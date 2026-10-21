@@ -4,50 +4,48 @@
 ░▒▓█  M0T10N::MΔCH1NΞ  █▓▒░
 ```
 
-**An AI agent can now direct a short film or an animated deck for you, but only if something measures every frame before anyone sees it. This is that something.**
+**Give your brand its own motion studio: eye-catching films and animated decks, made with an AI agent in your colours, your type and your design system, and still unmistakably yours.**
 
-motion-machine turns one brief into a 20 to 60 second film (9x16, 4x5, 1x1 and 16x9) and a clicker deck, built from 120 brand-neutral patterns and worn in your style. Then a gate of 37 rules renders the result and measures it: time, colour, type, legibility, pace, rests, sound. Frame by frame. Press by press.
+motion-machine is an engine for building branded motion tools. Capture a brand once (its colours, faces, composition and the way it likes to move) and the engine becomes that brand's studio: anyone on the team asks for a reel, a launch film or an animated deck, and gets a 20 to 60 second piece in 9x16, 4x5, 1x1 and 16x9, built from 120 brand-neutral patterns worn in the brand. A gate of 37 rules keeps every piece showable without boxing in the craft: hard stops for what breaks a film or stops it looking like the brand, advice for everything that is a creative choice. Bold. On brand. Checked.
 
-New here? Take the 15-minute [guided tour](GUIDE.md): you break a piece on purpose and watch the gate catch you. Want to see the parts? Read the [architecture tour](docs/ARCHITECTURE.md).
+New here? Take the 15-minute [guided tour](GUIDE.md): you make a piece, break it on purpose and watch the gate catch you. Want to see the parts? Read the [architecture tour](docs/ARCHITECTURE.md).
 
 ---
 
 ## Why this exists
 
-Almost every motion tool with "AI" on the label chases the same prize: **more video, faster**. More reels, more variants, more cuts per prompt. Speed is a solved problem. What nobody solved is the question you ask before every one of those pieces goes out:
+Brand and product teams need motion all the time: a launch reel, a feature teaser, a stat that has to land in a feed, a deck that has to hold a room. The usual options each fail one way. An agency looks great and takes weeks. A template is fast and looks like a template. A video generator is fast and looks like nobody in particular. And the question every brand team asks of every one of those pieces stays open:
 
-> *"Would I show this?"*
+> *"Would people stop for this, and does it still look like us?"*
 
-Motion without measurement is how a brand starts to wobble. A pipeline that makes ten films an afternoon makes ten afternoons of drift: an entrance that runs on its own clock, a headline that reads on a laptop and blurs on a phone, a hook that arrives at second three, a deck press that lands mid-animation, a colour that is almost the brand's. Each one plausible. Each one wrong. And the person who has to catch it is you, scrubbing a timeline at 6pm.
+motion-machine answers both halves. **Production value first, brand always.** The patterns are built for impact: kinetic type, data that counts up, devices that turn in 3D, sound cues on the beat, finishes and glows, each worn in the brand's own palette, faces and motion feel. Every frame is a pure function of time, so a piece can be rendered, checked and re-rendered to the frame, and the same story becomes every format and a deck.
 
-motion-machine inverts the priority. **Measured before shown.** Every frame is a pure function of time, so any instant can be rendered twice and compared. Every colour, face, size, space and duration comes from one style file, so anything else is an error with a file and a line. The machine renders the piece in a real browser, measures what it drew, and returns one of two verdicts.
-
-**Green: it can be shown, with its numbers. Red: back to the bench, with the rule, the instant and the evidence.**
+The gate guards what matters and leaves the rest to taste. **Hard stops: text nobody can read on a phone, a colour or face the brand does not own, a frame that does not render the same twice, a deck press that lands mid-motion. Advice: pace, holds, staggers, how much arrives at once, how often a cut is a plain fade.** A warning comes with its evidence and never vetoes a bolder cut.
 
 The taste stays yours: which story, which feel, which of two cuts. The arithmetic is the machine's.
 
 ## The pains this ends
 
-**If you make motion for a brand (designer, marketer, founder):**
+**If you are on a brand, marketing or product team:**
 
-- **Scrubbing QA.** You check a film by playing it again and again, and the bad frame slips through anyway. Here the gate reads every rest, every arrival and every cut, at the size a phone shows them.
-- **The almost-right problem.** The brand blue became a near blue. A 400 ms ease became 350. Nobody catches this in a review; the gate catches it in the CSS, in the computed styles and in the rendered pixels.
+- **Motion that looks like a template.** Every reel from the same tool looks like every other reel. Here the patterns wear your palette, your faces, your composition and your motion style, so the piece reads as yours before the logo appears.
+- **Agency speed for everyday motion.** A feature teaser should not take three weeks. Ask the agent for a launch film or an animated deck and direct it round by round, without a production schedule.
+- **Four formats, four edits.** One story renders every format: 9x16, 4x5, 1x1 and 16x9, plus a deck with a handout and a walkthrough. End cards scale, safe areas hold.
 - **Illegible on a phone.** A caption that reads on your monitor is a smudge in a feed. Text is measured at its rendered size against a floor per format, for a phone and for the back row of a room.
 - **The hook that comes too late.** In a muted feed the first frame decides. The gate fails a piece whose first frame is not its hook.
-- **Four formats, four edits.** One story renders every format: 9x16, 4x5, 1x1 and 16x9, plus a deck with a handout and a walkthrough. End cards scale, safe areas hold.
 - **Decks that stutter.** A press that lands mid-entrance looks broken on a big screen. Every rest is checked: nothing is still moving, and a press on the final pose does nothing.
 
-**If you lead a team, or build with AI agents:**
+**If you build tools for brands (design-system teams, agencies, studios):**
 
-- **Adoption without abdication.** You want an agent to make the first cut; you dread defending what it makes. The gate is the defence: nothing is exported that did not pass, and a forced render is stamped `UNCHECKED`.
+- **A studio per brand, from one engine.** Capture a brand from a web page, a `DESIGN.md` or a folder of stills, and a motion style from a reference film; `mm skill new` scaffolds that brand's own studio, with its look, motion, fonts and facts pinned. The engine stays brand-free.
+- **Creative freedom with guard rails.** The agent offers directions that differ in how the piece is built and how hard it hits, not only in colour. The gate keeps the brand and the legibility intact while the craft stays open.
 - **A number instead of a feeling.** Every piece ships with `out/check.json`: each rule, its verdict and its evidence. "Is it on-brand?" becomes a report, not a meeting.
-- **Any brand in any motion.** A style is a brand half (colour, type, space, composition) worn with a motion half (tempo, curves, transitions, entrances). Capture a brand from a web page, a `DESIGN.md` or a folder of stills, and a motion style from a reference film.
-- **Reproducible to the frame.** `export --prove` renders the film twice, in different orders, and proves the frames identical. A rule that could not run says `SKIP`, never `PASS`.
+- **Reproducible to the frame.** `export --prove` renders the film twice, in different orders, and proves the frames identical. A rule that could not run says `SKIP`, never `PASS`, and a forced render is stamped `UNCHECKED`.
 - **A record of every call.** The agent works in seven rounds, one question at a time. Each answer is written in a direction log, each note in a defects ledger, each round on a review page.
 
 ## What this is, exactly
 
-motion-machine is a **production pipeline and verification gate for short motion pieces made with an AI agent**: a library of patterns, a plain HTML, CSS and JavaScript runtime that draws every frame from time alone, a command-line tool (`mm`), a timeline studio, and a skill that directs the work.
+motion-machine is an **engine for building branded motion studios**, where an AI agent makes short films and animated decks in a brand's own identity and a gate checks them: a library of patterns, a plain HTML, CSS and JavaScript runtime that draws every frame from time alone, a command-line tool (`mm`), a timeline studio, and a skill that directs the work.
 
 It is **not** a video editor. There is no free canvas; the studio shows the piece as a timeline and writes each drag back into the story file, which stays the only place the film lives. It is **not** a video generator; it does not call image or video models. It does **not** compose music; bring a track and `mm beats` finds its grid. It is built for [Claude Code](https://claude.com/claude-code); the CLI and the gate work with any agent ([AGENTS.md](AGENTS.md)) or by hand.
 
@@ -72,7 +70,7 @@ Most tools in the "AI + video" space are not competitors of this machine. They s
 | **Code-based video frameworks** | Render video from code, frame by frame, reproducibly | Hold a style or judge the result. They render what you wrote, legible or not |
 | **Prompt-to-video generators** | Make footage from a sentence | Keep your brand, your copy or your facts. Every frame is a new guess |
 | **Slide tools with animation** | Present a story one press at a time | Promise that a press lands on a finished picture, or turn the same story into a film |
-| **motion-machine** | Builds the film and the deck from one story, in your style, and measures every frame against 37 rules | Shoot footage, compose music or generate imagery |
+| **motion-machine** | Gives a brand its own motion studio: film and deck from one story, in the brand's identity, every frame checked against 37 rules | Shoot footage, compose music or generate imagery |
 
 The relationship with the others is the one worth underlining: **bring a recording, a still or a track from anywhere. This is the stage it plays on and the gate the piece must pass.**
 
@@ -81,7 +79,7 @@ The relationship with the others is the one worth underlining: **bring a recordi
 1. **Brief:** the agent asks only for what the brief lacks: the channel (which fixes the formats), the one thing to remember, three words for the feeling, the facts with their sources.
 2. **Style:** the agent captures your brand (`mm brand capture`) and a motion style from a reference film (`mm motion capture`), or starts from a shipped preset, and composes them into one `style.json`. Every guess is written down with its evidence.
 3. **Story:** a beat sheet comes first, one row per scene or press, then `story.json`: scenes, beats and cuts named by pattern or by style role. Every frame is a function of the time `t`.
-4. **Verify:** `mm check` renders the piece in Chromium and measures it: time (the same instant rendered twice gives the same pixels; a trap fails any clock), style (CSS, computed styles and rendered pixels against the palette), legibility, pace, deck rests and sound. Thresholds are law: a stubborn piece gets diagnosed, never a loosened gate.
+4. **Verify:** `mm check` renders the piece in Chromium and measures it: time (the same instant rendered twice gives the same pixels; a trap fails any clock), style (CSS, computed styles and rendered pixels against the palette), legibility, pace, deck rests and sound. A hard rule is fixed in the piece, never by loosening the rule; a warning is weighed by the director, with its evidence.
 5. **Deliver:** `mm export` refuses a piece whose check failed or is out of date, renders every format from the one piece, and the handover lists what nobody verified. You decide each round; the machine never decides for you that something is good enough.
 
 ---

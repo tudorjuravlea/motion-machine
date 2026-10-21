@@ -2,7 +2,7 @@
   "name": "motion-machine",
   "version": "0.1.0",
   "private": true,
-  "description": "Stories in motion, in any style, that a machine checks before you show them. Films and clicker decks as pure functions of time, from a brand-neutral pattern library.",
+  "description": "An engine for building branded motion studios: eye-catching films and animated decks in a brand's own colours, type and design system, made with an AI agent and checked by a gate.",
   "keywords": [
     "motion",
     "video",
