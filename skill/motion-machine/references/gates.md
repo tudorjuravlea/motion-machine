@@ -7,7 +7,7 @@ quoted in `direction-log.md`.
 | Gate | Starts from | You prepare | The director sees | The director answers | The log row records |
 |---|---|---|---|---|---|
 | 1 Brief | the user's message, files, references | a summary of the brief; questions only for what is missing | the summary and the questions | confirms the brief | purpose, formats, the one thing, three words, facts, faces, language |
-| 2 Treatment | the confirmed brief | two or three named directions, each a paragraph and a beat sheet; the one you would take | the sheets next to each other, with the arithmetic per scene | names the direction to take, or asks for others | the direction, length, scene list, named gaps |
+| 2 Treatment | the confirmed brief | two or three named directions that differ in impact as well as look, each a paragraph and a beat sheet; the one that would stop the scroll and the one you would take | the sheets next to each other, with the arithmetic per scene | names the direction to take, or asks for others | the direction, length, scene list, named gaps |
 | 3 Style | the chosen direction | a composed `style.json`; a swatch and tempo sheet; the beat grid | pattern stills of title-stack, stat-hero and the headline entrance; a section map when there is music | accepts the style and the grid | mode (preset, compose, capture), `from`, bpm |
 | 4 Style frames | the accepted style | `story.json`; the stills | `out/contact.png`, `out/phone.png`, `out/review.html` | signs or annotates each still | per still: signed, or the note |
 | 5 Animatic | the signed stills | a low-cost export on the grid | the MP4, and candidates for every motion call | judges the pacing | each motion call with its candidates |
@@ -38,15 +38,19 @@ director wins; log the change in this gate's row.
 ## Gate 2 · Treatment
 
 Two or three directions that differ in how the piece is built (structure, tempo, what carries the
-story), never one idea worded several ways. Each: a name, one paragraph, a beat sheet (`beat-sheet.md`), named gaps,
-and the arithmetic:
-- film 20 to 60 s; deck 6 to 20 presses (G-LENGTH);
+story) and in impact, never one idea worded several ways. Impact is the hook (a finished headline, a
+cold open, a reveal that builds), the rhythm (cut and arrival tempo), the reveal (what the viewer sees
+last), and production value: 3D devices, finishes (grain, vignette, paper edge), music sync. Each
+direction: a name, one paragraph, a beat sheet (`beat-sheet.md`), named gaps, and a line on which of
+the three would stop the scroll in a feed and why; say which one you would take. The arithmetic below
+advises: a direction may break a line on purpose, and the director decides.
+- film 20 to 60 s; deck 6 to 20 presses (W-LENGTH);
 - per scene: words × 0.3 s + the last arrival's `at` ≤ the scene's seconds (W-READ);
 - the first arrival after a soft cut at least 0.1 s after the cut ends (W-STAGGER; not after a
   hard cut or at frame 0), and no run of more than 6 near-empty frames (W-EMPTY);
-- the first frame is the hook: the headline finished at frame 0 (G-HOOK);
-- 2 s of quiet after the last arrival in a film; one element at most on a deck's last press (G-QUIET);
-- no 4 s window without an arrival, cut or move (G-DEAD);
+- the first frame is the hook: the headline finished at frame 0 (W-HOOK, the default for a feed film; a cold open or a reveal that builds is a choice to name);
+- 2 s of quiet after the last arrival in a film; one element at most on a deck's last press (W-QUIET);
+- no 4 s window without an arrival, cut or move (W-DEAD; a long held hero shot is a choice to name);
 - arrivals per 10 s inside the motion style's band (W-PACE), cues per 10 s inside its sound band (W-MIX).
 
 When a brief cannot be told legibly in its seconds, say so and offer the re-scope (fewer words,
@@ -73,6 +77,18 @@ first. The format is the demo's own, 9x16 for layouts and 16x9 for entrances; `-
 another, and the printed line names it. With music:
 `mm beats <track> [--bpm N] --out pieces/<id>/assets/beats.json`, then set `audio.beats` in the
 story. With a declared BPM and no track, see `pitfalls.md` §1.
+
+**Tuning the warnings for a brand (embed mode).** A brand studio (`mm skill new`) pins its own soft
+thresholds in a `gate` block in `style/motion.json` (compose again; the composed `style.json` carries
+it). It adjusts warnings only, and every key is optional: `length` (`filmS`, `loopS`, `deckPresses`,
+each `[min, max]`) for W-LENGTH; `deadS` for W-DEAD; `quietS` for W-QUIET; `read` (`perWordS`, `labelS`,
+`sentenceS`) for W-READ; `liftBans` (`centered-title-on-gradient`, `corner-labels`, `frame-borders`) for
+W-BAN, which then stops reporting those looks while the style's `bans` stay as they are. The hold floor,
+the arrival band and the stagger cap are still `pacing` and `motion.stagger` (W-HOLD, W-PACE, W-STAGGER).
+A key naming a G- rule, or any unknown key, is a contract error and `mm check` exits 2: hard rules are
+never tunable. A tuned rule reports the threshold it used. Tune from what the brand's films are (a
+bumper brand widens `length.filmS`), with the director's word, before a piece, never to silence a
+warning after the fact.
 
 ## Gate 4 · Style frames
 
@@ -119,7 +135,7 @@ Not while the studio's Export runs (a second exporter is refused, exit 2).
 mm check pieces/<id>                      # exit 0, or fix and repeat
 mm export pieces/<id> --prove             # every format; --prove re-renders in reverse and compares bytes
 mm sound pieces/<id>                      # cues + bed, loudnorm, muxed into the MP4s
-mm check pieces/<id>                      # again: G-LOUD now runs on the muxed audio
+mm check pieces/<id>                      # again: G-PEAK and W-LOUDNESS now run on the muxed audio
 mm review pieces/<id>                     # out/review.html, newest round first
 ```
 
@@ -127,7 +143,9 @@ mm review pieces/<id>                     # out/review.html, newest round first
 text travels more than 4 px per frame, because blending turns fast text
 into ghosts; `mm check <piece> --sub N` reports the same warning without exporting.
 
-Each WARN gets a fix or a one-line reason in the log; the reason travels to the handover. The
+Every WARN is read. Show each to the director with its evidence; the director accepts it or asks for a fix,
+in one line in the log, and an accepted warning travels to the handover with that line. A warning the
+director accepts is not a defect; one they want fixed becomes a `defects.md` row. The
 director's notes enter `defects.md` before any change. Repeat until the director answers **lock**.
 
 ## Gate 7 · Deliver

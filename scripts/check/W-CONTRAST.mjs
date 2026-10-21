@@ -6,7 +6,9 @@
 // gradient on a sibling, a picture under a caption), so for every text box with no background of
 // its own the gate shoots the rest with every text transparent and reads the pixels under the box.
 // The ratio is the lower of the computed one and the 5th percentile against those pixels (the
-// darkest or lightest stretch, not one stray pixel).
+// darkest or lightest stretch, not one stray pixel). Text is read as it is painted: the element's own
+// opacity times its ancestors' fades the text colour toward the background before the ratio is taken,
+// so a ghosted line warns with its effective contrast.
 import { rule } from '../lib/report.mjs';
 import { decodePng } from './_pixels.mjs';
 import { contrastRatio, parseColor, restInstants, round, texts } from './_lib.mjs';
@@ -28,15 +30,19 @@ async function behindText(page) {
   } finally { await handle.evaluate((n) => n.remove()); }
 }
 
-// The PERCENTILE-lowest contrast of fg against the rendered pixels inside the box (stage coordinates).
-function renderedRatio(fg, box, { img, at }) {
+// fg painted at opacity `a` over a background pixel: the colour the eye gets.
+const faded = (fg, bg, a) => (a >= 1 ? fg : [0, 1, 2].map((k) => fg[k] * a + bg[k] * (1 - a)));
+
+// The PERCENTILE-lowest contrast of fg (at opacity a) against the rendered pixels inside the box (stage coordinates).
+function renderedRatio(fg, a, box, { img, at }) {
   const x0 = Math.max(0, Math.floor(box.x + at.x)), y0 = Math.max(0, Math.floor(box.y + at.y));
   const x1 = Math.min(img.width, Math.ceil(box.x + at.x + box.w)), y1 = Math.min(img.height, Math.ceil(box.y + at.y + box.h));
   const step = Math.max(1, Math.round(Math.sqrt(((x1 - x0) * (y1 - y0)) / 4000)));
   const ratios = [];
   for (let y = y0; y < y1; y += step) for (let x = x0; x < x1; x += step) {
     const i = (y * img.width + x) * 4;
-    ratios.push(contrastRatio(fg, [img.data[i], img.data[i + 1], img.data[i + 2], 1]));
+    const px = [img.data[i], img.data[i + 1], img.data[i + 2], 1];
+    ratios.push(contrastRatio(faded(fg, px, a), px));
   }
   if (!ratios.length) return null;
   ratios.sort((a, b) => a - b);
@@ -55,13 +61,14 @@ export default async function (ctx) {
       if (!fg || !bg) { unread.push({ instant: round(t), selector: e.selector, colors: `${e.color} on ${e.bg}` }); continue; }
       const isDisplay = e.fontFamily.toLowerCase().includes(display) || e.fontPx >= h2;
       const need = isDisplay ? DISPLAY : BODY;
-      let r = contrastRatio(fg, bg), background = 'computed';
+      const a = e.opacity ?? 1;
+      let r = contrastRatio(faded(fg, bg, a), bg), background = 'computed';
       if (!e.ownBg) {
         if (!shot) { await ctx.mm.seek(t); shot = await behindText(ctx.page); }
-        const seen = renderedRatio(fg, e.box, shot);
+        const seen = renderedRatio(fg, a, e.box, shot);
         if (seen != null && seen < r) { r = seen; background = 'rendered'; }
       }
-      if (r < need) low.push({ instant: round(t), selector: e.selector, measured: round(r, 2), threshold: need, background, colors: `${e.color} on ${background === 'rendered' ? 'the rendered gradient' : e.bg}` });
+      if (r < need) low.push({ instant: round(t), selector: e.selector, measured: round(r, 2), threshold: need, background, ...(a < 1 ? { opacity: round(a, 3) } : {}), colors: `${e.color}${a < 1 ? ` at opacity ${round(a, 3)}` : ''} on ${background === 'rendered' ? 'the rendered gradient' : e.bg}` });
     }
   }
   if (low.length) return rule('W-CONTRAST', 'WARN', { ...low[0], reason: `contrast ${low[0].measured}:1 is under ${low[0].threshold}:1 (${low[0].colors})`, all: low.slice(0, 20) });

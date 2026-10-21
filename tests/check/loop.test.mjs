@@ -1,4 +1,4 @@
-// G-LOOP and the loop kind: a story of kind "loop" is 4 to 15 s (G-LENGTH) and its last frame
+// G-LOOP and the loop kind: a story of kind "loop" is 4 to 15 s (W-LENGTH) and its last frame
 // must be its first (G-LOOP); every film rule applies to it.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -9,11 +9,11 @@ test('G-LOOP/seam: a loop whose last frame is not its first fails G-LOOP and not
   const r = failsOnly(await run('G-LOOP/seam'), 'G-LOOP');
   assert.match(r.evidence.reason, /last frame/);
 });
-test('G-LOOP/ok: a loop that ends on its first frame passes G-LOOP and G-LENGTH', async () => {
+test('G-LOOP/ok: a loop that ends on its first frame passes G-LOOP and W-LENGTH', async () => {
   const report = await run('G-LOOP/ok');
   const byId = Object.fromEntries(report.rules.map((x) => [x.id, x]));
   assert.equal(byId['G-LOOP'].status, 'PASS', JSON.stringify(byId['G-LOOP']));
-  assert.equal(byId['G-LENGTH'].status, 'PASS', JSON.stringify(byId['G-LENGTH']));
+  assert.equal(byId['W-LENGTH'].status, 'PASS', JSON.stringify(byId['W-LENGTH']));
   assert.deepEqual(report.rules.filter((x) => x.status === 'FAIL').map((x) => x.id), []);
 });
 test('G-LOOP/auto: a loop with autoReturn ends on its first frame with no hand-built return', async () => {

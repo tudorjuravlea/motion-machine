@@ -20,7 +20,7 @@ For this example the crew stood in for the director; rows marked *stand-in* are 
 
 | # | Call | Options shown | Director's words | Decision |
 |---|---|---|---|---|
-| 2.1 | Press map | one press per scene (13) · gate and end card split (15) · every caption on its own press (24, over 20) | *stand-in:* "15: the gate's totals deserve their own click; the licence line alone on the last press (G-QUIET)" | 15 presses |
+| 2.1 | Press map | one press per scene (13) · gate and end card split (15) · every caption on its own press (24, over 20) | *stand-in:* "15: the gate's totals deserve their own click; the licence line alone on the last press (W-QUIET)" | 15 presses |
 | 2.2 | Notes | every `say` two to four sentences, with the click cue where one matters | brief | written per scene in `build-story.mjs` (`notes`) |
 
 ## Gate 3 · Style

@@ -13,7 +13,7 @@ export const INK_MIN = 0.005;
 const DE = 2;
 
 export default async function (ctx) {
-  if (ctx.kind === 'deck') return rule('W-EMPTY', 'SKIP', { reason: 'a deck has rests, not a run of frames (G-HOOK covers rest 0)' });
+  if (ctx.kind === 'deck') return rule('W-EMPTY', 'SKIP', { reason: 'a deck has rests, not a run of frames (W-HOOK covers rest 0)' });
   const cdp = await cdpOf(ctx);
   const canvas = rgbToLab(...parseColor(ctx.style.color.canvas).slice(0, 3));
   const { width, height } = ctx.page.viewportSize();

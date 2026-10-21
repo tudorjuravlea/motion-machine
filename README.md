@@ -6,7 +6,7 @@
 
 **Give your brand its own motion studio: eye-catching films and animated decks, made with an AI agent in your colours, your type and your design system, and still unmistakably yours.**
 
-motion-machine is an engine for building branded motion tools. Capture a brand once (its colours, faces, composition and the way it likes to move) and the engine becomes that brand's studio: anyone on the team asks for a reel, a launch film or an animated deck, and gets a 20 to 60 second piece in 9x16, 4x5, 1x1 and 16x9, built from 120 brand-neutral patterns worn in the brand. A gate of 37 rules keeps every piece showable without boxing in the craft: hard stops for what breaks a film or stops it looking like the brand, advice for everything that is a creative choice. Bold. On brand. Checked.
+motion-machine is an engine for building branded motion tools. Capture a brand once (its colours, faces, composition and the way it likes to move) and the engine becomes that brand's studio: anyone on the team asks for a reel, a launch film or an animated deck, and gets a 20 to 60 second piece in 9x16, 4x5, 1x1 and 16x9, built from 120 brand-neutral patterns worn in the brand. A gate of 40 rules keeps every piece showable without boxing in the craft: hard stops for what breaks a film or stops it looking like the brand, advice for everything that is a creative choice. Bold. On brand. Checked.
 
 New here? Take the 15-minute [guided tour](GUIDE.md): you make a piece, break it on purpose and watch the gate catch you. Want to see the parts? Read the [architecture tour](docs/ARCHITECTURE.md).
 
@@ -20,7 +20,7 @@ Brand and product teams need motion all the time: a launch reel, a feature tease
 
 motion-machine answers both halves. **Production value first, brand always.** The patterns are built for impact: kinetic type, data that counts up, devices that turn in 3D, sound cues on the beat, finishes and glows, each worn in the brand's own palette, faces and motion feel. Every frame is a pure function of time, so a piece can be rendered, checked and re-rendered to the frame, and the same story becomes every format and a deck.
 
-The gate guards what matters and leaves the rest to taste. **Hard stops: text nobody can read on a phone, a colour or face the brand does not own, a frame that does not render the same twice, a deck press that lands mid-motion. Advice: pace, holds, staggers, how much arrives at once, how often a cut is a plain fade.** A warning comes with its evidence and never vetoes a bolder cut.
+The gate guards what matters and leaves the rest to taste. **Hard stops, fourteen rules, are what breaks a piece or the brand: text nobody can read on a phone or under the platform's interface, two texts that collide, a frame that does not render the same twice, a missing asset or a system font, placeholder text, a claim with no source, a pattern that does not exist, a deck press that lands mid-motion or past the end (or a film rest drawn mid-entrance), a loop that jumps, audio that clips, a colour or face the brand does not own. Advice, twenty-six rules, is craft: length, the hook, dead air, the ending, pace, holds, staggers, reading time, loudness, how much arrives at once, how often a cut is a plain fade.** A warning comes with its evidence and never vetoes a bolder cut.
 
 The taste stays yours: which story, which feel, which of two cuts. The arithmetic is the machine's.
 
@@ -32,12 +32,12 @@ The taste stays yours: which story, which feel, which of two cuts. The arithmeti
 - **Agency speed for everyday motion.** A feature teaser should not take three weeks. Ask the agent for a launch film or an animated deck and direct it round by round, without a production schedule.
 - **Four formats, four edits.** One story renders every format: 9x16, 4x5, 1x1 and 16x9, plus a deck with a handout and a walkthrough. End cards scale, safe areas hold.
 - **Illegible on a phone.** A caption that reads on your monitor is a smudge in a feed. Text is measured at its rendered size against a floor per format, for a phone and for the back row of a room.
-- **The hook that comes too late.** In a muted feed the first frame decides. The gate fails a piece whose first frame is not its hook.
+- **The hook that comes too late.** In a muted feed the first frame decides. The gate warns when the first frame is not the hook; a cold open stays your call.
 - **Decks that stutter.** A press that lands mid-entrance looks broken on a big screen. Every rest is checked: nothing is still moving, and a press on the final pose does nothing.
 
 **If you build tools for brands (design-system teams, agencies, studios):**
 
-- **A studio per brand, from one engine.** Capture a brand from a web page, a `DESIGN.md` or a folder of stills, and a motion style from a reference film; `mm skill new` scaffolds that brand's own studio, with its look, motion, fonts and facts pinned. The engine stays brand-free.
+- **A studio per brand, from one engine.** Capture a brand from a web page, a `DESIGN.md` or a folder of stills, and a motion style from a reference film; `mm skill new` scaffolds that brand's own studio, with its look, motion, fonts and facts pinned. The studio can tune the gate's warnings for itself (its length band, its reading speed, the looks it lifts); no studio can tune a hard rule. The engine stays brand-free.
 - **Creative freedom with guard rails.** The agent offers directions that differ in how the piece is built and how hard it hits, not only in colour. The gate keeps the brand and the legibility intact while the craft stays open.
 - **A number instead of a feeling.** Every piece ships with `out/check.json`: each rule, its verdict and its evidence. "Is it on-brand?" becomes a report, not a meeting.
 - **Reproducible to the frame.** `export --prove` renders the film twice, in different orders, and proves the frames identical. A rule that could not run says `SKIP`, never `PASS`, and a forced render is stamped `UNCHECKED`.
@@ -70,7 +70,7 @@ Most tools in the "AI + video" space are not competitors of this machine. They s
 | **Code-based video frameworks** | Render video from code, frame by frame, reproducibly | Hold a style or judge the result. They render what you wrote, legible or not |
 | **Prompt-to-video generators** | Make footage from a sentence | Keep your brand, your copy or your facts. Every frame is a new guess |
 | **Slide tools with animation** | Present a story one press at a time | Promise that a press lands on a finished picture, or turn the same story into a film |
-| **motion-machine** | Gives a brand its own motion studio: film and deck from one story, in the brand's identity, every frame checked against 37 rules | Shoot footage, compose music or generate imagery |
+| **motion-machine** | Gives a brand its own motion studio: film and deck from one story, in the brand's identity, every frame checked against 40 rules | Shoot footage, compose music or generate imagery |
 
 The relationship with the others is the one worth underlining: **bring a recording, a still or a track from anywhere. This is the stage it plays on and the gate the piece must pass.**
 
@@ -163,7 +163,7 @@ Type this command:
 node scripts/mm.mjs check pieces/hello
 ```
 
-The check fails, and this is correct. The new piece is a four-second placeholder, so `G-LENGTH` and `G-HOOK` report it. Write a real story of 20 to 60 seconds: the [guided tour](GUIDE.md) shows you how, in fifteen minutes. Then do this step again until the check passes.
+The check exits 0, and it prints three warnings. The new piece is a four-second placeholder, so `W-LENGTH` (a film usually runs 20 to 60 seconds), `W-HOOK` (the first frame does not show the headline finished) and `W-EMPTY` (the first frames are almost empty) report it. A warning is advice about craft: it never fails the check and never blocks an export. A hard rule (`G-` in the report) is a `FAIL` and makes the check exit 1. To see one fail, and to see a warning read and accepted, follow the [guided tour](GUIDE.md): it takes fifteen minutes and also shows you how to write a real story of 20 seconds.
 
 ### Step 7: Use the skill with your agent
 
@@ -183,7 +183,7 @@ When the check passes, type this command:
 node scripts/mm.mjs export pieces/hello
 ```
 
-The files go into `pieces/hello/out/`. The export refuses a piece that failed its check or changed after it. Do not use `--force` for a piece you deliver: it stamps the file `UNCHECKED`.
+The files go into `pieces/hello/out/`. The export refuses a piece with a failing hard rule, or one that changed after its check; warnings do not block it. Do not use `--force` for a piece you deliver: it stamps the file `UNCHECKED`.
 
 ### Command reference
 

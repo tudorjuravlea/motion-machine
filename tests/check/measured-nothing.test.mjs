@@ -1,6 +1,6 @@
 // SPEC §7: a rule that measured nothing, or only part of what it should, never reports PASS.
 // W-PACE on a film shorter than one half window, G-EDGE and G-OVERLAP on a film with no text at
-// its rests, G-LOUD on files the story does not ship: each says SKIP and why.
+// its rests, G-PEAK and W-LOUDNESS on files the story does not ship: each says SKIP and why.
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
@@ -10,7 +10,8 @@ import { join } from 'node:path';
 import wPace, { paceWindows } from '../../scripts/check/W-PACE.mjs';
 import gEdge from '../../scripts/check/G-EDGE.mjs';
 import gOverlap from '../../scripts/check/G-OVERLAP.mjs';
-import gLoud from '../../scripts/check/G-LOUD.mjs';
+import gPeak from '../../scripts/check/G-PEAK.mjs';
+import wLoudness from '../../scripts/check/W-LOUDNESS.mjs';
 
 const arrivals = (times) => times.map((t) => ({ kind: 'arrive', t }));
 
@@ -32,7 +33,7 @@ test('W-PACE: a film of 12 s judges its one full window (the 2 s tail is too sho
 /** A context whose sample() returns the given text boxes at every rest. */
 const textCtx = (boxes, rests = [1, 2]) => ({
   floors: { safe: 80 }, format: '16x9', story: {},
-  schedule: { kind: 'film', rests, duration: 3, events: [] },
+  schedule: { kind: 'film', rests, holds: [], scenes: [], duration: 3, events: [] },
   sample: async () => ({ probe: { frame: { w: 1920, h: 1080 }, elements: boxes } }),
 });
 const box = (x, y, w, h, selector) => ({ text: 'Hello', ink: { x, y, w, h }, selector });
@@ -55,7 +56,7 @@ test('G-EDGE and G-OVERLAP: a pass says how much it measured', async () => {
   }
 });
 
-// ---- G-LOUD: only what the story ships is measured ----------------------------------------------
+// ---- G-PEAK and W-LOUDNESS: only what the story ships is measured ----------------------------------------------
 let dir;
 const ff = (args) => assert.equal(spawnSync('ffmpeg', ['-v', 'error', '-y', ...args]).status, 0);
 before(() => {
@@ -69,15 +70,19 @@ before(() => {
 });
 after(() => rmSync(dir, { recursive: true, force: true }));
 
-test('G-LOUD: a silent MP4 that ships, a stale loud mix.wav, a leftover MP4 of another id: SKIP, nothing else is measured', async () => {
-  const r = await gLoud({ dir, style: {}, story: { id: 'film', formats: ['16x9'] } });
-  assert.equal(r.status, 'SKIP');
-  assert.match(r.evidence.reason, /no audio stream/);
+test('G-PEAK and W-LOUDNESS: a silent MP4 that ships, a stale loud mix.wav, a leftover MP4 of another id: SKIP, nothing else is measured', async () => {
+  for (const rule of [gPeak, wLoudness]) {
+    const r = await rule({ dir, style: {}, story: { id: 'film', formats: ['16x9'] } });
+    assert.equal(r.status, 'SKIP');
+    assert.match(r.evidence.reason, /no audio stream/);
+  }
 });
 
-test('G-LOUD: with no MP4 that ships, out/mix.wav is what is measured', async () => {
-  const r = await gLoud({ dir, style: {}, story: { id: 'other', formats: ['9x16'] } });
-  assert.notEqual(r.status, 'SKIP');
-  assert.equal(r.evidence.files.length, 1);
-  assert.equal(r.evidence.files[0].file, 'out/mix.wav');
+test('G-PEAK and W-LOUDNESS: with no MP4 that ships, out/mix.wav is what is measured', async () => {
+  for (const rule of [gPeak, wLoudness]) {
+    const r = await rule({ dir, style: {}, story: { id: 'other', formats: ['9x16'] } });
+    assert.notEqual(r.status, 'SKIP');
+    assert.equal(r.evidence.files.length, 1);
+    assert.equal(r.evidence.files[0].file, 'out/mix.wav');
+  }
 });

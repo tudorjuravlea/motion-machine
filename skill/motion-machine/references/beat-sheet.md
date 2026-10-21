@@ -58,9 +58,10 @@ The schema requires `move` (a pattern id or `null`) and `say` on every scene.
 - **Deck:** `presses` instead of `duration`; each beat has `step` (the press inside the scene that
   brings it, from 1) and `at` (seconds after that press). Rest 0 is the first layout before any
   step; a deck has `presses + 1` rests. `step: 0` puts a beat on rest 0,
-  finished, with no animation (its `at` is ignored); the first scene's headline needs it (G-HOOK).
-- **The hook (G-HOOK):** a film's first headline is finished at frame 0:
-  `at: 0` and `params.instant: true` (an entrance of 0 s). Without it the gate fails.
+  finished, with no animation (its `at` is ignored); the first scene's headline needs it (W-HOOK).
+- **The hook (W-HOOK):** a film's first headline is finished at frame 0:
+  `at: 0` and `params.instant: true` (an entrance of 0 s). Without it the gate warns; a cold open is a
+  choice the director can accept.
 - **`cta`:** `text` and `url` are both required strings (a film with no link carries
   `"url": ""`). The call to action is never `data-micro` text.
 - **Timing:** a beat's `params.dur` (a role name) or `params.spring` (a spring role) overrides the
@@ -89,4 +90,4 @@ The schema requires `move` (a pattern id or `null`) and `say` on every scene.
 - Scene durations add up exactly to the running time; a transition takes no time of its own,
   because it plays inside the first `d` seconds of the incoming scene.
 - The rest after the last arrival settles must reach the motion style's `pacing.holdMinS` (W-HOLD).
-- The last film scene keeps 2 s after its last arrival (G-QUIET).
+- The last film scene keeps 2 s after its last arrival (W-QUIET).

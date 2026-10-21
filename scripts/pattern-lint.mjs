@@ -5,6 +5,10 @@
 // in its CSS or JS, none of the forbidden time sources, and a demo story that validates and uses
 // it. Only complete patterns are listed.
 //
+// A row's id names the rule `mm check` applies to the same text in a piece. W-LITERAL (and the card and
+// provenance rules) only warn a piece, whose studio may have its reasons; here they fail, because the
+// library the engine publishes must stay complete and free of literals. G-TIME fails in both.
+//
 //   node scripts/pattern-lint.mjs [lint|list] [name|folder|root=patterns/] [--json]
 // `lint <name>` lints one pattern: `group/name` or a bare name unique across patterns/, or
 // a pattern folder; any other folder is a root of group/name folders. Exit: 0 every pattern
@@ -128,7 +132,7 @@ export function lintPattern(dir, { provenance = join(ROOT, 'PROVENANCE.md') } = 
   }
 
   const row = (id, list) => (list.length ? rule(id, 'FAIL', { ...list[0], all: list }) : rule(id, 'PASS', {}));
-  const rules = [row('G-PATTERN-CARD', card), row('G-PROVENANCE', prov), row('G-LITERAL', lit), row('G-TIME', time)];
+  const rules = [row('W-PATTERN-CARD', card), row('W-PROVENANCE', prov), row('W-LITERAL', lit), row('G-TIME', time)];
   return { ref, group, name, dir, complete: rules.every((r) => r.status !== 'FAIL'), rules };
 }
 

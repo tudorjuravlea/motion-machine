@@ -1,0 +1,2 @@
+/* Negative G-BRAND/named: a CSS named colour in a shadow. */
+[data-slot="headline"] { text-shadow: 0 0 var(--mm-space-1) crimson; }

@@ -71,6 +71,9 @@ export function skillNew({ brand, motion = 'calm', out, license = 'Apache-2.0', 
       'A banned font family is advice only; the fonts in `fonts/` are the ones the piece ships.',
     ].join('\n'),
   };
+  vars.gate_section = m.gate
+    ? [`This studio tunes the engine's warnings: \`${JSON.stringify(m.gate)}\` (the motion half's \`gate\`, carried into \`${vars.style_path}\`).`, '', 'The tuned rules report the threshold they used. Hard rules cannot be tuned.'].join('\n')
+    : [`The gate runs at the engine's defaults. To tune this studio's warnings (the length band, the dead-air window, the quiet tail, reading speed and line floors, the looks W-BAN lifts), add a \`gate\` block in \`${vars.motion_path}\` and compose again; the engine's SPEC lists the keys.`, '', 'Hard rules cannot be tuned.'].join('\n');
   if (/["\\\n]/.test(vars.description + vars.compatibility)) throw fail('description/compatibility may not contain quotes, backslashes or newlines', 1);
   writeFileSync(join(dest, 'SKILL.md'), fill(readFileSync(join(TEMPLATE, 'SKILL.md'), 'utf8'), vars));
   writeFileSync(join(dest, 'facts.md'), fill(readFileSync(join(TEMPLATE, 'facts.md'), 'utf8'), vars));

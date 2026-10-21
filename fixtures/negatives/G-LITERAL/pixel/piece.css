@@ -1,3 +1,0 @@
-/* Negative G-LITERAL/pixel: no literal, every computed colour a palette role, yet a filter
-   turns every rendered pixel of the stage off the palette. Only the pixel half sees it. */
-.mm-stage { filter: hue-rotate(90deg) saturate(4); }

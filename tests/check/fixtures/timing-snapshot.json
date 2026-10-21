@@ -2,7 +2,7 @@
  "pieces/catalogue-3d-1": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 4,
@@ -10,7 +10,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 37.45,
@@ -18,7 +18,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 33.45,
@@ -107,7 +107,7 @@
  "pieces/catalogue-data-1": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.9,
@@ -115,7 +115,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 44.55,
@@ -123,7 +123,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 41.35,
@@ -212,7 +212,7 @@
  "pieces/catalogue-data-2": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 4,
@@ -220,7 +220,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 45.95,
@@ -228,7 +228,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 42.75,
@@ -323,7 +323,7 @@
  "pieces/catalogue-devices-1": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.8,
@@ -331,7 +331,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 47.85,
@@ -339,7 +339,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 44.05,
@@ -434,7 +434,7 @@
  "pieces/catalogue-emphasis-1": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.9,
@@ -442,7 +442,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 37.85,
@@ -450,7 +450,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 34.8,
@@ -536,7 +536,7 @@
  "pieces/catalogue-emphasis-2": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.9,
@@ -544,7 +544,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 37.65,
@@ -552,7 +552,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 34.45,
@@ -638,7 +638,7 @@
  "pieces/catalogue-entrances-1": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.95,
@@ -646,7 +646,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 52.65,
@@ -654,7 +654,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 49.7,
@@ -746,7 +746,7 @@
  "pieces/catalogue-entrances-2": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.95,
@@ -754,7 +754,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 44.95,
@@ -762,7 +762,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 42,
@@ -848,7 +848,7 @@
  "pieces/catalogue-entrances-3": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.95,
@@ -856,7 +856,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 52.55,
@@ -864,7 +864,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 49.6,
@@ -956,7 +956,7 @@
  "pieces/catalogue-exits-1": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.2,
@@ -964,7 +964,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 36.9,
@@ -972,7 +972,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 33.8,
@@ -1061,7 +1061,7 @@
  "pieces/catalogue-layouts-1": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.9,
@@ -1069,7 +1069,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 39.15,
@@ -1077,7 +1077,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 35.85,
@@ -1163,7 +1163,7 @@
  "pieces/catalogue-layouts-2": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.95,
@@ -1171,7 +1171,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 35.8,
@@ -1179,7 +1179,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 32.6,
@@ -1268,7 +1268,7 @@
  "pieces/catalogue-moves-1": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.9,
@@ -1276,7 +1276,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 55.1,
@@ -1284,7 +1284,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 51.6,
@@ -1385,7 +1385,7 @@
  "pieces/catalogue-moves-2": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.9,
@@ -1393,7 +1393,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 55.95,
@@ -1401,7 +1401,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 52.45,
@@ -1502,7 +1502,7 @@
  "pieces/catalogue-music-1": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 4,
@@ -1510,7 +1510,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 34,
@@ -1518,7 +1518,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 31,
@@ -1602,7 +1602,7 @@
  "pieces/catalogue-screen-1": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.65,
@@ -1610,7 +1610,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 44.9,
@@ -1618,7 +1618,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 40.6,
@@ -1707,7 +1707,7 @@
  "pieces/catalogue-screen-2": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 4,
@@ -1715,7 +1715,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 40.9,
@@ -1723,7 +1723,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 36,
@@ -1832,7 +1832,7 @@
  "pieces/catalogue-sound-1": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.95,
@@ -1840,7 +1840,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 46.65,
@@ -1848,7 +1848,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 43.05,
@@ -1943,7 +1943,7 @@
  "pieces/catalogue-text-1": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.95,
@@ -1951,7 +1951,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 44.85,
@@ -1959,7 +1959,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 41.9,
@@ -2048,7 +2048,7 @@
  "pieces/catalogue-text-2": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.95,
@@ -2056,7 +2056,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 45.15,
@@ -2064,7 +2064,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 42.2,
@@ -2159,7 +2159,7 @@
  "pieces/catalogue-transitions-1": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.95,
@@ -2167,7 +2167,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 39.39,
@@ -2175,7 +2175,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 36.93,
@@ -2264,7 +2264,7 @@
  "pieces/catalogue-transitions-2": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.95,
@@ -2272,7 +2272,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 52.31,
@@ -2280,7 +2280,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 49.85,
@@ -2375,7 +2375,7 @@
  "pieces/catalogue-transitions-3": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.95,
@@ -2383,7 +2383,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 38.68,
@@ -2391,7 +2391,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 36.22,
@@ -2480,7 +2480,7 @@
  "pieces/catalogue-transitions-4": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.95,
@@ -2488,7 +2488,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 51.11,
@@ -2496,7 +2496,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 48.36,
@@ -2591,7 +2591,7 @@
  "pieces/catalogue-transitions-5": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.95,
@@ -2599,7 +2599,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 39.51,
@@ -2607,7 +2607,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 36.76,
@@ -2708,14 +2708,14 @@
  "pieces/demo-deck": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "SKIP",
     "evidence": {
      "reason": "a deck waits on the presenter; dead time is a film rule"
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 15,
@@ -2723,7 +2723,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "press": 15,
@@ -2780,7 +2780,7 @@
  "pieces/demo-film": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 4,
@@ -2788,7 +2788,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 57,
@@ -2796,7 +2796,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 54,
@@ -2893,7 +2893,7 @@
   ],
   "9x16": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 4,
@@ -2901,7 +2901,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 57,
@@ -2909,7 +2909,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 54,
@@ -3008,7 +3008,7 @@
  "pieces/demo-launch": {
   "9x16": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.2,
@@ -3016,7 +3016,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 30,
@@ -3024,7 +3024,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 27.1,
@@ -3102,7 +3102,7 @@
   ],
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.2,
@@ -3110,7 +3110,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 30,
@@ -3118,7 +3118,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 27.1,
@@ -3196,7 +3196,7 @@
   ],
   "4x5": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.2,
@@ -3204,7 +3204,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 30,
@@ -3212,7 +3212,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 27.1,
@@ -3292,7 +3292,7 @@
  "pieces/demo-swap-calm-product": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 4,
@@ -3300,7 +3300,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 20,
@@ -3308,7 +3308,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 16,
@@ -3383,7 +3383,7 @@
  "pieces/demo-swap-editorial": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 4,
@@ -3391,7 +3391,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 20,
@@ -3399,7 +3399,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 16,
@@ -3474,7 +3474,7 @@
  "pieces/demo-swap-kinetic": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 4,
@@ -3482,7 +3482,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 20,
@@ -3490,7 +3490,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 16,
@@ -3565,14 +3565,14 @@
  "pieces/golden-deck-editorial": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "SKIP",
     "evidence": {
      "reason": "a deck waits on the presenter; dead time is a film rule"
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 10,
@@ -3580,7 +3580,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "press": 10,
@@ -3637,14 +3637,14 @@
  "pieces/golden-deck-kinetic": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "SKIP",
     "evidence": {
      "reason": "a deck waits on the presenter; dead time is a film rule"
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 10,
@@ -3652,7 +3652,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "press": 10,
@@ -3709,7 +3709,7 @@
  "pieces/golden-film-editorial": {
   "9x16": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.5,
@@ -3717,7 +3717,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 30,
@@ -3725,7 +3725,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 27,
@@ -3807,7 +3807,7 @@
   ],
   "1x1": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.5,
@@ -3815,7 +3815,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 30,
@@ -3823,7 +3823,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 27,
@@ -3905,7 +3905,7 @@
   ],
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.5,
@@ -3913,7 +3913,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 30,
@@ -3921,7 +3921,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 27,
@@ -4005,7 +4005,7 @@
  "pieces/golden-film-kinetic": {
   "9x16": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.5,
@@ -4013,7 +4013,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 30,
@@ -4021,7 +4021,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 27,
@@ -4100,7 +4100,7 @@
   ],
   "1x1": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.5,
@@ -4108,7 +4108,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 30,
@@ -4116,7 +4116,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 27,
@@ -4195,7 +4195,7 @@
   ],
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.5,
@@ -4203,7 +4203,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 30,
@@ -4211,7 +4211,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 27,
@@ -4292,7 +4292,7 @@
  "pieces/sketch-showcase": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.7,
@@ -4300,7 +4300,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 20.6,
@@ -4308,7 +4308,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 16.9,
@@ -4382,7 +4382,7 @@
  "fixtures/negatives/G-LOOP/ok": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3,
@@ -4390,7 +4390,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 8,
@@ -4398,7 +4398,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 6,
@@ -4467,7 +4467,7 @@
  "fixtures/negatives/G-LOOP/auto": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.192,
@@ -4475,7 +4475,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 4.5,
@@ -4483,7 +4483,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 0.6,
@@ -4543,7 +4543,7 @@
  "fixtures/negatives/_base/variants": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.8,
@@ -4551,7 +4551,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 25,
@@ -4559,7 +4559,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 21.2,
@@ -4637,7 +4637,7 @@
   ],
   "9x16": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.8,
@@ -4645,7 +4645,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 25,
@@ -4653,7 +4653,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 21.2,
@@ -4730,11 +4730,11 @@
    }
   ]
  },
- "fixtures/negatives/G-DEAD": {
+ "fixtures/negatives/W-DEAD": {
   "16x9": [
    {
-    "id": "G-DEAD",
-    "status": "FAIL",
+    "id": "W-DEAD",
+    "status": "WARN",
     "evidence": {
      "instant": 11.2,
      "measured": 4.8,
@@ -4743,7 +4743,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 26,
@@ -4751,7 +4751,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 22.2,
@@ -4828,10 +4828,10 @@
    }
   ]
  },
- "fixtures/negatives/G-LENGTH": {
+ "fixtures/negatives/W-LENGTH": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.8,
@@ -4839,8 +4839,8 @@
     }
    },
    {
-    "id": "G-LENGTH",
-    "status": "FAIL",
+    "id": "W-LENGTH",
+    "status": "WARN",
     "evidence": {
      "measured": 15,
      "threshold": "20–60s",
@@ -4848,7 +4848,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 11.2,
@@ -4919,10 +4919,10 @@
    }
   ]
  },
- "fixtures/negatives/G-QUIET/film": {
+ "fixtures/negatives/W-QUIET/film": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.8,
@@ -4930,7 +4930,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 25,
@@ -4938,8 +4938,8 @@
     }
    },
    {
-    "id": "G-QUIET",
-    "status": "FAIL",
+    "id": "W-QUIET",
+    "status": "WARN",
     "evidence": {
      "instant": 23.1,
      "selector": "[data-scene=\"close\"] [data-slot=\"sub\"]",
@@ -5020,7 +5020,7 @@
  "fixtures/negatives/W-READ": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.8,
@@ -5028,7 +5028,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 25,
@@ -5036,7 +5036,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 21.2,
@@ -5126,7 +5126,7 @@
  "fixtures/negatives/W-PACE": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 4,
@@ -5134,7 +5134,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 25,
@@ -5142,7 +5142,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 21.2,
@@ -5225,7 +5225,7 @@
  "fixtures/negatives/W-HOLD": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.8,
@@ -5233,7 +5233,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 25,
@@ -5241,7 +5241,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 21.2,
@@ -5331,7 +5331,7 @@
  "fixtures/negatives/W-CUE": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.8,
@@ -5339,7 +5339,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 25,
@@ -5347,7 +5347,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 21.2,
@@ -5440,7 +5440,7 @@
  "fixtures/negatives/W-FADE-ONLY": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.8,
@@ -5448,7 +5448,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 25,
@@ -5456,7 +5456,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 21.2,
@@ -5537,7 +5537,7 @@
  "fixtures/negatives/W-ASK": {
   "16x9": [
    {
-    "id": "G-DEAD",
+    "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
      "measured": 3.8,
@@ -5545,7 +5545,7 @@
     }
    },
    {
-    "id": "G-LENGTH",
+    "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
      "measured": 25,
@@ -5553,7 +5553,7 @@
     }
    },
    {
-    "id": "G-QUIET",
+    "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
      "instant": 21.2,

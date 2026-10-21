@@ -1,5 +1,5 @@
 // The device pieces' soft glow and shadow are drawn by Chromium in 8-bit premultiplied colour, so
-// a faint tail over a dark canvas carries rounding noise. G-LITERAL's pixel half tolerates a
+// a faint tail over a dark canvas carries rounding noise. G-BRAND's pixel half tolerates a
 // small off-palette area (REGION_MAX) but not a solid one, and the flat bottom edge of a large
 // phone is one row of identical pixels, wider than that. The glow has to be faint enough, or
 // shaped so, that no shipped preset shows a solid off-palette region around a device at rest.
@@ -9,7 +9,7 @@ import { join } from 'node:path';
 import { readFileSync } from 'node:fs';
 import { ROOT, serveRoot, openPiece, launchBrowser, framePng } from '../../scripts/lib/browser.mjs';
 import { decodePng, offPalette, paletteDistance } from '../../scripts/check/_pixels.mjs';
-import { DELTA_E, REGION_MAX } from '../../scripts/check/G-LITERAL.mjs';
+import { DELTA_E, REGION_MAX } from '../../scripts/check/G-BRAND.mjs';
 import { palette } from '../../scripts/check/_lib.mjs';
 
 const PAGE = join(ROOT, 'tests/kit/media');

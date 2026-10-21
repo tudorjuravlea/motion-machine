@@ -5,7 +5,7 @@ The crew's director pass reads the 15 fps animatic and the exports: 2 fps sheets
 
 | # | Timecode / press | Note | Raised by | Status | Fix |
 |---|---|---|---|---|---|
-| D1 | 9.9–14.0 s · brands | nothing arrives for 4.1 s | gate G-DEAD | fixed | scene 5.0 s, tiles at 0.5/0.75/1.0 s |
+| D1 | 9.9–14.0 s · brands | nothing arrives for 4.1 s | gate W-DEAD | fixed | scene 5.0 s, tiles at 0.5/0.75/1.0 s |
 | D2 | skill · sub | `text/typewriter` does not exist | gate G-PATTERN-REF | fixed | `entrances/typewriter` |
 | D3 | site | 12 words need 5.1 s in a 5 s scene | gate W-READ | fixed | body at 1.4 s |
 | D4 | 30–40 s | 4 arrivals, kinetic band 5–10 | gate W-PACE | fixed | an extra arrival in the 30–40 s window (cursor, then the split-flap caption) |

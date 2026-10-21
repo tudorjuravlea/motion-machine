@@ -1,0 +1,2 @@
+/* Faint type: the colour is a role, the line is nearly transparent. */
+[data-slot="sub"] { opacity: 0.12 !important; }

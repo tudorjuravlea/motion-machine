@@ -1,0 +1,7 @@
+/* W-LITERAL/layout: a literal space, radius, duration and easing in piece CSS. None of them changes a
+   colour or a face, so the piece stays the brand: the gate advises and does not block. */
+[data-scene] [data-slot="sub"] {
+  padding: 6px 0;
+  border-radius: 4px;
+  transition: opacity 300ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}

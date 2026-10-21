@@ -18,12 +18,12 @@ For this example the crew stood in for the director; rows marked *stand-in* are 
 
 | # | Call | Options shown | Director's words | Decision |
 |---|---|---|---|---|
-| 2.1 | Presses | hook 1, problem 1, time 1, style 1, patterns 1, gate 2, both 1, cta 2 = 10, 11 rests; G-LENGTH 6–20 | *stand-in:* "merge the half-finished rests; the figure keeps a press of its own (H-ONE)" | 10 presses, 11 rests |
-| 2.2 | Rest 0 | hook headline `step: 0` (G-HOOK) | *stand-in:* "the first rest is the hook, finished" | G-HOOK PASS |
+| 2.1 | Presses | hook 1, problem 1, time 1, style 1, patterns 1, gate 2, both 1, cta 2 = 10, 11 rests; W-LENGTH 6–20 | *stand-in:* "merge the half-finished rests; the figure keeps a press of its own (H-ONE)" | 10 presses, 11 rests |
+| 2.2 | Rest 0 | hook headline `step: 0` (W-HOOK) | *stand-in:* "the first rest is the hook, finished" | W-HOOK PASS |
 | 2.3 | Roles and positions | every beat `style:<role>`; positions opening, related, topic, related, topic, climax, related, outro; here: entrances slam, words, punch, drop; cuts hard-cut, push, hard-cut, push, whip-pan (blur off), hard-cut, hard-cut | *stand-in:* "the style decides" | no explicit entrance or cut |
 | 2.4 | Overrides | gate `cutParams: { amount: 0 }` (kinetic whip-pan blur off) | *stand-in:* "logged" | applied |
 | 2.5 | Text over text in the climax cut | figure at 0 s · at 0.5 s (after the outgoing scene has faded) | *stand-in:* "0.5: nothing lands on the dissolving tiles; shared with the editorial deck" | figure at 0.5 s on its press |
-| 2.6 | G-QUIET: the last press brings two elements (headline and URL) | end card over two presses · drop the URL · URL in the headline | *stand-in:* "the URL is the call to action, and the name lands alone first" | cta `presses: 2`, URL on step 2; G-QUIET PASS |
+| 2.6 | W-QUIET: the last press brings two elements (headline and URL) | end card over two presses · drop the URL · URL in the headline | *stand-in:* "the URL is the call to action, and the name lands alone first" | cta `presses: 2`, URL on step 2; W-QUIET PASS |
 | 2.7 | Mid-press reflow (found by a 1/40-press sweep of the page) | a slot that arrives later in a press re-centres what is on screen: the style headline jumped 173 px when its plates arrived 0.4 s after it; the time, gate and "both" presses jumped 34 to 55 px. A every beat of those presses at `at: 0` · B keep the stagger | *stand-in:* "A: a stagger that ends in a snap is not a move" | time, style, gate (step 2) and both: every beat at 0; the sweep finds no mid-press jump; the jump at the press instant stays (D17) |
 | 2.8 | Press 1 only adds the hook subtitle; handout stubs | A fold the subtitle into press 0 (9 presses) · B keep 10 presses | *stand-in:* "B: the ten presses are pinned by `tests/contracts/schemas.test.mjs`, and the stubs on the gate and CTA presses come from `scripts/export.mjs` either way" | kept (D14) |
 | 2.9 | The count passes through "1 rules" | kinetic draws the figure with `entrances/punch` from its `text`, so no count passes through it | *stand-in:* "nothing to change in the story" | verified (D15) |

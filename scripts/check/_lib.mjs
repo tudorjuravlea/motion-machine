@@ -34,7 +34,14 @@ export function contractError(name, value) {
     validators = { story: ajv.getSchema(schemas.story.$id), style: ajv.getSchema(schemas.style.$id) };
   }
   const v = validators[name];
-  return v(value) ? null : v.errors.slice(0, 3).map((e) => `${e.instancePath || '/'} ${e.message}`).join('; ');
+  return v(value) ? null : v.errors.slice(0, 3).map(describe).join('; ');
+}
+
+/** One schema error as a line; an unexpected property is named, and a `G-` key anywhere in `gate`, in any case, says why it is refused. */
+function describe(e) {
+  const prop = e.params?.additionalProperty;
+  const hard = prop && /^\/gate(\/|$)/.test(e.instancePath) && /^g-/i.test(prop);
+  return `${e.instancePath || '/'} ${e.message}${prop ? ` ("${prop}")` : ''}${hard ? ': G- rules are hard rules and cannot be tuned; gate adjusts warnings only' : ''}`;
 }
 
 export const isWithin = (file, dir) => file === dir || file.startsWith(dir + sep);
@@ -135,7 +142,7 @@ function colorMixLiteral(v) {
   return false;
 }
 
-/** SPEC §7 G-LITERAL regexes over one CSS text: [{ line, prop, value, kind }]. */
+/** SPEC §7 W-LITERAL regexes over one CSS text: [{ line, prop, value, kind }]. */
 export function cssLiterals(src) {
   const hits = [];
   for (const d of cssDeclarations(src)) {
@@ -335,6 +342,23 @@ export function restInstants(schedule) {
   return schedule.rests.length ? schedule.rests : [schedule.duration];
 }
 
+const SCENE_LAST = 1e-3;   // a scene's last instant: its end minus a millisecond
+const MID = 1e-6;          // progress is u/d in floating point: within this of 0 or 1 is not mid-entrance
+
+/**
+ * The instants the hard rules read the frame at: the rests, and for a film the last instant of every
+ * scene that has no rest (its last arrival is still running at its cut; W-SCENE-END only advises on
+ * that), so no scene ships unread. The last instant is where the most of the scene has arrived while the
+ * scene is still alone on the stage; what is still arriving there is marked `moving` by sample().
+ */
+export function auditInstants(schedule) {
+  if (schedule.kind === 'deck') return schedule.rests;
+  const resting = new Set(schedule.holds.map((h) => h.scene));
+  const last = schedule.scenes.length - 1;
+  const ends = schedule.scenes.flatMap((sc, i) => (resting.has(sc.id) ? [] : [i === last ? schedule.duration : round(sc.end - SCENE_LAST, 6)]));
+  return [...new Set([...schedule.rests, ...ends])].sort((a, b) => a - b);
+}
+
 /** G-DETERMINISM's and G-TIME's three instants, all from the schedule (SPEC §2.5). */
 export function threeInstants(schedule) {
   const arrive = schedule.events.find((e) => e.kind === 'arrive' && (schedule.kind === 'deck' ? e.to > e.from : e.d > 0));
@@ -413,7 +437,7 @@ function probeInPage(itemSelectors) {
     const itemIndex = items.findIndex((i) => i && (i === el || i.contains(el)));
     const shared = {
       scene: el.closest('[data-scene]')?.dataset.scene ?? null,
-      micro: !!el.closest('[data-micro]'), bleed: !!el.closest('[data-bleed]'), chrome: !!el.closest('[data-chrome]'), over: !!el.closest('[data-over]'), keep: !!el.closest('[data-keep]'),
+      micro: !!el.closest('[data-micro]'), microItem: (() => { const m = el.closest('[data-micro]'); return !!m && itemIndex >= 0 && (m === items[itemIndex] || m.contains(items[itemIndex])); })(), bleed: !!el.closest('[data-bleed]'), chrome: !!el.closest('[data-chrome]'), over: !!el.closest('[data-over]'), keep: !!el.closest('[data-keep]'),
       caption: !!el.closest('[data-caption]'), item: itemIndex >= 0 ? itemSelectors[itemIndex] : null,
     };
     for (const pseudo of ['before', 'after']) {
@@ -486,7 +510,7 @@ function probeInPage(itemSelectors) {
 /**
  * The media the pixel test does not judge: the content box of each replaced element
  * (img, video, embed, iframe, SVG image; object without fallback content) and of each leaf element a
- * pattern declares as media (`data-media`, never piece code: G-LITERAL's static half), canvas only
+ * pattern declares as media (`data-media`, never piece code: G-BRAND's static half), canvas only
  * inside such a declaration. A background-image never masks. `hide: true` also hides exactly these
  * elements (inline visibility, restored by `hide: false`) so the frame behind them can be shot.
  */
@@ -530,11 +554,11 @@ export function mediaInPage(hide) {
 
 /**
  * The media of the frame at `instant` (page coordinates) and, when there is any, the same frame shot
- * with that media hidden: { masks, behind } (G-LITERAL reads masked pixels from `behind`).
+ * with that media hidden: { masks, behind } (G-BRAND reads masked pixels from `behind`).
  */
 /**
  * the frame at `instant` with only the brand ground showing (every scene's camera hidden, and the mark, which is masked as media),
- * for G-LITERAL's pixel half; null for a style without a ground.
+ * for G-BRAND's pixel half; null for a style without a ground.
  */
 export async function groundAt(ctx, instant) {
   if (!ctx.style.ground) return null;
@@ -622,13 +646,19 @@ export async function sample(ctx, instant) {
   const report = await ctx.mm.report();
   const probe = await ctx.page.evaluate(probeInPage, ctx.schedule.items.map((it) => it.selector));
   if (!probe.frame) throw new Error('the page has no .mm-stage: nothing to measure');
+  const arriving = report.elements.filter((e) => e.progress > MID && e.progress < 1 - MID).map((e) => e.selector);
+  const inside = arriving.length ? new Set(await ctx.page.evaluate((sels) => {
+    const roots = sels.map((q) => document.querySelector(q)).filter(Boolean);
+    return [...document.querySelector('.mm-stage').querySelectorAll('*')].flatMap((el, i) => (roots.some((r) => r === el || r.contains(el)) ? [i] : []));
+  }, arriving)) : new Set();
+  for (const e of probe.elements) e.moving = inside.has(e.idx);
   await augment(ctx, probe);
   const s = { instant, report, probe };
   ctx.cache.samples.set(key, s);
   return s;
 }
 
-/** The frame at `instant` as PNG bytes and decoded RGBA, cached per ctx (G-LITERAL, G-HOOK). */
+/** The frame at `instant` as PNG bytes and decoded RGBA, cached per ctx (G-BRAND, W-HOOK). */
 export async function frameAt(ctx, instant) {
   const key = String(round(instant, 6));
   ctx.cache.frames ??= new Map();
@@ -642,6 +672,9 @@ export async function frameAt(ctx, instant) {
 
 /** The visible text elements of a sample (pseudo-element text included). */
 export const texts = (s) => s.probe.elements.filter((e) => e.text && e.ink);
+
+/** The text elements of a sample that are not still arriving: where they sit and how big they are is judged only once they are in place. */
+export const settledTexts = (s) => texts(s).filter((e) => !e.moving);
 
 /** The first family of a computed font-family list, unquoted and lower-cased. */
 export const firstFamily = (list) => String(list ?? '').split(',')[0].trim().replace(/^["']|["']$/g, '').toLowerCase();

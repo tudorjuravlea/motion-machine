@@ -1,3 +1,0 @@
-/* Negative G-LITERAL/overlay: a transparent image laid over the whole layout (piece.js). Media
-   is masked by its content box, so the pixels behind it are read from the frame shot with it hidden. */
-[data-scene="style"] .title-stack__rule { filter: hue-rotate(180deg); }

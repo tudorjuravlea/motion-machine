@@ -46,7 +46,7 @@ A generic notebook whose lid opens as the entrance, then rests flat.
 - `--mm-weight-display`
 
 ## Legibility and rest notes
-- proportions measured from today's devices (slab, bezel, corner and camera sizes as fractions), drawn in our own code; no maker's name or artwork. the finish: a metal rim whose light bands run from the finish toward the lightest and the darkest palette roles, a glass bezel in the darkest role, a lit inner edge, a top highlight and a diagonal reflection on the glass, and a contact shadow, an ambient shadow and a faint glow. Every colour is a palette role or a blend of two (G-LITERAL); a mixed colour is drawn as an image, never as a flat fill.
+- proportions measured from today's devices (slab, bezel, corner and camera sizes as fractions), drawn in our own code; no maker's name or artwork. the finish: a metal rim whose light bands run from the finish toward the lightest and the darkest palette roles, a glass bezel in the darkest role, a lit inner edge, a top highlight and a diagonal reflection on the glass, and a contact shadow, an ambient shadow and a faint glow. Every colour is a palette role or a blend of two (G-BRAND); a mixed colour is drawn as an image, never as a flat fill.
 - A real phone or notebook (a maker's official frame, a licensed render) is your own asset: `mm media frame` puts it in the piece's `assets/frames/`, never in the library (call 3). A piece that names a real device belongs outside the shipped repository (R-BRAND).
 - The lid is fully open and flat at p = 1 (`transform: none`).
 - The slot's text becomes the screen title (body size, display face); the rest of the screen is drawn from `line` and `accent` bars, no copy.

@@ -10,7 +10,7 @@ This one wears `kinetic` (signal × kinetic), scaffolded with `mm new --style ki
 
 | # | Call | Options shown | Director's words | Decision |
 |---|---|---|---|---|
-| 1.1 | Length | a 7 s film (fails G-LENGTH, 20–60 s; `--force` stamps it UNCHECKED) · a 20 s gate-clean film whose first scene is the short scene | *stand-in:* "20 s: nothing in the demo ships unchecked" | 20 s, four scenes |
+| 1.1 | Length | a 7 s film (warns W-LENGTH, outside 20–60 s) · a 20 s gate-clean film whose first scene is the short scene | *stand-in:* "20 s: nothing in the demo ships unchecked" | 20 s, four scenes |
 
 ## Gate 2 · Treatment
 

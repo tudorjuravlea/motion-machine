@@ -1,0 +1,2 @@
+/* Body copy at the micro size, under data-micro. */
+[data-scene="open"] [data-slot="sub"] { font-size: var(--mm-size-micro); }

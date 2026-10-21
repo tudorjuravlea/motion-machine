@@ -2,7 +2,7 @@
 # pieces), the browser and golden groups sharded, then the release sweep. A contributor waits for the
 # slowest shard, not for the sum.
 #
-# The font-glyph and pixel checks (G-LOCAL glyph, G-LITERAL pixels, G-LEGIBLE sizes) depend on the
+# The font-glyph and pixel checks (G-LOCAL glyph, G-BRAND pixels, G-LEGIBLE sizes) depend on the
 # fonts bundled under styles/fonts/, never on system fonts: a runner with different system fonts must
 # produce the same verdicts. If a check passes locally and fails here (or the reverse), look for a
 # font or Chromium-version difference first, not a runner quirk.

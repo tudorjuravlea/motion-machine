@@ -1,9 +1,9 @@
 // node pieces/catalogue/build.mjs [family …]
 // Builds the catalogue films: one spec per pattern family in specs/<family>.json becomes one or more
-// pieces/catalogue-<family>-<n>/ films of at most 60 s (G-LENGTH). Every pattern gets an explain
+// pieces/catalogue-<family>-<n>/ films of at most 60 s (W-LENGTH). Every pattern gets an explain
 // scene (its name, one line on how it works, its path) and a replay with one knob turned.
 // Scene lengths come from the gate's own numbers: 0.3 s a word plus the last arrival (W-READ), and
-// no more than 4 s from the last arrival to the cut (G-DEAD), so a scene carries at most 13 words.
+// no more than 4 s from the last arrival to the cut (W-DEAD), so a scene carries at most 13 words.
 import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { dirname, join, relative } from 'node:path';
@@ -21,7 +21,7 @@ const r2 = (x) => Math.round(x * 100) / 100;
 // The pattern's name sits in the split layout's half-width headline: a long single word
 // ("circumscribe") broke mid-word at the layout's size, so names go a step smaller and break only at hyphens.
 const PIECE_CSS = `/* Piece-level styles. Colour, family, size, space, radius, duration and easing come only from
-   --mm-* variables (SPEC §3, G-LITERAL). Layouts and patterns carry their own CSS. */
+   --mm-* variables (SPEC §3, W-LITERAL). Layouts and patterns carry their own CSS. */
 [data-format="16x9"] .split__headline { font-size: calc(var(--mm-size-h1) * var(--mm-headline-scale) * 0.78); overflow-wrap: normal; }
 `;
 

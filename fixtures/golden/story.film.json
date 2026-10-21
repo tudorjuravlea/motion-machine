@@ -6,7 +6,7 @@
   "language": "en",
   "facts": [
     { "id": "f1", "text": "A 30-second film at 30 frames per second is 900 frames, each drawn from t alone.", "source": "SPEC §2" },
-    { "id": "f2", "text": "The gate checks 37 rules: 20 errors and 17 warnings.", "source": "SPEC §7" },
+    { "id": "f2", "text": "The gate checks 40 rules: 14 errors and 26 warnings.", "source": "SPEC §7" },
     { "id": "f3", "text": "The same story renders as a film and as a clicker deck from one scene model.", "source": "SPEC §1, §10" }
   ],
   "audio": { "track": null, "bpm": 120, "beats": "assets/beats.json" },
@@ -57,7 +57,7 @@
       "id": "gate", "layout": "layouts/stat-hero", "duration": 4, "position": "climax", "move": null, "cutParams": { "amount": 0 },
       "beats": [
         { "at": 0.22, "slot": "headline", "fx": "style:headline", "text": "Measured, not felt." },
-        { "at": 0.483, "slot": "figure", "fx": "data/counter", "value": 37, "fact": "f2", "params": { "suffix": " rules", "spring": "heavy" }, "cue": "riser" },
+        { "at": 0.483, "slot": "figure", "fx": "data/counter", "value": 40, "fact": "f2", "params": { "suffix": " rules", "spring": "heavy" }, "cue": "riser" },
         { "at": 1.5, "slot": "body", "fx": "style:body", "text": "determinism, legibility, pacing, style, sound" }
       ],
       "say": "A gate measures every result. Thirty-seven rules. Nothing ships on a feeling."

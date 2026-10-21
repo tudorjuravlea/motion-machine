@@ -111,3 +111,21 @@ test('mm new --style <skill>/style/style.json works: the scaffold and mm new agr
     for (const face of Object.values(style.type)) for (const f of face.files) { assert.match(f.src, /^assets\/fonts\//); assert.ok(existsSync(join(piece, f.src)), f.src); }
   } finally { rmSync(join(ROOT, `.tmp-cli-skill-new-${process.pid}`), { recursive: true, force: true }); }
 });
+
+test('SKILL.md has a gate section: it says how to tune the warnings, and names what a motion half\'s gate block tunes', () => {
+  const plain = readFileSync(join(dir, 'SKILL.md'), 'utf8');
+  assert.match(plain, /## The gate/);
+  assert.match(plain, /`gate` block in `style\/motion\.json`/);
+  assert.match(plain, /hard rules.*cannot be tuned/i);
+  const half = JSON.parse(readFileSync(join(ROOT, 'styles', 'motion', 'calm.json'), 'utf8'));
+  const halfPath = join(tmp, 'calm-tuned.json');
+  writeFileSync(halfPath, JSON.stringify({ ...half, name: 'calm-tuned', gate: { length: { filmS: [10, 90] }, liftBans: ['frame-borders'] } }));
+  const out = join(tmp, 'tuned-skill');
+  const res = run('--brand', 'paper', '--motion', halfPath, '--out', out);
+  assert.equal(res.status, 0, res.stderr);
+  const text = readFileSync(join(out, 'SKILL.md'), 'utf8');
+  assert.match(text, /This studio tunes the engine's warnings/);
+  assert.ok(text.includes('"filmS":[10,90]') && text.includes('frame-borders'));
+  assert.deepEqual(JSON.parse(readFileSync(join(out, 'style/style.json'), 'utf8')).gate, { length: { filmS: [10, 90] }, liftBans: ['frame-borders'] });
+  assert.doesNotMatch(text, /\{\{/);
+});

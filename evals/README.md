@@ -15,7 +15,7 @@ What every eval also checks, whatever the prompt:
 - The agent asked only for what the brief lacked (round 1) and waited for a yes at each round; when
   the director contradicted the brief it followed the director and logged the change.
 - `story.json` was written from a beat-sheet table first (AXIOMS.md AXIOM 6); every pattern id and
-  style role resolves; the first frame is the hook (G-HOOK).
+  style role resolves; the first frame is the hook (W-HOOK).
 - `direction-log.md` has a section for each round, 1 to 7; `defects.md` exists.
 - Every WARN in `out/check.json` has a line in the log and in the handover.
 - The handover's "Unverified" section is present and not empty.

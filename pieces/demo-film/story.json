@@ -56,8 +56,8 @@
     },
     {
       "id": "f10",
-      "text": "The gate checks 37 rules: 20 errors (G-) and 17 warnings (W-). On pieces/golden-film-kinetic: 31 PASS, 1 WARN, 5 SKIP.",
-      "source": "SPEC.md §7; scripts/check/ (20 G-*.mjs, 17 W-*.mjs); pieces/golden-film-kinetic/out/check.json"
+      "text": "The gate checks 40 rules: 14 errors (G-) and 26 warnings (W-). On pieces/golden-film-kinetic: 34 PASS, 1 WARN, 5 SKIP.",
+      "source": "SPEC.md §7; scripts/check/ (14 G-*.mjs, 26 W-*.mjs); pieces/golden-film-kinetic/out/check.json"
     },
     {
       "id": "f11",
@@ -470,7 +470,7 @@
           "at": 0.25,
           "slot": "headline",
           "fx": "style:headline",
-          "text": "37 rules, measured.",
+          "text": "40 rules, measured.",
           "fact": "f10"
         },
         {

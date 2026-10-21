@@ -44,6 +44,10 @@ story's `facts` with their source; a figure that is not in the table gets asked 
 
 {{bans_section}}
 
+## The gate
+
+{{gate_section}}
+
 ## Not in this skill
 
 The engine's gates, patterns, thresholds and render commands. Colours, fonts and motion numbers

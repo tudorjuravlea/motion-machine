@@ -3,7 +3,7 @@
 // citing it is visible, a visible element carrying `data-sample` with text ("Illustrative") must be
 // on the stage too. Rendered per format: a label can fall out of one format's frame.
 import { rule } from '../lib/report.mjs';
-import { restInstants, round } from './_lib.mjs';
+import { auditInstants, round } from './_lib.mjs';
 
 export const scope = 'format';
 
@@ -17,7 +17,7 @@ export default async function (ctx) {
   if (!cite.length) return rule('G-FACT-REF', 'PASS', { facts: ids.size, samples: samples.size });
   if (!ctx.page) return rule('G-FACT-REF', 'SKIP', { partial: true, reason: 'partial: the piece did not open, so the sample-data labels were not looked for' });
   const unlabelled = [];
-  for (const t of restInstants(ctx.schedule)) {
+  for (const t of auditInstants(ctx.schedule)) {
     await ctx.mm.seek(t);
     const r = await ctx.page.evaluate((cite) => {
       const st = document.querySelector('.mm-stage').getBoundingClientRect();

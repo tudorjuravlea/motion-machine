@@ -115,7 +115,7 @@ deck folder stands alone.
     arrived element is drawn at `p = 1` exactly and `report()` gives it `progress: 1`. The kit
     compares local time to a duration with a 1e-9 tolerance, so float error never leaves an
     entrance at `spring(d) = 0.995`. A film's frame 0 and a deck's rest 0 may show the
-    first scene's headline finished (§4 `params.instant`, `step: 0`; G-HOOK).
+    first scene's headline finished (§4 `params.instant`, `step: 0`; W-HOOK).
 
 ## 3. Style contract (`contracts/style.schema.json`)
 
@@ -125,7 +125,7 @@ halves are authored, captured and shipped separately so that any brand can wear 
 | Half | Owns | Lives in | Captured from |
 |---|---|---|---|
 | **brand** | `color`, `type`, `scale`, `space`, `radius`, `composition`, `bans`/`allow` | `styles/brands/<name>.json` | a site (`mm brand capture --from <url>`), a Figma file, a `DESIGN.md`, or by hand |
-| **motion** | `motion` (durations, easings, springs, travel), `sound`, `transitions` (preferred cut per narrative position), `entrances` (preferred vocabulary), `pacing` (hold floor, arrivals per 10 s) | `styles/motion/<name>.json` | a reference film (`mm motion capture --from <video>`: cuts and their kinds, shot lengths, arrival tempo, entrance and cut durations, energy and the headline entrance family, measured on extracted frames; §13), a preset, or by hand |
+| **motion** | `motion` (durations, easings, springs, travel), `sound`, `transitions` (preferred cut per narrative position), `entrances` (preferred vocabulary), `pacing` (hold floor, arrivals per 10 s), optional `gate` (tunes the gate's warnings, below) | `styles/motion/<name>.json` | a reference film (`mm motion capture --from <video>`: cuts and their kinds, shot lengths, arrival tempo, entrance and cut durations, energy and the headline entrance family, measured on extracted frames; §13), a preset, or by hand |
 
 `mm style compose --brand <name|path> --motion <name|path> --out pieces/<id>/style.json` writes the
 composed file with `from: { brand, motion }` recorded. The kit reads only the composed file. A
@@ -165,10 +165,27 @@ Composed shape:
                    "policy": "owns-exit" | "velocity-matched" },  // §15; passed to transitions as ctx.policy
   "entrances": { "headline": "entrances/rise", "body": "entrances/fade", "figure": "entrances/count", "plate": "entrances/pop" },
   "pacing": { "holdMinS": 1.2, "arrivalsPer10s": [3, 6], "energy": "calm" | "medium" | "high" },
+  "gate": { "length": { "filmS": [20, 60], "loopS": [4, 15], "deckPresses": [6, 20] },   // optional, and so is every key: W-LENGTH's bands
+            "deadS": 4, "quietS": 2,                            // W-DEAD's window, W-QUIET's tail
+            "read": { "perWordS": 0.3, "labelS": 0.8, "sentenceS": 1.2 },   // W-READ's speed and line floors
+            "liftBans": ["frame-borders"] },                    // looks W-BAN stops reporting
   "bans": ["centered-title-on-gradient", "fade-only", "corner-labels", "frame-borders", "glow-on-ui", "particle-burst"],
   "allow": []                                                   // a style may lift a ban by name
 }
 ```
+
+`gate` is how a studio tunes the gate for its own brand, and only the warnings: the length band
+(W-LENGTH), the dead-air window (W-DEAD), the quiet tail (W-QUIET), the reading speed and line floors
+(W-READ) and the looks W-BAN stops reporting (`liftBans`, limited to the three looks W-BAN detects;
+the style's `bans` and `allow` stay as they are). The hold floor, the arrival band and the stagger caps
+(W-HOLD, W-PACE, W-STAGGER) are tuned by `pacing` and `motion.stagger`. The values in the shape above
+are the defaults, which apply to every key a style leaves out. Each tuned rule reports the threshold it
+used in its evidence. A `gate` key that names a `G-` rule, or any key not listed here, is a contract error
+(`mm check` exits 2): a hard rule is never tunable; the hint is given for a `G-` key at any depth of
+the block, in any case. The console summary of `mm check` ends with "Tuned by the style's gate block:"
+and the warning rules the block tunes (`tuned` in `out/check.json` too), so the person reading the
+warnings sees which thresholds moved. `mm style compose` carries the motion half's `gate`
+into the composed style unchanged.
 
 `transitions` and `entrances` are the motion style's vocabulary, and a story speaks it by role
 (§4): `fx: "style:<role>"` takes `entrances.<role>`, and a scene that gives a
@@ -191,7 +208,7 @@ compact.
 
 **Device finish.** A brand may give `devices.finish`: `ink` (the default, the look device
 frames always had), `canvas` (the surface colour), `graphite` (the darkest palette role) or
-`silver` (the lightest). Every finish is a palette role, so G-LITERAL holds. `mm style compose`
+`silver` (the lightest). Every finish is a palette role, so G-BRAND holds. `mm style compose`
 copies it. The kit exposes it as `--mm-device-body`, with `--mm-device-island` (the darkest role)
 for the phone's cutout; device patterns read only those.
 
@@ -207,7 +224,7 @@ alpha }`, the box in shares of the frame), `blur` (a share of the frame width) a
 `mark` (`{ src, width, alpha }`: a picture relative to the piece page, centred, `width` a share of
 the frame width, clipped by the frame above 1). The kit draws it as the first child of every scene
 (`.mm-ground`, `data-chrome`, `data-keep`, `aria-hidden`), so cuts carry it. Blob colours join the
-palette as `ground-<n>`; G-LITERAL's pixel half compares each frame with the same frame showing only
+palette as `ground-<n>`; G-BRAND's pixel half compares each frame with the same frame showing only
 the ground, and passes a pixel that is the ground or a blend of the ground under it and one palette
 colour. G-LOCAL checks the mark file. `mm style compose` copies `ground`.
 
@@ -232,9 +249,10 @@ multiplies every headline size by `--mm-headline-scale` and multiplies the gaps 
 blocks and its side indent by `--mm-density`. A beat's `align` param (`left` or `center`, written
 as `data-p-align` on its slot) or `data-align` on the layout root overrides `--mm-align` for that
 scene, in either direction. Springs are read by name through `ctx.spring(t, role)` (§5). Pattern and piece CSS may use **only** these variables for colour, family,
-size, space, radius, duration and easing (**G-LITERAL**, §7). The gate also samples computed
-colours of every text and background at each rest and fails any not in the palette (tolerance:
-exact, since the values are variables).
+size, space, radius, duration and easing (**W-LITERAL** warns on a literal in a piece's CSS; `mm pattern
+lint` fails one in a library pattern, §5). The gate also samples computed colours of every text and
+background at each rest and fails any not in the palette (**G-BRAND**, §7; tolerance: exact, since the
+values are variables).
 
 ## 4. Story contract (`contracts/story.schema.json`)
 
@@ -314,11 +332,11 @@ opens on that beat finished. A deck beat with `step: 0` is present at the scene'
 (rest 0 for the first scene; for a later scene, already there as the scene cuts in), finished,
 with no animation; its `at` is ignored and it cannot carry an emphasis. The first scene may carry
 a gentle idle (`move: "moves/idle-breathe"`). It is a whole number of sine cycles, so the camera is
-at identity at p = 0: frame 0 is exactly the finished hook, G-HOOK holds, and the first second is
+at identity at p = 0: frame 0 is exactly the finished hook, W-HOOK holds, and the first second is
 not a still card.
 
-Rules the schema cannot express are gates: film length 20 to 60 s and deck 6 to 20 presses
-(**G-LENGTH**); every `fx`, `layout`, `cut`, `move` and screen action resolves to a listed pattern (**G-PATTERN-REF**);
+Rules the schema cannot express are checked by the gate: film length 20 to 60 s and deck 6 to 20 presses
+advise (**W-LENGTH** warns, it never blocks); every `fx`, `layout`, `cut`, `move` and screen action resolves to a listed pattern (**G-PATTERN-REF**);
 every `fact` id resolves (**G-FACT-REF**).
 
 A **loop** (4 to 15 s, G-LOOP) is a film whose story says `"kind": "loop"`: a short piece that ends on its
@@ -374,7 +392,7 @@ transition module with `dur: 0` is a hard cut.
 **Declarations for the gate.** `data-media` on a leaf element of a pattern's
 markup (no child elements, no text) declares a media slot; the pixel test masks that slot's content
 box, and a canvas is masked only inside one. Piece code may not declare media: `data-media` or
-`dataset.media` in a piece's JS or HTML fails G-LITERAL's static half. `canvasText: true` on a
+`dataset.media` in a piece's JS or HTML fails G-BRAND. `canvasText: true` on a
 pattern module lets that pattern call `fillText`/`strokeText`, and the pattern then answers for the
 text it draws; without it, canvas text fails G-LEGIBLE. No library pattern needs either today.
 
@@ -400,10 +418,10 @@ when / Do not use when**, **Params** (table: name, type, default, meaning), **St
 consumed**, **Legibility and rest notes** (what the pattern guarantees at `p = 1`), **Provenance**
 (source, licence, what changed; or "original"), **Known limits**. `scripts/pattern-lint.mjs`
 enforces the folder, the sections, the literal ban and that the demo story validates
-(**G-PATTERN-CARD**, **G-PROVENANCE**); photographing the demo is `mm pattern stills`, not the
+(**W-PATTERN-CARD**, **W-PROVENANCE**, **W-LITERAL**: failures in the lint, warnings when a piece's own patterns have the same fault); photographing the demo is `mm pattern stills`, not the
 lint. An incomplete folder is not listed by `mm pattern list` (AXIOM 4), which is the lint's own `list()`.
 `mm pattern lint <name>` lints one pattern (`group/name`, or a bare name unique across `patterns/`; an
-ambiguous or unknown name exits 2). G-PROVENANCE matches a card's source exactly (normalised,
+ambiguous or unknown name exits 2). W-PROVENANCE matches a card's source exactly (normalised,
 parenthetical notes removed) against a name in one of PROVENANCE.md's source tables, never a pattern
 id from the credits table or a substring.
 
@@ -483,37 +501,52 @@ sum of its scene durations exactly.
 
 Each id is one file, `scripts/check/<id>.mjs`, listed in `IDS` in
 `scripts/check.mjs`; `scripts/check/_lib.mjs` (probe, text walk, boxes) and `_pixels.mjs` (ΔE and
-region labelling) are shared helpers, not rules. G-PATTERN-CARD and G-PROVENANCE call
+region labelling) are shared helpers, not rules. W-PATTERN-CARD and W-PROVENANCE call
 `scripts/pattern-lint.mjs` on the patterns a piece references. §14 maps every file to its test
 and its negatives.
+
+The prefix is the severity, with one named exception: G-PATTERN-REF also WARNs on a `screen: ` warning from the kit or the schedule (below), which is advice. A `G-` rule guards what breaks a piece (it cannot be rendered the same
+twice, it plays wrongly, it is missing what it needs, it shows placeholder text, it states an
+unsourced fact, its text cannot be read) or what stops it being the brand (a colour or a face the
+brand does not own); a FAIL blocks `mm export`. A `W-` rule advises on a craft choice, with
+evidence, and never blocks an export.
+
+Frame-sampling rules read a film at its rests. A film scene that has no rest (its last arrival is
+still running at its cut; W-SCENE-END advises on that) is also read at its last instant, so no scene
+ships unread: G-BRAND, G-PLACEHOLDER, G-LEGIBLE, G-LOCAL and G-FACT-REF judge everything there, and
+G-LEGIBLE, G-EDGE and G-OVERLAP leave out an element still arriving at that instant (where it sits and
+how large it is are judged once it is in place).
 
 | Id | Checks | How |
 |---|---|---|
 | G-TIME | every frame is a function of `t` (§2.3, §2.4) | static grep (names, realm and SMIL markup, custom-property durations); runtime recorder (no call from served code, realms and threads refused, no child realm); computed styles at three instants |
 | G-DETERMINISM | same `t`, same pixels (§2.5) | two page loads, one in order and one in reverse; three instants plus one per scene; PNG byte compare |
 | G-LOCAL | everything travels with the piece (§2.6) | static scan of URLs and relative roots; every frame or tile a prepared asset's `media.json` names exists; `document.fonts` all `loaded`; at every rest, every visible text element (`::before`/`::after` included) is painted only by web fonts (CDP `CSS.getPlatformFontsForNode`, no `isCustomFont: false`) |
-| G-LITERAL | no literal colour, family, size, space, radius, duration or easing in piece or pattern CSS; computed colours ∈ palette; computed family is a style family; rendered pixels ∈ palette | regex on CSS (`#hex`, `rgb(`, `hsl(`, `oklch(`/`oklab(`/`lab(`/`lch(`/`hwb(`, `color(`, `color-mix()` of a literal, CSS named and system colours, `font-family:` not `var(`, a family list in a custom property, `ms`, `cubic-bezier`, non-zero `px` in padding/margin/gap/border-radius) and no `data-media` in piece code; computed sampling at rests (an alpha of a role passes); the first computed family of each visible text element ∈ `style.type.*.family`; pixels at each rest: a pixel is off when it lies farther than **ΔE 2** (CIE76) from every role and every sRGB blend of two roles. FAIL when more than **0.5 %** of the stage's pixels are off, or when one **4-connected region of off pixels exceeds 256 px**. Masked: only the content box of media (`img`, `video`, `embed`, `iframe`, SVG `image`, an `object` without fallback content, and a leaf a pattern declares `data-media`; a `canvas` only inside one). Masked pixels are read from the same frame shot with that media hidden. A `background-image` never masks. Calibration: the four goldens peak at ΔE 1.13 (margin 0.87); the presets' palette sheet (`fixtures/negatives/_palette/`) peaks at 0.30 % off and a 99 px region, all antialiased ink over the highlight tint |
-| G-PLACEHOLDER | no `TODO`, `lorem`, `[…]`, `XXX`, `{{` in rendered text or in a shipped SVG's text | text walk at every rest, `::before`/`::after`/`::marker` included; `<text>` and `<foreignObject>` of the piece's `.svg` files and of `data:image/svg+xml` URIs, with every entity form resolved first (predefined names, decimal and hex references, DTD-declared entities, CDATA) |
-| G-LEGIBLE | at every rest, each text element's rendered size ≥ its floor (§12); `data-micro` ≥ micro floor; no text the gate cannot measure | computed size × the scale its transforms give it on screen (screen box over untransformed box, the smaller axis; SVG by its screen CTM); `::before`, `::after`, `::marker`, and `::first-letter`/`::first-line` when they restyle their host. No shadow root: static `attachShadow`/`shadowrootmode`; the recorder refuses `attachShadow`; CDP `DOM.getDocument({ pierce: true })` finds no open or closed root in the stage. No canvas text (`fillText`, `strokeText`, static and recorded) unless the drawing pattern declares `canvasText: true` (§5) |
-| G-REST | deck: at every rest no element has progress strictly between 0 and 1; film: at each scene's last instant likewise | kit reports progress per element |
-| G-HOOK | film: frame 0, deck: rest 0 shows the first scene's headline finished | the headline is the first scene's `headline` slot, else its earliest beat; the kit reports progress 1 (`params.instant: true` / `step: 0`) and at least 3 % of its text box differs from the colour behind it by more than ΔE 2 |
+| G-BRAND | the piece stays the brand: computed colours ∈ palette; computed family is a style family; rendered pixels ∈ the palette and its blends | computed sampling at rests (an alpha of a role passes); the first computed family of each visible text element ∈ `style.type.*.family`; no `data-media` in piece code; pixels at each rest: a pixel is off when it lies farther than **ΔE 2** (CIE76) from every role, every sRGB blend of two roles and every sRGB blend of three (a gradient through brand colours, a translucent role or a glow over one) and every `multiply` or `screen` blend of roles (two levels deep, as overlapping blended discs make), and is not the brand ground or a blend of it with a role. A black vignette fails: black is not a role, and a multiply darker than the darkest role or a screen lighter than the lightest is black or white; a vignette toward the darkest role passes. A global `contrast()` or `saturate()` grade fails: it shifts the brand's own colours; the style's `finish` (`vignette`, `grain`, `halftone`, `edgeFringe`, `paperEdge`) is where brand-safe finishes live. Off pixels form 4-connected regions; **a region under 2 px tall or under 2 px wide is not a finding of its own** (the antialiasing row along an edge), but its pixels count toward the share. FAIL when more than **0.5 %** of the stage's pixels are off (1 px stripes, a checkerboard or a dither add up there), or when one **region exceeds 256 px**. Masked: only the content box of media (`img`, `video`, `embed`, `iframe`, SVG `image`, an `object` without fallback content, and a leaf a pattern declares `data-media`; a `canvas` only inside one). Masked pixels are read from the same frame shot with that media hidden. A `background-image` never masks. Calibration: every shipped piece in every format (43 runs) peaks at 0.000 % off and no region, where blends of two roles peaked at 0.25 % and 60 px; the presets' palette sheet (`fixtures/negatives/_palette/`) at 0 % and 0 px, where it peaked at 0.30 % and 95 px; the four goldens stay under ΔE 1.13. The weakest negative (a hue-rotated headline) measures 1.2 % and the smallest region negative 832 px, so the budget stays 0.5 % and 256 px. Blends of up to three roles and multiply and screen blends of roles together explain about 1 to 3.5 % of the sRGB cube, so an unowned hue stays unexplained |
+| G-PLACEHOLDER | no `TODO`, `lorem`, `[…]`, `XXX`, `{{` in rendered text, in the story's own text (every beat `text`, every scene `say`, `cta`, `share`) or in a shipped SVG's text | text walk at every rest, `::before`/`::after`/`::marker` included; the story's text fields read statically, so a line that appears and leaves between rests is caught; `<text>` and `<foreignObject>` of the piece's `.svg` files and of `data:image/svg+xml` URIs, with every entity form resolved first (predefined names, decimal and hex references, DTD-declared entities, CDATA) |
+| G-LEGIBLE | at every rest, each text element's rendered size ≥ its floor (§12); `data-micro` ≥ micro floor, and `data-micro` text may not carry a fact or the call to action (a beat that cites a fact, or text that shows a fact or the call to action, under `data-micro` fails); no text the gate cannot measure | computed size × the scale its transforms give it on screen (screen box over untransformed box, the smaller axis; SVG by its screen CTM); `::before`, `::after`, `::marker`, and `::first-letter`/`::first-line` when they restyle their host. No shadow root: static `attachShadow`/`shadowrootmode`; the recorder refuses `attachShadow`; CDP `DOM.getDocument({ pierce: true })` finds no open or closed root in the stage. No canvas text (`fillText`, `strokeText`, static and recorded) unless the drawing pattern declares `canvasText: true` (§5) |
+| G-REST | deck: at every rest no element has progress strictly between 0 and 1; film: likewise at each settle rest (where a scene's last arrival has finished). A deck press drawn mid-entrance breaks the deck | kit reports progress per element; SKIP for a film whose every scene ends while something still arrives |
 | G-EDGE | at rests, no text box crosses the safe margin (§12) unless `data-bleed`; with `story.platform` (`reels`, `tiktok`, `shorts`; 9x16 only) no text enters the bottom 500 px or the right 120 px either | DOM boxes; `::before`/`::after`/`::marker` text has its own box (CDP `DOM.getBoxModel`); a host and its own generated text, `::first-letter` and `::first-line` count as nested. SKIP when no text is present at any rest; a PASS carries `{ instants, texts }` |
 | G-OVERLAP | at rests, no two text boxes intersect unless one carries `data-over` | DOM boxes; `::before`/`::after`/`::marker` text has its own box; a host and its own generated text, `::first-letter` and `::first-line` count as nested. SKIP when no text is present at any rest; a PASS carries `{ instants, texts }` |
-| G-DEAD | film: no window of 4 s (*provisional*, from published motion-studio practice) without an arrival, departure, cut or move keyframe | from the schedule |
-| G-QUIET | film: ≥ 2 s (*provisional*, from the author's practice) between the last arrival and the end; deck: last press introduces at most one element | from the schedule |
-| G-LENGTH | film 20–60 s; loop 4–15 s; deck 6–20 presses (*provisional*) | story |
 | G-LOOP | a story of kind `loop` ends on its first frame (`autoReturn: true` has the kit build the return: over the last min(1.2 s, 15 %) before the last exported frame, each beat of the last scene that arrived with an entrance plays it back to p = 0, last arrival first, never before the scene rests; instant beats stay): the frames at 0 and at the last exported instant differ in at most 0.2 % of pixels by more than 6 levels (*provisional*) | rendered pixels |
 | G-END | deck: `goto(presses + 1)` changes nothing | render compare |
 | G-PATTERN-REF · G-FACT-REF | every reference resolves (§4). G-PATTERN-REF also fails a screen action whose mark (`at`, or scroll `to`) the screen it acts on does not carry, naming the beat and the mark, and WARNs on any kit or schedule warning that starts `screen: ` (a play `rate` ≤ 0, a deck screen `step` past its scene, screen actions on a slot with no `[data-screen]`, a laptop menu of more than 5 items). G-FACT-REF also fails when a fact marked `sample: true` is cited by a beat visible at a rest where no visible element with `data-sample` and text has area inside the stage; a mark is looked up on the screen the kit shows when the action starts (a swap changes it at its end; `cut` at once) | story vs listing; `media.json` on disk (`screenIssues`, shared with the kit); DOM at rests, per format |
-| G-PATTERN-CARD · G-PROVENANCE | §5 | pattern lint |
-| G-LOUD | when audio exists: integrated −14 LUFS ± 1, true peak ≤ −1 dBTP (*provisional*, platform norms) | ffmpeg `ebur128` on the MP4s that ship; SKIP when they have no audio stream (a stale `out/mix.wav` is not measured beside them) |
+| W-PATTERN-CARD · W-PROVENANCE | §5: every referenced pattern's folder, card and demo pass the lint, and its card's sources have a row in `PROVENANCE.md`. A piece with its own patterns is warned and never blocked; `mm pattern lint` and release-check's R-PATTERNS fail the library on the same problems | pattern lint on the patterns a piece references; SKIP for fixture stubs |
+| W-LITERAL | a literal colour, family, size, space, radius, duration or easing in the piece's CSS (the piece's own folder, its own patterns included); library patterns are held to the same text by `mm pattern lint`, where it fails | regex on CSS (`#hex`, `rgb(`, `hsl(`, `oklch(`/`oklab(`/`lab(`/`lch(`/`hwb(`, `color(`, `color-mix()` of a literal, CSS named and system colours, `font-family:` not `var(`, a family list in a custom property, `ms`, `cubic-bezier`, non-zero `px` in padding/margin/gap/border-radius, `font-size`). A warning because a literal that renders a colour or face the style owns is still the brand; one that does not is G-BRAND's failure. `W-DUR-LITERAL` stays its own rule: it reads the story's `params.dur` and the markup's `data-dur`, which are not CSS |
+| W-LOUDNESS | when audio exists: integrated loudness −14 LUFS ± 1 (*provisional*, platform norms); platforms normalise overall loudness, so a quiet or loud mix warns | the same measurement as G-PEAK |
+| W-SCENE-END | film: at each scene's last instant no element has progress strictly between 0 and 1. Motion carried into a cut is a technique (a match cut, a whip), so it warns and the scene is still read by the frame-sampling rules at that instant; a deck is SKIP | kit reports progress per element |
+| G-PEAK | when audio exists: true peak ≤ −1 dBTP (*provisional*, platform norms); above it the mix clips on every platform | ffmpeg `ebur128` on the MP4s that ship; SKIP when they have no audio stream (a stale `out/mix.wav` is not measured beside them) |
+| W-HOOK | film: frame 0, deck: rest 0 shows the first scene's headline finished | the headline is the first scene's `headline` slot, else its earliest beat; the kit reports progress 1 (`params.instant: true` / `step: 0`) and at least 3 % of its text box differs from the colour behind it by more than ΔE 2 |
+| W-DEAD | film: no window of 4 s (*provisional*, from published motion-studio practice) without an arrival, departure, cut or move keyframe | from the schedule |
+| W-QUIET | film: ≥ 2 s (*provisional*, from the author's practice) between the last arrival and the end; deck: last press introduces at most one element | from the schedule |
+| W-LENGTH | film 20–60 s; loop 4–15 s; deck 6–20 presses (*provisional*) | story |
 | W-FADE-ONLY | more than 70 % of entrances are `fade` (ban `fade-only`) | schedule |
-| W-READ | a scene's words × 0.3 s + last arrival > scene duration (*provisional*, from the author's practice); or a line settled (end of its entrance to its `out` or its scene's end) shorter than 0.8 s for 1 to 3 words, else max(1.2 s, 0.3 s × words) (*provisional*, brag); a line still arriving at its scene's end is G-REST's | story, schedule |
+| W-READ | a scene's words × 0.3 s + last arrival > scene duration (*provisional*, from the author's practice); or a line settled (end of its entrance to its `out` or its scene's end) shorter than 0.8 s for 1 to 3 words, else max(1.2 s, 0.3 s × words) (*provisional*, brag); a line still arriving at its scene's end is W-SCENE-END's | story, schedule |
 | W-CUE | a sound cue more than 40 ms from the nearest beat when a grid exists (*provisional*) | cues vs `beats.json`. Known limit: the gate's schedule does not load `sound/` modules, so it reads an end-anchored cue at its beat's arrival, not where the kit and the mixer place it (§9) |
 | W-DUR-LITERAL | numeric `data-dur` | markup |
 | W-BAN | detectable bans: first scene is one centred text block over a gradient canvas; text smaller than caption inside the four corner zones; a full-frame border element | DOM at rests |
 | W-SUB | export with `--sub` > 1 while a text element travels more than 4 px per frame | every frame at the export fps in the page, the largest move of a visible text element's box between consecutive frames; `--sub 1` never warns; a deck is SKIP |
-| W-CONTRAST | at rests, body text below WCAG 4.5:1 against its sampled background, or display text below 3:1 (*provisional*, WCAG AA) | computed colours at rests; `::before`/`::after` included; a colour pair it cannot parse makes a clean result SKIP (partial). A text box with no background of its own is also measured against the rendered pixels under it, shot with every text transparent (5th percentile; the lower ratio counts) |
+| W-CONTRAST | at rests, body text below WCAG 4.5:1 against its sampled background, or display text below 3:1 (*provisional*, WCAG AA) | computed colours at rests; the text colour is read as painted, faded by the element's own opacity times its ancestors' (a ghosted line warns with its effective contrast and the opacity); `::before`/`::after` included; a colour pair it cannot parse makes a clean result SKIP (partial). A text box with no background of its own is also measured against the rendered pixels under it, shot with every text transparent (5th percentile; the lower ratio counts) |
 | W-PACE · W-HOLD | arrivals per 10 s outside the motion style's band (a screen action counts as an arrival); a rest shorter than `holdMinS` (*provisional*, from the motion style) | schedule vs style; W-PACE is SKIP for a film under 5 s, where no 10 s window is judged |
 | W-EMPTY | a film run of more than 6 frames (30 fps) whose ink, the pixels farther than ΔE 2 from the canvas colour, is under 0.5 % of the frame | frames at quarter scale; every third frame first, candidates frame by frame; a deck is SKIP |
 | W-ENTRANCE | a visible element inside a scene with neither an entrance nor `data-keep` | DOM vs schedule |
@@ -553,7 +586,7 @@ grammar and never its content; **H-SOUND** the largest motion event of each scen
 | `serve [piece] [--port N] [--format 16x9\|9x16\|1x1\|4x5] [--t S] [--press N]` | local preview with play clock, keyboard, `?t=`/`?press=` | URL |
 | `stills [piece] [--format F]` | every rest, every mid-entrance, a 12-frame strip through each move; a contact sheet; a phone-width sheet | `out/stills/`, `out/contact.png`, `out/phone.png` |
 | `check <piece> [--format F] [--sub N] [--quiet] [--json] [--progress]` | §7; the piece is required (one per run); `--sub` is the export setting W-SUB judges; `--progress` prints each format and rule as it starts, on stderr. The report names the story `version` and the `formats` it checked, and `complete: false` on exit 2; it is written whole when the run ends, so an interrupted run (exit 130, 143, 129) leaves the previous report | `out/check.json`, exit code |
-| `export [piece] [--fps 30] [--sub 1] [--formats …] [--force] [--prove] [--gif] [--gif-width 540] [--workers N]` | film: MP4 per format, drawn by N pages in parallel (default half the cores, 1 to 4, at most 16) that each take the next run of up to 15 frames and hand them to one encoder strictly in order; the frames, the encoded streams and the MP4 bytes equal a one-page run (§16.6) (H.264 yuv420p CRF 16, with a silent AAC track whose handler is `silent` until `mm sound` muxes the mix; G-LOUD ignores it), a looping GIF per format with `--gif` (one palette, no dither, 15 fps at most), `poster.png`, `loop_check.mp4`; deck: standalone `out/deck/` folder, `handout.pdf` (one page per rest, set in the style's bundled faces; each scene's note once), `walkthrough.mp4` (starts on rest 0; each press plays its transition at its real length, then its rest is held 2 s); both: `share-copy.txt`, one caption: the story's `share`, else the first scene's headline, the last scene's headline (each a sentence, not repeated) and the call to action's link, with launch clichés warned in `out/export.json`. `--sub` defaults to 1; above 1 the exporter asks the gate's W-SUB hook and records a warning in `out/export.json` | `out/` |
+| `export [piece] [--fps 30] [--sub 1] [--formats …] [--force] [--prove] [--gif] [--gif-width 540] [--workers N]` | film: MP4 per format, drawn by N pages in parallel (default half the cores, 1 to 4, at most 16) that each take the next run of up to 15 frames and hand them to one encoder strictly in order; the frames, the encoded streams and the MP4 bytes equal a one-page run (§16.6) (H.264 yuv420p CRF 16, with a silent AAC track whose handler is `silent` until `mm sound` muxes the mix; G-PEAK and W-LOUDNESS ignore it), a looping GIF per format with `--gif` (one palette, no dither, 15 fps at most), `poster.png`, `loop_check.mp4`; deck: standalone `out/deck/` folder, `handout.pdf` (one page per rest, set in the style's bundled faces; each scene's note once), `walkthrough.mp4` (starts on rest 0; each press plays its transition at its real length, then its rest is held 2 s); both: `share-copy.txt`, one caption: the story's `share`, else the first scene's headline, the last scene's headline (each a sentence, not repeated) and the call to action's link, with launch clichés warned in `out/export.json`. `--sub` defaults to 1; above 1 the exporter asks the gate's W-SUB hook and records a warning in `out/export.json` | `out/` |
 | `beats <track.wav> [--bpm N] [--out assets/beats.json]` | beat grid: declared BPM with a measured downbeat offset, or an energy-onset estimate (*provisional* method) | `assets/beats.json` `{ bpm, beats[], downbeats[], hits[], strong[] }`; `strong[]`: every beat and onset scored 0.45 onset + 0.25 local contrast (onset minus the ±0.5 s median) + 0.20 RMS + 0.10 energy below 180 Hz, each over its 98th percentile (onset and contrast over the candidates), kept at 0.45 or more, 0.18 s apart, at most 64, in time order `{ t, intensity, kind: beat \| onset }` |
 | `sound [piece] [--formats 16x9,9x16] [--patterns dir]` | renders cue presets through an OfflineAudioContext in the Playwright page, mixes with the track in ffmpeg, two-pass `loudnorm` to the style's target | `out/mix.wav`, `out/cues.json`, final MP4 muxed |
 | `pattern list` · `pattern lint [<group>/<name> \| <name>] [--json]` · `pattern stills <group>/<name> [--style preset\|path\|all] [--format F] [--patterns dir]` | §5. `list` is pattern-lint's own list of complete patterns; `lint <name>` lints one pattern (`rise` or `entrances/rise`) | listing, lint report, `patterns/<…>/demo/out/` |
@@ -660,11 +693,11 @@ two rounds in one reply; the log then keeps both headings and names the sharing 
 | Round (gate) | The agent brings | The director answers | Written to |
 |---|---|---|---|
 | 1 Brief | the brief restated; every fact with its source; the formats; a reference, opened and measured before anything is said about it | purpose, formats, the one thing to remember, which facts may appear | log rows 1.k |
-| 2 Treatment | two or three named directions, each a paragraph with its list of beats and different in structure, not only in colour; the agent's pick in one line; the copy and the arithmetic of the durations | one direction, a mix of several, or a request for new ones | `story.json`; rows 2.k |
+| 2 Treatment | two or three named directions, each a paragraph with its list of beats and different in impact (the hook, the rhythm, the reveal, production value such as 3D devices, finishes and music sync) as well as in look; which one would stop the scroll, and the agent's pick, in one line; the copy and the arithmetic of the durations | one direction, a mix of several, or a request for new ones | `story.json`; rows 2.k |
 | 3 Style | a `style.json` (preset, composed halves, captured half; §13); the beat grid from `mm beats` or a declared tempo; where cues fall | the style and the cue plan | `style.json`, `assets/beats.json`; rows 3.k |
 | 4 Style frames | `mm stills`: every rest and mid-entrance in every format, the strips, the contact sheet and the phone sheet. Nothing moves yet | each still, one at a time; no motion is built on a still that is not signed | rows 4.k |
 | 5 Animatic | the whole piece at low resolution (`mm export --fps 15`): final timing, unfinished surface | pace, holds and cuts | rows 5.k |
-| 6 Cut | the full gate run (`mm check`, `mm export --prove`, `mm sound`, `mm check`, `mm review`); each warning that remains, with its reason; the ledger re-walked | lock | rows 6.k |
+| 6 Cut | the full gate run (`mm check`, `mm export --prove`, `mm sound`, `mm check`, `mm review`); each warning, read, with the director's answer (accepted, or a fix asked for) in one line; the ledger re-walked | lock | rows 6.k |
 | 7 Deliver | every format exported, with the poster, the loop check, the contact sheet, the mix and the review page; the handover | acceptance | rows 7.k; `handover.md` |
 
 **Whose call.** A call that changes how the piece feels is the director's: the agent renders the
@@ -680,8 +713,8 @@ to 7. These headings are a file format: `mm review` reads every `## ` heading as
 tests look for the seven `Gate N` headings. The first `>` quote in a section is the director's note
 for the round. Under it sits a table with the columns `#`, Call, Options shown, Director's words and
 Decision, one row per call, numbered `N.k`. The words are a quotation; a call that offered nothing
-says why (forced by a rule, plain arithmetic, fixed by the brief). Every warning that stands at the
-cut has a row with its reason.
+says why (forced by a rule, plain arithmetic, fixed by the brief). Every warning at the cut has a row: the
+director accepts it or asks for a fix, in one line.
 
 **The review page**, `mm review [piece]`, writes `out/review.html`: one file, no scripts, with the
 images beside it. Rounds are listed newest first, ordered by the number in the heading (by position
@@ -744,7 +777,7 @@ frames. Nothing is fetched at render time (G-LOCAL), and a capture is redone onl
 | `mm motion capture --from <video> --out <path>.json [--name <name>] [--fps N]` | decodes greyscale frames at the source rate (at most 30 fps; `--fps` overrides), finds candidate events at 10 fps and reads each again at the source rate; classifies cut kinds by their frame-pair signature: hard, fade, dip (a fade through a flat colour), push, whip-pan, wipe and iris (each with its direction where it has one) and zoom; times arrivals, and push, whip-pan, wipe and iris cuts, on their progress curves; derives `pacing` (energy from calibrated bands, arrivals per 10 s, hold floor), duration roles, preferred `transitions` and the headline entrance family; writes `capture-notes.md` with the shot list, the evidence for each value and what was defaulted. `--name` defaults to the `--out` basename. Takes the grammar of the reference, never its content (H-REF) | motion half |
 | `mm style compose --brand <name\|path> --motion <name\|path> --out <path> [--name <style-name>]` | §3 | composed `style.json` |
 | `mm style export-designmd --style <style.json> --out DESIGN.md` | writes a style as a `DESIGN.md`, which `mm brand capture` reads back to the same colours, faces, space and radius | `DESIGN.md` |
-| `mm skill new --brand <name\|path-to-brand.json> [--motion <name\|path>] --out <dir> [--force]` | scaffolds a thin per-brand skill from `skill/templates/brand-skill/`: a `SKILL.md` that loads the engine's skill, pins the composed style, carries the brand's facts file and fonts, and lists which bans the brand lifts. The engine stays shared and brand-free; the thin skill is private to its owner. `--brand` accepts a shipped name or a captured half's path; font `src` paths in the skill's `style/*.json` are relative to the style file's own folder, and a font `src` is looked up beside its style file first, then from the repository root | a skill folder |
+| `mm skill new --brand <name\|path-to-brand.json> [--motion <name\|path>] --out <dir> [--force]` | scaffolds a thin per-brand skill from `skill/templates/brand-skill/`: a `SKILL.md` that loads the engine's skill, pins the composed style, carries the brand's facts file and fonts, lists which bans the brand lifts, and says which warnings the studio tunes (the motion half's `gate`, §3) or how to tune them. The engine stays shared and brand-free; the thin skill is private to its owner. `--brand` accepts a shipped name or a captured half's path; font `src` paths in the skill's `style/*.json` are relative to the style file's own folder, and a font `src` is looked up beside its style file first, then from the repository root | a skill folder |
 
 Captured halves belong in a piece-local or git-ignored folder, not in the shipped `styles/brands/`
 and `styles/motion/`. Capture is best effort and says so: every captured value carries evidence in `capture-notes.md`,
@@ -811,30 +844,33 @@ test file or a negatives folder that does not exist.
 | G-TIME | `G-TIME.mjs` | `tests/check/time.test.mjs` | `G-TIME/{static,runtime,trap,realm,worker,post-task,smil,entropy,custom-duration}/`; `patterns/G-TIME/entrances/` (`tests/pattern-lint.test.mjs`) |
 | G-DETERMINISM | `G-DETERMINISM.mjs` | `tests/check/determinism.test.mjs` | `G-DETERMINISM/{scene,order}/` |
 | G-LOCAL | `G-LOCAL.mjs` | `tests/check/local.test.mjs` | `G-LOCAL/{url,font,glyph}/` |
-| G-LITERAL | `G-LITERAL.mjs` (pixels: `_pixels.mjs`) | `tests/check/literal.test.mjs` | `G-LITERAL/{regex,named,computed,family,pixel,hue,region,mask,overlay,canvas}/`; `patterns/G-LITERAL/entrances/` (`tests/pattern-lint.test.mjs`); calibration sheet `_palette/` (a positive) |
-| G-PLACEHOLDER | `G-PLACEHOLDER.mjs` | `tests/check/placeholder.test.mjs` | `G-PLACEHOLDER/{text,pseudo,svg,marker,entity}/` |
-| G-LEGIBLE | `G-LEGIBLE.mjs` | `tests/check/legible.test.mjs` | `G-LEGIBLE/{size,scaled,pseudo,first-letter,shadow,canvas-text}/`; `_base/canvas-text/` (a positive: a pattern that declares `canvasText`) |
-| G-REST | `G-REST.mjs` | `tests/check/rest.test.mjs` | `G-REST/` (also warns W-HOLD: the same defect) |
-| G-HOOK | `G-HOOK.mjs` | `tests/check/hook.test.mjs` | `G-HOOK/{film,deck}/` |
+| G-BRAND | `G-BRAND.mjs` (pixels: `_pixels.mjs`) | `tests/check/brand.test.mjs` | `G-BRAND/{named,computed,family,pixel,hue,hue-ground,region,mask,overlay,canvas,stripes,checker,no-rest,vignette-black,grade-contrast,grade-saturate}/`, `G-BRAND/expressive/` (a positive: a three-stop gradient of brand roles with a glow over it), `G-BRAND/{blend-multiply,blend-screen,vignette-ink}/` (positives: finishes made of roles); calibration sheet `_palette/` (a positive) |
+| G-PLACEHOLDER | `G-PLACEHOLDER.mjs` | `tests/check/placeholder.test.mjs` | `G-PLACEHOLDER/{text,pseudo,svg,marker,entity,no-rest,hard-end,transient}/` |
+| G-LEGIBLE | `G-LEGIBLE.mjs` | `tests/check/legible.test.mjs` | `G-LEGIBLE/{size,scaled,pseudo,first-letter,shadow,canvas-text,no-rest,micro-fact,micro-cta}/`; `_base/canvas-text/` (a positive: a pattern that declares `canvasText`) |
+| G-REST | `G-REST.mjs` (with `_rest.mjs`) | `tests/check/rest.test.mjs` | `G-REST/deck/` (a deck whose rest 2 is drawn mid-entrance) |
 | G-EDGE | `G-EDGE.mjs` | `tests/check/edge.test.mjs` | `G-EDGE/{box,pseudo,platform}/` |
 | G-OVERLAP | `G-OVERLAP.mjs` | `tests/check/overlap.test.mjs` | `G-OVERLAP/{box,pseudo}/` |
-| G-DEAD | `G-DEAD.mjs` | `tests/check/dead.test.mjs` | `G-DEAD/` |
-| G-QUIET | `G-QUIET.mjs` | `tests/check/quiet.test.mjs` | `G-QUIET/{film,deck}/` |
-| G-LENGTH | `G-LENGTH.mjs` | `tests/check/length.test.mjs` | `G-LENGTH/` |
 | G-LOOP | `G-LOOP.mjs` | `tests/check/loop.test.mjs` | `G-LOOP/seam/` (and `G-LOOP/ok/` and `G-LOOP/auto/`, which pass) |
 | G-END | `G-END.mjs` | `tests/check/end.test.mjs` | `G-END/` |
 | G-PATTERN-REF | `G-PATTERN-REF.mjs` | `tests/check/refs.test.mjs`, `tests/kit/screen-actions.test.mjs` | `G-PATTERN-REF/`, `G-PATTERN-REF/mark/` |
 | G-FACT-REF | `G-FACT-REF.mjs` | `tests/check/refs.test.mjs` | `G-FACT-REF/`, `G-FACT-REF/sample/` |
-| G-PATTERN-CARD | `G-PATTERN-CARD.mjs` (calls `scripts/pattern-lint.mjs`) | `tests/pattern-lint.test.mjs`, `tests/contracts/pattern-card.test.mjs` | `patterns/G-PATTERN-CARD/{missing-file,missing-section,empty-section,out-of-order,demo-unused}/`; `patterns/positive/` (a positive) |
-| G-PROVENANCE | `G-PROVENANCE.mjs` (calls `scripts/pattern-lint.mjs`) | `tests/pattern-lint.test.mjs` | `patterns/G-PROVENANCE/{unknown-source,pattern-credit,substring}/` |
-| G-LOUD | `G-LOUD.mjs` | `tests/check/sound.test.mjs`, `tests/sound/{loudness,gate,sparse}.test.mjs` | `G-LOUD/` (tracked `out/mix.wav`, −8 LUFS) |
+| W-PATTERN-CARD | `W-PATTERN-CARD.mjs` (calls `scripts/pattern-lint.mjs`) | `tests/check/library.test.mjs`, `tests/pattern-lint.test.mjs`, `tests/contracts/pattern-card.test.mjs` | `patterns/W-PATTERN-CARD/{missing-file,missing-section,empty-section,out-of-order,demo-unused}/`; `patterns/positive/` (a positive) |
+| W-PROVENANCE | `W-PROVENANCE.mjs` (calls `scripts/pattern-lint.mjs`) | `tests/check/library.test.mjs`, `tests/pattern-lint.test.mjs` | `patterns/W-PROVENANCE/{unknown-source,pattern-credit,substring}/` |
+| W-SCENE-END | `W-SCENE-END.mjs` (with `_rest.mjs`) | `tests/check/rest.test.mjs` | `W-SCENE-END/` (also warns W-HOLD: the same defect); `G-REST/deck/` (SKIP) |
+| G-PEAK | `G-PEAK.mjs` (with `_loudness.mjs`) | `tests/check/sound.test.mjs`, `tests/sound/{loudness,gate,sparse}.test.mjs` | `G-PEAK/` (tracked `out/mix.wav`, a clipping mix at 0.1 dBTP; also warns W-LOUDNESS: the same mix) |
+| W-LITERAL | `W-LITERAL.mjs` | `tests/check/literal.test.mjs` | `W-LITERAL/{regex,layout}/`; `patterns/W-LITERAL/entrances/` (`tests/pattern-lint.test.mjs`, `tests/cli/release-check.test.mjs`: fails the library) |
+| W-LOUDNESS | `W-LOUDNESS.mjs` (with `_loudness.mjs`) | `tests/check/sound.test.mjs`, `tests/sound/{loudness,gate,sparse}.test.mjs` | `W-LOUDNESS/` (tracked `out/mix.wav`, −24 LUFS, clean) |
+| W-HOOK | `W-HOOK.mjs` | `tests/check/hook.test.mjs` | `W-HOOK/{film,deck}/` |
+| W-DEAD | `W-DEAD.mjs` | `tests/check/dead.test.mjs` | `W-DEAD/` |
+| W-QUIET | `W-QUIET.mjs` | `tests/check/quiet.test.mjs` | `W-QUIET/{film,deck}/` |
+| W-LENGTH | `W-LENGTH.mjs` | `tests/check/length.test.mjs` | `W-LENGTH/` |
 | W-FADE-ONLY | `W-FADE-ONLY.mjs` | `tests/check/warnings.test.mjs` | `W-FADE-ONLY/` |
 | W-READ | `W-READ.mjs` | `tests/check/warnings.test.mjs` | `W-READ/` |
 | W-CUE | `W-CUE.mjs` | `tests/check/sound.test.mjs`, `tests/sound/{cues,gate}.test.mjs` | `W-CUE/` |
 | W-DUR-LITERAL | `W-DUR-LITERAL.mjs` | `tests/check/warnings.test.mjs` | `W-DUR-LITERAL/` |
 | W-BAN | `W-BAN.mjs` | `tests/check/warnings.test.mjs` | `W-BAN/` |
 | W-SUB | `W-SUB.mjs` | `tests/check/warnings.test.mjs` | `W-SUB/` (run with `--sub 4`) |
-| W-CONTRAST | `W-CONTRAST.mjs` | `tests/check/warnings.test.mjs` | `W-CONTRAST/{color,pseudo,gradient}/` |
+| W-CONTRAST | `W-CONTRAST.mjs` | `tests/check/warnings.test.mjs` | `W-CONTRAST/{color,pseudo,gradient,faint}/` |
 | W-PACE | `W-PACE.mjs` | `tests/check/warnings.test.mjs` | `W-PACE/` |
 | W-HOLD | `W-HOLD.mjs` | `tests/check/warnings.test.mjs`, `tests/check/rest.test.mjs` | `W-HOLD/` |
 | W-EMPTY | `W-EMPTY.mjs` | `tests/check/warnings.test.mjs` | `W-EMPTY/` |
@@ -852,8 +888,9 @@ test file or a negatives folder that does not exist.
 | composition, headline ladder, bounded entrances, units on landing, zoom-through, travel units | `runtime/kit/{kit,room,count}.js`, `patterns/` | `tests/contracts/composition.test.mjs`, `tests/kit/{composition,patterns-frames,count-text,travel-units}.browser.test.mjs` | `fixtures/kit-smoke/composition/` |
 | kit: springs, track, ease, random, schedule, roles, hook, anchors, rests, settle moves, cascade emphasis, decode warnings, the reference in `runtime/kit/README.md`, shared sound synth, fragments | `runtime/kit/` | `tests/kit/*.test.mjs` (among them `move-settle`, `cascade-emphasis`, `seek-decode-warning`, `readme`, `synth`, `fragments`) | pure-function cases; `fixtures/kit-smoke/{roles,roles-deck}/` |
 
-Ledger note: a G- negative is judged on every row. Its own id fails, and no other G- rule fails
-or W- rule warns, unless that W- row is the same defect, which the test names.
+Ledger note: a negative is judged on every row. A G- negative: its own id fails, and no other G- rule fails
+or W- rule warns, unless that W- row is the same defect, which the test names. A W- negative: its own id
+warns, nothing else fails or warns, and the exit code is 0.
 
 ## 15. Rulings on contested rules
 
@@ -916,8 +953,8 @@ its file server answers HTTP Range requests so the page can play and seek an MP4
 offers every film format whatever the story ships, and previewing one writes nothing; a format ticked
 in Export that the story does not ship is added to `formats` (one `story.formats` edit) before the run. The
 page draws the timeline from the kit's own `schedule()` (§6): one lane per slot name, scenes with
-their cuts, cues, moves, the music grid, and a gate lane. The schedule-only rules (G-DEAD, G-LENGTH,
-G-QUIET, W-READ, W-PACE, W-HOLD, W-CUE, W-FADE-ONLY, W-ASK) run in the page from the same rule files
+their cuts, cues, moves, the music grid, and a gate lane. The schedule-only rules (W-DEAD, W-LENGTH,
+W-QUIET, W-READ, W-PACE, W-HOLD, W-CUE, W-FADE-ONLY, W-ASK) run in the page from the same rule files
 `mm check` runs (`scripts/check/timing.mjs`), on the gate's schedule, and their verdicts are those of
 `mm check` for the same story.
 

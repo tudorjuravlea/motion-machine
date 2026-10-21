@@ -1,0 +1,2 @@
+[data-scene]::before, [data-scene]::after { content: ""; position: absolute; width: 420px; height: 420px; border-radius: 50%; background: var(--mm-color-accent); mix-blend-mode: multiply; top: 300px; right: 300px; }
+[data-scene]::after { right: 520px; top: 420px; }

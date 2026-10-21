@@ -1,9 +1,10 @@
-// G-PLACEHOLDER (SPEC §7): no TODO, lorem, […], XXX or {{ in the text visible at any rest
+// G-PLACEHOLDER (SPEC §7): no TODO, lorem, […], XXX or {{ in the story's own text (beat text, scene say,
+// cta, share), nor in the text visible at any rest
 // (::before/::after/::marker text included), nor in the <text> of an SVG the piece ships: an .svg file, or an
 // SVG data: URI inside its CSS or markup (raster images of text stay a reviewer's call), with
 // every XML entity form decoded before matching. ::marker text counts.
 import { rule } from '../lib/report.mjs';
-import { expandDtd, restInstants, round, sources, svgDataUris, texts, xmlText } from './_lib.mjs';
+import { auditInstants, expandDtd, round, sources, svgDataUris, texts, xmlText } from './_lib.mjs';
 
 export const scope = 'format';
 export const PLACEHOLDER = /TODO|XXX|\{\{|\[(?:…|\.\.\.)\]|lorem/i;
@@ -35,12 +36,23 @@ export default async function (ctx) {
       }
     }
   }
-  for (const t of restInstants(ctx.schedule)) {
+  for (const t of auditInstants(ctx.schedule)) {
     const s = await ctx.sample(t);
     for (const el of texts(s)) {
       const m = CASED.exec(el.text);
       if (m) return rule('G-PLACEHOLDER', 'FAIL', { instant: round(t), selector: el.selector, measured: m[0], reason: `placeholder text on screen: "${el.text.slice(0, 80)}"` });
     }
   }
-  return rule('G-PLACEHOLDER', 'PASS', { rests: restInstants(ctx.schedule).length });
+  // The story's own text, whether or not a frame shows it at an instant the gate samples: a line that
+  // appears and leaves between rests is read here.
+  const fields = [['cta.text', ctx.story.cta?.text], ['cta.url', ctx.story.cta?.url], ['share', ctx.story.share]];
+  ctx.story.scenes.forEach((sc, i) => {
+    fields.push([`scenes[${i}].say`, sc.say]);
+    sc.beats.forEach((b, j) => fields.push([`scenes[${i}].beats[${j}].text`, b.text]));
+  });
+  for (const [field, text] of fields) {
+    const m = typeof text === 'string' ? CASED.exec(text) : null;
+    if (m) return rule('G-PLACEHOLDER', 'FAIL', { file: 'story.json', selector: field, measured: m[0], reason: `placeholder text in the story (${field}): "${text.slice(0, 80)}"` });
+  }
+  return rule('G-PLACEHOLDER', 'PASS', { rests: auditInstants(ctx.schedule).length });
 }

@@ -41,7 +41,7 @@ Rules:
   what authority ("crew, standing in for the director by the brief's instruction").
 - A gate-forced change records the rule id, the evidence (instant, selector, measured vs
   threshold) and the options for *how* it was met.
-- Every WARN left at the cut gets a row with its reason; the same line goes into the handover.
+- Every WARN at the cut gets a row: the director accepts it or asks for a fix, in one line; an accepted one goes into the handover with that line.
 
 ## Example row set (gate 6)
 

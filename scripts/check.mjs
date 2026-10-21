@@ -27,9 +27,10 @@ import { contractError, floorsFor, refsOf, sample, isWithin } from './check/_lib
 const HERE = dirname(fileURLToPath(import.meta.url));
 export const RULES_DIR = join(HERE, 'check');
 
-/** SPEC §7 ids in report order. */
-export const IDS = ['G-TIME', 'G-DETERMINISM', 'G-LOCAL', 'G-LITERAL', 'G-PLACEHOLDER', 'G-LEGIBLE', 'G-REST', 'G-HOOK', 'G-EDGE', 'G-OVERLAP',
-  'G-DEAD', 'G-QUIET', 'G-LENGTH', 'G-LOOP', 'G-END', 'G-PATTERN-REF', 'G-FACT-REF', 'G-PATTERN-CARD', 'G-PROVENANCE', 'G-LOUD',
+/** SPEC §7 ids in report order: the rules that fail the gate (G-), then the ones that advise (W-). */
+export const IDS = ['G-TIME', 'G-DETERMINISM', 'G-LOCAL', 'G-BRAND', 'G-PLACEHOLDER', 'G-LEGIBLE', 'G-REST', 'G-EDGE', 'G-OVERLAP',
+  'G-LOOP', 'G-END', 'G-PATTERN-REF', 'G-FACT-REF', 'G-PEAK',
+  'W-HOOK', 'W-DEAD', 'W-QUIET', 'W-LENGTH', 'W-SCENE-END', 'W-LOUDNESS', 'W-LITERAL', 'W-PATTERN-CARD', 'W-PROVENANCE',
   'W-FADE-ONLY', 'W-READ', 'W-CUE', 'W-DUR-LITERAL', 'W-BAN', 'W-SUB', 'W-CONTRAST', 'W-PACE', 'W-HOLD', 'W-EMPTY', 'W-ENTRANCE',
   'W-STAGGER', 'W-AMBIENT', 'W-CAPTION', 'W-OVERSHOOT', 'W-MIX', 'W-ASK'];
 
@@ -84,8 +85,11 @@ function recording(browser, log) {
 
 const RANK = { FAIL: 3, WARN: 2, PASS: 1, SKIP: 0 };
 
+/** The warning rule each key of a style's `gate` block tunes. */
+export const TUNED_BY = { length: 'W-LENGTH', deadS: 'W-DEAD', quietS: 'W-QUIET', read: 'W-READ', liftBans: 'W-BAN' };
+
 /**
- * Runs the gate over one piece. Returns { rules, code, crashed, schedule, version, formats }. Pass
+ * Runs the gate over one piece. Returns { rules, code, crashed, schedule, version, formats, tuned } (`tuned`: the warning rules the style's gate block tunes). Pass
  * `browser` and `server` to share them across pieces (tests); `formats` to restrict; `sub` for W-SUB;
  * `progress(line)` to hear each format and rule as it starts.
  */
@@ -187,7 +191,7 @@ export async function runCheck(dir, { formats, format, sub = null, browser, serv
   }
   const anyFail = out.some((r) => r.status === 'FAIL' && r.id.startsWith('G-'));
   const code = crashed ? 2 : anyFail ? 1 : mountFailed ? 2 : 0;
-  return { rules: out, code, crashed, mountError: mountFailed, schedule: per[fmts[0]].schedule, version: versionOf(storyText), formats: fmts };
+  return { rules: out, code, crashed, mountError: mountFailed, schedule: per[fmts[0]].schedule, version: versionOf(storyText), formats: fmts, tuned: Object.keys(style.gate ?? {}).map((k) => TUNED_BY[k]).filter(Boolean) };
 }
 
 function usage(msg) {
@@ -224,7 +228,7 @@ export async function main(argv = process.argv.slice(2)) {
     if (e instanceof SetupError || e instanceof UsageError) { console.error(`mm check: ${e.message}`); return 2; }
     throw e;
   }
-  const code = writeReport(resolve(dir), result.rules, { quiet: opts.quiet || opts.json, version: result.version, formats: result.formats, complete: result.code !== 2 });
+  const code = writeReport(resolve(dir), result.rules, { quiet: opts.quiet || opts.json, version: result.version, formats: result.formats, complete: result.code !== 2, tuned: result.tuned });
   if (opts.json) console.log(JSON.stringify({ rules: result.rules }, null, 2));
   else if (opts.quiet && code === 1) {   // quiet drops the per-rule lines, not the verdict
     const failed = result.rules.filter((r) => r.status === 'FAIL').map((r) => r.id);

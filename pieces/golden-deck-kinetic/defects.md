@@ -4,11 +4,11 @@ Same story as `golden-deck-editorial`. Raised by: `director` (a review of the st
 
 | # | Where | Note | Raised by | Status | Fix |
 |---|---|---|---|---|---|
-| D1 | press 10 · cta | the last press brings the headline and the URL together | gate G-QUIET | fixed | end card over two presses (11 presses) |
+| D1 | press 10 · cta | the last press brings the headline and the URL together | gate W-QUIET | fixed | end card over two presses (11 presses) |
 | D2 | press 8 · gate | the figure's text box overlapped the headline in the editorial deck (stat-hero) | crew | fixed | shared layout fix: `layouts/stat-hero` sets the figure's line-height to `normal` |
 | D3 | rest 0 | an empty card with the title rule before the first press | crew | accepted | rest 0 precedes any step; it is the presenter's blank |
 | D4 | all | deck cues are not mixed into the walkthrough | crew | accepted | out of scope: deck cues play in `mm serve` |
-| D5 | rest 0 | the opening rest is a blank slide with a dash; the handout page 1 is blank | director | fixed | hook headline `step: 0`; G-HOOK PASS |
+| D5 | rest 0 | the opening rest is a blank slide with a dash; the handout page 1 is blank | director | fixed | hook headline `step: 0`; W-HOOK PASS |
 | D6 | press 2.5, 6.2 | incoming headline printed over the fading outgoing one; a figure lands on a zoomed tile | director | fixed | crossfade clears the old text first; the gate figure arrives at 0.5 s, after the zoom-through dissolve |
 | D7 | fades | a container box shows during fades | director | fixed | sections fade whole; mid-press stills |
 | D8 | rests 3 and 5 | two rests are not finished pictures | director | fixed | time and style scenes on one press each; ten presses, eleven finished rests |

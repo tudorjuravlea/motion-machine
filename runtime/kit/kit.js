@@ -400,7 +400,7 @@ function groundOf(ground, spec, media) {
 // the brand finish. One overlay per scene above the camera, a layer per strength: grain
 // (ink through seeded noise) and halftone (an ink dot screen) at no more than 0.08 opacity, since they
 // cover text; a vignette toward the darker of ink and canvas that stays at or under 0.08 inside the safe area; an accent glow and a
-// rough surface border, both inside the safe margin. Only palette roles, so G-LITERAL's two-colour
+// rough surface border, both inside the safe margin. Only palette roles, so G-BRAND's two-colour
 // blends still hold. The grain's seed is set per seek from t (12 Hz), so it flickers like film and is
 // the same at every seek. Chrome, not content.
 const FINISH_LAYERS = [['grain', 'grain'], ['halftone', 'halftone'], ['vignette', 'vignette'], ['edgeFringe', 'edge'], ['paperEdge', 'paper']];
@@ -476,7 +476,7 @@ function setVariables(style, spec) {
   set('--mm-device-island-ink', `var(--mm-color-${roles.at(-1)?.k ?? 'canvas'})`);   // text inside an open island
   // the polished devices. Glass (the bezel and the camera) is the darkest role; the metal rim
   // runs from the finish mixed toward the lightest role to the finish mixed toward the darkest, so
-  // every pixel is a blend of two palette roles (G-LITERAL); shadows fall in the darkest role and the
+  // every pixel is a blend of two palette roles (G-BRAND); shadows fall in the darkest role and the
   // glass sheen is the lightest at a few percent.
   const darkest = roles[0]?.k ?? 'ink', lightest = roles.at(-1)?.k ?? 'canvas';
   set('--mm-device-glass', `var(--mm-color-${darkest})`);

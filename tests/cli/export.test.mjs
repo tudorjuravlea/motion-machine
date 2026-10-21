@@ -3,9 +3,9 @@
 // injected; export refuses while the gate is red or unrun unless --force, which stamps UNCHECKED.
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { MM, mm, probeVideo, readJson, stampChecked, workCopy } from './cli-helpers.mjs';
+import { MM, ROOT, mm, probeVideo, readJson, stampChecked, workCopy } from './cli-helpers.mjs';
 import { shareCopy } from '../../scripts/export.mjs';
 
 const SIZES = { '16x9': [1920, 1080], '9x16': [1080, 1920], '1x1': [1080, 1080] };
@@ -71,6 +71,24 @@ test('export refuses without a passing check, and --force stamps UNCHECKED', () 
   } finally { unchecked.cleanup(); }
 });
 
+test('a piece that only warns (W-LENGTH) exports without --force, unstamped', () => {
+  // fixtures/negatives/W-LENGTH is a 15 s film: outside the length band, and nothing else
+  const dir = join(ROOT, 'fixtures', 'negatives', 'W-LENGTH');
+  try {
+    const c = mm(['check', dir, '--json']);
+    assert.equal(c.status, 0, c.out);
+    const rules = JSON.parse(c.stdout).rules;
+    assert.equal(rules.find((r) => r.id === 'W-LENGTH')?.status, 'WARN', 'the film is outside the length band');
+    assert.deepEqual(rules.filter((r) => r.status === 'FAIL'), []);
+    const r = mm(['export', dir, '--fps', '5', '--formats', '16x9']);
+    assert.equal(r.status, 0, r.out);
+    assert.equal(probeVideo(join(dir, 'out', 'gate-base-film-16x9.mp4')).comment, null, 'a warning leaves no UNCHECKED stamp');
+    const manifest = readJson(join(dir, 'out', 'export.json'));
+    assert.equal(manifest.forced, false);
+    assert.equal(manifest.checked, true);
+  } finally { rmSync(join(dir, 'out'), { recursive: true, force: true }); }
+});
+
 test('--prove fails when Math.random is injected into a pattern of a copy of the fixture', () => {
   const bad = workCopy('export-random');
   try {
@@ -115,7 +133,7 @@ test('--sub defaults to 1 and does not call the gate\'s W-SUB hook; above 1 it d
 import { spawnSync as spawnProbe } from 'node:child_process';
 const streamsOf = (file) => JSON.parse(spawnProbe('ffprobe', ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', file], { encoding: 'utf8' }).stdout);
 
-test('a film with no mix still carries one silent AAC track, which G-LOUD does not take for sound', async () => {
+test('a film with no mix still carries one silent AAC track, which G-PEAK and W-LOUDNESS do not take for sound', async () => {
   const r = mm(['export', w.film, '--fps', '10', '--formats', '16x9', '--force']);
   assert.equal(r.status, 0, r.out);
   const mp4 = join(w.film, 'out', 'kit-smoke-film-16x9.mp4');

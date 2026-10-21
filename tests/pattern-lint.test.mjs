@@ -1,4 +1,4 @@
-// G-PATTERN-CARD · G-PROVENANCE (SPEC §5, contracts/pattern-card.md): the lint lists the complete
+// W-PATTERN-CARD · W-PROVENANCE (SPEC §5, contracts/pattern-card.md): the lint lists the complete
 // positive and fails each negative folder with exactly its id. Independent of patterns/ content.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -16,15 +16,15 @@ test('the positive pattern is complete and listed', () => {
 });
 
 const CASES = {
-  'G-PATTERN-CARD/missing-section': ['G-PATTERN-CARD', /missing "Known limits"/],
-  'G-PATTERN-CARD/empty-section': ['G-PATTERN-CARD', /"Purpose" is empty/],
-  'G-PATTERN-CARD/out-of-order': ['G-PATTERN-CARD', /out of order/],
-  'G-PATTERN-CARD/missing-file': ['G-PATTERN-CARD', /missing pattern\.js/],
-  'G-PATTERN-CARD/demo-unused': ['G-PATTERN-CARD', /never uses entrances\/snap-in/],
-  'G-PROVENANCE/unknown-source': ['G-PROVENANCE', /"Acme Motion Kit" has no row in PROVENANCE\.md/],
-  'G-PROVENANCE/pattern-credit': ['G-PROVENANCE', /"entrances\/words" has no row/],   // a credits-table row is not a source row
-  'G-PROVENANCE/substring': ['G-PROVENANCE', /"hyperframes" has no row/],             // a substring of a row is not the row
-  'G-LITERAL': ['G-LITERAL', /hex colour/],
+  'W-PATTERN-CARD/missing-section': ['W-PATTERN-CARD', /missing "Known limits"/],
+  'W-PATTERN-CARD/empty-section': ['W-PATTERN-CARD', /"Purpose" is empty/],
+  'W-PATTERN-CARD/out-of-order': ['W-PATTERN-CARD', /out of order/],
+  'W-PATTERN-CARD/missing-file': ['W-PATTERN-CARD', /missing pattern\.js/],
+  'W-PATTERN-CARD/demo-unused': ['W-PATTERN-CARD', /never uses entrances\/snap-in/],
+  'W-PROVENANCE/unknown-source': ['W-PROVENANCE', /"Acme Motion Kit" has no row in PROVENANCE\.md/],
+  'W-PROVENANCE/pattern-credit': ['W-PROVENANCE', /"entrances\/words" has no row/],   // a credits-table row is not a source row
+  'W-PROVENANCE/substring': ['W-PROVENANCE', /"hyperframes" has no row/],             // a substring of a row is not the row
+  'W-LITERAL': ['W-LITERAL', /hex colour/],   // a warning in `mm check`, a failure for the library
   'G-TIME': ['G-TIME', /Math\.random/],
 };
 
@@ -76,7 +76,7 @@ test('lint <name>: group/name or a unique bare name is one pattern; an ambiguous
 
 test('list(): the export mm pattern list calls, the lint\'s own judgement', () => {
   assert.deepEqual(list(join(LP, 'positive')), ['entrances/snap-in']);
-  assert.deepEqual(list(join(LP, 'G-PATTERN-CARD/empty-section')), []);
+  assert.deepEqual(list(join(LP, 'W-PATTERN-CARD/empty-section')), []);
   assert.equal(list().length, lintRoot(join(ROOT, 'patterns')).complete.length);
 });
 
@@ -86,6 +86,6 @@ test('CLI: list prints complete patterns as JSON; lint exits 1 on a negative and
   assert.equal(list.status, 0);
   assert.deepEqual(JSON.parse(list.stdout).complete, ['entrances/snap-in']);
   assert.equal(cli('lint', join(LP, 'positive')).status, 0);
-  assert.equal(cli('lint', join(LP, 'G-PROVENANCE/unknown-source')).status, 1);
+  assert.equal(cli('lint', join(LP, 'W-PROVENANCE/unknown-source')).status, 1);
   assert.equal(cli('lint', join(LP, 'nope')).status, 2);
 });

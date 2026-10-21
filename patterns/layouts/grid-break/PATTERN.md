@@ -49,7 +49,7 @@ A headline over a grid of identical tiles, then one tile that breaks the pattern
 - Composition: alignment from `--mm-align`, headline size times `--mm-headline-scale`, gaps and side indent times `--mm-density`.
 - Every box sits inside `--mm-safe`, inset a further 8 % of the half-width on the left and right as headroom for a camera move.
 - Tiles are `visibility:hidden` until their beat arrives, so the grid never reflows; an empty headline leaves the flow.
-- The odd tile has no shadow (its blend with the accent would fall off the palette, G-LITERAL) and is never rotated (no rotated type at rest, `references/bans.md`); it breaks the grid by colour, size and lift.
+- The odd tile has no shadow (its blend with the accent would fall off the palette, G-BRAND) and is never rotated (no rotated type at rest, `references/bans.md`); it breaks the grid by colour, size and lift.
 - Text sizes come from `--mm-size-*` roles at body size or above.
 
 ## Provenance

@@ -20,6 +20,7 @@ const CASES = {
   'W-DUR-LITERAL': ['W-DUR-LITERAL', (r) => assert.equal(r.evidence.measured, '0.5')],
   'W-BAN': ['W-BAN', (r) => assert.equal(r.evidence.ban, 'frame-borders')],
   'W-CONTRAST/color': ['W-CONTRAST', (r) => assert.ok(r.evidence.measured < 1.5, `Review Focus 1: #888 on #777 measured ${r.evidence.measured}:1`)],
+  'W-CONTRAST/faint': ['W-CONTRAST', (r) => { assert.equal(r.evidence.opacity, 0.12); assert.ok(r.evidence.measured < 1.5, `effective contrast ${r.evidence.measured}:1`); assert.match(r.evidence.reason, /opacity 0\.12/); }],
   'W-CONTRAST/pseudo': ['W-CONTRAST', (r) => assert.match(r.evidence.selector, /::after$/)],
   'W-CONTRAST/gradient': ['W-CONTRAST', (r) => { assert.equal(r.evidence.background, 'rendered'); assert.match(r.evidence.selector, /data-scene="notch"/); }],
   'W-PACE': ['W-PACE', (r) => assert.equal(r.evidence.measured, 8)],

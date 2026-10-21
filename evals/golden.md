@@ -13,7 +13,7 @@
 |---|---|---|---|
 | film, editorial | exit 0 | W-PACE (6 arrivals per 10 s against calm's 2–5) and W-STAGGER (arrivals that enter with the cut) | 3 MP4 with sound, poster, loop check, review page; `--prove` ok |
 | film, kinetic | exit 0 | W-STAGGER (one arrival 0.02 s after its cut settles) | as above |
-| deck, editorial | exit 0 | none (G-LOUD, W-CUE, W-MIX, W-PACE, W-HOLD, W-READ, G-DEAD, W-AMBIENT and W-SUB report SKIP) | `out/deck/`, `handout.pdf`, `walkthrough.mp4`, review page; `--prove` ok |
+| deck, editorial | exit 0 | none (G-PEAK, W-LOUDNESS, W-CUE, W-MIX, W-PACE, W-HOLD, W-READ, W-DEAD, W-AMBIENT and W-SUB report SKIP) | `out/deck/`, `handout.pdf`, `walkthrough.mp4`, review page; `--prove` ok |
 | deck, kinetic | exit 0 | none | as above |
 
 The warnings that may stand, with their evidence and reasons, are listed in
@@ -22,7 +22,7 @@ fix or a reason of its own.
 
 The pieces must also meet these requirements: stories use style roles and a scene `position`, so
 editorial and kinetic differ in entrances and cuts, not only in durations; the first frame (film)
-and rest 0 (deck) show the first headline finished (G-HOOK); no run of more than 6 near-empty
+and rest 0 (deck) show the first headline finished (W-HOOK); no run of more than 6 near-empty
 frames (W-EMPTY); exports run at `--sub 1`.
 
 Pass also requires: the two films share one story (only `id` differs), so every cut, arrival and

@@ -80,7 +80,7 @@
   height: 40%;
   translate: -50% 0;
   border-radius: 0 0 var(--mm-radius-2) var(--mm-radius-2);
-  /* a blend of two roles, so drawn as an image: a flat fill must be a palette role (G-LITERAL) */
+  /* a blend of two roles, so drawn as an image: a flat fill must be a palette role (G-BRAND) */
   background: linear-gradient(var(--mm-device-rim-dark), var(--mm-device-rim-dark));
 }
 /* A beat's asset fills the screen edge to edge (object-fit cover, clipped by the screen) and the

@@ -4,7 +4,7 @@
 
 - `SKILL.md`: router for the thin skill. Placeholders: `{{name}}`, `{{title}}`, `{{description}}`,
   `{{compatibility}}`, `{{license}}`, `{{version}}`, `{{brand}}`, `{{motion}}`, `{{engine_skill}}`,
-  `{{style_path}}`, `{{brand_path}}`, `{{motion_path}}`, `{{bans_section}}`.
+  `{{style_path}}`, `{{brand_path}}`, `{{motion_path}}`, `{{bans_section}}`, `{{gate_section}}`.
 - `facts.md`: an empty facts table for the brand (placeholder `{{title}}`).
 
 The scaffold also writes `style/` (the two halves and the composed style, with `from` and font paths

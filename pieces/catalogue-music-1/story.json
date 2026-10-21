@@ -217,7 +217,7 @@
           "at": 0.5,
           "slot": "sub",
           "fx": "entrances/fade",
-          "text": "G-LOUD checks loudness and true peak.",
+          "text": "G-PEAK and W-LOUDNESS check the mix.",
           "cue": "tick"
         }
       ],

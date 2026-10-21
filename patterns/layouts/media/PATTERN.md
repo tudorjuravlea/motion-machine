@@ -47,7 +47,7 @@ One picture from the piece's `assets/`, framed at its own proportions or full bl
 - `--mm-weight-text`
 
 ## Legibility and rest notes
-- The picture is an `<img data-media>` leaf, so the gate's pixel rules (G-LITERAL, W-BAN) mask its content box and read what lies behind it from the same frame with the picture hidden; the kit decodes it before the first seek, so each frame depends on `t` and nothing else.
+- The picture is an `<img data-media>` leaf, so the gate's pixel rules (G-BRAND, W-BAN) mask its content box and read what lies behind it from the same frame with the picture hidden; the kit decodes it before the first seek, so each frame depends on `t` and nothing else.
 - framed: the frame takes the picture's proportions (`--mm-asset-ratio`, default 16 / 9 when the kit has not written one) and the largest size that leaves room for two headline lines and two caption lines (one of each in 16x9); the picture covers it (`object-fit: cover`), clipped by the frame's radius. Headline, picture and caption are one block, centred in the safe box, which is lifted by half a safe margin (H-FILL), and aligned per `--mm-align`.
 - 16x9 with a portrait or square picture (`data-asset-shape`, written by the kit: portrait below 0.8, square up to 1.25): the picture stands on the right at the full height of the box (at most 60 % of its width) and the headline and caption are a column on its left, centred on it; stacked otherwise.
 - bleed: the frame is the whole frame (the box's insets turned outward); headline and caption sit on canvas plates under the top row, never on the picture, so their contrast is the brand's ink on canvas.

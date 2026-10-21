@@ -29,12 +29,12 @@ A fictional product; nothing here names a real company.
   them, logs the change in round 1 and does not insist on the preset (SKILL.md, opening). Either
   outcome passes; silently ignoring the director fails.
 - The story is written in style roles (`fx: "style:headline"`, a scene `position`, no `cut`), its
-  first headline is finished at frame 0 (`at: 0`, `params.instant: true`; G-HOOK) and `cta`
+  first headline is finished at frame 0 (`at: 0`, `params.instant: true`; W-HOOK) and `cta`
   carries both `text` and `url` (`""` when there is no link).
 - The piece is scaffolded where the agent works (`pieces/lumen-ledger/` or `--dir <folder>`) and
   never moved afterwards; any capture goes in the piece's `capture/` folder, not in `styles/`.
-- Result: one 20 s film (G-LENGTH: 20.0 s), all requested formats exported at `--sub 1`, `mm check`
-  exit 0, every WARN explained (W-EMPTY and W-STAGGER included), `--prove` ok, a handover whose unverified list names the 3-second claim
+- Result: one 20 s film (W-LENGTH: 20.0 s), all requested formats exported at `--sub 1`, `mm check`
+  exit 0, every WARN read and accepted or fixed (W-EMPTY and W-STAGGER included), `--prove` ok, a handover whose unverified list names the 3-second claim
   as needing a second read.
 - Named gaps are expected (no phone recording exists): a device pattern (`devices/phone`) with
   placeholder screens is acceptable only if the handover says so; inventing a screen recording is

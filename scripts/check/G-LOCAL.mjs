@@ -9,7 +9,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { rule } from '../lib/report.mjs';
-import { ROOT, isWithin, refsOf, resolvesPattern, restInstants, round, sources, texts } from './_lib.mjs';
+import { ROOT, auditInstants, isWithin, refsOf, resolvesPattern, round, sources, texts } from './_lib.mjs';
 
 export const scope = 'format';
 
@@ -98,7 +98,7 @@ export default async function (ctx) {
 
   const platform = [];
   let unread = 0, read = 0;
-  for (const t of restInstants(ctx.schedule)) {
+  for (const t of auditInstants(ctx.schedule)) {
     const s = await ctx.sample(t);
     for (const el of texts(s)) {
       if (!el.fonts) { unread++; continue; }

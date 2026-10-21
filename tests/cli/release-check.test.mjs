@@ -30,7 +30,7 @@ const CASES = [
   ['cdn-url', 'R-URL', /runtime\/kit\/net\.js:1\s+https:\/\/cdn\.example\.org/],
   ['no-licence', 'R-LICENSE', /is not the Apache-2\.0 text/],
   ['font-no-licence', 'R-FONT-LICENSE', /styles\/fonts\/acme\s+font files with no LICENSE/],
-  ['bad-pattern', 'R-PATTERNS', /patterns\/entrances\/broken\s+G-PATTERN-CARD/],
+  ['bad-pattern', 'R-PATTERNS', /patterns\/entrances\/broken\s+W-PATTERN-CARD/],
   ['golden-failed', 'R-GOLDEN', /pieces\/golden-x\/out\/check\.json\s+last check failed: G-EDGE/],
   ['strategy-file', 'R-STRATEGY', /DECISIONS\.md\s+planning and decision records are not kept in this repository[\s\S]*docs\/evals\/E1\.md/],
   ['history', 'R-HISTORY', new RegExp(`decision-id\\.md:1\\s+decision id: ${'DE' + 'C'}-999`)],
@@ -46,6 +46,19 @@ test('every sweep has a fixture that makes it fail, with the sweep named and the
     assert.match(r.stdout, finding, `${fixture}: ${r.stdout}`);
     assert.match(r.stdout, new RegExp(`release-check: 1 sweep failed: ${sweep}`));
   }
+});
+
+test('R-PATTERNS holds the library to literal values: a hex colour in a pattern fails, where a piece only warns', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'mm-literal-'));
+  try {
+    cpSync(join(ROOT, 'fixtures/negatives/patterns/W-LITERAL'), join(root, 'patterns'), { recursive: true });
+    cpSync(join(ROOT, 'PROVENANCE.md'), join(root, 'PROVENANCE.md'));
+    const r = await releaseCheck({ root, only: ['R-PATTERNS'] });
+    assert.equal(r.code, 1);
+    const text = r.sweeps[0].findings.map((f) => f.text).join('\n');
+    assert.match(text, /W-LITERAL: hex colour/);
+    assert.doesNotMatch(text, /W-PATTERN-CARD|W-PROVENANCE|G-TIME/);
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
 test('near misses pass: a short word inside longer words, the SVG namespace, a licensed font folder beside an unlicensed one', async () => {

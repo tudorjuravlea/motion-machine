@@ -16,7 +16,7 @@ exists). `mm review` appends it to `out/review.html`.
 | # | Where | Note | Raised by | Status | Fix |
 |---|---|---|---|---|---|
 | D1 | 19.0–23.0 s · 9x16 · gate | figure "32 rules" runs off the right edge | gate G-EDGE | fixed | suffix moved to the headline (story) |
-| D2 | press 10 · cta | last press brings headline and URL together | gate G-QUIET | fixed | end card split over two presses |
+| D2 | press 10 · cta | last press brings headline and URL together | gate W-QUIET | fixed | end card split over two presses |
 | D3 | all · stat-hero 16x9 | figure box overlaps the headline by 9.8 px | gate G-OVERLAP | accepted | layout defect, logged in the piece folder's `gaps.md`; worked around in the story |
 ```
 

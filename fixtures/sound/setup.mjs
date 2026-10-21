@@ -211,14 +211,14 @@ export const NEG = join(ROOT, 'fixtures', 'negatives');
 const gridBeats = Array.from({ length: 16 }, (_, k) => CLICK_OFFSET + k * 0.5);
 
 /**
- * Writes fixtures/negatives/{G-LOUD,W-CUE,W-MIX}/ (committed: story, style, page; W-CUE's grid) and
- * puts the pre-mixed -8 LUFS track at G-LOUD/out/mix.wav (generated, git-ignored, like all of out/).
+ * Writes fixtures/negatives/{G-PEAK,W-LOUDNESS,W-CUE,W-MIX}/ (committed: story, style, page; W-CUE's grid) and
+ * ships a clipping mix at G-PEAK/out/mix.wav and a quiet one at W-LOUDNESS/out/mix.wav (tracked through .gitignore exceptions, unlike the rest of out/).
  */
 export async function ensureNegatives() {
   // The three sound negatives are tracked fixtures built from fixtures/negatives/_base/film
-  // by the gate lane (G-LOUD ships its -8 LUFS out/mix.wav through a .gitignore exception). Rewriting them
+  // by the gate lane (G-PEAK and W-LOUDNESS ship their out/mix.wav through .gitignore exceptions). Rewriting them
   // here would undo that, so this only returns their paths.
-  return { loud: join(NEG, 'G-LOUD'), cue: join(NEG, 'W-CUE'), mix: join(NEG, 'W-MIX') };
+  return { peak: join(NEG, 'G-PEAK'), quiet: join(NEG, 'W-LOUDNESS'), cue: join(NEG, 'W-CUE'), mix: join(NEG, 'W-MIX') };
 }
 
 /** A gate context for a piece directory, built without a browser (schedule from the pure kit). */

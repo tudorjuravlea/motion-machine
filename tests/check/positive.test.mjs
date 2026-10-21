@@ -11,7 +11,7 @@ import { gate } from './_harness.mjs';
 
 const run = gate();
 const findings = (res) => res.rules.filter((r) => r.status === 'FAIL' || r.status === 'WARN').map((r) => `${r.id} ${r.status}: ${r.evidence.reason ?? ''}`);
-const SOUND = new Set(['G-LOUD', 'W-CUE', 'W-MIX']);
+const SOUND = new Set(['G-PEAK', 'W-LOUDNESS', 'W-CUE', 'W-MIX']);
 
 for (const kind of ['film', 'deck']) {
   test(`_base/${kind}: every rule PASS or SKIP with a reason, exit 0`, async () => {
@@ -27,11 +27,11 @@ for (const kind of ['film', 'deck']) {
 }
 
 // The kit-smoke fixtures are kit fixtures, not productions: the film is 6 s and the deck
-// 3 presses (under G-LENGTH), and the deck's last press brings two elements (G-QUIET). Everything
-// else passes (G-LEGIBLE since scale.body is 0.27). Empty these when kit-smoke is
+// 3 presses (under W-LENGTH), and the deck's last press brings two elements (W-QUIET). They warn
+// and nothing fails (G-LEGIBLE since scale.body is 0.27). Empty these when kit-smoke is
 // brought inside the thresholds.
-const KIT_SMOKE = { film: ['G-LENGTH'], deck: ['G-QUIET', 'G-LENGTH'] };
-// G-HOOK also fails there until the kit lane gives kit-smoke's first headline
+const KIT_SMOKE = { film: ['W-LENGTH'], deck: ['W-QUIET', 'W-LENGTH'] };
+// W-HOOK also warns there until the kit lane gives kit-smoke's first headline
 // `params.instant` (film) or `step: 0` (deck); the pin follows the fixture.
 const hooked = (kind) => {
   const story = JSON.parse(readFileSync(join(ROOT, 'fixtures/kit-smoke', kind, 'story.json'), 'utf8'));
@@ -40,11 +40,13 @@ const hooked = (kind) => {
 };
 
 for (const kind of ['film', 'deck']) {
-  test(`kit-smoke ${kind}: no G- failure beyond the pinned threshold conflicts`, async () => {
+  test(`kit-smoke ${kind}: no failure, and the pinned threshold conflicts only warn`, async () => {
     const res = await run(join(ROOT, 'fixtures/kit-smoke', kind));
-    const fails = res.rules.filter((r) => r.status === 'FAIL').map((r) => r.id);
-    const expected = hooked(kind) ? KIT_SMOKE[kind] : [...KIT_SMOKE[kind], 'G-HOOK'];
-    assert.deepEqual([...fails].sort(), [...expected].sort(), findings(res).join('\n'));
+    assert.deepEqual(res.rules.filter((r) => r.status === 'FAIL').map((r) => r.id), [], findings(res).join('\n'));
+    assert.equal(res.code, 0);
+    const warned = res.rules.filter((r) => r.status === 'WARN').map((r) => r.id);
+    const expected = hooked(kind) ? KIT_SMOKE[kind] : [...KIT_SMOKE[kind], 'W-HOOK'];
+    for (const id of expected) assert.ok(warned.includes(id), `${id} warns: ${findings(res).join('\n')}`);
     for (const r of res.rules) if (r.status === 'SKIP') assert.ok(r.evidence.reason);
   });
 }
@@ -60,14 +62,14 @@ test('_base/ground: the base film over a brand ground passes every rule, exit 0'
   const res = await run('_base/ground');
   assert.deepEqual(findings(res), []);
   assert.equal(res.code, 0);
-  assert.equal(res.rules.find((r) => r.id === 'G-LITERAL').status, 'PASS', 'the ground colours and their blends are the palette');
+  assert.equal(res.rules.find((r) => r.id === 'G-BRAND').status, 'PASS', 'the ground colours and their blends are the palette');
 });
 
 test('_base/finish: the base film with every finish layer passes every rule, exit 0', async () => {
   const res = await run('_base/finish');
   assert.deepEqual(findings(res), []);
   assert.equal(res.code, 0);
-  assert.equal(res.rules.find((r) => r.id === 'G-LITERAL').status, 'PASS', 'the finish draws only palette roles and their blends');
+  assert.equal(res.rules.find((r) => r.id === 'G-BRAND').status, 'PASS', 'the finish draws only palette roles and their blends');
 });
 
 test('_base/variants: a scene drawn differently in 9x16 passes every rule in both formats, exit 0', async () => {

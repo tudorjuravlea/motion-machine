@@ -2,7 +2,7 @@
 // punch and slam never carry text past the safe margin mid-entrance; a dropping
 // plate never covers the headline above it; a counted figure never shows a unit against a
 // number it has not reached ("1 rules"); and a gentle idle under the hook keeps frame 0
-// finished while the first second moves (G-HOOK). Every check samples 30 fps.
+// finished while the first second moves (W-HOOK). Every check samples 30 fps.
 // Fixtures: fixtures/kit-smoke/composition (layouts.json, opening.json); golden via golden-smoke.
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
@@ -199,7 +199,7 @@ test('the golden deck\'s gate figure never reads "1 rules", and every rest shows
   } finally { await o.close(); }
 });
 
-test('an idle under the hook keeps frame 0 finished (G-HOOK) and moves in the first second', async () => {
+test('an idle under the hook keeps frame 0 finished (W-HOOK) and moves in the first second', async () => {
   for (const preset of PRESETS) {
     const o = await open({ preset, story: 'opening' }, '9x16');
     try {

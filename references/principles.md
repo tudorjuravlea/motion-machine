@@ -61,8 +61,8 @@ The heuristics the skill applies and the reviewer checks, with the reasoning beh
 ## Three habits of prompt-written film that the grammar corrects
 
 - UI rules applied to film (sub-300 ms caps, no ease-in): the grammar uses per-role budgets and allows ease-in on exits and wind-ups [SPEC §15]
-- No numbers: "feels premium" is not a spec; every pattern carries tokens, a minimum hold and a minimum legible size (G-LITERAL, G-LEGIBLE) [SPEC §7]
-- Wall-clock logic: every value is computed from time alone and springs are at rest before the clip ends (G-TIME, G-DETERMINISM, G-REST) [SPEC §7]
+- No numbers: "feels premium" is not a spec; every pattern carries tokens, a minimum hold and a minimum legible size (G-BRAND, W-LITERAL, G-LEGIBLE) [SPEC §7]
+- Wall-clock logic: every value is computed from time alone and springs are at rest before the clip ends (G-TIME, G-DETERMINISM, G-REST; W-SCENE-END for a film scene that ends mid-motion) [SPEC §7]
 
 ## Ten mechanical rules and where they live
 
@@ -75,6 +75,6 @@ The heuristics the skill applies and the reviewer checks, with the reasoning beh
 | 5. stagger span at most 0.5 s; first tween at least 0.1 s after the cut | W-STAGGER |
 | 6. at most two tweens per scene share an ease; at least three distinct eases | not yet a rule |
 | 7. ambient amplitude at most 20 % of primary; text scale within 5 % | W-AMBIENT |
-| 8. dead zone over 1 s, overlap over 30 %, off-frame element | G-DEAD (4 s window), G-OVERLAP (any overlap), G-EDGE |
+| 8. dead zone over 1 s, overlap over 30 %, off-frame element | W-DEAD (4 s window), G-OVERLAP (any overlap), G-EDGE |
 | 9. one caption group at a time, within the style's words-per-group range | W-CAPTION |
-| 10. effect peaks 6-8 dB over the bed, cues per 10 s in range, at most two at once, fades present | not yet a rule in the ledger; W-CUE and G-LOUD cover beat drift and loudness only |
+| 10. effect peaks 6-8 dB over the bed, cues per 10 s in range, at most two at once, fades present | not yet a rule in the ledger; W-CUE, G-PEAK and W-LOUDNESS cover beat drift, clipping and loudness only |

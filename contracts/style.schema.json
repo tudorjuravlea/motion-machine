@@ -32,6 +32,7 @@
     "sound":       { "$ref": "urn:motion-machine:contracts:motion#/properties/sound" },
     "transitions": { "$ref": "urn:motion-machine:contracts:motion#/properties/transitions" },
     "entrances":   { "$ref": "urn:motion-machine:contracts:motion#/properties/entrances" },
-    "pacing":      { "$ref": "urn:motion-machine:contracts:motion#/properties/pacing" }
+    "pacing":      { "$ref": "urn:motion-machine:contracts:motion#/properties/pacing" },
+    "gate":        { "$ref": "urn:motion-machine:contracts:motion#/properties/gate", "description": "the motion half's gate block, carried unchanged; absent when the half has none" }
   }
 }

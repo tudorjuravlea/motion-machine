@@ -218,5 +218,5 @@ Five files, in order:
 4. `scripts/check.mjs`: how the picture is measured.
 5. `scripts/export.mjs`: how it becomes a file.
 
-Then read one rule (`scripts/check/G-HOOK.mjs`), one pattern (`patterns/entrances/rise/`) and its
+Then read one rule (`scripts/check/W-HOOK.mjs`), one pattern (`patterns/entrances/rise/`) and its
 card, and run [GUIDE.md](../GUIDE.md).

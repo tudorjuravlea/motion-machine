@@ -22,7 +22,7 @@ export const row = (res, id) => res.rules.find((r) => r.id === id);
 /**
  * A G- negative: its id FAILs, no other G- rule fails and no W- rule warns. `inherent` names
  * W- ids that are the same defect seen by a warning (a scene still arriving at its end has no hold,
- * so G-REST's negative also warns W-HOLD); nothing else may appear. Returns the row.
+ * so W-SCENE-END's negative also warns W-HOLD); nothing else may appear. Returns the row.
  */
 export function failsOnly(res, id, { inherent = [] } = {}) {
   const r = row(res, id);
@@ -33,11 +33,14 @@ export function failsOnly(res, id, { inherent = [] } = {}) {
   return r;
 }
 
-/** A W- negative: its id WARNs and nothing else fails or warns. Returns the row. */
-export function warnsOnly(res, id) {
+/**
+ * A W- negative: its id WARNs and nothing else fails or warns; the exit code is 0 (a warning never blocks).
+ * `inherent` names W- ids that are the same defect seen by another warning. Returns the row.
+ */
+export function warnsOnly(res, id, { inherent = [] } = {}) {
   const r = row(res, id);
   assert.equal(r?.status, 'WARN', `${id} should WARN; got ${r?.status}: ${r?.evidence?.reason ?? ''}`);
-  const others = res.rules.filter((x) => x.id !== id && (x.status === 'FAIL' || x.status === 'WARN'));
+  const others = res.rules.filter((x) => x.id !== id && !(x.status === 'WARN' && inherent.includes(x.id)) && (x.status === 'FAIL' || x.status === 'WARN'));
   assert.deepEqual(others, [], `cross-contamination: other findings\n  ${show(others)}`);
   assert.equal(res.code, 0);
   return r;

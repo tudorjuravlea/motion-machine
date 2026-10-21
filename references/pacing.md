@@ -14,7 +14,7 @@ How long things stay, how often something new arrives, and where a film breathes
 
 ## Arrivals per 10 seconds
 
-- Four seconds with no arrival, departure, cut or move is dead time (G-DEAD, provisional)
+- Four seconds with no arrival, departure, cut or move is dead time (W-DEAD, provisional)
 - Dead time is measured over four seconds, not one, because a deliberate hold is not dead [SPEC §12]
 - A style declares a band of arrivals per 10 s; the default is 3-6, and W-PACE reads it [SPEC §3]
 - Starting bands by energy, still to be measured: calm 2-4, medium 3-6, high 5-9 [SPEC §3]
@@ -32,7 +32,7 @@ How long things stay, how often something new arrives, and where a film breathes
 ## First and last seconds
 
 - Open on the piece's strongest image within the first two seconds; a logo is not that image
-- Keep the ending quiet: the last arrival has settled at least two seconds before the final frame (G-QUIET, provisional)
+- Keep the ending quiet: the last arrival has settled at least two seconds before the final frame (W-QUIET, provisional)
 - The final rest holds; it does not fade unless the style names a fade as its outro [SPEC §15]
 - The last frame is the line to remember, and it must be a legal still
 - A deck's last press introduces at most one element
@@ -59,7 +59,7 @@ How long things stay, how often something new arrives, and where a film breathes
 
 ## Length and format
 
-- Film length is 20-60 s and a deck has 6-20 presses (G-LENGTH, provisional) [SPEC §12]
+- Film length is 20-60 s and a deck has 6-20 presses (W-LENGTH, provisional) [SPEC §12]
 - One story renders in every format the brief names: 9x16, 4x5, 1x1 and 16x9
 - On square and portrait frames, scale the end card up by at least 1.5 times
 - A looping GIF for a feed is 12 fps at 1200 by 675 with 160 colours and stays under 5 MB; its cover is the first frame rendered at twice size

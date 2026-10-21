@@ -1,8 +1,9 @@
-// G-EDGE (SPEC §7, §12): at rests no visible text crosses the format's safe margin unless it (or
+// G-EDGE (SPEC §7, §12): at rests (and at the last instant of a film scene with no rest, where text still
+// arriving is not judged) no visible text crosses the format's safe margin unless it (or
 // an ancestor) carries data-bleed. Boxes are the text's own line boxes, not its block; ::before and
 // ::after text are measured by their own boxes.
 import { rule } from '../lib/report.mjs';
-import { restInstants, round, texts } from './_lib.mjs';
+import { auditInstants, round, settledTexts } from './_lib.mjs';
 
 export const scope = 'format';
 const TOL = 0.5;
@@ -13,11 +14,11 @@ export default async function (ctx) {
   const { safe } = ctx.floors;
   const zone = ctx.format === '9x16' ? PLATFORM_ZONES[ctx.story?.platform] : null;   // opt-in; other formats ignore it
   let instants = 0, boxes = 0;
-  for (const t of restInstants(ctx.schedule)) {
+  for (const t of auditInstants(ctx.schedule)) {
     const s = await ctx.sample(t);
     const { w: W, h: H } = s.probe.frame;
     instants++;
-    for (const el of texts(s)) {
+    for (const el of settledTexts(s)) {
       boxes++;
       if (el.bleed) continue;
       const b = el.ink;

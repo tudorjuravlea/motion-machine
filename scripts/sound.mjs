@@ -39,7 +39,7 @@ const BED_TARGET_DB = 7;
 const BED_UNDER_TRACK_DB = 6;
 const CUE_UNDER_TRACK_PEAK_DB = 4;
 const LOUDNORM_TP = -1.5;
-const TOLERANCE_LU = 1;           // G-LOUD's band: target ± 1 LU, true peak ≤ -1 dBTP, on the shipped file
+const TOLERANCE_LU = 1;           // W-LOUDNESS's band (target ± 1 LU) and G-PEAK's ceiling (true peak ≤ -1 dBTP), on the shipped file
 const TRUE_PEAK_MAX = -1;
 const STAGE2_UNDER_LU = 0.5;      // stage 2 runs when stage 1 lands more than this under the target
 const STAGE2_TRIES = 4;
@@ -421,9 +421,9 @@ export async function buildSound(pieceDir, { formats = null, patterns = null, lo
   const mixInfo = await mixdown({ inputs, D, target, out: mixPath });
   const loudness = await measureLoudness(mixPath);
   const last = mixInfo.attempts.at(-1);
-  if (mixInfo.stage === 'silent') notes.push(`the mix is silent: ${round(loudness.lufs, 1)} LUFS (G-LOUD will fail)`);
+  if (mixInfo.stage === 'silent') notes.push(`the mix is silent: ${round(loudness.lufs, 1)} LUFS (W-LOUDNESS will warn)`);
   else if (Math.abs(last.shippedLufs - target) > TOLERANCE_LU || last.shippedTruePeak > TRUE_PEAK_MAX) {
-    notes.push(`mix encodes to ${round(last.shippedLufs, 1)} LUFS / ${round(last.shippedTruePeak, 1)} dBTP against ${target} LUFS / ${TRUE_PEAK_MAX} dBTP after ${mixInfo.attempts.length} attempt(s), last stage ${mixInfo.stage} (G-LOUD will fail)`);
+    notes.push(`mix encodes to ${round(last.shippedLufs, 1)} LUFS / ${round(last.shippedTruePeak, 1)} dBTP against ${target} LUFS / ${TRUE_PEAK_MAX} dBTP after ${mixInfo.attempts.length} attempt(s), last stage ${mixInfo.stage} (W-LOUDNESS will warn)`);
   }
   const loudnessRecord = { target, stage: mixInfo.stage, lufs: round(loudness.lufs), truePeak: round(loudness.truePeak), attempts: mixInfo.attempts };
 

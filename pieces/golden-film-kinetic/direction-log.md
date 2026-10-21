@@ -65,7 +65,7 @@ For this example the crew stood in for the director; rows marked *stand-in* are 
 |---|---|---|---|---|
 | 6.1 | Gate | `mm check --sub 1` exit 0 → `mm export --prove` → `mm sound` → `mm check --sub 1` exit 0 → `mm review` | *stand-in:* "green" | PASS · WARN · SKIP 30 · 1 · 4; prove ok: 900 frames identical in each format; -14.4 LUFS, -1.0 dBTP (on the ceiling) |
 | 6.2 | W-STAGGER: the time headline arrives 0.02 s after the 0.28 s push settles (needs 0.1 s); every other scene passes | the trade-off of 2.2 and 5.3 | *stand-in:* "accepted: at 0.38 s the push left 7 empty frames (W-EMPTY)" | row in `tests/golden/accepted-warnings.md` |
-| 6.3 | Loudness | true peak -1.0 dBTP, on the G-LOUD ceiling (at most -1) | *stand-in:* "passes as measured; a second mix may land either side" | noted |
+| 6.3 | Loudness | true peak -1.0 dBTP, on the G-PEAK ceiling (at most -1) | *stand-in:* "passes as measured; a second mix may land either side" | noted |
 | 6.4 | W-MIX | structure passed; peaks SKIP (partial: `mm sound` mixed no bed) | crew: "nothing to compare cue peaks against; not a pass" | SKIP stands |
 | 6.5 | Tiles entrance | pop, fade, list-reveal, each run through a forward/reverse comparison of 14.9–18.5 s: only fade and list-reveal come back identical | *stand-in:* "fade, shared with the editorial film: it keeps the bento picture; the tiles still arrive in order" | tiles `entrances/fade` (D7) |
 | 6.6 | Ledger re-check | `defects.md` top to bottom against the new stills and `out/check.json` | crew: "no regressions" | — |

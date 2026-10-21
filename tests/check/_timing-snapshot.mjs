@@ -13,7 +13,7 @@ import { resolveStory, forFormat, schedule as buildSchedule, addImplicitPlays } 
 export const SNAPSHOT_FILE = join(ROOT, 'tests', 'check', 'fixtures', 'timing-snapshot.json');
 
 /** The rules the snapshot records (the live gate's TIMING_IDS, fixed before any rule moved). */
-export const SNAPSHOT_IDS = ['G-DEAD', 'G-LENGTH', 'G-QUIET', 'W-READ', 'W-PACE', 'W-HOLD', 'W-CUE', 'W-FADE-ONLY', 'W-ASK'];
+export const SNAPSHOT_IDS = ['W-DEAD', 'W-LENGTH', 'W-QUIET', 'W-READ', 'W-PACE', 'W-HOLD', 'W-CUE', 'W-FADE-ONLY', 'W-ASK'];
 
 /**
  * Every tracked film, loop and deck in pieces/ (relative to the repo), plus fixtures for the
@@ -22,7 +22,7 @@ export const SNAPSHOT_IDS = ['G-DEAD', 'G-LENGTH', 'G-QUIET', 'W-READ', 'W-PACE'
  */
 export const FIXTURE_DIRS = [
   'fixtures/negatives/G-LOOP/ok', 'fixtures/negatives/G-LOOP/auto', 'fixtures/negatives/_base/variants',
-  ...SNAPSHOT_IDS.map((id) => (id === 'G-QUIET' ? 'fixtures/negatives/G-QUIET/film' : `fixtures/negatives/${id}`)),
+  ...SNAPSHOT_IDS.map((id) => (id === 'W-QUIET' ? 'fixtures/negatives/W-QUIET/film' : `fixtures/negatives/${id}`)),
 ];
 
 export function pieceDirs() {

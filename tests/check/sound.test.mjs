@@ -1,5 +1,5 @@
 // The sound negatives through the whole gate: each starts from _base/film, so it
-// fails or warns with exactly its id; the G-LOUD negative's shipped mix is a tracked file, so the
+// fails or warns with exactly its id; the G-PEAK and W-LOUDNESS negatives' shipped mixes are tracked files, so the
 // result is the same in a fresh clone.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -7,10 +7,20 @@ import { gate, failsOnly, warnsOnly, row } from './_harness.mjs';
 
 const run = gate();
 
-test('G-LOUD: the tracked out/mix.wav measures -8 LUFS and fails G-LOUD only', async () => {
-  const r = failsOnly(await run('G-LOUD'), 'G-LOUD');
+test('G-PEAK: the tracked out/mix.wav clips (true peak above -1 dBTP) and fails G-PEAK; W-LOUDNESS is the same mix seen by a warning', async () => {
+  const res = await run('G-PEAK');
+  const r = failsOnly(res, 'G-PEAK', { inherent: ['W-LOUDNESS'] });
   assert.equal(r.evidence.file, 'out/mix.wav');
-  assert.ok(Math.abs(r.evidence.measured + 8) <= 0.5, String(r.evidence.measured));
+  assert.ok(r.evidence.truePeak > -1, String(r.evidence.truePeak));
+  assert.match(r.evidence.reason, /dBTP/);
+});
+
+test('W-LOUDNESS: a quiet but clean mix (-24 LUFS, true peak -21 dBTP) only warns; G-PEAK passes and the gate exits 0', async () => {
+  const res = await run('W-LOUDNESS');
+  const r = warnsOnly(res, 'W-LOUDNESS');
+  assert.equal(r.evidence.file, 'out/mix.wav');
+  assert.ok(Math.abs(r.evidence.measured + 24) <= 0.5, String(r.evidence.measured));
+  assert.equal(row(res, 'G-PEAK').status, 'PASS');
 });
 
 test('W-CUE: a cue 120 ms off the grid warns W-CUE only (W-MIX is a partial SKIP: no peaks yet)', async () => {

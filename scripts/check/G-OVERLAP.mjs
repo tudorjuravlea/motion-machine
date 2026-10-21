@@ -1,8 +1,9 @@
-// G-OVERLAP (SPEC §7): at rests no two visible text boxes intersect unless one carries data-over.
+// G-OVERLAP (SPEC §7): at rests (and at the last instant of a film scene with no rest, where text still
+// arriving is not judged) no two visible text boxes intersect unless one carries data-over.
 // ::before/::after/::marker text is a box of its own; a host and its own generated or
 // restyled text (::first-letter, ::first-line) are nested.
 import { rule } from '../lib/report.mjs';
-import { restInstants, round, texts } from './_lib.mjs';
+import { auditInstants, round, settledTexts } from './_lib.mjs';
 
 export const scope = 'format';
 const TOL = 0.5;
@@ -14,9 +15,9 @@ const nested = (a, b) => {
 
 export default async function (ctx) {
   let instants = 0, boxes = 0;
-  for (const t of restInstants(ctx.schedule)) {
+  for (const t of auditInstants(ctx.schedule)) {
     const s = await ctx.sample(t);
-    const list = texts(s);
+    const list = settledTexts(s);
     instants++; boxes += list.length;
     for (let i = 0; i < list.length; i++) {
       for (let j = i + 1; j < list.length; j++) {

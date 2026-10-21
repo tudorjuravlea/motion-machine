@@ -28,7 +28,7 @@ W-EMPTY: more than 6 frames with under 0.5 % ink, which a late first arrival int
 scene that a dip or a whip-pan cut shows empty produces. Pull the arrival to `d + 0.1`, or
 choose a cut that carries the outgoing scene (crossfade, push).
 
-## 3. Too many words for the seconds (W-READ, W-HOLD, G-QUIET)
+## 3. Too many words for the seconds (W-READ, W-HOLD, W-QUIET)
 
 W-READ: words × 0.3 s + the last beat's `at` must fit in the scene, and each line must hold settled
 (from the end of its entrance to its `out` or its scene's end) 0.8 s for 1 to 3 words, else 0.3 s per
@@ -36,7 +36,7 @@ word and at least 1.2 s. On a fast grid (beats under 0.6 s apart) give text line
 or bring them in fast and hold the set; only accents may take every beat. W-HOLD: after the last
 arrival *settles* (its `at` plus its duration: `hold`-role text patterns such as
 `text/kinetic-words` and `text/caption-karaoke` take 1.8 s in calm), the rest must reach
-`pacing.holdMinS`. G-QUIET: 2 s after the film's last arrival. The arithmetic at gate 2 is cheaper
+`pacing.holdMinS`. W-QUIET: 2 s after the film's last arrival. The arithmetic at gate 2 is cheaper
 than a re-cut: cut words first (a headline repeated by its plates, a list line under a figure),
 then move seconds between scenes, keeping the total. The golden film cut four lines and
 rebalanced durations at a fixed 30.0 s.
@@ -71,6 +71,9 @@ both moves.
 suffix (`" rules"`) pushes it past the margin. Move the unit into the headline ("32" over "rules,
 measured, not felt.") or use a smaller figure size.
 
+A bleed on purpose (a headline cropped by the frame edge) is declared with `data-bleed` on that text
+or an ancestor; G-EDGE then leaves it alone.
+
 ## 8. Text boxes touching at a rest (G-OVERLAP)
 
 G-OVERLAP measures each text node's box (the line's text box, taller than the glyphs for some
@@ -80,16 +83,21 @@ apart in the bundled faces). If it still fires, the evidence names the two
 slots; choose a pattern or size role that keeps the boxes apart (`data/counter` takes `size:
 display|h1|h2|body|caption`) and render the options before choosing.
 
-## 9. A deck's last press bringing two things (G-QUIET)
+Text laid over text on purpose (a ghosted word behind a headline) is declared with `data-over` on one
+of the two; G-OVERLAP then skips the pair. Use it for an intended overlap, never to hide a collision.
+
+## 9. A deck's last press bringing two things (W-QUIET)
 
 The final press may introduce at most one element. An end card with a name and an address on one
-press fails. Split the end card over two presses (name, then address), or drop one line.
+press warns. Split the end card over two presses (name, then address), or drop one line.
 
-## 10. Literals and clocks in piece code (G-LITERAL, G-TIME)
+## 10. Literals and clocks in piece code (G-BRAND, W-LITERAL, G-TIME)
 
-A hex colour, a `font-family`, a millisecond or a `cubic-bezier` in `piece.css` fails G-LITERAL;
-`setTimeout`, `Date`, `Math.random` or a CSS animation in the piece fails G-TIME. The style file
-is the only look and `t` is the only clock; the golden pieces ship the skeleton's empty
+A colour or a `font-family` the brand does not own fails G-BRAND, however it is set (it reads the
+computed style and samples the rendered pixels); a literal hex, size, space, radius, millisecond or
+`cubic-bezier` in `piece.css` warns W-LITERAL; `setTimeout`, `Date`, `Math.random` or a CSS animation in the piece fails G-TIME. The style file
+is the only look and `t` is the only clock; glows, gradients of roles and `multiply` or `screen` blends of roles pass, while a black vignette or
+a global `contrast()` or `saturate()` grade fails (they move the brand's own colours): the style's `finish` holds the brand-safe finishes; the golden pieces ship the skeleton's empty
 `piece.css` and a `piece.js` that differs from the skeleton only in the kit import `mm new` wrote.
 Do not move a piece afterwards: that import is relative, and `mm check` stops with the missing
 import's name (scaffold in place with `mm new --dir`).

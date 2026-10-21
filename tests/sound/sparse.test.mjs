@@ -8,7 +8,8 @@ import { copyFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { PATTERNS, ctxFor, ensureSilentMp4, variant } from '../../fixtures/sound/setup.mjs';
 import { buildSound, measureLoudness } from '../../scripts/sound.mjs';
-import gLoud from '../../scripts/check/G-LOUD.mjs';
+import gPeak from '../../scripts/check/G-PEAK.mjs';
+import wLoudness from '../../scripts/check/W-LOUDNESS.mjs';
 
 test('three short cues over 20 s of silence: the muxed MP4 lands at -14 ± 1 LUFS and ≤ -1 dBTP; the stage is recorded', async () => {
   const dir = await variant('sparse', {
@@ -31,6 +32,8 @@ test('three short cues over 20 s of silence: the muxed MP4 lands at -14 ± 1 LUF
   const shipped = await measureLoudness(mp4);
   assert.ok(Math.abs(shipped.lufs + 14) <= 1, `MP4 ${shipped.lufs} LUFS`);
   assert.ok(shipped.truePeak <= -1, `MP4 ${shipped.truePeak} dBTP`);
-  const g = await gLoud(await ctxFor(dir));
-  assert.equal(g.status, 'PASS', JSON.stringify(g.evidence));
+  for (const rule of [gPeak, wLoudness]) {
+    const g = await rule(await ctxFor(dir));
+    assert.equal(g.status, 'PASS', JSON.stringify(g.evidence));
+  }
 });

@@ -42,7 +42,7 @@ Sound is a set of short cues named by the visible event they mark, an optional q
 - Place each cue with its own delay and sum with normalisation off, so adding a cue never changes the others' level
 - The bed sits at -6 dB under a user track; the track itself is used unchanged [SPEC §9]
 - Resample everything to 48 kHz, pad or trim to the exact picture length, and compare stream durations afterwards
-- Loudness uses two passes: measure, then normalise in linear mode to the style's integrated target (default -14 LUFS) with true peak at -1 dBTP; G-LOUD accepts one LUFS either side [SPEC §9]
+- Loudness uses two passes: measure, then normalise in linear mode to the style's integrated target (default -14 LUFS) with true peak at -1 dBTP; W-LOUDNESS warns outside one LUFS either side and G-PEAK fails a true peak above -1 dBTP [SPEC §9]
 - A fade-in of about 0.3 s and a fade-out of about 1.5 s on the full mix are usual
 
 ## The CC0 sample option

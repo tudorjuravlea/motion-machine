@@ -60,7 +60,7 @@ test('timingRules without ctx.grid: a story that declares a grid and has cues SK
 test('timing.mjs imports no node: built-in and no bare package, at any depth', () => {
   const { files, bad } = importGraph(join(ROOT, 'scripts', 'check', 'timing.mjs'));
   assert.deepEqual(bad, []);
-  for (const f of ['scripts/check/G-DEAD.mjs', 'scripts/check/W-READ.mjs', 'scripts/check/W-ASK.mjs', 'scripts/check/_pure.mjs', 'scripts/lib/rule.mjs']) assert.ok(files.includes(f), `${f} is in the graph`);
+  for (const f of ['scripts/check/W-DEAD.mjs', 'scripts/check/W-READ.mjs', 'scripts/check/W-ASK.mjs', 'scripts/check/_pure.mjs', 'scripts/lib/rule.mjs']) assert.ok(files.includes(f), `${f} is in the graph`);
 });
 
 test('the import walk catches a node: import and a bare import (it is not vacuous)', () => {
@@ -115,7 +115,7 @@ test('floors: a deck has no scene floors and no dead windows', async () => {
   assert.deepEqual(floors(ctx.schedule, ctx.story, ctx.style), { scenes: [], dead: [] });
 });
 
-test('floors: dead lists the windows G-DEAD fails on, and none on a passing film', async () => {
+test('floors: dead lists the windows W-DEAD warns on, and none on a passing film', async () => {
   const rel = 'pieces/demo-film', format = '16x9';
   const ctx = (await prepare(rel))[format];
   assert.deepEqual(floors(ctx.schedule, ctx.story, ctx.style).dead, []);
@@ -124,8 +124,8 @@ test('floors: dead lists the windows G-DEAD fails on, and none on a passing film
   last.duration += 6;
   const long = (await prepare(rel, { story }))[format];
   const rows = await timingRules({ schedule: long.schedule, story: long.story, style: long.style, grid: { beats: null, declared: false } });
-  const dead = rows.find((r) => r.id === 'G-DEAD');
-  assert.equal(dead.status, 'FAIL');
+  const dead = rows.find((r) => r.id === 'W-DEAD');
+  assert.equal(dead.status, 'WARN');
   const { dead: windows } = floors(long.schedule, long.story, long.style);
   assert.ok(windows.length >= 1);
   assert.ok(windows.every((w) => w.gap > 4 && w.to - w.from > 4));
@@ -197,7 +197,7 @@ test('floors reads W-READ\'s own halves (sceneNeed, lineEnd), not a copy', async
 });
 
 // A one-line scene ("Hi" rising in at 0.5 s): below minDuration W-READ warns, or the line is still
-// arriving at the scene's end (G-REST's defect, which W-READ leaves alone). That is what the floor means.
+// arriving at the scene's end (W-SCENE-END's defect, which W-READ leaves alone). That is what the floor means.
 const hiStory = (d) => {
   const s = JSON.parse(readFileSync(join(ROOT, 'fixtures/negatives/_base/variants/story.json'), 'utf8'));
   s.scenes[0].beats = [{ at: 0.5, slot: 'headline', fx: 'entrances/rise', text: 'Hi' }];

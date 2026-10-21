@@ -1,6 +1,6 @@
 // The mixed kit-smoke film measures -14 ± 1 LUFS with true peak ≤ -1 dBTP; a -30 LUFS
 // input is normalised; the audio stream is as long as the picture (within one frame); the muxed MP4
-// keeps its video untouched; and fixtures/negatives/G-LOUD fails G-LOUD.
+// keeps its video untouched; and the clipping negative fails G-PEAK while the quiet one only warns W-LOUDNESS.
 import { test, before } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
@@ -8,7 +8,8 @@ import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { PATTERNS, ctxFor, ensureNegatives, ensurePiece, ensurePremix, ensureQuiet, ensureShort, variant, withPicture, ROOT } from '../../fixtures/sound/setup.mjs';
 import { buildSound, main, measureLoudness, probe, streamSeconds } from '../../scripts/sound.mjs';
-import gLoud from '../../scripts/check/G-LOUD.mjs';
+import gPeak from '../../scripts/check/G-PEAK.mjs';
+import wLoudness from '../../scripts/check/W-LOUDNESS.mjs';
 const PICTURE = 'kit-smoke-cues-16x9.mp4';   // <story id>-<format>.mp4: the name `mm export` gives a render
 
 const FPS = 10;
@@ -38,9 +39,11 @@ test('the mixed kit-smoke film (track + bed + cues) measures -14 ± 1 LUFS and �
   const video = shipped.streams.find((s) => s.codec_type === 'video');
   assert.equal(video.nb_frames, before.nb_frames, 'the picture is copied, not re-encoded');
   assert.equal(video.codec_name, 'h264');
-  const g = await gLoud(await ctxFor(dir));
-  assert.equal(g.status, 'PASS', JSON.stringify(g.evidence));
-  assert.deepEqual(g.evidence.files.map((f) => f.file), [`out/${PICTURE}`], 'the shipped MP4 is what was measured');
+  for (const rule of [gPeak, wLoudness]) {
+    const g = await rule(await ctxFor(dir));
+    assert.equal(g.status, 'PASS', JSON.stringify(g.evidence));
+    assert.deepEqual(g.evidence.files.map((f) => f.file), [`out/${PICTURE}`], 'the shipped MP4 is what was measured');
+  }
 });
 
 test('the audio stream is as long as the picture, within one frame (track longer, shorter, and cues only)', async () => {
@@ -80,20 +83,30 @@ test('a pre-mixed -8 LUFS track is brought down to the target, and the style tar
   inBand((await buildSound(dir2, { patterns: PATTERNS })).loudness, -16);
 });
 
-test('fixtures/negatives/G-LOUD fails G-LOUD; with no audio built the gate skips with a reason', async () => {
-  const g = await gLoud(await ctxFor(negatives.loud));
+test('fixtures/negatives/G-PEAK fails G-PEAK; W-LOUDNESS/ only warns; with no audio built both skip with a reason', async () => {
+  const g = await gPeak(await ctxFor(negatives.peak));
   assert.equal(g.status, 'FAIL');
-  assert.ok(Math.abs(g.evidence.measured + 8) <= 0.5, JSON.stringify(g.evidence));
-  assert.match(g.evidence.reason, /-8\.\d LUFS/);
+  assert.ok(g.evidence.truePeak > -1, JSON.stringify(g.evidence));
+  assert.match(g.evidence.reason, /dBTP/);
+  const q = await wLoudness(await ctxFor(negatives.quiet));
+  assert.equal(q.status, 'WARN');
+  assert.ok(Math.abs(q.evidence.measured + 24) <= 0.5, JSON.stringify(q.evidence));
+  assert.match(q.evidence.reason, /-24\.\d LUFS/);
+  assert.equal((await gPeak(await ctxFor(negatives.quiet))).status, 'PASS', 'a quiet mix does not clip');
+  assert.equal((await wLoudness(await ctxFor(negatives.peak))).status, 'WARN', 'the clipping mix is also far from the target');
   const none = await variant('no-audio', { track: null, beats: null, cues: [null, null, null, null] });
-  const s = await gLoud(await ctxFor(none));
-  assert.equal(s.status, 'SKIP');
-  assert.ok(s.evidence.reason.length > 10);
+  for (const rule of [gPeak, wLoudness]) {
+    const s = await rule(await ctxFor(none));
+    assert.equal(s.status, 'SKIP');
+    assert.ok(s.evidence.reason.length > 10);
+  }
   // a silent MP4 (no audio stream) also skips, naming the missing stream
   await withPicture(none, PICTURE);
-  const s2 = await gLoud(await ctxFor(none));
-  assert.equal(s2.status, 'SKIP');
-  assert.match(s2.evidence.reason, /no audio stream/);
+  for (const rule of [gPeak, wLoudness]) {
+    const s2 = await rule(await ctxFor(none));
+    assert.equal(s2.status, 'SKIP');
+    assert.match(s2.evidence.reason, /no audio stream/);
+  }
 });
 
 test('a piece with nothing to mix is left alone; a deck is not mixed; setup errors exit 2', async () => {

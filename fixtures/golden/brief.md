@@ -10,7 +10,7 @@ checks it before you show it.
 
 **Facts (every number on screen cites one):**
 - f1 — A 30-second film at 30 frames per second is 900 frames, each drawn from `t` alone. Source: SPEC §2.
-- f2 — The gate checks 37 rules: 20 errors and 17 warnings. Source: SPEC §7.
+- f2 — The gate checks 40 rules: 14 errors and 26 warnings. Source: SPEC §7.
 - f3 — The same story renders as a film and as a clicker deck from one scene model. Source: SPEC §1, §10.
 
 **Style:** rendered twice, in `styles/presets/editorial.json` and `styles/presets/kinetic.json`,
@@ -30,6 +30,6 @@ mișcare", "stories in motion") to prove Latin Extended glyphs render from the b
 | 3 | time | 4 / 2 | "Only time moves things." · 900 frames, each drawn alone (f1) | rise · counter | The mechanism |
 | 4 | style | 4 / 2 | "One brand file. One motion file." two plates | pop ×2, indicate | The swap |
 | 5 | patterns | 4 / 1 | three plates: entrances · transitions · sound | pop, staggered | The vocabulary |
-| 6 | gate | 4 / 1 | 37 rules (f2), "measured, not felt" | count, fade | The gate |
+| 6 | gate | 4 / 1 | 40 rules (f2), "measured, not felt" | count, fade | The gate |
 | 7 | both | 3.5 / 1 | "One brief. A film and a deck." · "Povești în mișcare" | kinetic words, caption | The promise (f3) |
 | 8 | cta | 3.5 / 1 | motion-machine · github.com/tudorjuravlea/motion-machine | fade; two quiet seconds | Call to action |

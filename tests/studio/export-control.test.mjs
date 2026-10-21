@@ -1,5 +1,5 @@
 // The studio's Export, against the real server and the real verbs on temp copies of
-// the kit-smoke film (fails G-HOOK and G-LENGTH, so its exports are forced) at a low frame rate:
+// the kit-smoke film (its copy's font sits outside the piece, so G-LOCAL fails and its exports are forced) at a low frame rate:
 // an Export pins the story it checks (edits refused meanwhile, here and by `mm timeline`); a
 // Cancel during the gate leaves out/check.json as it found it; the studio and a shell's
 // `mm export` exclude each other; a Cancel queued behind Run gate ends at once; a

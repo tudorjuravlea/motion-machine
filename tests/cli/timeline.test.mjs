@@ -224,20 +224,20 @@ test('check prints the timing verdicts; after a write the changed verdicts come 
   fresh();
   const c = tl('check');
   assert.ok([0, 1].includes(c.status), c.out);
-  for (const id of ['G-DEAD', 'G-LENGTH', 'W-READ']) assert.match(c.stdout, new RegExp(id));
+  for (const id of ['W-DEAD', 'W-LENGTH', 'W-READ']) assert.match(c.stdout, new RegExp(id));
   const j = JSON.parse(tl('check', '--json').stdout);
   assert.ok(j.some((r) => r.id === 'W-READ' && r.format === '16x9'));
-  // lengthening intro to 6 s opens a dead window (a new failure) and gives it its hold (an improvement)
+  // lengthening intro to 6 s opens a dead window (a new warning) and gives it its hold (an improvement)
   const r = tl('trim', 'intro', '6', '--json');
   assert.equal(r.status, 0, r.out);
   const { changed } = JSON.parse(r.stdout);
-  assert.ok(changed.some((x) => x.id === 'G-DEAD' && x.before === 'PASS' && x.after === 'FAIL'), JSON.stringify(changed));
+  assert.ok(changed.some((x) => x.id === 'W-DEAD' && x.before === 'PASS' && x.after === 'WARN'), JSON.stringify(changed));
   assert.ok(changed.some((x) => x.id === 'W-HOLD' && x.after === 'PASS'), JSON.stringify(changed));
   const rank = (st) => (st === 'FAIL' ? 0 : st === 'WARN' ? 1 : 2);
   for (let i = 1; i < changed.length; i++) assert.ok(rank(changed[i - 1].after) <= rank(changed[i].after), JSON.stringify(changed));
   const back = tl('trim', 'intro', '3');
   assert.ok(back.stdout.indexOf('W-HOLD 16x9: PASS → WARN') > 0, back.stdout);
-  assert.ok(back.stdout.indexOf('W-HOLD 16x9: PASS → WARN') < back.stdout.indexOf('G-DEAD 16x9: FAIL → PASS'), 'the new warning comes before the fixed failure');
+  assert.ok(back.stdout.indexOf('W-HOLD 16x9: PASS → WARN') < back.stdout.indexOf('W-DEAD 16x9: WARN → PASS'), 'the new warning comes before the fixed one');
 });
 
 test('selection prints what the studio selected', () => {

@@ -1,3 +1,0 @@
-/* Negative G-LITERAL/hue: no literal and every computed colour a role, yet a hue-rotate moves
-   every ink pixel of the opening headline about ΔE 5 off the palette. The old threshold (ΔE 8) let it pass. */
-[data-scene="open"] [data-slot="headline"] { filter: hue-rotate(90deg); }

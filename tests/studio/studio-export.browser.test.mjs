@@ -21,6 +21,8 @@ before(async () => {
   browser = await launchBrowser();
   w = workCopy('studio-export-ui');
   storyFile = join(w.film, 'story.json');
+  // a placeholder in the first headline fails G-PLACEHOLDER at 1.52 s: a failing row that seeks (the film's length and hook only warn)
+  writeFileSync(storyFile, readFileSync(storyFile, 'utf8').replace('"Only time moves things."', '"TODO: only time moves things."'));
   original = readFileSync(storyFile, 'utf8');
   s = await startStudio({ piece: w.film, exportFps: 4 });
   page = await openStudio(browser, s);
@@ -102,12 +104,12 @@ test('Export: the dialog lists the formats with sizes; a failing gate lists its 
   await dlg.locator('[data-export-run]').click();
   await page.waitForFunction(() => /paused while the export runs/.test(window.studio.state().readOnly ?? ''));
   assert.ok(await page.locator('#paused').isVisible(), 'a banner says edits are paused');
-  await dlg.locator('[data-rule="G-HOOK"]').waitFor({ timeout: 90_000 });
+  await dlg.locator('[data-rule="G-PLACEHOLDER"]').waitFor({ timeout: 90_000 });
   assert.equal((await stateOf(page)).readOnly, null, 'edits are back once the run ends');
   assert.equal(await page.locator('#paused').isVisible(), false);
   await page.evaluate(() => window.studio.seek(2));
-  await dlg.locator('[data-rule="G-HOOK"]').click();
-  await page.waitForFunction(() => window.studio.state().t === 0);
+  await dlg.locator('[data-rule="G-PLACEHOLDER"]').click();
+  await page.waitForFunction(() => window.studio.state().t === 1.52);
   await dlg.locator('[data-export-force]').click();
   const video = dlg.locator('video');
   await video.waitFor({ timeout: 180_000 });

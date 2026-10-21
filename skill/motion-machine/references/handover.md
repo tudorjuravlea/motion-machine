@@ -53,7 +53,7 @@ Director: <name>, <date> · or · pending
 ## Rules
 
 - Every WARN in the last `out/check.json` appears in "Warnings and why they stand"; a WARN with no
-  row means the handover is not finished.
+  row means the handover is not finished. A row says that the director accepted it, in a line.
 - "Unverified" is never empty: a machine cannot watch or listen for you.
 - Sizes and durations come from `ffprobe` and `out/export.json`, not from memory.
 - The handover names the commit or the date of the round it describes.

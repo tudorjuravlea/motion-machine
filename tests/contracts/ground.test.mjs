@@ -1,6 +1,6 @@
 // Brand ground: an optional brand field for what sits behind every scene, blurred blobs
 // in the brand's own colours and a clipped mark. Compose carries it into the style, the style schema
-// accepts it, and the palette G-LITERAL checks against includes the blob colours.
+// accepts it, and the palette G-BRAND checks against includes the blob colours.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';

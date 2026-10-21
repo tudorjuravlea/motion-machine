@@ -67,7 +67,7 @@ For this example the crew stood in for the director; rows marked *stand-in* are 
 |---|---|---|---|---|
 | 6.1 | Check | `mm check --sub 1`: all gates passed, 1 WARN (W-STAGGER, library), 4 SKIP | rule; *stand-in:* "the WARN stands: the wall is the dissolve's content, not an arrival hidden in it" | lock |
 | 6.2 | Prove | `mm export --prove`: 1710 frames identical on a second render, in 16x9 and in 9x16 | rule | lock |
-| 6.3 | Sound | `mm sound`: 22 cues, mix −14 LUFS / −1.5 dBTP (limiter); G-LOUD measured −14.0 LUFS on the muxed 16x9 | *stand-in:* "hit on each scene's largest arrival, tick on the next, complete on the wordmark" | as built; nobody listened |
+| 6.3 | Sound | `mm sound`: 22 cues, mix −14 LUFS / −1.5 dBTP (limiter); W-LOUDNESS measured −14.0 LUFS on the muxed 16x9 | *stand-in:* "hit on each scene's largest arrival, tick on the next, complete on the wordmark" | as built; nobody listened |
 | 6.4 | Director pass on the 15 fps animatic and the first export | 2 fps sheets, cut strips, first 2 s, 360 px phone sheet | *stand-in:* "word broken in the 9x16 hook and the library plate; posters cropped on the screens; devices small; W-EMPTY dips after pushes; statement scenes dead for 2.5 to 3.2 s" | D18–D24 fixed |
 | 6.5 | Director pass on the final export | the same sheets | *stand-in:* "what stays is accepted with its reason" | D27 and D28; nothing else re-opened |
 

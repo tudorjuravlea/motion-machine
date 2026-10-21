@@ -40,7 +40,7 @@
 //                        (out/export.lock): `mm check <piece>` (every story format, so out/check.json is the whole
 //                        gate); when it passes, or `force`, `mm export <piece> --formats …` (with --force when the
 //                        gate failed: the MP4s are stamped UNCHECKED); then, when `sound`, `mm sound <piece>
-//                        --formats …` and `mm check` again, since G-LOUD measures the muxed MP4s. Its
+//                        --formats …` and `mm check` again, since G-PEAK and W-LOUDNESS measure the muxed MP4s. Its
 //                        progress goes out on the SSE stream as `export` events, each with { id (the run's, also
 //                        in the 202), state, formats, sound, force, version (the story pinned), line? }: state 'check'|'export'|'sound'|
 //                        'recheck' while it runs, then one of
@@ -324,7 +324,7 @@ export async function startStudio({ piece, port = 0, exportFps, codeRoots = CODE
       const so = await step(run, ['sound', dir, '--formats', formats.join(',')], say);
       if (run.cancelled) return final({ state: 'cancelled', stage: 'sound', files: sized(files) });
       if (so.code !== 0) return final({ state: 'failed', reason: so.reason || `mm sound exited ${so.code}`, files: sized(files), soundFailed: true });
-      // G-LOUD measures the muxed MP4s, so the gate runs again on the mix (as the skill's workflow does)
+      // G-PEAK and W-LOUDNESS measure the muxed MP4s, so the gate runs again on the mix (as the skill's workflow does)
       at('recheck');
       const since2 = Date.now() - 1;
       const again = await gateStep(run, say);

@@ -30,8 +30,8 @@ node pieces/catalogue/join.mjs             # one cut per family in pieces/catalo
 ```
 
 `build.mjs` sizes every scene from the gate's own numbers: 0.3 s a word after the last timed
-arrival (W-READ) and no more than 4 s from that arrival to the cut (G-DEAD), so a scene carries at
-most 13 words. It packs a family into even parts of at most 60 s (G-LENGTH). A transition's second
+arrival (W-READ) and no more than 4 s from that arrival to the cut (W-DEAD), so a scene carries at
+most 13 words. It packs a family into even parts of at most 60 s (W-LENGTH). A transition's second
 and third cards bring their content in once the cut settles (W-STAGGER), read from the kit's
 `cutSeconds`. The music film's track is generated with ffmpeg and git-ignored; `mm beats` writes its
 grid.

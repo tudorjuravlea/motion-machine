@@ -74,7 +74,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": ["blobs", "blur"],
-      "description": "what sits behind every scene; optional, a flat canvas by default. Blobs are blurred shapes in the brand's own colours (added to the palette G-LITERAL checks), placed and sized by shares of the frame; the mark is a picture centred and scaled past the frame, faint",
+      "description": "what sits behind every scene; optional, a flat canvas by default. Blobs are blurred shapes in the brand's own colours (added to the palette G-BRAND checks), placed and sized by shares of the frame; the mark is a picture centred and scaled past the frame, faint",
       "properties": {
         "blobs": {
           "type": "array", "minItems": 1, "maxItems": 8,

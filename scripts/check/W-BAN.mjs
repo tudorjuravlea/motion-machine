@@ -3,6 +3,7 @@
 // over a gradient. corner-labels: text smaller than the caption size inside a corner zone, device
 // chrome (data-chrome) excepted (20 %
 // of each side). frame-borders: a bordered or outlined element covering ≥ 90 % of the frame.
+// A style's `gate.liftBans` names looks this check stops reporting; the others are still checked.
 import { rule } from '../lib/report.mjs';
 import { banActive, restInstants, round, texts } from './_lib.mjs';
 
@@ -12,8 +13,9 @@ export const FRAME = 0.9;
 export const CENTRE_TOL = 0.02;
 
 export default async function (ctx) {
-  const active = ['centered-title-on-gradient', 'corner-labels', 'frame-borders'].filter((b) => banActive(ctx.style, b));
-  if (!active.length) return rule('W-BAN', 'SKIP', { reason: 'the style bans none of the detectable looks' });
+  const lifted = (ctx.style.gate?.liftBans ?? []).filter((b) => banActive(ctx.style, b));   // the style's gate stops this check only; the ban stays in its bans
+  const active = ['centered-title-on-gradient', 'corner-labels', 'frame-borders'].filter((b) => banActive(ctx.style, b) && !lifted.includes(b));
+  if (!active.length) return rule('W-BAN', 'SKIP', { reason: lifted.length ? `the style's gate lifts ${lifted.join(', ')} and bans no other detectable look` : 'the style bans none of the detectable looks', ...(lifted.length ? { lifted } : {}) });
   const hits = [];
   const caption = ctx.style.scale.caption * ctx.floors.base;
   const first = ctx.story.scenes[0].id;
@@ -43,6 +45,6 @@ export default async function (ctx) {
       for (const e of s.probe.elements) if (e.framed && e.box.w >= FRAME * W && e.box.h >= FRAME * H) hits.push({ ban: 'frame-borders', instant: round(t), selector: e.selector });
     }
   }
-  if (hits.length) return rule('W-BAN', 'WARN', { ...hits[0], reason: `banned look: ${hits[0].ban}`, all: hits.slice(0, 20) });
-  return rule('W-BAN', 'PASS', { bans: active });
+  if (hits.length) return rule('W-BAN', 'WARN', { ...hits[0], reason: `banned look: ${hits[0].ban}`, all: hits.slice(0, 20), ...(lifted.length ? { lifted } : {}) });
+  return rule('W-BAN', 'PASS', { bans: active, ...(lifted.length ? { lifted } : {}) });
 }

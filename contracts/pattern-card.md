@@ -2,7 +2,7 @@
 
 A pattern folder `patterns/<group>/<name>/` is complete when it holds the files SPEC §5 lists for
 its group and a `PATTERN.md` with exactly the sections below, in this order, each non-empty. The
-lint reads the `## ` headings literally; a missing, renamed or empty section fails G-PATTERN-CARD.
+lint reads the `## ` headings literally; a missing, renamed or empty section fails `mm pattern lint` (W-PATTERN-CARD; a piece with the same fault is warned).
 
 ```markdown
 # <group>/<name>
@@ -23,7 +23,7 @@ format; "multiple of ctx.unit" scales with the format's type size. See runtime/k
 
 ## Style variables consumed
 A list of the `--mm-*` variables and spring roles the pattern reads. Nothing else may appear in
-its CSS or JS (G-LITERAL).
+its CSS or JS (W-LITERAL).
 
 ## Legibility and rest notes
 What the pattern guarantees at p = 1: nothing mid-motion, no text below the floor it is given,
@@ -31,7 +31,7 @@ boxes inside the measure it is given; any known edge case.
 
 ## Provenance
 `original`, or one line per source: name, licence, what was taken, what changed. Every source
-also has a row in `PROVENANCE.md` (G-PROVENANCE). A restricted or private source is credited in
+also has a row in `PROVENANCE.md` (W-PROVENANCE). A restricted or private source is credited in
 the words `PROVENANCE.md` uses for it.
 
 ## Known limits

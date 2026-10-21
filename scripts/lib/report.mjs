@@ -10,12 +10,13 @@ export const SPEC_VERSION = '0.11';
  * Writes <dir>/out/check.json whole (a temporary file renamed over it), prints a summary, returns the
  * exit code (0 pass, 1 any FAIL). `version` (the story version checked), `formats` (the formats
  * checked) and `complete` (false when the run could not judge every rule: exit 2) are what `mm export`
- * holds the report to.
+ * holds the report to. `tuned` names the warning rules the style's gate block tuned: it is written to the
+ * report and printed after the summary, so the people who read the warnings see which thresholds moved.
  */
-export function writeReport(dir, rules, { quiet = false, version, formats, complete } = {}) {
+export function writeReport(dir, rules, { quiet = false, version, formats, complete, tuned = [] } = {}) {
   const out = join(dir, 'out');
   mkdirSync(out, { recursive: true });
-  const report = { spec: SPEC_VERSION, when: new Date().toISOString(), piece: dir, version, formats, complete, rules };
+  const report = { spec: SPEC_VERSION, when: new Date().toISOString(), piece: dir, version, formats, complete, ...(tuned.length ? { tuned } : {}), rules };
   const tmp = join(out, `check.json.${process.pid}.tmp`);
   writeFileSync(tmp, JSON.stringify(report, null, 2) + '\n');
   renameSync(tmp, join(out, 'check.json'));
@@ -26,6 +27,7 @@ export function writeReport(dir, rules, { quiet = false, version, formats, compl
       console.log(`${r.status.padEnd(4)}  ${r.id}${ev}`);
     }
     console.log(`\n${count('FAIL') ? `${count('FAIL')} rule${count('FAIL') > 1 ? 's' : ''} failed` : 'All rules passed'}; ${count('WARN')} warning${count('WARN') === 1 ? '' : 's'}, ${count('SKIP')} skipped. Report: ${join(out, 'check.json')}`);
+    if (tuned.length) console.log(`Tuned by the style's gate block: ${tuned.join(', ')}.`);
   }
   return count('FAIL') ? 1 : 0;
 }

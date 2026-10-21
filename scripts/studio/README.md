@@ -23,7 +23,7 @@ gesture ─▶ edit ops ─▶ JSON patch ─▶ story.json (only the edited byt
 | `history.js` | Undo and redo as ordinary edits; a drag's stream of edits to one target merges into one entry, and only when nothing would be lost | Node, browser |
 | `model.js` | The timeline: a pure function of the kit's `schedule()` and the raw story. Scenes, one lane per slot name, cues, moves, the music grid; each beat clip knows its source path in the story and whether it can be edited, and why not | Node, browser |
 | `geometry.js` | Time and pixels, zoom anchored under the pointer, snap targets in priority order (playhead, music beat, scene edge, clip edge, frame) within 8 px, never to the dragged thing's own edges | Node, browser |
-| `../check/timing.mjs` | The live gate: the rules `mm check` runs whose verdict needs only the schedule (G-DEAD, G-LENGTH, G-QUIET, W-READ, W-PACE, W-HOLD, W-CUE, W-FADE-ONLY, W-ASK), from the same rule files, plus `floors()`: the shortest each scene may be, and the dead windows | Node, browser |
+| `../check/timing.mjs` | The live gate: the rules `mm check` runs whose verdict needs only the schedule (W-DEAD, W-LENGTH, W-QUIET, W-READ, W-PACE, W-HOLD, W-CUE, W-FADE-ONLY, W-ASK), from the same rule files, plus `floors()`: the shortest each scene may be, and the dead windows | Node, browser |
 | `../lib/story-edit.mjs` | The one writer of `story.json` for the studio and `mm timeline`: version check, story-schema check, a cross-process lock, the receipt appended to `out/studio/journal.jsonl` before an atomic rename; undo by receipt while the file is still that receipt's result; every write refused while an export holds `out/export.lock` (`../lib/export-lock.mjs`: one export of a piece at a time, across processes) | Node |
 | `server.mjs` | `mm studio`'s local server: the repo's files by GET and a small JSON API over one piece (`/api/piece`, `/api/edit`, `/api/undo`, `/api/events` SSE, `/api/selection`, `/api/check`, `/api/export`, `/api/export/cancel`); files with Range support, so a `<video>` seeks. 127.0.0.1 only; foreign Host or Origin refused; writes only the story, `out/studio/`, and the gate's `out/check.json`; Export holds the piece's export lock and runs `mm check`, `mm export`, `mm sound` and, after the mix, `mm check` again, which write under `out/` | Node |
 | `ui/` | The studio page: stage, transport, timeline, inspector, a key legend under the timeline that shows only the keys that work now (`keybar.js`), the format switch with every film format side by side, named by platform (`formats.js`), and Export (`export.js`), which adds a format to the piece when it renders it. Plain ESM, no framework, no build | browser |
@@ -45,7 +45,7 @@ any other, whose label says when the first format (the poster, the opening view)
 format cannot be removed. Export (the accent button, ⌘E) opens a panel: every format the story
 ships starts ticked, and the sound when `mm sound` has something to mix (`GET /api/piece`'s
 `sound`). It runs the full gate on every format, renders an MP4 per ticked format, mixes the sound
-and runs the gate again on the mix (G-LOUD measures the muxed files), and plays each MP4 inline
+and runs the gate again on the mix (G-PEAK and W-LOUDNESS measure the muxed files), and plays each MP4 inline
 with its path. A failing gate lists its rules, each naming its format (a row switches to it and
 seeks), and offers "Export anyway", stamped UNCHECKED.
 

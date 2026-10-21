@@ -4,7 +4,7 @@
 // stream as `export` events; POST /api/export/cancel stops it and leaves out/ as it was (with sound,
 // `mm check` runs again on the mix). The file
 // server answers Range requests, so the page's <video> can seek the MP4 it made. Temp copies of the
-// kit-smoke film (fails G-HOOK and G-LENGTH) and of golden-film-editorial (passes, has cues); every
+// kit-smoke film (its copy's font sits outside the piece, so G-LOCAL fails; its length and hook only warn) and of golden-film-editorial (passes, has cues); every
 // export renders at a low frame rate (startStudio's exportFps) to stay quick.
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
@@ -64,7 +64,8 @@ test('a failing gate: check, then failed with the failing rule ids and rows; not
     assert.equal(r.status, 202, JSON.stringify(r.json));
     const end = await ev.until(ended);
     assert.equal(end.state, 'failed', JSON.stringify(end));
-    assert.ok(end.failed.includes('G-HOOK') && end.failed.includes('G-LENGTH'), JSON.stringify(end.failed));
+    assert.ok(end.failed.includes('G-LOCAL'), JSON.stringify(end.failed));
+    assert.ok(!end.failed.includes('W-HOOK') && !end.failed.includes('W-LENGTH'), 'the warnings do not stop an export');
     assert.ok(end.rules.every((x) => x.status === 'FAIL' && end.failed.includes(x.id)), 'the rows are the failing rules, with their evidence');
     assert.deepEqual(ev.states(), ['check', 'failed']);
     assert.ok(!outFiles(w.film).some((f) => f.endsWith('.mp4')), 'no MP4');
@@ -122,8 +123,10 @@ test('a passing gate with sound: check, export, sound, the gate again on the mix
     assert.equal(end.unchecked, false);
     assert.equal(end.mixChecked, true, 'the gate ran again, after the mux');
     assert.ok(Array.isArray(end.failed), JSON.stringify(end));
-    const loud = JSON.parse(readFileSync(join(c.piece, 'out', 'check.json'), 'utf8')).rules.find((r) => r.id === 'G-LOUD');
-    assert.notEqual(loud.status, 'SKIP', `G-LOUD measured the mix: ${JSON.stringify(loud)}`);
+    for (const id of ['G-PEAK', 'W-LOUDNESS']) {
+      const loud = JSON.parse(readFileSync(join(c.piece, 'out', 'check.json'), 'utf8')).rules.find((r) => r.id === id);
+      assert.notEqual(loud.status, 'SKIP', `${id} measured the mix: ${JSON.stringify(loud)}`);
+    }
     const file = join(c.piece, 'out', 'golden-film-editorial-16x9.mp4');
     assert.notEqual(probeVideo(file).comment, 'UNCHECKED');
     assert.ok(existsSync(join(c.piece, 'out', 'mix.wav')), 'mm sound wrote its mix');

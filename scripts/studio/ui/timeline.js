@@ -29,7 +29,7 @@ export function markTime(model, { instant, selector, id } = {}) {
     const c = model.lanes.flatMap((l) => l.clips).find((x) => x.selector === selector && !x.parent);
     if (c) return c.segments.enter[1];
   }
-  return id === 'G-LENGTH' ? model.duration : null;
+  return id === 'W-LENGTH' ? model.duration : null;
 }
 
 /** The marks of the verdicts that do not pass: one per piece of evidence. */
@@ -209,11 +209,11 @@ export function createTimeline(root, hooks) {
       content.append(g);
     }
 
-    // gate lane (sticky): live verdicts at their instants, W-READ floors at scene ends, G-DEAD windows
+    // gate lane (sticky): live verdicts at their instants, W-READ floors at scene ends, W-DEAD windows
     const gate = row('gate', 'Gate');
     const gt = gate.querySelector('.track');
     for (const d of floors.dead ?? []) {
-      const el = h('div', 'dead', { title: `G-DEAD: nothing happens for ${d.gap} s` }, `dead ${d.gap} s`);
+      const el = h('div', 'dead', { title: `W-DEAD: nothing happens for ${d.gap} s` }, `dead ${d.gap} s`);
       el.style.left = `${x(d.from)}px`; el.style.width = `${(d.to - d.from) * pxPerS}px`;
       gt.append(el);
     }

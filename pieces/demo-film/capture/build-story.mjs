@@ -124,7 +124,7 @@ const notes = {
   film: 'Capture also reads motion. Given the kinetic golden film, mm motion capture read all 900 frames and wrote down its grammar: seven cuts, eighteen arrivals, high energy. It keeps the grammar, never the content.',
   skill: 'And a captured brand becomes a skill of its own with one command: a SKILL file, the composed style, the fonts with their licences and an empty facts file. Any agent can load it and stay on brand.',
   time: 'Why can it be checked at all? Because only time moves things. This sheet is the golden kinetic film, one frame a second. Export renders every one of its 900 frames twice, in fresh pages, and they match byte for byte.',
-  gate: `So the gate can measure instead of judge. ${ruleFiles.length} rules: ${errors} errors that stop an export, ${warnings} warnings that must each be explained. This is its real report on the golden film. Click for the totals.`,
+  gate: `So the gate can measure instead of judge. ${ruleFiles.length} rules: ${errors} errors that stop an export, ${warnings} warnings that advise. This is its real report on the golden film. Click for the totals.`,
   library: `Underneath sits a library of ${patterns.length} patterns in ${groups.length} groups. Every still on this wall is drawn in this deck's brand, because no pattern carries one of its own.`,
   cta: 'One brief, any style, checked before anyone sees it. Click once more for the licence line. Motion Machine is Apache-2.0.',
 };

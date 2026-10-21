@@ -34,7 +34,7 @@ export const subFilter = (sub) => (sub > 1 ? `tmix=frames=${sub},select='not(mod
 
 export function encodeArgs({ out, fps = 30, sub = 1, comment } = {}) {
   // a silent stereo AAC track, its handler named `silent`, so the apps accept the file before `mm sound`
-  // muxes the real mix (which replaces it); G-LOUD does not take it for sound (sound.mjs hasAudio)
+  // muxes the real mix (which replaces it); G-PEAK and W-LOUDNESS do not take it for sound (sound.mjs hasAudio)
   return ['-y', '-hide_banner', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps * sub), '-c:v', 'png', '-i', '-',
     '-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=stereo', '-map', '0:v', '-map', '1:a', '-c:a', 'aac', '-b:a', '128k', '-shortest', '-metadata:s:a:0', 'handler_name=silent',
     '-vf', subFilter(sub) + COLOR_FILTER,

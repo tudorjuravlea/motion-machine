@@ -55,7 +55,7 @@ A pattern lives in `patterns/<group>/<name>/` and is complete or it does not exi
 2. Create the files SPEC section 5 requires for the group (`pattern.js`, `pattern.html`,
    `pattern.css`, `demo/story.json`; a `sound` pattern takes `demo/cue.json` instead). CSS reads
    only `--mm-*` style variables and spring roles; no literal colour, family, size or duration
-   (AXIOM 2, rule G-LITERAL).
+   (AXIOM 2, rules G-BRAND and W-LITERAL).
 3. Write `PATTERN.md` with exactly the seven sections of
    [contracts/pattern-card.md](contracts/pattern-card.md), in order, none empty: Purpose; Use when /
    Do not use when; Params; Style variables consumed; Legibility and rest notes; Provenance; Known
@@ -66,7 +66,7 @@ A pattern lives in `patterns/<group>/<name>/` and is complete or it does not exi
    `node scripts/mm.mjs pattern stills <group>/<name> --style all`. Check each format you claim to
    support; say in Known limits which you do not.
 6. Provenance: `original`, or one line per source in the card (name, licence, what was taken, what
-   changed) plus a row in [PROVENANCE.md](PROVENANCE.md) (rule G-PROVENANCE). A source whose
+   changed) plus a row in [PROVENANCE.md](PROVENANCE.md) (rule W-PROVENANCE, which warns in `mm check` and fails `mm pattern lint` and `release-check`). A source whose
    licence forbids reuse gives principles in your own words, never code or copy (AXIOM 11). Add a
    notice to [NOTICE](NOTICE) when permissive code lands.
 7. Add a row for the pattern to

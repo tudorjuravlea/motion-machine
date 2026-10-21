@@ -58,7 +58,8 @@ describe('golden pieces: gate, exports, log', () => {
       if (FILMS.includes(id)) {
         const st = Object.fromEntries(report.rules.map((r) => [r.id, r.status]));
         assert.equal(st['W-SUB'], 'PASS', 'final check ran with --sub 1, the export default');
-        assert.equal(st['G-LOUD'], 'PASS', 'loudness measured on the muxed MP4s');
+        assert.equal(st['G-PEAK'], 'PASS', 'true peak measured on the muxed MP4s');
+        assert.equal(st['W-LOUDNESS'], 'PASS', 'loudness measured on the muxed MP4s');
         assert.equal(st['W-CUE'], 'PASS', 'cues measured against the 120 BPM grid');
       }
     });

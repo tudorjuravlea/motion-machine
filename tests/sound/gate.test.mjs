@@ -15,28 +15,34 @@ before(async () => {
   await ensurePiece();
   neg = await ensureNegatives();
   rulesDir = mkdtempSync(join(tmpdir(), 'mm-sound-rules-'));
-  for (const id of ['G-LOUD', 'W-CUE', 'W-MIX']) symlinkSync(join(ROOT, 'scripts/check', `${id}.mjs`), join(rulesDir, `${id}.mjs`));
+  for (const id of ['G-PEAK', 'W-LOUDNESS', 'W-CUE', 'W-MIX']) symlinkSync(join(ROOT, 'scripts/check', `${id}.mjs`), join(rulesDir, `${id}.mjs`));
 });
 
-const only = ['G-LOUD', 'W-CUE', 'W-MIX'];
+const only = ['G-PEAK', 'W-LOUDNESS', 'W-CUE', 'W-MIX'];
 const run = (dir) => runCheck(dir, { rulesDir, only }).then((r) => Object.fromEntries(r.rules.map((x) => [x.id, x])));
 
-test('through the composer: W-CUE and W-MIX warn on their negatives, G-LOUD skips until audio exists, and no rule crashes', async () => {
+test('through the composer: W-CUE and W-MIX warn on their negatives, G-PEAK and W-LOUDNESS skip until audio exists, and no rule crashes', async () => {
   const cue = await run(neg.cue);
   assert.equal(cue['W-CUE'].status, 'WARN');
-  assert.equal(cue['G-LOUD'].status, 'SKIP');
+  assert.equal(cue['G-PEAK'].status, 'SKIP');
+  assert.equal(cue['W-LOUDNESS'].status, 'SKIP');
   const mix = await run(neg.mix);
   assert.equal(mix['W-MIX'].status, 'WARN');
   assert.ok(mix['W-MIX'].evidence.kinds.includes('cooldown'));
   assert.equal(mix['W-CUE'].status, 'SKIP');                  // no beat grid in that piece
-  const loud = await run(neg.loud);
-  assert.equal(loud['G-LOUD'].status, 'FAIL');
+  const clip = await run(neg.peak);
+  assert.equal(clip['G-PEAK'].status, 'FAIL');
+  assert.equal(clip['W-LOUDNESS'].status, 'WARN');
+  const quiet = await run(neg.quiet);
+  assert.equal(quiet['G-PEAK'].status, 'PASS');
+  assert.equal(quiet['W-LOUDNESS'].status, 'WARN');
 });
 
-test('through the composer: kit-smoke-cues: W-CUE passes, G-LOUD skips, and only the rate sub-check of W-MIX warns', async () => {
+test('through the composer: kit-smoke-cues: W-CUE passes, G-PEAK and W-LOUDNESS skip, and only the rate sub-check of W-MIX warns', async () => {
   const r = await run(PIECE);
   assert.equal(r['W-CUE'].status, 'PASS');
-  assert.equal(r['G-LOUD'].status, 'SKIP');
+  assert.equal(r['G-PEAK'].status, 'SKIP');
+  assert.equal(r['W-LOUDNESS'].status, 'SKIP');
   assert.deepEqual(r['W-MIX'].evidence.kinds, ['rate']);       // 4 cues in 6 s against calm's 1-4 per 10 s
   for (const x of Object.values(r)) assert.ok(!x.evidence.crash, JSON.stringify(x.evidence));
 });

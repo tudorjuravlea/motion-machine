@@ -39,16 +39,16 @@ output go in `pieces/<id>/capture/` or a git-ignored folder, never in the shippe
 1. **The beat sheet comes before code** (AXIOMS.md AXIOM 6). No scene is rendered from a vibe.
 2. **Only patterns that exist.** Every `layout`, `fx`, `cut`, `move`, `emphasis` and `exit` is an
    id from `mm pattern list`, or a style role (below). Where none fits, write a **named gap**.
-3. **The style file is the only look.** Piece CSS holds `--mm-*` variables only (G-LITERAL, which
-   also samples rendered pixels). Change the look by changing `style.json`.
+3. **The style file is the only look.** Piece CSS holds `--mm-*` variables only (G-BRAND fails a colour
+   or face the brand does not own; W-LITERAL warns on a literal size or timing). Change the look in `style.json`.
 4. **Time alone drives motion.** No timers, `Date`, `Math.random` or CSS animation in `piece.js` or
    `piece.css` (G-TIME, which also traps them at run time). The kit draws every frame from `t`.
 5. **Options for taste, arithmetic for rules.** A gate failure is fixed, not debated; *how* is a
    taste call when there is more than one honest way.
 6. **Write before you change.** A note goes into `defects.md` with its timecode before anything is
    edited; every call goes into `direction-log.md` as a quotation from the director.
-7. **Honest reporting** (AXIOMS.md AXIOM 8). A rule that did not run is SKIP, a warning is
-   explained, a threshold is never loosened to pass, the handover lists what nobody verified.
+7. **Honest reporting** (AXIOMS.md AXIOM 8). A rule that did not run is SKIP, a warning is read and
+   answered, a threshold is never loosened to pass a piece, the handover lists what nobody verified.
 8. **Escalate, do not improvise** (AXIOMS.md AXIOM 14). A missing fact is a question; a missing
    pattern is a named gap; a brief too long for its duration gets a re-scope.
 9. **A device only when the viewer must see the product in use**. An idea, a number or a
@@ -66,8 +66,8 @@ The default way to write `story.json`, so the motion style shows:
 - A scene gives `"position": "opening|related|topic|climax|outro"` and **no `cut`**; the style
   decides the transition. Name a pattern id only to override the style for that beat or scene, and
   say why in the log.
-- **The first frame is the hook** (G-HOOK): the first headline is finished at
-  frame 0. Film: `"at": 0` with `"params": {"instant": true}`. Deck: `"step": 0` (on rest 0,
+- **The first frame is the hook** (W-HOOK; the default for a feed film, a cold open is the
+  director's call): the first headline is finished at frame 0. Film: `"at": 0` with `"params": {"instant": true}`. Deck: `"step": 0` (on rest 0,
   no animation, no emphasis). Later scenes use `step: 0` to be present as the scene cuts in.
 - After a hard cut a first arrival may sit at `at: 0`; after a soft cut it waits for `d + 0.1`
   (W-STAGGER). W-EMPTY warns on more than 6 frames (0.2 s) with under 0.5 % ink: bring
@@ -88,11 +88,11 @@ pieces/<id>/capture/motion.json` gives the shot list and `motion.capture-notes.m
 content, only if a scene shows the product in use (ask for its entry, key action and result): record it (simulator or phone) and `mm media
 prep`, or `mm capture site`; a real device's frame: `mm media frame`. Write the brief summary; the director confirms it.
 
-**Gate 2 · Treatment.** Offer two or three named directions that differ in how the piece is built, not
-only in colour. Each is a short paragraph and a beat sheet (start from `references/archetypes.md`) with its named
-gaps; add a line saying which one you would take. Check arithmetic here: film 20 to 60 s,
-deck 6 to 20 presses (G-LENGTH); per scene words × 0.3 s + last arrival ≤ the scene (W-READ); 2 s
-of quiet after the last arrival (G-QUIET). Let the gate do it: `mm new` (above), the beat sheet into `story.json`, `mm check <piece>`.
+**Gate 2 · Treatment.** Offer two or three named directions that differ in impact (hook, rhythm, reveal, production value
+such as 3D devices, finishes, music sync) as well as in look. Each: a short paragraph and a beat sheet
+(`references/archetypes.md`) with named gaps; say which would stop the scroll and which you would take. Arithmetic (it
+advises): film 20 to 60 s, deck 6 to 20 presses (W-LENGTH); words × 0.3 s + last arrival ≤ the scene (W-READ); 2 s quiet
+after the last arrival (W-QUIET). The gate does it: `mm new` (above), the beat sheet into `story.json`, `mm check <piece>`.
 
 **Gate 3 · Style.** Choose the mode (below), compose into `<piece>/style.json`, show a swatch and
 tempo sheet: `mm pattern stills layouts/title-stack --style <piece>/style.json`, the same for
@@ -115,10 +115,10 @@ background; give the director its URL and reuse it to gate 7 (restart only if it
 
 **Gate 6 · Cut.** Until **lock**, never while the studio exports: `mm check <piece>` (exit 0, or fix or ask the
 director) → `mm export <piece> --prove` → `mm sound <piece>` (cues, bed, loudness, muxed) →
-`mm check <piece>` again (G-LOUD runs on the mux) → `mm review <piece>`. Export is `--sub 1` by
-default; above 1 it blends instants into ghosts of fast text and W-SUB warns, so leave
-it unless the story's text barely travels. Every WARN is fixed or explained in one line. Timecoded
-notes go into the ledger first; each cut is checked against the whole ledger.
+`mm check <piece>` again (G-PEAK and W-LOUDNESS run on the mux) → `mm review <piece>`. Export is `--sub 1` by
+default; above 1 it blends instants into ghosts of fast text and W-SUB warns, so leave it unless the
+story's text barely travels. Every WARN is read; the director accepts it or asks for a fix, in one line in
+the log. Timecoded notes go into the ledger first; each cut is checked against the whole ledger.
 
 **Gate 7 · Deliver.** Every format from the one piece (end cards scale at least 1.5× on square and
 portrait; a length cut removes beats, never trims a line's reading time); for a deck
@@ -163,16 +163,16 @@ brand half (colour, type, composition) worn with a motion half (tempo, curves, c
   reference's grammar, never its content (H-REF); a captured brand is not fictional and stays out
   of shipped presets and `styles/`.
 - **Embed.** `mm skill new --brand <name|path-to-brand.json> [--motion <name|path>] --out <dir>
-  [--license <spdx>] [--force]` scaffolds a thin per-brand skill, named `<brand>-motion`
-  whatever the motion (default `calm`): `SKILL.md` (loads this engine's skill first), `style/`
-  (`brand.json`, `motion.json`, composed `style.json`), `fonts/` with licences, `facts.md` (empty;
-  the only source of that brand's numbers) and the bans it lifts. Use it:
-  `mm new --kind film --style <dir>/style/style.json --id <id>`. The engine stays brand-free.
+  [--license <spdx>] [--force]` scaffolds a thin per-brand skill, named `<brand>-motion` whatever the
+  motion (default `calm`): `SKILL.md` (loads this engine's skill first), `style/` (`brand.json`, `motion.json`,
+  composed `style.json`), `fonts/` with licences, `facts.md` (empty; the only source of that brand's numbers)
+  and the bans it lifts. Use it: `mm new --kind film --style <dir>/style/style.json --id <id>`. The studio
+  pins its own soft thresholds in the `gate` block of `style/motion.json` (`references/gates.md`).
 
 ## Stills review questions (gate 4, and again at every cut)
 
 Put the answers to the director with the contact sheet:
-1. Is the first frame the strongest image and the headline finished, not a logo (H-HOOK, G-HOOK)?
+1. Is the first frame the strongest image and the headline finished, not a logo (H-HOOK, W-HOOK)?
 2. Does each rest say one thing; is a figure alone in its press (H-ONE)?
 3. Does the content sit between the header row and just above mid-frame, never pooled low (H-FILL)?
 4. On `out/phone.png`, can every word be read at 360 px wide (9x16, 4x5 and 1x1; a 16x9 film is judged
@@ -230,9 +230,9 @@ audio not heard, names and dates needing a second read, any face, any ban lifted
 | Too many words for the scene's seconds; a rest under the style's floor | W-READ, W-HOLD | `references/pitfalls.md` §3 |
 | One story worn by two styles with different arrival bands | W-PACE, W-MIX | `references/pitfalls.md` §4 |
 | A camera move still travelling over the rest | W-AMBIENT | `references/pitfalls.md` §6 |
-| A figure with a long suffix in portrait; two text slots touching | G-EDGE, G-OVERLAP | `references/pitfalls.md` §7, §8 |
-| A deck's last press bringing two things | G-QUIET | `references/pitfalls.md` §9 |
-| A hex, family or millisecond in `piece.css`; a timer in `piece.js` | G-LITERAL, G-TIME | `references/pitfalls.md` §10 |
+| A figure with a long suffix in portrait; two text slots touching (overlap or bleed on purpose: `data-over`, `data-bleed`) | G-EDGE, G-OVERLAP | `references/pitfalls.md` §7, §8 |
+| A deck's last press bringing two things | W-QUIET | `references/pitfalls.md` §9 |
+| A hex or family in `piece.css`, a millisecond in it; a timer in `piece.js` | G-BRAND, W-LITERAL, G-TIME | `references/pitfalls.md` §10 |
 | A slot or id that does not resolve; a number with no fact | G-PATTERN-REF, G-FACT-REF | `references/patterns-cheatsheet.md` |
 | Exporting with `--sub` above 1 while text travels | W-SUB | `references/pitfalls.md` §12 |
 | Fading everything in | W-FADE-ONLY, W-BAN | repository root: `references/bans.md` |

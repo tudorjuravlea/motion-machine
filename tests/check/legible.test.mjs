@@ -31,6 +31,24 @@ test('G-LEGIBLE/scaled: the computed size passes, the rendered size (scale 0.6) 
   assert.ok(Math.abs(r.evidence.measured - 36.72 * 0.6) < 0.05, String(r.evidence.measured));
 });
 
+test('G-LEGIBLE/no-rest: a 12 px headline in a scene with motion across its cut fails', async () => {
+  const r = failsOnly(await run('G-LEGIBLE/no-rest'), 'G-LEGIBLE', { inherent: ['W-SCENE-END', 'W-HOLD', 'W-DEAD', 'W-READ', 'W-EMPTY', 'W-LITERAL'] });
+  assert.equal(r.evidence.measured, 12);
+  assert.match(r.evidence.selector, /data-scene="style"/);
+});
+
+test('G-LEGIBLE/micro-fact: data-micro text may not carry a fact', async () => {
+  const r = failsOnly(await run('G-LEGIBLE/micro-fact'), 'G-LEGIBLE');
+  assert.equal(r.evidence.measured, 'data-micro text carries fact f1');
+  assert.equal(r.evidence.selector, '[data-scene="open"] [data-slot="sub"]');
+});
+
+test('G-LEGIBLE/micro-cta: data-micro text may not carry the call to action', async () => {
+  const r = failsOnly(await run('G-LEGIBLE/micro-cta'), 'G-LEGIBLE');
+  assert.equal(r.evidence.measured, 'data-micro text carries the call to action');
+  assert.equal(r.evidence.selector, '[data-scene="close"] [data-slot="sub"]');
+});
+
 test('G-LEGIBLE/pseudo: ::after small print is measured', async () => {
   const r = failsOnly(await run('G-LEGIBLE/pseudo'), 'G-LEGIBLE');
   assert.match(r.evidence.selector, /::after$/);

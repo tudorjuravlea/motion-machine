@@ -22,9 +22,12 @@ docs/private/
 
 # Generated test inputs
 fixtures/sound/kit-smoke-cues/assets/
-!fixtures/negatives/G-LOUD/out/
-fixtures/negatives/G-LOUD/out/*
-!fixtures/negatives/G-LOUD/out/mix.wav
+!fixtures/negatives/G-PEAK/out/
+fixtures/negatives/G-PEAK/out/*
+!fixtures/negatives/G-PEAK/out/mix.wav
+!fixtures/negatives/W-LOUDNESS/out/
+fixtures/negatives/W-LOUDNESS/out/*
+!fixtures/negatives/W-LOUDNESS/out/mix.wav
 fixtures/media/*.mp4
 fixtures/media/*.mov
 tests/kit/media/assets/rec/

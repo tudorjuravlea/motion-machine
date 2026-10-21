@@ -97,9 +97,41 @@
         "arrivalsPer10s": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "integer", "minimum": 0, "maximum": 20 } },
         "energy":         { "type": "string", "enum": ["calm", "medium", "high"] }
       }
+    },
+    "gate": {
+      "type": "object", "additionalProperties": false,
+      "description": "tunes the gate's warnings for this style; hard (G-) rules have no entry here and the schema refuses one. Every key is optional and each tuned rule reports the threshold it used",
+      "properties": {
+        "length": {
+          "type": "object", "additionalProperties": false,
+          "description": "W-LENGTH's bands, each [min, max]: the film in seconds, a looping post in seconds, a deck in presses",
+          "properties": {
+            "filmS":       { "$ref": "#/$defs/band" },
+            "loopS":       { "$ref": "#/$defs/band" },
+            "deckPresses": { "$ref": "#/$defs/band" }
+          }
+        },
+        "deadS":  { "type": "number", "exclusiveMinimum": 0, "maximum": 60, "description": "W-DEAD: the longest window of a film with no arrival, departure, cut or move, in seconds" },
+        "quietS": { "type": "number", "minimum": 0, "maximum": 30, "description": "W-QUIET: the shortest film tail after the last arrival, in seconds" },
+        "read": {
+          "type": "object", "additionalProperties": false,
+          "description": "W-READ: the reading speed and the floors a line must hold settled",
+          "properties": {
+            "perWordS": { "type": "number", "exclusiveMinimum": 0, "maximum": 2, "description": "seconds to read one word (a scene needs its words times this, plus its last arrival)" },
+            "labelS":    { "type": "number", "exclusiveMinimum": 0, "maximum": 10, "description": "seconds a line of one to three words holds settled" },
+            "sentenceS": { "type": "number", "exclusiveMinimum": 0, "maximum": 10, "description": "the least seconds a longer line holds settled (it also needs perWordS per word)" }
+          }
+        },
+        "liftBans": {
+          "type": "array", "uniqueItems": true,
+          "description": "looks W-BAN stops warning about for this style, by name; only the three W-BAN detects can be lifted, and the brand's own `bans` and `allow` stay as they are",
+          "items": { "enum": ["centered-title-on-gradient", "corner-labels", "frame-borders"] }
+        }
+      }
     }
   },
   "$defs": {
+    "band": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number", "minimum": 0, "maximum": 3600 } },
     "easing": {
       "type": "string",
       "pattern": "^(linear|ease-in|ease-out|ease-in-out|cubic-bezier\\(\\s*-?[0-9.]+\\s*,\\s*-?[0-9.]+\\s*,\\s*-?[0-9.]+\\s*,\\s*-?[0-9.]+\\s*\\))$"
