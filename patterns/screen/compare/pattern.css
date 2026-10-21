@@ -1,0 +1,25 @@
+/* screen/compare: the divider, a line in the accent colour across the screen with a round knob at
+   its middle, at --mm-compare-x (a fraction of the screen width) that paint() writes. Above every
+   content layer, as a slider's handle is. */
+.mm-screen-fx[data-do="screen/compare"] { z-index: 50; }
+.mm-compare__line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--mm-compare-x) * 100%);
+  width: calc(var(--mm-space-1) * 0.6);
+  transform: translateX(-50%);
+  background: var(--mm-color-accent);
+}
+.mm-compare__knob {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--mm-compare-x) * 100%);
+  width: calc(var(--mm-space-6) * 1.1);
+  height: calc(var(--mm-space-6) * 1.1);
+  box-sizing: border-box;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: calc(var(--mm-space-6) * 0.3) solid var(--mm-color-accent);
+  background: var(--mm-color-surface);
+}

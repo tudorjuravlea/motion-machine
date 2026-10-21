@@ -1,0 +1,25 @@
+# Release-check sweep list, shipped part (AXIOM 3).
+#
+# The real list of private source names and client words is kept out of the repository, in
+# docs/private/brand-words.txt (git-ignored). `mm release-check` reads that file when it is present
+# and this file always; a clean checkout without the private list only runs the generic patterns
+# below and says so.
+#
+# Format: one extended regular expression per line, case-insensitive; a line starting with # is a
+# comment. A line starting with "@runtime " applies only under runtime/, patterns/, pieces/ and
+# examples/ (the paths that must never load anything from the network); all other lines apply to
+# every shipped text file. Whole-word matching is written with \b.
+#
+# Secret-key shapes
+AKIA[0-9A-Z]{16}
+sk-ant-[A-Za-z0-9_-]{20,}
+gh[pousr]_[A-Za-z0-9]{30,}
+xox[abprs]-[A-Za-z0-9-]{10,}
+AIza[0-9A-Za-z_-]{35}
+-----BEGIN [A-Z ]*PRIVATE KEY-----
+(api[_-]?key|secret|password|token)[ \t]*[:=][ \t]*['"]?[A-Za-z0-9_\/+=-]{16,}
+bearer [A-Za-z0-9._~+\/-]{20,}
+# Environment files
+(^|[\/ ])\.env(\.|$| )
+# Network access in shipped runtime paths
+@runtime https?://

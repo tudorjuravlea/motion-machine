@@ -1,0 +1,371 @@
+{
+  "id": "catalogue-data-1",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Data, part 1 of 2",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Illustrative numbers for the catalogue",
+      "source": "catalogue demo numbers, not a claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Data",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Numbers that arrive as a mechanism. Part 1 of 2."
+        }
+      ],
+      "say": "Numbers that arrive as a mechanism.",
+      "duration": 4
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "counter-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/counter",
+          "value": 94.2,
+          "fact": "f1",
+          "params": {
+            "fix": 1,
+            "suffix": "%",
+            "size": "display"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "counter: Counts to the value in fixed-width digits.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "counter: Counts to the value in fixed-width digits.",
+      "duration": 4.1
+    },
+    {
+      "id": "counter-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/counter",
+          "value": 94.2,
+          "fact": "f1",
+          "params": {
+            "fix": 1,
+            "suffix": "%",
+            "size": "display",
+            "from": 80
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "counter: from: 80. Counts from closer.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "from: 80. Counts from closer.",
+      "duration": 3.4
+    },
+    {
+      "id": "odometer-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/odometer",
+          "value": 4280,
+          "fact": "f1",
+          "params": {
+            "size": "display"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "odometer: Digits roll into place on clipped strips.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "odometer: Digits roll into place on clipped strips.",
+      "duration": 4.1
+    },
+    {
+      "id": "odometer-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/odometer",
+          "value": 4280,
+          "fact": "f1",
+          "params": {
+            "size": "display",
+            "from": 4000
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "odometer: from: 4000. Shorter rolls.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "from: 4000. Shorter rolls.",
+      "duration": 3.4
+    },
+    {
+      "id": "ring-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/ring",
+          "value": 68,
+          "fact": "f1"
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "ring: A circular stroke draws while its readout counts.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "ring: A circular stroke draws while its readout counts.",
+      "duration": 4.1
+    },
+    {
+      "id": "ring-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/ring",
+          "value": 68,
+          "fact": "f1",
+          "params": {
+            "thick": 20
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "ring: thick: 20. A heavier stroke.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "thick: 20. A heavier stroke.",
+      "duration": 3.4
+    },
+    {
+      "id": "fill-bar-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/fill-bar",
+          "value": 72,
+          "fact": "f1"
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "fill-bar: A pill track fills while the readout counts.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "fill-bar: A pill track fills while the readout counts.",
+      "duration": 4.1
+    },
+    {
+      "id": "fill-bar-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/fill-bar",
+          "value": 72,
+          "fact": "f1",
+          "params": {
+            "readout": false
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "fill-bar: readout: false. Just the bar.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "readout: false. Just the bar.",
+      "duration": 3.4
+    },
+    {
+      "id": "bar-grow-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/bar-grow",
+          "fact": "f1",
+          "params": {
+            "values": "32,48,41,67,82",
+            "labels": "Jan,Feb,Mar,Apr,May",
+            "focus": 5
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "bar-grow: Bars grow from a baseline in turn, values counting.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "bar-grow: Bars grow from a baseline in turn, values counting.",
+      "duration": 4.1
+    },
+    {
+      "id": "bar-grow-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/bar-grow",
+          "fact": "f1",
+          "params": {
+            "values": "32,48,41,67,82",
+            "labels": "Jan,Feb,Mar,Apr,May",
+            "focus": 0
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "bar-grow: focus: 0. Every bar in the accent.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "focus: 0. Every bar in the accent.",
+      "duration": 3.4
+    }
+  ],
+  "share": "Data (1/2): counter, odometer, ring, fill-bar, bar-grow. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

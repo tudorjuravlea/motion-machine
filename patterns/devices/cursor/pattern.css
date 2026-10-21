@@ -1,0 +1,37 @@
+/* devices/cursor: an arrow and a click ring. Its position is set from JS as a percentage of the
+   host slot, so the host should be a positioned area (caption-bar's overlay slot is one). */
+.cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.cursor__arrow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--mm-space-5);
+  height: var(--mm-space-5);
+  translate: -21% -12.5%;
+  overflow: visible;
+}
+.cursor__shape {
+  fill: var(--mm-color-ink);
+  stroke: var(--mm-color-canvas);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+.cursor__ring {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--mm-space-6);
+  height: var(--mm-space-6);
+  translate: -50% -50%;
+  box-sizing: border-box;
+  border-radius: var(--mm-radius-4);
+  border: var(--mm-space-1) solid var(--mm-color-accent);
+  opacity: 0;
+}

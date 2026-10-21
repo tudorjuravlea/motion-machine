@@ -1,0 +1,410 @@
+{
+  "id": "catalogue-exits-1",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Exits",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Exits",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "How things leave."
+        }
+      ],
+      "say": "How things leave.",
+      "duration": 3.6
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "fade-out-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "fade-out",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Goodbye",
+          "out": 2,
+          "exit": "exits/fade-out"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Leaves by opacity alone, faster than it came.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "exits/fade-out",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "fade-out: Leaves by opacity alone, faster than it came.",
+      "duration": 4.1
+    },
+    {
+      "id": "fade-out-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "fade-out",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Goodbye",
+          "out": 2,
+          "exit": "exits/fade-out"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "After a pop entrance. The exit stays the same.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "After a pop entrance. The exit stays the same.",
+      "duration": 3.65
+    },
+    {
+      "id": "blur-out-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "blur-out",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/draw",
+          "out": 2,
+          "exit": "exits/blur-out"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Blurs a picture or shape away as it fades.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "exits/blur-out",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "blur-out: Blurs a picture or shape away as it fades.",
+      "duration": 4.1
+    },
+    {
+      "id": "blur-out-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "blur-out",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/draw",
+          "out": 2,
+          "exit": "exits/blur-out",
+          "params": {
+            "exit": {
+              "blur": 40
+            }
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "blur: 40 px. Softer still on the way out.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "blur: 40 px. Softer still on the way out.",
+      "duration": 3.4
+    },
+    {
+      "id": "drop-out-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "drop-out",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Goodbye",
+          "out": 2,
+          "exit": "exits/drop-out"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Falls away downward while it fades.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "exits/drop-out",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "drop-out: Falls away downward while it fades.",
+      "duration": 4.1
+    },
+    {
+      "id": "drop-out-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "drop-out",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Goodbye",
+          "out": 2,
+          "exit": "exits/drop-out",
+          "params": {
+            "exit": {
+              "d": 300
+            }
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "d: 300 px. A longer fall.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "d: 300 px. A longer fall.",
+      "duration": 3.4
+    },
+    {
+      "id": "push-out-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "push-out",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Goodbye",
+          "out": 2,
+          "exit": "exits/push-out"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Slides out toward one side while it fades.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "exits/push-out",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "push-out: Slides out toward one side while it fades.",
+      "duration": 4.1
+    },
+    {
+      "id": "push-out-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "push-out",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Goodbye",
+          "out": 2,
+          "exit": "exits/push-out",
+          "params": {
+            "exit": {
+              "side": "up"
+            }
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "side: up. It leaves through the top.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "side: up. It leaves through the top.",
+      "duration": 3.4
+    }
+  ],
+  "share": "Exits: fade-out, blur-out, drop-out, push-out. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

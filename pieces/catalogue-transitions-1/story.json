@@ -1,0 +1,384 @@
+{
+  "id": "catalogue-transitions-1",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Transitions, part 1 of 5",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Transitions",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "How one scene hands over. Part 1 of 5."
+        }
+      ],
+      "say": "How one scene hands over.",
+      "duration": 3.7
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch three times.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "A card, the cut as shipped, then one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 4.25
+    },
+    {
+      "id": "hard-cut-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "hard-cut",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "One frame to the next, nothing in between.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/hard-cut",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "One frame to the next, nothing in between.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.6
+    },
+    {
+      "id": "hard-cut-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.12,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "hard-cut"
+        },
+        {
+          "at": 0.24,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 0.36,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "The cut every other is measured against."
+        }
+      ],
+      "say": "The cut every other is measured against.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.11
+    },
+    {
+      "id": "hard-cut-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.12,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "hard-cut"
+        },
+        {
+          "at": 0.24,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 0.36,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "No knobs: it is the zero."
+        }
+      ],
+      "say": "No knobs: it is the zero.",
+      "cut": "transitions/hard-cut",
+      "cutParams": {},
+      "duration": 2.82
+    },
+    {
+      "id": "crossfade-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "crossfade",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Opacity alone; old text clears before new text arrives.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/crossfade",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Opacity alone; old text clears before new text arrives.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.65
+    },
+    {
+      "id": "crossfade-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "crossfade"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/crossfade",
+      "duration": 3.34
+    },
+    {
+      "id": "crossfade-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "crossfade"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "No knobs: the style sets its length."
+        }
+      ],
+      "say": "No knobs: the style sets its length.",
+      "cut": "transitions/crossfade",
+      "cutParams": {},
+      "duration": 3.63
+    },
+    {
+      "id": "blur-crossfade-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "blur-crossfade",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Dissolves while one scene defocuses and the next sharpens.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/blur-crossfade",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Dissolves while one scene defocuses and the next sharpens.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.65
+    },
+    {
+      "id": "blur-crossfade-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 1.12,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "blur-crossfade"
+        },
+        {
+          "at": 1.24,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 1.36,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/blur-crossfade",
+      "duration": 3.82
+    },
+    {
+      "id": "blur-crossfade-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 1.12,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "blur-crossfade"
+        },
+        {
+          "at": 1.24,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 1.36,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "amount: 3. Much softer."
+        }
+      ],
+      "say": "amount: 3. Much softer.",
+      "cut": "transitions/blur-crossfade",
+      "cutParams": {
+        "amount": 3
+      },
+      "duration": 3.82
+    }
+  ],
+  "share": "Transitions (1/5): hard-cut, crossfade, blur-crossfade. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

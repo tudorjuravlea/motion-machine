@@ -1,0 +1,74 @@
+{
+  "id": "kit-smoke-cues",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "kit-smoke film with cues on a 120 BPM grid",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": "assets/audio/track.wav",
+    "bpm": 120,
+    "beats": "assets/beats.json"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/title-stack",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.25,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Only time moves things.",
+          "cue": "tick"
+        },
+        {
+          "at": 1.25,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Every frame is drawn from t alone. Povești în mișcare.",
+          "cue": "hit"
+        }
+      ],
+      "say": "The kit draws every frame from one number."
+    },
+    {
+      "id": "outro",
+      "layout": "layouts/title-stack",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.25,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Same t, same pixels.",
+          "params": {
+            "spring": "ui"
+          },
+          "cue": "tick"
+        },
+        {
+          "at": 0.75,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "kit-smoke: two scenes, one hard cut",
+          "cue": "tick"
+        }
+      ],
+      "say": "Render the same instant twice and get the same picture."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

@@ -1,0 +1,69 @@
+/* grid-break: a headline over identical tiles, then one tile (odd) that breaks the pattern: it
+   takes the accent, sits a little larger and lifts off the grid (no rotated type at rest, bans.md). Tiles keep their cells
+   (visibility) so the grid never reflows as they arrive. */
+.grid-break {
+  position: absolute;
+  inset: var(--mm-safe) calc(var(--mm-safe) + (var(--mm-frame-w) / 2 - var(--mm-safe)) * 0.08 * var(--mm-density)) calc(var(--mm-safe) * 2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  gap: calc(var(--mm-space-5) * var(--mm-density));
+}
+.grid-break__headline {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: calc(var(--mm-size-h1) * var(--mm-headline-scale));
+  line-height: 1.05;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+  text-align: var(--mm-align);
+  color: var(--mm-color-ink);
+}
+.grid-break__headline[data-empty] { display: none; }
+.grid-break__grid {
+  display: grid;
+  gap: calc(var(--mm-space-4) * var(--mm-density));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  height: calc(var(--mm-frame-h) * 0.46);
+}
+[data-format="16x9"] .grid-break__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); height: calc(var(--mm-frame-h) * 0.5); }
+[data-format="1x1"] .grid-break__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); height: calc(var(--mm-frame-h) * 0.42); }
+.grid-break__tile {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: var(--mm-space-3);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-surface);
+  color: var(--mm-color-surfaceInk);
+  font-family: var(--mm-font-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.15;
+  overflow-wrap: break-word;
+  text-align: center;
+}
+.grid-break__tile[data-empty] { visibility: hidden; }
+.grid-break__tile--odd {
+  position: relative;
+  z-index: 1;
+  background: var(--mm-color-accent);
+  color: var(--mm-color-accentInk);
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  /* larger and lifted through margins and top, never scale or translate: an entrance owns those */
+  margin: calc(var(--mm-space-2) * -0.7) calc(var(--mm-space-2) * -0.7) calc(var(--mm-space-2) * -0.1);
+  top: calc(var(--mm-space-2) * -0.6);
+}
+/* align: the brand's composition (--mm-align) by default; a beat param overrides it. */
+.grid-break[data-align="center"] .grid-break__headline,
+.grid-break:has([data-p-align="center"]) .grid-break__headline { text-align: center; }
+.grid-break[data-align="left"] .grid-break__headline,
+.grid-break:has([data-p-align="left"]) .grid-break__headline { text-align: left; }

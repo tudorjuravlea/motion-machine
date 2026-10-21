@@ -1,0 +1,28 @@
+{
+  "title": "Text",
+  "sub": "Type that moves as it lands.",
+  "style": "calm-product",
+  "template": "figure",
+  "items": [
+    { "pattern": "text/caption-karaoke", "figure": { "text": "Light each word" }, "how": "Lights the words of each group in turn.",
+      "knob": { "line": "group: 2. Shorter groups.", "figure": { "params": { "group": 2 } } } },
+    { "pattern": "text/date-flip", "figure": { "text": "2027", "params": { "from": "2026" } }, "how": "The old value is struck through, then flips away.",
+      "knob": { "line": "from: empty. Just the flip.", "figure": { "params": { "from": "" } } } },
+    { "pattern": "text/elastic", "figure": { "text": "Stretch" }, "how": "A width wave runs out from the middle letter.",
+      "knob": { "line": "amp: 0.08. A gentler swell.", "figure": { "params": { "amp": 0.08 } } } },
+    { "pattern": "text/fit-headline", "figure": { "text": "Fitted" }, "how": "Sizes the line to its measure, then rises in.",
+      "knob": { "line": "grow: true. It may grow to fill.", "figure": { "params": { "grow": true } } } },
+    { "pattern": "text/handwrite", "figure": { "text": "hello" }, "how": "Traces each outline in turn, then fills it.",
+      "knob": { "line": "stroke: accent. The tracing line in colour.", "figure": { "params": { "stroke": "accent" } } } },
+    { "pattern": "text/highlight", "figure": { "text": "Marked" }, "how": "A marker sweeps behind the words as they fade in.",
+      "knob": { "line": "strength: 0.15. A fainter marker.", "figure": { "params": { "strength": 0.15 } } } },
+    { "pattern": "text/kinetic-words", "figure": { "text": "Only|time|moves" }, "how": "One word at a time, each replacing the last.",
+      "knob": { "line": "d: 90 px. Each word rises further.", "figure": { "params": { "d": 90 } } } },
+    { "pattern": "text/masked-fill", "figure": { "text": "Fill" }, "how": "A fill rises inside outlined letters, led by an edge.",
+      "knob": { "line": "fill: accent. It fills with colour.", "figure": { "params": { "fill": "accent" } } } },
+    { "pattern": "text/scramble", "figure": { "text": "Decoded" }, "how": "Letters resolve left to right out of shuffling noise.",
+      "knob": { "line": "pool: 0 and 1. Binary noise.", "figure": { "params": { "pool": "01" } } } },
+    { "pattern": "text/split-flap", "figure": { "text": "Board" }, "how": "Departure-board tiles flip through letters and land in turn.",
+      "knob": { "line": "flips: 14. The last tile spins longer.", "figure": { "params": { "flips": 14 } } } }
+  ]
+}

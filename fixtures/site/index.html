@@ -1,0 +1,26 @@
+<!doctype html>
+<!-- Test site for mm capture site (tests/cli/capture-site.test.mjs): 20,000 css px tall at phone
+     width, a sticky header, three marked sections, a fixed cookie banner (magenta, must be hidden)
+     and one lazy image near the bottom (must be loaded). Everything local. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>fixture site</title>
+<style>
+  body { margin: 0; font: 16px/1.4 sans-serif; background: #F4EFE6; color: #1E1B16; }
+  header { position: sticky; top: 0; height: 56px; background: #1E1B16; color: #F4EFE6; display: flex; align-items: center; padding: 0 16px; }
+  section { height: 8000px; padding: 24px 16px; box-sizing: border-box; border-top: 4px solid #B5451B; }
+  #hero { height: 1944px; }
+  .cta { display: inline-block; margin-top: 400px; padding: 14px 28px; background: #B5451B; color: #fff; border-radius: 10px; }
+  #tail { height: 2000px; position: relative; }
+  #lazy-box { position: absolute; top: 1000px; left: 95px; width: 200px; height: 200px; background: #888888; }
+  #lazy { display: block; width: 200px; height: 200px; }
+  #cookie-banner { position: fixed; left: 0; right: 0; bottom: 0; height: 120px; background: #FF00FF; }
+</style></head>
+<body>
+  <div id="backdrop" style="position: fixed; inset: 0; opacity: 0; background: #000;"></div><!-- a closed modal backdrop: not an overlay -->
+  <header>Fixture</header>
+  <section id="hero"><h1>Hero</h1></section>
+  <section id="pricing"><h2>Pricing</h2></section>
+  <section id="signup"><h2>Sign up</h2><a class="cta" href="#">Sign up</a></section>
+  <section id="tail"><div id="lazy-box"><img id="lazy" loading="lazy" src="lazy.png" alt=""></div></section>
+  <div id="cookie-banner">We use cookies</div>
+</body></html>

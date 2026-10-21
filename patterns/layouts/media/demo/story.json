@@ -1,0 +1,39 @@
+{
+  "id": "demo-media",
+  "kind": "film",
+  "formats": ["9x16", "1x1", "16x9"],
+  "title": "Demo: layouts/media",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/media",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": "moves/push-in",
+      "moveParams": { "target": "media", "end": "settle" },
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "entrances/rise", "text": "The proof, as a picture." },
+        { "at": 0.5, "slot": "image", "fx": "entrances/mask-reveal", "asset": "assets/grid.png" },
+        { "at": 1.2, "slot": "caption", "fx": "entrances/fade", "text": "A local asset, framed at its own shape." }
+      ],
+      "say": "A demo of the pattern."
+    },
+    {
+      "id": "demo-bleed",
+      "layout": "layouts/media",
+      "duration": 4.0,
+      "cut": "transitions/hard-cut",
+      "move": "moves/ken-burns",
+      "moveParams": { "target": "media" },
+      "beats": [
+        { "at": 0, "slot": "image", "fx": "entrances/fade", "asset": "assets/grid.png", "params": { "frame": "bleed" } },
+        { "at": 0.4, "slot": "headline", "fx": "entrances/rise", "text": "Edge to edge." }
+      ],
+      "say": "A demo of the bleed variant."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

@@ -1,0 +1,480 @@
+{
+  "id": "effects-reel",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "16x9",
+    "4x5"
+  ],
+  "title": "Effects reel: the effects library",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo series for the effects reel",
+      "source": "fixture, an invented series that carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "open",
+      "layout": "layouts/statement",
+      "duration": 2.6,
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "New moves, any scene.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "No device needed."
+        }
+      ],
+      "say": "New moves, any scene.",
+      "position": "opening"
+    },
+    {
+      "id": "fill",
+      "layout": "layouts/statement",
+      "duration": 3.2,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "text/masked-fill",
+          "text": "Fill it up",
+          "params": {
+            "dur": "slow"
+          }
+        }
+      ],
+      "say": "Fill it up."
+    },
+    {
+      "id": "stretch",
+      "layout": "layouts/statement",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "text/elastic",
+          "text": "Stretch it",
+          "params": {
+            "dur": "slow"
+          }
+        }
+      ],
+      "say": "Stretch it."
+    },
+    {
+      "id": "slats",
+      "layout": "layouts/media",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "image",
+          "fx": "entrances/slats",
+          "asset": "assets/grid.png"
+        },
+        {
+          "at": 0.9,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Slat by slat."
+        }
+      ],
+      "say": "Slat by slat."
+    },
+    {
+      "id": "ring",
+      "layout": "layouts/statement",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Only 3 steps",
+          "emphasis": "emphasis/marker-circle"
+        }
+      ],
+      "say": "Only three steps."
+    },
+    {
+      "id": "moved",
+      "layout": "layouts/title-stack",
+      "duration": 3.8,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "text/date-flip",
+          "text": "March 2027",
+          "params": {
+            "from": "June 2026",
+            "dur": "slow"
+          }
+        },
+        {
+          "at": 1.8,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "The launch moved."
+        }
+      ],
+      "say": "The launch moved."
+    },
+    {
+      "id": "odd",
+      "layout": "layouts/grid-break",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Your week"
+        },
+        {
+          "at": 0.30000000000000004,
+          "slot": "tile-1",
+          "fx": "entrances/pop",
+          "text": "Meeting"
+        },
+        {
+          "at": 0.4,
+          "slot": "tile-2",
+          "fx": "entrances/pop",
+          "text": "Meeting"
+        },
+        {
+          "at": 0.5,
+          "slot": "tile-3",
+          "fx": "entrances/pop",
+          "text": "Meeting"
+        },
+        {
+          "at": 0.6000000000000001,
+          "slot": "tile-4",
+          "fx": "entrances/pop",
+          "text": "Meeting"
+        },
+        {
+          "at": 0.7,
+          "slot": "tile-5",
+          "fx": "entrances/pop",
+          "text": "Meeting"
+        },
+        {
+          "at": 1.1,
+          "slot": "odd",
+          "fx": "entrances/punch",
+          "text": "Focus"
+        }
+      ],
+      "say": "Five meetings, one hour of focus."
+    },
+    {
+      "id": "paper",
+      "layout": "layouts/paper-cards",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "What we learned"
+        },
+        {
+          "at": 0.4,
+          "slot": "card-1",
+          "fx": "entrances/drop",
+          "text": "Ask first"
+        },
+        {
+          "at": 0.7,
+          "slot": "card-2",
+          "fx": "entrances/drop",
+          "text": "Ship small"
+        },
+        {
+          "at": 1.0,
+          "slot": "card-3",
+          "fx": "entrances/drop",
+          "text": "Measure"
+        }
+      ],
+      "say": "Ask first, ship small, measure."
+    },
+    {
+      "id": "pill",
+      "layout": "layouts/statement",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Monthly",
+          "emphasis": "emphasis/stretch-pill"
+        }
+      ],
+      "say": "Monthly."
+    },
+    {
+      "id": "frame",
+      "layout": "layouts/statement",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Look here",
+          "emphasis": "emphasis/brackets"
+        }
+      ],
+      "say": "Look here."
+    },
+    {
+      "id": "lens",
+      "layout": "layouts/list-reveal",
+      "duration": 3.8,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Pick a focus"
+        },
+        {
+          "at": 0.2,
+          "slot": "item-1",
+          "fx": "entrances/fade",
+          "text": "Reviews"
+        },
+        {
+          "at": 0.3,
+          "slot": "item-3",
+          "fx": "entrances/fade",
+          "text": "Rituals"
+        },
+        {
+          "at": 0.4,
+          "slot": "item-2",
+          "fx": "entrances/fade",
+          "text": "Deep work",
+          "emphasis": "emphasis/lens"
+        }
+      ],
+      "say": "Deep work."
+    },
+    {
+      "id": "trend",
+      "layout": "layouts/title-stack",
+      "duration": 3.8,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "data/bar-to-line",
+          "fact": "f1",
+          "params": {
+            "values": "32,48,41,67,82",
+            "labels": "Jan,Feb,Mar,Apr,May",
+            "dur": "slow"
+          }
+        },
+        {
+          "at": 2.2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Amounts, then the trend."
+        }
+      ],
+      "say": "Amounts, then the trend."
+    },
+    {
+      "id": "flow",
+      "layout": "layouts/title-stack",
+      "duration": 3.8,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "data/flow",
+          "params": {
+            "nodes": "Brief|Design,Build,Test|Launch",
+            "dur": "slow"
+          }
+        }
+      ],
+      "say": "One brief, three tracks, one launch."
+    },
+    {
+      "id": "inbox",
+      "layout": "layouts/fan-stack",
+      "duration": 4.2,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "One inbox"
+        },
+        {
+          "at": 0.3,
+          "slot": "card-1",
+          "fx": "entrances/pop",
+          "text": "Invoice"
+        },
+        {
+          "at": 0.5,
+          "slot": "card-2",
+          "fx": "entrances/pop",
+          "text": "Review moved"
+        },
+        {
+          "at": 0.9,
+          "slot": "card-4",
+          "fx": "entrances/pop",
+          "text": "Launch plan ready"
+        }
+      ],
+      "say": "One inbox."
+    },
+    {
+      "id": "layers",
+      "layout": "layouts/bento-3",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": "moves/explode-layers",
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Built in layers"
+        },
+        {
+          "at": 0.1,
+          "slot": "tile-1",
+          "fx": "entrances/fade",
+          "text": "Data"
+        },
+        {
+          "at": 0.2,
+          "slot": "tile-2",
+          "fx": "entrances/fade",
+          "text": "Logic"
+        },
+        {
+          "at": 0.3,
+          "slot": "tile-3",
+          "fx": "entrances/fade",
+          "text": "Interface"
+        }
+      ],
+      "say": "Built in layers."
+    },
+    {
+      "id": "parts",
+      "layout": "layouts/statement",
+      "duration": 3.4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "entrances/assemble",
+          "text": "Made of parts",
+          "params": {
+            "dur": "slow"
+          }
+        },
+        {
+          "at": 1.6,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Dots into words."
+        }
+      ],
+      "say": "Made of parts."
+    },
+    {
+      "id": "cta",
+      "layout": "layouts/endcard",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "line",
+          "fx": "style:body",
+          "text": "Sixteen new patterns."
+        },
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Effects, checked."
+        },
+        {
+          "at": 0.5,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "github.com/tudorjuravlea/motion-machine"
+        }
+      ],
+      "say": "Sixteen new patterns. Effects, checked.",
+      "position": "outro"
+    }
+  ],
+  "cta": {
+    "text": "Effects, checked.",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

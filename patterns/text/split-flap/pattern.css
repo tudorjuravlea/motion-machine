@@ -1,0 +1,11 @@
+.mm-split-flap__word { display: inline-block; white-space: nowrap; }
+.mm-split-flap__c {
+  display: inline-block;
+  text-align: center;
+  padding-inline: var(--mm-space-1);
+  margin-inline: calc(var(--mm-space-0) / 2);
+  border-radius: var(--mm-radius-1);
+  background-color: var(--mm-color-surface);
+  color: var(--mm-color-surfaceInk);
+  background-image: linear-gradient(to bottom, transparent calc(50% - var(--mm-space-0) / 4), var(--mm-color-line) calc(50% - var(--mm-space-0) / 4), var(--mm-color-line) calc(50% + var(--mm-space-0) / 4), transparent calc(50% + var(--mm-space-0) / 4));
+}

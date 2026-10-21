@@ -1,0 +1,2 @@
+/* the computed font-size is the body size; the scale renders it at 60 %. */
+[data-scene="style"] [data-slot="sub"] { scale: 0.6; transform-origin: left top; }

@@ -1,0 +1,410 @@
+{
+ "title": "Sound cues",
+ "sub": "Synthesised, never sampled. Turn the sound on.",
+ "style": "nocturne-kinetic",
+ "template": "scenes",
+ "watch": "Listen as it lands.",
+ "watchSub": "Each cue plays on its own moment.",
+ "items": [
+  {
+   "pattern": "sound/tick",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "tick",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/pop",
+       "text": "Chip",
+       "cue": "tick"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A small arrival: a chip, a word, a bar.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/tick",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/step",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "step",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/rise",
+       "text": "Next",
+       "cue": "step"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "Progress moving on: an item, a stage.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/step",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/press",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "press",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/punch",
+       "text": "Press",
+       "cue": "press"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A button pressed, or a deck advanced.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/press",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/hit",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "hit",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/slam",
+       "text": "Land",
+       "cue": "hit"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A slam, or a figure landing.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/hit",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/swipe",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "cut": "transitions/push",
+     "min": 4.4,
+     "beats": [
+      {
+       "at": 0.7,
+       "slot": "headline",
+       "fx": "entrances/rise",
+       "text": "swipe",
+       "cue": "swipe"
+      },
+      {
+       "at": 0.85,
+       "slot": "body",
+       "fx": "entrances/fade",
+       "text": "A cut between scenes; it sits on the cut."
+      },
+      {
+       "at": 1,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "sound/swipe"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/riser",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "riser",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 1.6,
+       "slot": "figure",
+       "fx": "entrances/slam",
+       "text": "Peak",
+       "cue": "riser"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "The second before a climax; it ends on the landing.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/riser",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/success",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "success",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/pop",
+       "text": "Done",
+       "cue": "success"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A good outcome, landing.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/success",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/bed",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "bed",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/fade",
+       "text": "Hold",
+       "cue": "bed"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A quiet loop under a held rest.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/bed",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/complete",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "complete",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/rise",
+       "text": "The end",
+       "cue": "complete"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "The end card.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/complete",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

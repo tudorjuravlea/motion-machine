@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:motion-machine:contracts:brand",
+  "title": "Motion Machine brand half (SPEC §3): the look",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "version", "fictional", "color", "type", "scale", "space", "radius", "composition", "bans", "allow"],
+  "properties": {
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+    "version": { "type": "integer", "minimum": 1 },
+    "fictional": { "type": "boolean", "description": "true for every shipped preset (AXIOM 3); false for a captured or hand-written real brand" },
+    "source": { "type": "string", "description": "where a captured brand came from; never a URL that the piece would load" },
+    "color": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["canvas", "ink", "muted", "surface", "line", "accent", "accentInk"],
+      "properties": {
+        "canvas":    { "$ref": "#/$defs/hex" },
+        "ink":       { "$ref": "#/$defs/hex" },
+        "muted":     { "$ref": "#/$defs/hex" },
+        "surface":   { "$ref": "#/$defs/hex" },
+        "line":      { "$ref": "#/$defs/hex" },
+        "accent":    { "$ref": "#/$defs/hex" },
+        "accentInk": { "$ref": "#/$defs/hex" },
+        "surfaceInk": { "$ref": "#/$defs/hex", "description": "text on a surface (cards, panels, tiles, caption bars, device screens); ink when absent" }
+      }
+    },
+    "type": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["display", "text", "mono"],
+      "properties": {
+        "display": { "$ref": "#/$defs/face" },
+        "text":    { "$ref": "#/$defs/face" },
+        "mono":    { "$ref": "#/$defs/face" }
+      }
+    },
+    "scale": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["display", "h1", "h2", "body", "caption", "micro"],
+      "properties": {
+        "display": { "type": "number", "exclusiveMinimum": 0, "maximum": 2 },
+        "h1":      { "type": "number", "exclusiveMinimum": 0, "maximum": 2 },
+        "h2":      { "type": "number", "exclusiveMinimum": 0, "maximum": 2 },
+        "body":    { "type": "number", "exclusiveMinimum": 0, "maximum": 2 },
+        "caption": { "type": "number", "exclusiveMinimum": 0, "maximum": 2 },
+        "micro":   { "type": "number", "exclusiveMinimum": 0, "maximum": 2 }
+      }
+    },
+    "space":  { "type": "array", "minItems": 5, "maxItems": 9, "items": { "type": "number", "minimum": 0 } },
+    "radius": { "type": "array", "minItems": 3, "maxItems": 7, "items": { "type": "number", "minimum": 0 } },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["align", "headlineScale", "density"],
+      "description": "the grid and type hierarchy are part of the brand. Layouts take their default alignment and headline size from these; a beat's align param still overrides",
+      "properties": {
+        "align":         { "enum": ["left", "center"], "description": "default alignment of every layout (the kit exposes it as --mm-align: start or center)" },
+        "headlineScale": { "type": "number", "minimum": 0.8, "maximum": 1.4, "description": "multiplier on every layout headline (--mm-headline-scale); 1 is the reference hierarchy" },
+        "density":       { "enum": ["airy", "compact"], "description": "spacing between a layout's blocks and its side indent (--mm-density: airy 1, compact 0.6)" },
+        "accentText":    { "type": "boolean", "description": "false for a brand that never colours text: every pattern that would tint text with the accent uses ink (--mm-accent-text); accent fills are unchanged. Default true" }
+      }
+    },
+    "devices": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "how device frames (phone, laptop, browser) are finished; optional, ink by default",
+      "properties": {
+        "finish": { "enum": ["graphite", "silver", "ink", "canvas"], "description": "every finish is a palette role: ink, canvas (the surface), graphite (the darkest role), silver (the lightest)" }
+      }
+    },
+    "ground": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["blobs", "blur"],
+      "description": "what sits behind every scene; optional, a flat canvas by default. Blobs are blurred shapes in the brand's own colours (added to the palette G-LITERAL checks), placed and sized by shares of the frame; the mark is a picture centred and scaled past the frame, faint",
+      "properties": {
+        "blobs": {
+          "type": "array", "minItems": 1, "maxItems": 8,
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["color", "x", "y", "w", "h", "alpha"],
+            "properties": {
+              "color": { "$ref": "#/$defs/hex" },
+              "x":     { "type": "number", "minimum": -1, "maximum": 2, "description": "left edge, share of the frame width" },
+              "y":     { "type": "number", "minimum": -1, "maximum": 2, "description": "top edge, share of the frame height" },
+              "w":     { "type": "number", "exclusiveMinimum": 0, "maximum": 3, "description": "width, share of the frame width" },
+              "h":     { "type": "number", "exclusiveMinimum": 0, "maximum": 3, "description": "height, share of the frame height" },
+              "alpha": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          }
+        },
+        "blur": { "type": "number", "minimum": 0, "maximum": 0.5, "description": "blur radius, share of the frame width" },
+        "mark": {
+          "type": "object", "additionalProperties": false, "required": ["src", "width", "alpha"],
+          "properties": {
+            "src":   { "type": "string", "pattern": "^(?!https?:)(?!//)[^\\s]+\\.(svg|png|webp)$", "description": "relative path from the piece page; never a URL (SPEC §2.6)" },
+            "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 4, "description": "width, share of the frame width; above 1 the mark is clipped by the frame" },
+            "alpha": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        }
+      }
+    },
+    "finish": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "the surface look, each strength 0 to 1 and optional. Overlays above the scene; whatever can lie over text stays at or under 0.08 opacity",
+      "properties": {
+        "grain":      { "type": "number", "minimum": 0, "maximum": 1, "description": "film grain in ink, seeded from t at 12 Hz; like halftone it darkens the background a little, which W-CONTRAST measures" },
+        "halftone":   { "type": "number", "minimum": 0, "maximum": 1, "description": "a fine dot screen in ink" },
+        "vignette":   { "type": "number", "minimum": 0, "maximum": 1, "description": "the corners darken toward ink; inside the safe area it stays at or under 0.08" },
+        "edgeFringe": { "type": "number", "minimum": 0, "maximum": 1, "description": "a soft accent glow along the frame's edge, outside the safe area" },
+        "paperEdge":  { "type": "number", "minimum": 0, "maximum": 1, "description": "a rough surface-coloured border inside the frame's edge, within the safe margin; it is a frame border, so W-BAN warns unless the brand lists `frame-borders` in `allow`" }
+      }
+    },
+    "ask": {
+      "type": "array",
+      "description": "fields a capture could not measure (fonts from stills, for example), to be confirmed by hand; W-ASK warns while any remain",
+      "items": { "type": "string", "pattern": "^(color|type)\\.[a-zA-Z]+$" },
+      "uniqueItems": true
+    },
+    "bans":   { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/ban" } },
+    "allow":  { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/ban" }, "description": "bans this brand lifts, by name" }
+  },
+  "$defs": {
+    "hex": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+    "ban": {
+      "type": "string",
+      "enum": ["centered-title-on-gradient", "fade-only", "corner-labels", "frame-borders", "glow-on-ui", "particle-burst", "gradient-text", "accent-stripe", "pure-black-white", "identical-card-grid"]
+    },
+    "face": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family", "files", "weight", "tracking"],
+      "properties": {
+        "family":   { "type": "string", "minLength": 1 },
+        "files":    {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["src", "weight", "unicodeRange"],
+            "properties": {
+              "src":          { "type": "string", "pattern": "^(?!https?:)(?!//)[^\\s]+\\.(woff2|woff|ttf|otf)$", "description": "relative path inside the repo or the piece; never a URL (SPEC §2.6)" },
+              "weight":       { "type": "integer", "minimum": 100, "maximum": 900 },
+              "unicodeRange": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "weight":   { "type": "integer", "minimum": 100, "maximum": 900 },
+        "tracking": { "type": "number", "minimum": -0.2, "maximum": 0.5, "description": "em" }
+      }
+    }
+  }
+}

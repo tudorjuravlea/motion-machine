@@ -1,0 +1,48 @@
+{
+  "id": "demo-text-handwrite",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: text/handwrite",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/statement",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/handwrite",
+          "text": "hello",
+          "params": {
+            "dur": 2.2
+          }
+        },
+        {
+          "at": 2.6,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Written, then filled."
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

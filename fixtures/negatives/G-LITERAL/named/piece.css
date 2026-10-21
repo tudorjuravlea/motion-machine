@@ -1,0 +1,2 @@
+/* Negative G-LITERAL/named: a CSS named colour in a shadow, which the old regex missed. */
+[data-slot="headline"] { text-shadow: 0 0 var(--mm-space-1) crimson; }

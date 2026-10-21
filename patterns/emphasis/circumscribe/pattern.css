@@ -1,0 +1,12 @@
+.mm-circumscribe {
+  position: absolute;
+  overflow: visible;
+  pointer-events: none;
+}
+.mm-circumscribe rect {
+  fill: none;
+  stroke: var(--mm-color-accent);
+  stroke-width: var(--mm-space-0);
+  stroke-linejoin: round;
+  stroke-dasharray: 0 2;
+}

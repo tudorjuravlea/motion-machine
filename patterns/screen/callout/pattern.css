@@ -1,0 +1,18 @@
+/* screen/callout: an accent leader line and dot, and a label plate in the brand's surface and ink. */
+.mm-screen-out { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+.mm-screen-out .callout__line { position: absolute; left: 0; top: 0; overflow: visible; }
+.mm-screen-out .callout__line line { stroke: var(--mm-color-accent); stroke-width: calc(var(--mm-space-1) * 0.5); stroke-linecap: round; }
+.mm-screen-out .callout__dot { fill: var(--mm-color-accent); }
+.mm-screen-out .callout__label {
+  position: absolute;
+  translate: 0 -50%;
+  padding: var(--mm-space-2) var(--mm-space-3);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-surface);
+  color: var(--mm-color-surfaceInk);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.2;
+  white-space: nowrap;
+}

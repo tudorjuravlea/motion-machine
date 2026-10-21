@@ -1,0 +1,3 @@
+/* generated text sits on the headline. */
+[data-scene="style"] [data-slot="sub"] { position: relative; }
+[data-scene="style"] [data-slot="sub"]::after { content: "Overlaps"; position: absolute; left: 0; bottom: 100%; }

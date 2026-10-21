@@ -1,0 +1,41 @@
+{
+  "id": "kit-typewriter-end",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "16x9"
+  ],
+  "title": "Kit typewriter end",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "scenes": [
+    {
+      "id": "one",
+      "layout": "layouts/statement",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.45,
+          "slot": "headline",
+          "fx": "entrances/typewriter",
+          "text": "Hello",
+          "params": {
+            "dur": 0.6
+          }
+        }
+      ],
+      "say": ""
+    }
+  ]
+}

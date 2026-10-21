@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:motion-machine:contracts:style",
+  "title": "Motion Machine composed style (SPEC §3): brand half × motion half, as the kit reads it",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "version", "fictional", "from", "color", "type", "scale", "space", "radius", "bans", "allow", "motion", "sound", "transitions", "entrances", "pacing"],
+  "properties": {
+    "name":      { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+    "version":   { "type": "integer", "minimum": 1 },
+    "fictional": { "type": "boolean" },
+    "from": {
+      "type": "object", "additionalProperties": false, "required": ["brand", "motion"],
+      "properties": {
+        "brand":  { "type": "string", "minLength": 1, "description": "repo-relative path of the brand half this was composed from" },
+        "motion": { "type": "string", "minLength": 1 }
+      }
+    },
+    "color":  { "$ref": "urn:motion-machine:contracts:brand#/properties/color" },
+    "type":   { "$ref": "urn:motion-machine:contracts:brand#/properties/type" },
+    "scale":  { "$ref": "urn:motion-machine:contracts:brand#/properties/scale" },
+    "space":  { "$ref": "urn:motion-machine:contracts:brand#/properties/space" },
+    "radius": { "$ref": "urn:motion-machine:contracts:brand#/properties/radius" },
+    "composition": { "$ref": "urn:motion-machine:contracts:brand#/properties/composition", "description": "compose always writes it. Optional here so that a style with no composition still mounts: the kit then reads left, 1, airy" },
+    "devices": { "$ref": "urn:motion-machine:contracts:brand#/properties/devices" },
+    "ground":  { "$ref": "urn:motion-machine:contracts:brand#/properties/ground" },
+    "finish":  { "$ref": "urn:motion-machine:contracts:brand#/properties/finish" },
+    "ask":     { "$ref": "urn:motion-machine:contracts:brand#/properties/ask" },
+    "bans":   { "$ref": "urn:motion-machine:contracts:brand#/properties/bans" },
+    "allow":  { "$ref": "urn:motion-machine:contracts:brand#/properties/allow" },
+    "motion":      { "$ref": "urn:motion-machine:contracts:motion#/properties/motion" },
+    "sound":       { "$ref": "urn:motion-machine:contracts:motion#/properties/sound" },
+    "transitions": { "$ref": "urn:motion-machine:contracts:motion#/properties/transitions" },
+    "entrances":   { "$ref": "urn:motion-machine:contracts:motion#/properties/entrances" },
+    "pacing":      { "$ref": "urn:motion-machine:contracts:motion#/properties/pacing" }
+  }
+}

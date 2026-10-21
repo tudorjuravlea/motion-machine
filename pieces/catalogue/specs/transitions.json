@@ -1,0 +1,37 @@
+{
+  "title": "Transitions",
+  "sub": "How one scene hands over.",
+  "style": "editorial",
+  "template": "transition",
+  "watch": "Watch three times.",
+  "watchSub": "A card, the cut as shipped, then one knob turned.",
+  "items": [
+    { "pattern": "transitions/hard-cut", "how": "One frame to the next, nothing in between.", "again": "The cut every other is measured against.", "knob": { "line": "No knobs: it is the zero.", "cutParams": {} } },
+    { "pattern": "transitions/crossfade", "how": "Opacity alone; old text clears before new text arrives.", "knob": { "line": "No knobs: the style sets its length.", "cutParams": {} } },
+    { "pattern": "transitions/blur-crossfade", "how": "Dissolves while one scene defocuses and the next sharpens.", "knob": { "line": "amount: 3. Much softer.", "cutParams": { "amount": 3 } } },
+    { "pattern": "transitions/color-dip", "how": "Dips into a flat colour, then rises out of it.", "knob": { "line": "veil: ink, hold: 0.6. A longer dark beat.", "cutParams": { "veil": "ink", "hold": 0.6 } } },
+    { "pattern": "transitions/light-leak", "how": "A warm glow washes across and peaks at the swap.", "knob": { "line": "No knobs: the glow takes the accent.", "cutParams": {} } },
+    { "pattern": "transitions/wipe", "how": "A coloured plate sweeps across and cuts the old away.", "knob": { "line": "plate: surface, direction: up.", "cutParams": { "plate": "surface", "direction": "up" } } },
+    { "pattern": "transitions/push", "how": "The new scene slides in and pushes the old out.", "knob": { "line": "direction: up. Both travel upwards.", "cutParams": { "direction": "up" } } },
+    { "pattern": "transitions/whip-pan", "how": "A fast pan, its blur swelling with the speed.", "knob": { "line": "direction: down, amount: 2.", "cutParams": { "direction": "down", "amount": 2 } } },
+    { "pattern": "transitions/iris", "how": "A growing circle opens from the centre of the frame.", "knob": { "line": "shape: diamond.", "cutParams": { "shape": "diamond" } } },
+    { "pattern": "transitions/clock-wipe", "how": "A hand sweeps round the centre from twelve o'clock.", "knob": { "line": "direction: counter. Anticlockwise.", "cutParams": { "direction": "counter" } } },
+    { "pattern": "transitions/split", "how": "Opens from a seam through the middle, like doors.", "knob": { "line": "shape: vertical. A straight seam.", "cutParams": { "shape": "vertical" } } },
+    { "pattern": "transitions/blinds", "how": "The next scene shows through slats that open together.", "knob": { "line": "slats: 16, axis: vertical.", "cutParams": { "slats": 16, "axis": "vertical" } } },
+    { "pattern": "transitions/grid-dissolve", "how": "Cell by cell, each on its own seeded schedule.", "knob": { "line": "cols: 16, spread: 0.9. Finer, more scattered.", "cutParams": { "cols": 16, "spread": 0.9 } } },
+    { "pattern": "transitions/flip", "how": "The frame swings edge-on and the next swings to rest.", "knob": { "line": "axis: x, perspective: 1. A board flip.", "cutParams": { "axis": "x", "perspective": 1 } } },
+    { "pattern": "transitions/zoom-out", "how": "The camera pulls back; the next settles from larger.", "knob": { "line": "depth: 1.2. A deeper pull.", "cutParams": { "depth": 1.2 } } },
+    { "pattern": "transitions/zoom-through", "how": "The camera dives through this scene into the next.", "knob": { "line": "depth: 1.4. A deeper dive.", "cutParams": { "depth": 1.4 } } },
+    { "pattern": "transitions/shared-element", "template": "scenes", "scenes": [
+      { "layout": "layouts/split", "min": 3.6, "beats": [
+        { "at": 0, "slot": "headline", "fx": "style:headline", "text": "shared-element", "params": { "instant": true } },
+        { "at": 0, "slot": "body", "fx": "style:body", "text": "One element flies from its box here to its box there.", "params": { "instant": true } },
+        { "at": 0, "slot": "caption", "fx": "style:body", "text": "transitions/shared-element", "params": { "instant": true } } ] },
+      { "layout": "layouts/statement", "cut": "transitions/shared-element", "min": 3.3, "beats": [
+        { "at": 0, "slot": "headline", "fx": "style:headline", "text": "shared-element", "params": { "instant": true } },
+        { "at": 0.9, "slot": "sub", "fx": "entrances/fade", "text": "The name flew here." } ] },
+      { "layout": "layouts/split", "cut": "transitions/shared-element", "cutParams": { "fit": "stretch" }, "min": 3, "beats": [
+        { "at": 0, "slot": "headline", "fx": "style:headline", "text": "shared-element", "params": { "instant": true } },
+        { "at": 0.9, "slot": "body", "fx": "entrances/fade", "text": "fit: stretch. It fills the target box exactly." } ] } ] }
+  ]
+}

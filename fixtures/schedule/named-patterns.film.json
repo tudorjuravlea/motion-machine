@@ -1,0 +1,84 @@
+{
+  "id": "motion-machine-film",
+  "kind": "film",
+  "formats": ["9x16", "1x1", "16x9"],
+  "title": "Motion Machine: stories in motion",
+  "language": "en",
+  "facts": [
+    { "id": "f1", "text": "A 30-second film at 30 frames per second is 900 frames, each drawn from t alone.", "source": "SPEC §2" },
+    { "id": "f2", "text": "The gate checks 32 rules: 18 errors and 14 warnings.", "source": "SPEC §7" },
+    { "id": "f3", "text": "The same story renders as a film and as a clicker deck from one scene model.", "source": "SPEC §1, §10" }
+  ],
+  "audio": { "track": null, "bpm": 120, "beats": null },
+  "scenes": [
+    {
+      "id": "hook", "layout": "layouts/title-stack", "duration": 3.5, "cut": "transitions/hard-cut", "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "entrances/slam", "text": "Most AI video looks like AI video.", "cue": "hit" },
+        { "at": 1.3, "slot": "sub", "fx": "entrances/words", "text": "Centred title. Gradient. Everything fades in." }
+      ],
+      "say": "You have seen it: the centred title, the gradient, everything fading in."
+    },
+    {
+      "id": "problem", "layout": "layouts/statement", "duration": 3.5, "cut": "transitions/push", "move": "moves/push-in",
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "entrances/rise", "text": "Nobody checks it before you post it." }
+      ],
+      "say": "And nothing checks it before it goes out."
+    },
+    {
+      "id": "time", "layout": "layouts/split", "duration": 4, "cut": "transitions/crossfade", "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "entrances/rise", "text": "Only time moves things." },
+        { "at": 1.0, "slot": "figure", "fx": "data/counter", "value": 900, "fact": "f1", "params": { "suffix": " frames" }, "cue": "tick" },
+        { "at": 1.2, "slot": "body", "fx": "entrances/fade", "text": "each drawn from t alone", "fact": "f1" }
+      ],
+      "say": "Every frame is a function of one number, time. Nine hundred frames, each drawn alone."
+    },
+    {
+      "id": "style", "layout": "layouts/comparison", "duration": 4, "cut": "transitions/push", "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "entrances/rise", "text": "One brand file. One motion file." },
+        { "at": 1.0, "slot": "left", "fx": "entrances/pop", "text": "brand: colour, type, space", "cue": "tick" },
+        { "at": 1.4, "slot": "right", "fx": "entrances/pop", "text": "motion: tempo, curves, cuts", "cue": "tick", "emphasis": "emphasis/indicate" }
+      ],
+      "say": "The look is one file. How things move is another. Any brand can wear any tempo."
+    },
+    {
+      "id": "patterns", "layout": "layouts/bento-3", "duration": 4, "cut": "transitions/crossfade", "move": "moves/hero-drift",
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "entrances/rise", "text": "A library of patterns." },
+        { "at": 1.0, "slot": "tile-1", "fx": "entrances/pop", "text": "entrances", "cue": "tick" },
+        { "at": 1.2, "slot": "tile-2", "fx": "entrances/pop", "text": "transitions", "cue": "tick" },
+        { "at": 1.4, "slot": "tile-3", "fx": "entrances/pop", "text": "sound", "cue": "tick" }
+      ],
+      "say": "Entrances, transitions, layouts, camera moves, data moments, sound cues. None of them carries a brand."
+    },
+    {
+      "id": "gate", "layout": "layouts/stat-hero", "duration": 4, "cut": "transitions/zoom-through", "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "figure", "fx": "entrances/count", "value": 32, "fact": "f2", "params": { "suffix": " rules" }, "cue": "riser" },
+        { "at": 1.4, "slot": "headline", "fx": "entrances/rise", "text": "Measured, not felt." },
+        { "at": 2.0, "slot": "body", "fx": "entrances/fade", "text": "determinism · legibility · pacing · style · sound" }
+      ],
+      "say": "A gate measures every result. Thirty-two rules. Nothing ships on a feeling."
+    },
+    {
+      "id": "both", "layout": "layouts/split", "duration": 3.5, "cut": "transitions/push", "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "text/kinetic-words", "text": "One brief. A film and a deck.", "fact": "f3" },
+        { "at": 1.4, "slot": "caption", "fx": "text/caption-karaoke", "text": "Povești în mișcare" }
+      ],
+      "say": "One brief becomes a film and a deck. Stories in motion."
+    },
+    {
+      "id": "cta", "layout": "layouts/endcard", "duration": 3.5, "cut": "transitions/color-dip", "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "entrances/fade", "text": "motion-machine", "cue": "complete" },
+        { "at": 0.8, "slot": "body", "fx": "entrances/fade", "text": "github.com/tudorjuravlea/motion-machine" }
+      ],
+      "say": "Open source. Try it on your own brand."
+    }
+  ],
+  "cta": { "text": "motion-machine on GitHub", "url": "github.com/tudorjuravlea/motion-machine" }
+}

@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:motion-machine:contracts:motion",
+  "title": "Motion Machine motion half (SPEC §3): how things move and sound",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "version", "motion", "sound", "transitions", "entrances", "pacing"],
+  "properties": {
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+    "version": { "type": "integer", "minimum": 1 },
+    "source": { "type": "string", "description": "for a captured motion style: what reference it was measured from (a description, never a path the piece loads)" },
+    "motion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["durations", "easings", "spring", "travel", "overshootMax", "exitRatio", "stagger"],
+      "properties": {
+        "durations": {
+          "type": "object", "additionalProperties": false,
+          "required": ["quick", "standard", "slow", "hold"],
+          "properties": {
+            "quick":    { "type": "integer", "minimum": 60,  "maximum": 600,  "description": "ms" },
+            "standard": { "type": "integer", "minimum": 150, "maximum": 1200 },
+            "slow":     { "type": "integer", "minimum": 300, "maximum": 3000 },
+            "hold":     { "type": "integer", "minimum": 500, "maximum": 6000 }
+          }
+        },
+        "easings": {
+          "type": "object", "additionalProperties": false,
+          "required": ["enter", "exit", "move"],
+          "properties": {
+            "enter": { "$ref": "#/$defs/easing" },
+            "exit":  { "$ref": "#/$defs/easing" },
+            "move":  { "$ref": "#/$defs/easing" }
+          }
+        },
+        "spring": {
+          "type": "object", "additionalProperties": false,
+          "required": ["ui", "type", "heavy"],
+          "properties": {
+            "ui":    { "$ref": "#/$defs/spring" },
+            "type":  { "$ref": "#/$defs/spring" },
+            "heavy": { "$ref": "#/$defs/spring" }
+          }
+        },
+        "travel":       { "type": "number", "minimum": 0.25, "maximum": 3 },
+        "overshootMax": { "type": "number", "minimum": 0, "maximum": 0.3, "description": "SPEC §15: bounded by the motion style" },
+        "exitRatio":    { "type": "number", "minimum": 0.4, "maximum": 1 },
+        "frameHold":    { "type": "integer", "enum": [1, 2], "description": "2 animates elements on twos (each element's local time steps every 2/30 s, counted in 1/30 s whatever the export frame rate); cuts and camera moves stay smooth. Optional, 1 by default" },
+        "boil":         { "type": "number", "minimum": 0, "maximum": 2, "description": "seconds each frame of a pen stroke's shiver holds (entrances/sketch); 0 keeps strokes still. Optional, 0.4 by default; a deck never shivers" },
+        "stagger": {
+          "type": "object", "additionalProperties": false,
+          "required": ["eachS", "capS"],
+          "properties": {
+            "eachS": { "type": "number", "minimum": 0.01, "maximum": 0.25 },
+            "capS":  { "type": "number", "minimum": 0.2, "maximum": 1.5 }
+          }
+        }
+      }
+    },
+    "sound": {
+      "type": "object", "additionalProperties": false,
+      "required": ["palette", "bpm", "loudnessLufs", "cuesPer10s"],
+      "properties": {
+        "palette":      { "type": "string", "enum": ["soft-ui", "percussive", "cinematic", "none"] },
+        "bpm":          { "type": "integer", "minimum": 50, "maximum": 200 },
+        "loudnessLufs": { "type": "number", "minimum": -24, "maximum": -9 },
+        "cuesPer10s":   { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "integer", "minimum": 0, "maximum": 12 } }
+      }
+    },
+    "transitions": {
+      "type": "object", "additionalProperties": false,
+      "required": ["opening", "topic", "related", "climax", "outro", "policy"],
+      "properties": {
+        "opening": { "$ref": "#/$defs/patternRef" },
+        "topic":   { "$ref": "#/$defs/patternRef" },
+        "related": { "$ref": "#/$defs/patternRef" },
+        "climax":  { "$ref": "#/$defs/patternRef" },
+        "outro":   { "$ref": "#/$defs/patternRef" },
+        "policy":  { "type": "string", "enum": ["owns-exit", "velocity-matched"], "description": "SPEC §15: the transition owns the exit by default" }
+      }
+    },
+    "entrances": {
+      "type": "object", "additionalProperties": false,
+      "required": ["headline", "body", "figure", "plate"],
+      "properties": {
+        "headline": { "$ref": "#/$defs/patternRef" },
+        "body":     { "$ref": "#/$defs/patternRef" },
+        "figure":   { "$ref": "#/$defs/patternRef" },
+        "plate":    { "$ref": "#/$defs/patternRef" }
+      }
+    },
+    "pacing": {
+      "type": "object", "additionalProperties": false,
+      "required": ["holdMinS", "arrivalsPer10s", "energy"],
+      "properties": {
+        "holdMinS":       { "type": "number", "minimum": 0.3, "maximum": 4 },
+        "arrivalsPer10s": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "integer", "minimum": 0, "maximum": 20 } },
+        "energy":         { "type": "string", "enum": ["calm", "medium", "high"] }
+      }
+    }
+  },
+  "$defs": {
+    "easing": {
+      "type": "string",
+      "pattern": "^(linear|ease-in|ease-out|ease-in-out|cubic-bezier\\(\\s*-?[0-9.]+\\s*,\\s*-?[0-9.]+\\s*,\\s*-?[0-9.]+\\s*,\\s*-?[0-9.]+\\s*\\))$"
+    },
+    "spring": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false, "required": ["k", "c", "m"],
+          "properties": {
+            "k": { "type": "number", "exclusiveMinimum": 0, "maximum": 2000 },
+            "c": { "type": "number", "exclusiveMinimum": 0, "maximum": 200 },
+            "m": { "type": "number", "exclusiveMinimum": 0, "maximum": 10 }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false, "required": ["bounce", "period"],
+          "properties": {
+            "bounce": { "type": "number", "minimum": -1, "exclusiveMaximum": 1, "description": "1 would never settle; the kit floors damping at bounce 0.99" },
+            "period": { "type": "number", "exclusiveMinimum": 0, "maximum": 5, "description": "seconds" }
+          }
+        }
+      ]
+    },
+    "patternRef": { "type": "string", "pattern": "^(entrances|exits|emphasis|transitions|layouts|moves|text|data|devices|sound)/[a-z][a-z0-9-]*$" }
+  }
+}

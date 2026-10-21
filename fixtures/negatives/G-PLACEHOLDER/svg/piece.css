@@ -1,0 +1,2 @@
+/* the rule mark wears an SVG whose <text> is a placeholder. */
+[data-scene="style"] .title-stack__rule { background-image: url("assets/badge.svg"); background-size: cover; }

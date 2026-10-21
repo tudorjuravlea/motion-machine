@@ -1,0 +1,20 @@
+{
+  "title": "Exits",
+  "sub": "How things leave.",
+  "style": "editorial",
+  "template": "figure",
+  "items": [
+    { "pattern": "exits/fade-out", "figure": { "fx": "entrances/rise", "text": "Goodbye", "out": 2, "exit": "exits/fade-out" }, "figAt": 0.3,
+      "how": "Leaves by opacity alone, faster than it came.",
+      "knob": { "line": "After a pop entrance. The exit stays the same.", "figure": { "fx": "entrances/pop" } } },
+    { "pattern": "exits/blur-out", "figure": { "fx": "entrances/draw", "out": 2, "exit": "exits/blur-out" }, "figAt": 0.3,
+      "how": "Blurs a picture or shape away as it fades.",
+      "knob": { "line": "blur: 40 px. Softer still on the way out.", "figure": { "params": { "exit": { "blur": 40 } } } } },
+    { "pattern": "exits/drop-out", "figure": { "fx": "entrances/rise", "text": "Goodbye", "out": 2, "exit": "exits/drop-out" }, "figAt": 0.3,
+      "how": "Falls away downward while it fades.",
+      "knob": { "line": "d: 300 px. A longer fall.", "figure": { "params": { "exit": { "d": 300 } } } } },
+    { "pattern": "exits/push-out", "figure": { "fx": "entrances/rise", "text": "Goodbye", "out": 2, "exit": "exits/push-out" }, "figAt": 0.3,
+      "how": "Slides out toward one side while it fades.",
+      "knob": { "line": "side: up. It leaves through the top.", "figure": { "params": { "exit": { "side": "up" } } } } }
+  ]
+}

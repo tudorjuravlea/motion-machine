@@ -1,0 +1,99 @@
+/* bento-3: a headline over three tiles; tile-1 leads (accent fill), tile-2 and tile-3 follow. */
+.bento-3 {
+  position: absolute;
+  inset: var(--mm-safe) calc(var(--mm-safe) + (var(--mm-frame-w) / 2 - var(--mm-safe)) * 0.08 * var(--mm-density)) calc(var(--mm-safe) * 2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  gap: calc(var(--mm-space-5) * var(--mm-density));
+}
+.bento-3__headline {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: calc(var(--mm-size-h1) * var(--mm-headline-scale));
+  line-height: 1.05;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+  text-align: var(--mm-align);
+  color: var(--mm-color-ink);
+}
+.bento-3__headline[data-empty] { display: none; }
+.bento-3__grid {
+  display: grid;
+  gap: calc(var(--mm-space-4) * var(--mm-density));
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 1.5fr 1fr 1fr;
+  height: calc(var(--mm-frame-h) * 0.5);
+}
+.bento-3__tile {
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-end;
+  justify-content: var(--mm-align);
+  min-width: 0;
+  padding: var(--mm-space-4);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-surface);
+  color: var(--mm-color-surfaceInk);
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: var(--mm-size-h2);
+  line-height: 1.1;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+  text-align: var(--mm-align);
+}
+.bento-3__tile--lead {
+  background: var(--mm-color-accent);
+  color: var(--mm-color-accentInk);
+}
+.bento-3__tile[data-empty] { visibility: hidden; }
+[data-format="16x9"] .bento-3__grid {
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  grid-template-rows: 1fr 1fr;
+  height: calc(var(--mm-frame-h) * 0.5);
+}
+[data-format="16x9"] .bento-3__tile--lead { grid-row: 1 / span 2; font-size: var(--mm-size-h1); }
+[data-format="1x1"] .bento-3__grid {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: 1.2fr 1fr;
+  height: calc(var(--mm-frame-h) * 0.5);
+}
+[data-format="1x1"] .bento-3__tile--lead { grid-column: 1 / span 2; }
+[data-format="9x16"] .bento-3__grid { height: calc(var(--mm-frame-h) * 0.56); }
+/* align: the brand's composition (--mm-align) by default; `left` or `center` with a beat param on any slot (data-p-align) or data-align on the layout root. */
+.bento-3[data-align="center"] .bento-3__headline,
+.bento-3:has([data-p-align="center"]) .bento-3__headline { text-align: center; }
+.bento-3[data-align="center"] .bento-3__tile,
+.bento-3:has([data-p-align="center"]) .bento-3__tile { justify-content: center; text-align: center; }
+.bento-3[data-align="left"] .bento-3__headline,
+.bento-3:has([data-p-align="left"]) .bento-3__headline { text-align: left; }
+.bento-3[data-align="left"] .bento-3__tile,
+.bento-3:has([data-p-align="left"]) .bento-3__tile { justify-content: start; text-align: left; }
+/* A tile takes a beat's asset: the picture covers the tile (clipped by its radius) and the label,
+   when there is one, sits on a canvas plate over its lower edge. Without an asset the <img> takes no
+   room and the tile is its plain fill. */
+.bento-3__tile { position: relative; overflow: hidden; }
+.bento-3__media {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.bento-3__media:not([src]) { display: none; }
+.bento-3__label { position: relative; }
+.bento-3__label:empty { display: none; }
+.bento-3__tile:has(> .bento-3__media[src]) { font-size: var(--mm-size-h2); }
+.bento-3__tile:has(> .bento-3__media[src]) .bento-3__label {
+  padding: var(--mm-space-2) var(--mm-space-3);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-canvas);
+  color: var(--mm-color-ink);
+}

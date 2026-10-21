@@ -1,0 +1,102 @@
+{
+  "id": "demo-split",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: layouts/split",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo figure only.",
+      "source": "layout demo, not a claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/split",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Only time moves things."
+        },
+        {
+          "at": 0.9,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "900",
+          "fact": "f1"
+        },
+        {
+          "at": 1.5,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "each frame drawn from t alone"
+        },
+        {
+          "at": 2.0,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "no timers, no clocks"
+        }
+      ],
+      "say": "A demo of the pattern."
+    },
+    {
+      "id": "demo-align",
+      "layout": "layouts/split",
+      "duration": 4.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Only time moves things.",
+          "params": {
+            "align": "center"
+          }
+        },
+        {
+          "at": 0.9,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "900",
+          "fact": "f1"
+        },
+        {
+          "at": 1.5,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "each frame drawn from t alone"
+        },
+        {
+          "at": 2.0,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "no timers, no clocks"
+        }
+      ],
+      "say": "The same layout with align set to center."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

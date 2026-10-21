@@ -1,0 +1,12 @@
+{
+  "id": "kit-screen", "kind": "film", "formats": ["16x9", "9x16"], "title": "Kit screen content", "language": "en", "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null }, "cta": { "text": "", "url": "" },
+  "scenes": [
+    { "id": "seq", "layout": "layouts/caption-bar", "duration": 3, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{ "at": 0.2, "slot": "stage", "fx": "devices/phone", "asset": "assets/rec/", "params": { "size": "large" } }], "say": "" },
+    { "id": "page", "layout": "layouts/caption-bar", "duration": 3, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{ "at": 0.2, "slot": "stage", "fx": "devices/phone", "asset": "assets/site/", "params": { "size": "large" } }], "say": "" },
+    { "id": "empty", "layout": "layouts/caption-bar", "duration": 2, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{ "at": 0.2, "slot": "stage", "fx": "devices/phone", "asset": "assets/missing/" }], "say": "" }
+  ]
+}

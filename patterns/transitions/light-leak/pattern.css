@@ -1,0 +1,16 @@
+/* light-leak: the glow. pattern.js writes --mm-tx-leak-o (strength) and --mm-tx-leak-x (where it
+   sits across the frame) on a section's inline style; the kit restores that style on every seek. */
+.mm-scene[style*="--mm-tx-leak-o"] {
+  isolation: isolate;
+}
+.mm-scene[style*="--mm-tx-leak-o"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--mm-tx-leak-o);
+  background:
+    radial-gradient(ellipse 55% 95% at var(--mm-tx-leak-x) 28%, var(--mm-color-accent), transparent 72%),
+    radial-gradient(ellipse 40% 70% at calc(var(--mm-tx-leak-x) - 22%) 82%, var(--mm-color-accent), transparent 72%);
+}

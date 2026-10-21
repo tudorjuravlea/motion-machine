@@ -1,0 +1,54 @@
+{
+  "id": "g-loop-auto",
+  "kind": "loop",
+  "formats": [
+    "16x9"
+  ],
+  "title": "G-LOOP/auto: a one-scene loop with autoReturn; the kit plays each arrival back, so it ends on its first frame",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "The gate samples three instants for determinism.",
+      "source": "SPEC.md \u00a72.5"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  },
+  "scenes": [
+    {
+      "id": "a",
+      "layout": "layouts/title-stack",
+      "duration": 4.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Loop start",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "sub",
+          "fx": "entrances/rise",
+          "text": "The gate samples three instants.",
+          "fact": "f1"
+        }
+      ],
+      "say": "Loop start. The gate samples three instants."
+    }
+  ],
+  "autoReturn": true
+}

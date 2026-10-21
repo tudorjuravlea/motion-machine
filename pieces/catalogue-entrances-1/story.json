@@ -1,0 +1,559 @@
+{
+  "id": "catalogue-entrances-1",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Entrances, part 1 of 3",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "87",
+      "source": "catalogue demo number, not a claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Entrances",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "How things arrive. Part 1 of 3."
+        }
+      ],
+      "say": "How things arrive.",
+      "duration": 3.6
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "fade-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "fade",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "Hello"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Opacity alone. The quietest way anything can arrive.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/fade",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "fade: Opacity alone. The quietest way anything can arrive.",
+      "duration": 4.1
+    },
+    {
+      "id": "fade-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "fade",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "Hello",
+          "params": {
+            "dur": "slow"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "dur: slow. Every entrance takes a duration.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "dur: slow. Every entrance takes a duration.",
+      "duration": 3.4
+    },
+    {
+      "id": "blur-fade-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "blur-fade",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/blur-fade",
+          "text": "Hello"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Starts out of focus and sharpens as it fades up.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/blur-fade",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "blur-fade: Starts out of focus and sharpens as it fades up.",
+      "duration": 4.4
+    },
+    {
+      "id": "blur-fade-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "blur-fade",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/blur-fade",
+          "text": "Hello",
+          "params": {
+            "blur": 30
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "blur: 30 px. A softer, longer start.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "blur: 30 px. A softer, longer start.",
+      "duration": 3.4
+    },
+    {
+      "id": "ghost-fade-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "ghost-fade",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/ghost-fade",
+          "text": "Hello"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A faint, soft ghost first, then it tightens into focus.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/ghost-fade",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "ghost-fade: A faint, soft ghost first, then it tightens into focus.",
+      "duration": 4.4
+    },
+    {
+      "id": "ghost-fade-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "ghost-fade",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/ghost-fade",
+          "text": "Hello",
+          "params": {
+            "ghost": 0.5
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "ghost: 0.5. A stronger first glimpse.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "ghost: 0.5. A stronger first glimpse.",
+      "duration": 3.4
+    },
+    {
+      "id": "rise-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "rise",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Hello"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Slides a short way up while it fades in.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/rise",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "rise: Slides a short way up while it fades in.",
+      "duration": 4.1
+    },
+    {
+      "id": "rise-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "rise",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Hello",
+          "params": {
+            "side": "down"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "side: down. Now it comes from above.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "side: down. Now it comes from above.",
+      "duration": 3.4
+    },
+    {
+      "id": "drop-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "drop",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/drop",
+          "text": "Hello"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Falls from above and stops dead, with no bounce.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/drop",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "drop: Falls from above and stops dead, with no bounce.",
+      "duration": 4.1
+    },
+    {
+      "id": "drop-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "drop",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/drop",
+          "text": "Hello",
+          "params": {
+            "d": 1.5
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "d: 1.5. A longer fall, the same clean stop.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "d: 1.5. A longer fall, the same clean stop.",
+      "duration": 3.8
+    },
+    {
+      "id": "pop-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "pop",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Hello"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Grows from 94 per cent to full, never beyond.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/pop",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "pop: Grows from 94 per cent to full, never beyond.",
+      "duration": 4.1
+    },
+    {
+      "id": "pop-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "pop",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Hello",
+          "params": {
+            "from": 0.9
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "from: 0.90. Starts smaller, lands the same.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "from: 0.90. Starts smaller, lands the same.",
+      "duration": 3.4
+    }
+  ],
+  "share": "Entrances (1/3): fade, blur-fade, ghost-fade, rise, drop, pop. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

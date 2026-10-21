@@ -1,0 +1,31 @@
+{
+  "title": "Data",
+  "sub": "Numbers that arrive as a mechanism.",
+  "style": "kinetic",
+  "template": "figure",
+  "layout": "layouts/title-stack",
+  "figAt": 0.2,
+  "facts": [{ "id": "f1", "text": "Illustrative numbers for the catalogue", "source": "catalogue demo numbers, not a claim" }],
+  "items": [
+    { "pattern": "data/counter", "figure": { "value": 94.2, "fact": "f1", "params": { "fix": 1, "suffix": "%", "size": "display" } }, "how": "Counts to the value in fixed-width digits.",
+      "knob": { "line": "from: 80. Counts from closer.", "figure": { "params": { "from": 80 } } } },
+    { "pattern": "data/odometer", "figure": { "value": 4280, "fact": "f1", "params": { "size": "display" } }, "how": "Digits roll into place on clipped strips.",
+      "knob": { "line": "from: 4000. Shorter rolls.", "figure": { "params": { "from": 4000 } } } },
+    { "pattern": "data/ring", "figure": { "value": 68, "fact": "f1" }, "how": "A circular stroke draws while its readout counts.",
+      "knob": { "line": "thick: 20. A heavier stroke.", "figure": { "params": { "thick": 20 } } } },
+    { "pattern": "data/fill-bar", "figure": { "value": 72, "fact": "f1" }, "how": "A pill track fills while the readout counts.",
+      "knob": { "line": "readout: false. Just the bar.", "figure": { "params": { "readout": false } } } },
+    { "pattern": "data/bar-grow", "figure": { "fact": "f1", "params": { "values": "32,48,41,67,82", "labels": "Jan,Feb,Mar,Apr,May", "focus": 5 } }, "how": "Bars grow from a baseline in turn, values counting.",
+      "knob": { "line": "focus: 0. Every bar in the accent.", "figure": { "params": { "focus": 0 } } } },
+    { "pattern": "data/bar-to-line", "figure": { "fact": "f1", "params": { "values": "32,48,41,67,82", "labels": "Jan,Feb,Mar,Apr,May" } }, "how": "Bars shrink to dots, and a line joins them.", "minA": 4.2, "minB": 4,
+      "knob": { "line": "max: 120. The same trend with headroom.", "figure": { "params": { "max": 120 } } } },
+    { "pattern": "data/line-draw", "figure": { "value": 14, "fact": "f1", "params": { "points": "3,5,4,8,7,6,11,14", "prefix": "+", "suffix": "%" } }, "how": "A line draws itself, a dot riding its head.",
+      "knob": { "line": "thick: 3. A bolder line.", "figure": { "params": { "thick": 3 } } } },
+    { "pattern": "data/funnel", "figure": { "fact": "f1", "params": { "values": "1000,640,320,120", "labels": "Visited,Signed up,Activated,Paid" } }, "how": "Stages narrow down the frame, each value counting.",
+      "knob": { "line": "size: h2. Bigger values.", "figure": { "params": { "size": "h2" } } } },
+    { "pattern": "data/flow", "figure": { "params": { "nodes": "Brief|Design,Build,Test|Launch" } }, "how": "One node fans out, pulses travel, all gather again.", "minA": 4.2, "minB": 4,
+      "knob": { "line": "Two middle nodes this time.", "figure": { "params": { "nodes": "Idea|Draft,Review|Ship" } } } },
+    { "pattern": "data/stat-tile", "figure": { "value": 4280, "fact": "f1", "params": { "label": "Weekly signups", "delta": "+18%" } }, "how": "A card: the figure counts, then label and change settle.",
+      "knob": { "line": "delta: -4%. The chip shows a drop.", "figure": { "params": { "delta": "-4%" } } } }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "capture-reference-single",
+  "kind": "film",
+  "formats": ["16x9"],
+  "title": "capture reference: one continuous shot, no cuts",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "only", "layout": "layouts/title-stack", "duration": 10, "cut": "transitions/hard-cut", "move": null,
+      "beats": [
+        { "at": 0.4, "slot": "headline", "fx": "entrances/rise", "text": "Only time moves things.", "params": { "dur": "standard" } },
+        { "at": 2.5, "slot": "sub", "fx": "entrances/fade", "text": "One shot, held from the first frame to the last.", "params": { "dur": "slow" } }
+      ],
+      "say": "A single shot with no cut."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

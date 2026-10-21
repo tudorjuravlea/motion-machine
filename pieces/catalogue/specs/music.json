@@ -1,0 +1,229 @@
+{
+ "title": "Music",
+ "sub": "A track, its grid, cues on the beat.",
+ "style": "nocturne-kinetic",
+ "template": "scenes",
+ "watch": "Turn the sound on.",
+ "watchSub": "Every arrival here lands on a beat.",
+ "grid": 2,
+ "music": {
+  "bpm": 120
+ },
+ "audio": {
+  "track": "assets/audio/track.wav",
+  "bpm": 120,
+  "beats": "assets/beats.json"
+ },
+ "items": [
+  {
+   "pattern": "grid",
+   "name": "grid",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/list-reveal",
+     "duration": 4,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "mm beats",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.5,
+       "slot": "item-1",
+       "fx": "entrances/rise",
+       "text": "the tempo,",
+       "cue": "tick"
+      },
+      {
+       "at": 1,
+       "slot": "item-2",
+       "fx": "entrances/rise",
+       "text": "each beat,",
+       "cue": "tick"
+      },
+      {
+       "at": 1.5,
+       "slot": "item-3",
+       "fx": "entrances/rise",
+       "text": "each bar.",
+       "cue": "step"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "strong",
+   "name": "strong",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "duration": 6,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "strong cues",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.5,
+       "slot": "body",
+       "fx": "entrances/fade",
+       "text": "Onset, contrast, loudness and bass rank each beat."
+      },
+      {
+       "at": 2,
+       "slot": "figure",
+       "fx": "entrances/slam",
+       "text": "Drop",
+       "cue": "hit"
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "beats.json",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "snap",
+   "name": "snap",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/statement",
+     "duration": 4,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "Cues snap to beats.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.5,
+       "slot": "sub",
+       "fx": "entrances/fade",
+       "text": "Over 40 ms off, the gate warns.",
+       "cue": "tick"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "bed",
+   "name": "bed",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/statement",
+     "duration": 4,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "The bed sits under.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.5,
+       "slot": "sub",
+       "fx": "entrances/fade",
+       "text": "Six decibels below the track, by loudness.",
+       "cue": "bed"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "loud",
+   "name": "loudness",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/statement",
+     "duration": 4,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "Two passes to the target.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.5,
+       "slot": "sub",
+       "fx": "entrances/fade",
+       "text": "G-LOUD checks loudness and true peak.",
+       "cue": "tick"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "end",
+   "name": "end",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/endcard",
+     "duration": 4,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "line",
+       "fx": "style:body",
+       "text": "Sound and picture, one clock.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.5,
+       "slot": "headline",
+       "fx": "entrances/rise",
+       "text": "motion-machine",
+       "cue": "complete"
+      },
+      {
+       "at": 1,
+       "slot": "body",
+       "fx": "entrances/fade",
+       "text": "github.com/tudorjuravlea/motion-machine",
+       "cue": "tick"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

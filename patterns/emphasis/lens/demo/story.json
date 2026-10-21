@@ -1,0 +1,58 @@
+{
+  "id": "demo-emphasis-lens",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: emphasis/lens",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/list-reveal",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Pick your focus"
+        },
+        {
+          "at": 0.5,
+          "slot": "item-1",
+          "fx": "entrances/fade",
+          "text": "Design reviews"
+        },
+        {
+          "at": 0.6,
+          "slot": "item-3",
+          "fx": "entrances/fade",
+          "text": "Team rituals"
+        },
+        {
+          "at": 0.8,
+          "slot": "item-2",
+          "fx": "entrances/fade",
+          "text": "Deep work",
+          "emphasis": "emphasis/lens"
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

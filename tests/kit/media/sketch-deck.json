@@ -1,0 +1,112 @@
+{
+  "id": "kit-sketch-deck",
+  "kind": "deck",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Kit sketch, deck",
+  "scenes": [
+    {
+      "id": "wire",
+      "layout": "layouts/bento-3",
+      "presses": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "step": 0,
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Sketch it first"
+        },
+        {
+          "step": 1,
+          "at": 0.5,
+          "slot": "tile-1",
+          "fx": "entrances/sketch",
+          "text": "Plan the week"
+        },
+        {
+          "step": 2,
+          "at": 0,
+          "slot": "tile-2",
+          "fx": "entrances/sketch",
+          "text": "Track the work"
+        },
+        {
+          "step": 3,
+          "at": 0,
+          "slot": "tile-3",
+          "fx": "entrances/sketch",
+          "text": "Ship it",
+          "params": {
+            "shape": "pill"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "ink",
+      "layout": "layouts/bento-3",
+      "presses": 1,
+      "cut": "transitions/sketch-to-ink",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Sketch it first",
+          "params": {
+            "instant": true
+          },
+          "step": 0
+        },
+        {
+          "at": 0,
+          "slot": "tile-1",
+          "fx": "entrances/fade",
+          "text": "Plan the week",
+          "params": {
+            "instant": true
+          },
+          "step": 0
+        },
+        {
+          "at": 0,
+          "slot": "tile-2",
+          "fx": "entrances/fade",
+          "text": "Track the work",
+          "params": {
+            "instant": true
+          },
+          "step": 0
+        },
+        {
+          "at": 0,
+          "slot": "tile-3",
+          "fx": "entrances/fade",
+          "text": "Ship it",
+          "params": {
+            "instant": true
+          },
+          "step": 0
+        }
+      ],
+      "say": ""
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "language": "en",
+  "facts": []
+}

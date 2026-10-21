@@ -1,0 +1,11 @@
+/* text/handwrite: the tracing stroke over transparent text; the text keeps its own layout. */
+.mm-handwrite { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.mm-handwrite__line {
+  fill: none;
+  stroke-width: calc(var(--mm-space-1) * 0.6);
+  stroke-linejoin: round;
+  font: inherit;
+  letter-spacing: inherit;
+}
+.mm-handwrite__line--ink { stroke: var(--mm-color-ink); }
+.mm-handwrite__line--accent { stroke: var(--mm-accent-text); }

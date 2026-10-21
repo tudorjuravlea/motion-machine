@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>gate fixture: _base/deck</title>
+  <link rel="stylesheet" href="piece.css">
+</head>
+<body>
+  <script type="module">
+    import { mount } from '../../../../runtime/kit/kit.js';
+    import { after } from './piece.js';
+    const load = (f) => fetch(new URL(f, import.meta.url)).then((r) => r.json());
+    const [story, style] = await Promise.all([load('story.json'), load('style.json')]);
+    await mount({ story, style, patternsBase: new URL('../../_shared/patterns/', import.meta.url) });
+    after(window.mm);
+  </script>
+</body>
+</html>

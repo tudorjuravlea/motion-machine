@@ -1,0 +1,564 @@
+{
+  "id": "catalogue-entrances-3",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Entrances, part 3 of 3",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "87",
+      "source": "catalogue demo number, not a claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Entrances",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "How things arrive. Part 3 of 3."
+        }
+      ],
+      "say": "How things arrive.",
+      "duration": 3.6
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "words-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "words",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/words",
+          "text": "Word by word"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Each word rises and fades in, in turn.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/words",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "words: Each word rises and fades in, in turn.",
+      "duration": 4.4
+    },
+    {
+      "id": "words-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "words",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/words",
+          "text": "Word by word",
+          "params": {
+            "d": 80
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "d: 80 px. Each word rises further.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "d: 80 px. Each word rises further.",
+      "duration": 3.8
+    },
+    {
+      "id": "typewriter-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "typewriter",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/typewriter",
+          "text": "Hello"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Types one character at a time, with a caret.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/typewriter",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "typewriter: Types one character at a time, with a caret.",
+      "duration": 4.1
+    },
+    {
+      "id": "typewriter-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "typewriter",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/typewriter",
+          "text": "Hello",
+          "params": {
+            "blinks": 3
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "blinks: 3. The caret blinks as it types.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "blinks: 3. The caret blinks as it types.",
+      "duration": 3.5
+    },
+    {
+      "id": "scatter-settle-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "scatter-settle",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/scatter-settle",
+          "text": "Hello there"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Letters start scattered and turned, then settle together.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/scatter-settle",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "scatter-settle: Letters start scattered and turned, then settle together.",
+      "duration": 4.1
+    },
+    {
+      "id": "scatter-settle-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "scatter-settle",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/scatter-settle",
+          "text": "Hello there",
+          "params": {
+            "unit": "word"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "unit: word. Whole words scatter instead.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "unit: word. Whole words scatter instead.",
+      "duration": 3.4
+    },
+    {
+      "id": "assemble-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "assemble",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/assemble",
+          "text": "Hello"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Seeded dots spiral in and build the letterforms.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/assemble",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "assemble: Seeded dots spiral in and build the letterforms.",
+      "duration": 4
+    },
+    {
+      "id": "assemble-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "assemble",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/assemble",
+          "text": "Hello",
+          "params": {
+            "dots": 900,
+            "color": "accent"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "dots: 900, in the accent colour.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "dots: 900, in the accent colour.",
+      "duration": 3.6
+    },
+    {
+      "id": "count-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "count",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/count",
+          "value": 87,
+          "fact": "f1",
+          "params": {
+            "suffix": "%"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Counts up to its number; every digit keeps its width.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/count",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "count: Counts up to its number; every digit keeps its width.",
+      "duration": 4.1
+    },
+    {
+      "id": "count-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "count",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/count",
+          "value": 87,
+          "fact": "f1",
+          "params": {
+            "suffix": "%",
+            "from": 50
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "from: 50. A shorter climb.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "from: 50. A shorter climb.",
+      "duration": 3.4
+    },
+    {
+      "id": "draw-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "draw",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/draw"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A line grows from one edge and draws itself.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/draw",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "draw: A line grows from one edge and draws itself.",
+      "duration": 4.1
+    },
+    {
+      "id": "draw-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "draw",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/draw",
+          "params": {
+            "origin": "center"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "origin: center. It grows from the middle.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "origin: center. It grows from the middle.",
+      "duration": 3.4
+    }
+  ],
+  "share": "Entrances (3/3): words, typewriter, scatter-settle, assemble, count, draw. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

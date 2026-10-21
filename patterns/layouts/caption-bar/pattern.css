@@ -1,0 +1,54 @@
+/* caption-bar: a stage for a device or picture with a persistent lower band that carries the
+   caption. The overlay slot covers the stage so a cursor can travel across it. */
+.caption-bar {
+  position: absolute;
+  inset: var(--mm-safe);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-space-4);
+}
+.caption-bar__area {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.caption-bar__stage {
+  font-size: var(--mm-size-body);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.caption-bar__overlay {
+  font-size: var(--mm-size-body);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.caption-bar__caption {
+  box-sizing: border-box;
+  flex: none;
+  margin: 0;
+  padding: var(--mm-space-3) var(--mm-space-4);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-surface);
+  border-left: var(--mm-space-1) solid var(--mm-color-accent);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.3;
+  text-wrap: pretty;
+  text-align: var(--mm-align);
+  color: var(--mm-color-surfaceInk);
+}
+.caption-bar [data-empty] { visibility: hidden; }
+.caption-bar__caption[data-empty] { display: none; }
+[data-format="16x9"] .caption-bar__caption { align-self: var(--mm-align); max-width: 80%; }
+/* align: the brand's composition (--mm-align) by default; `left` or `center` with a beat param on any slot (data-p-align) or data-align on the layout root. */
+.caption-bar[data-align="center"] .caption-bar__caption,
+.caption-bar:has([data-p-align="center"]) .caption-bar__caption { align-self: center; text-align: center; }
+.caption-bar[data-align="left"] .caption-bar__caption,
+.caption-bar:has([data-p-align="left"]) .caption-bar__caption { align-self: start; text-align: left; }
+[data-kind="deck"] .caption-bar__caption[style*="visibility: hidden"] { display: none; }

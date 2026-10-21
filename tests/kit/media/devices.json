@@ -1,0 +1,307 @@
+{
+  "id": "kit-devices",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "16x9"
+  ],
+  "title": "Kit devices",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "scenes": [
+    {
+      "id": "island",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/grid.png",
+          "params": {
+            "size": "large"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "notch",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/grid.png",
+          "params": {
+            "size": "large",
+            "model": "notch"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "plain",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/grid.png",
+          "params": {
+            "size": "large",
+            "model": "plain",
+            "status": false
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "time",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/grid.png",
+          "params": {
+            "size": "large",
+            "statusTime": "10:08",
+            "status": true
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "still-tap",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/grid.png",
+          "params": {
+            "size": "large"
+          },
+          "screen": [
+            {
+              "do": "screen/tap",
+              "at": 0.5,
+              "d": 1,
+              "params": {
+                "at": "50%,50%"
+              }
+            }
+          ]
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "laptop-menu",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/laptop",
+          "asset": "assets/grid.png",
+          "params": {
+            "menu": "File,Edit,View,Go,Window,Help"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "laptop-plain",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/laptop",
+          "asset": "assets/grid.png",
+          "params": {
+            "model": "plain"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "bare",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "params": {
+            "size": "large"
+          },
+          "text": "Inbox"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "folder-text",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/site/",
+          "params": {
+            "size": "large"
+          },
+          "text": "Hidden title"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "look-phone",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/app.png",
+          "params": {
+            "size": "large"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "look-laptop",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/laptop",
+          "asset": "assets/desk.png",
+          "params": {
+            "size": "large"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "framed",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/app.png",
+          "params": {
+            "size": "large",
+            "frame": "assets/frames/test-phone"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "punch",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/app.png",
+          "params": {
+            "size": "large",
+            "model": "punch"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "laptop-chin",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/laptop",
+          "asset": "assets/desk.png",
+          "params": {
+            "size": "large",
+            "model": "chin"
+          }
+        }
+      ],
+      "say": ""
+    }
+  ]
+}

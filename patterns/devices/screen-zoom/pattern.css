@@ -1,0 +1,58 @@
+/* devices/screen-zoom: a framed screen that grows until the screen alone fills the safe box.
+   The bezel fades out as the zoom ends, so the last rest is a clean full-frame screen. */
+.screen-zoom {
+  position: relative;
+  width: min(calc(var(--mm-frame-w) * 0.7), calc(var(--mm-frame-h) * 0.5 * 800 / 520));
+  aspect-ratio: 800 / 520;
+}
+.screen-zoom__frame {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  padding: 3.5%;
+}
+.screen-zoom__bezel {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-ink);
+}
+.screen-zoom__screen {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--mm-space-3);
+  padding: var(--mm-space-4);
+  overflow: hidden;
+  border-radius: var(--mm-radius-1);
+  background: var(--mm-color-surface);
+}
+.screen-zoom__bar {
+  flex: none;
+  width: 30%;
+  height: var(--mm-space-2);
+  border-radius: var(--mm-radius-4);
+  background: var(--mm-color-accent);
+}
+.screen-zoom__label {
+  flex: none;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: var(--mm-size-body);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  color: var(--mm-color-surfaceInk);
+}
+.screen-zoom__label:empty { display: none; }
+.screen-zoom__row {
+  flex: none;
+  height: var(--mm-space-3);
+  border-radius: var(--mm-radius-4);
+  background: var(--mm-color-line);
+}
+.screen-zoom__row--short { width: 55%; }

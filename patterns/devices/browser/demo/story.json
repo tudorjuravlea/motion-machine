@@ -1,0 +1,45 @@
+{
+  "id": "demo-browser",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: devices/browser",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/caption-bar",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/browser",
+          "text": "Overview"
+        },
+        {
+          "at": 1.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Everything in one window."
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

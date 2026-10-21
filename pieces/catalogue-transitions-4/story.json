@@ -1,0 +1,496 @@
+{
+  "id": "catalogue-transitions-4",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Transitions, part 4 of 5",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Transitions",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "How one scene hands over. Part 4 of 5."
+        }
+      ],
+      "say": "How one scene hands over.",
+      "duration": 3.7
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch three times.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "A card, the cut as shipped, then one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 4.25
+    },
+    {
+      "id": "split-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "split",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Opens from a seam through the middle, like doors.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/split",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Opens from a seam through the middle, like doors.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.65
+    },
+    {
+      "id": "split-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "split"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/split",
+      "duration": 3.34
+    },
+    {
+      "id": "split-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "split"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "shape: vertical. A straight seam."
+        }
+      ],
+      "say": "shape: vertical. A straight seam.",
+      "cut": "transitions/split",
+      "cutParams": {
+        "shape": "vertical"
+      },
+      "duration": 3.34
+    },
+    {
+      "id": "blinds-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "blinds",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "The next scene shows through slats that open together.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/blinds",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "The next scene shows through slats that open together.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.65
+    },
+    {
+      "id": "blinds-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "blinds"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/blinds",
+      "duration": 3.34
+    },
+    {
+      "id": "blinds-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "blinds"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "slats: 16, axis: vertical."
+        }
+      ],
+      "say": "slats: 16, axis: vertical.",
+      "cut": "transitions/blinds",
+      "cutParams": {
+        "slats": 16,
+        "axis": "vertical"
+      },
+      "duration": 3.34
+    },
+    {
+      "id": "grid-dissolve-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "grid-dissolve",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Cell by cell, each on its own seeded schedule.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/grid-dissolve",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Cell by cell, each on its own seeded schedule.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.65
+    },
+    {
+      "id": "grid-dissolve-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "grid-dissolve"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/grid-dissolve",
+      "duration": 3.34
+    },
+    {
+      "id": "grid-dissolve-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "grid-dissolve"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "cols: 16, spread: 0.9. Finer, more scattered."
+        }
+      ],
+      "say": "cols: 16, spread: 0.9. Finer, more scattered.",
+      "cut": "transitions/grid-dissolve",
+      "cutParams": {
+        "cols": 16,
+        "spread": 0.9
+      },
+      "duration": 3.63
+    },
+    {
+      "id": "flip-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "flip",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "The frame swings edge-on and the next swings to rest.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/flip",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "The frame swings edge-on and the next swings to rest.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.95
+    },
+    {
+      "id": "flip-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 1.12,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "flip"
+        },
+        {
+          "at": 1.24,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 1.36,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/flip",
+      "duration": 3.82
+    },
+    {
+      "id": "flip-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 1.12,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "flip"
+        },
+        {
+          "at": 1.24,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 1.36,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "axis: x, perspective: 1. A board flip."
+        }
+      ],
+      "say": "axis: x, perspective: 1. A board flip.",
+      "cut": "transitions/flip",
+      "cutParams": {
+        "axis": "x",
+        "perspective": 1
+      },
+      "duration": 4.11
+    }
+  ],
+  "share": "Transitions (4/5): split, blinds, grid-dissolve, flip. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

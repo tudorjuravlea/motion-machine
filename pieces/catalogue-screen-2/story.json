@@ -1,0 +1,319 @@
+{
+  "id": "catalogue-screen-2",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Screen actions, part 2 of 2",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Screen actions",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "What happens on a device screen. Part 2 of 2."
+        }
+      ],
+      "say": "What happens on a device screen.",
+      "duration": 4.05
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "callout",
+      "layout": "layouts/caption-bar",
+      "duration": 6.6,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/app/",
+          "params": {
+            "size": "large",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 0.3,
+              "params": {
+                "to": "Pricing"
+              }
+            },
+            {
+              "do": "screen/callout",
+              "at": 1.4,
+              "d": 3.5,
+              "params": {
+                "at": "Price",
+                "text": "One plan"
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "callout: a leader line to a short label."
+        }
+      ],
+      "id": "callout-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "callout",
+      "layout": "layouts/caption-bar",
+      "duration": 6,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/app/",
+          "params": {
+            "size": "large",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 0.3,
+              "params": {
+                "to": "Pricing"
+              }
+            },
+            {
+              "do": "screen/callout",
+              "at": 1.2,
+              "d": 3.2,
+              "params": {
+                "at": "Price",
+                "text": "One plan",
+                "side": "left"
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.3,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "side left: the label moves over."
+        }
+      ],
+      "id": "callout-b"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "island",
+      "layout": "layouts/caption-bar",
+      "duration": 5.8,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Today",
+          "params": {
+            "size": "large",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/island",
+              "at": 0.8,
+              "params": {
+                "text": "Timer 04:12"
+              }
+            },
+            {
+              "do": "screen/island",
+              "at": 3.2,
+              "params": {
+                "close": true
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "island: the cutout opens into a live status."
+        }
+      ],
+      "id": "island-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "island",
+      "layout": "layouts/caption-bar",
+      "duration": 5,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Today",
+          "params": {
+            "size": "large",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/island",
+              "at": 0.6,
+              "params": {
+                "w": 0.5,
+                "h": 0.06,
+                "text": "Recording"
+              }
+            },
+            {
+              "do": "screen/island",
+              "at": 3,
+              "params": {
+                "close": true
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.3,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "w 0.5, h 0.06: a slimmer widget."
+        }
+      ],
+      "id": "island-b"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "play",
+      "layout": "layouts/caption-bar",
+      "duration": 5.2,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/rec/",
+          "params": {
+            "size": "large",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/play",
+              "at": 0.6,
+              "d": 4,
+              "params": {}
+            }
+          ]
+        },
+        {
+          "at": 0.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "play: a screen recording plays on the device."
+        }
+      ],
+      "id": "play-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "play",
+      "layout": "layouts/caption-bar",
+      "duration": 5.2,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/rec/",
+          "params": {
+            "size": "large",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/play",
+              "at": 0.6,
+              "d": 4,
+              "params": {
+                "from": 0.5,
+                "rate": 0.5
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.3,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "rate 0.5: half speed."
+        }
+      ],
+      "id": "play-b"
+    }
+  ],
+  "share": "Screen actions (2/2): callout, island, play. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

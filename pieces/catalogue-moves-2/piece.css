@@ -1,0 +1,3 @@
+/* Piece-level styles. Colour, family, size, space, radius, duration and easing come only from
+   --mm-* variables (SPEC §3, G-LITERAL). Layouts and patterns carry their own CSS. */
+[data-format="16x9"] .split__headline { font-size: calc(var(--mm-size-h1) * var(--mm-headline-scale) * 0.78); overflow-wrap: normal; }

@@ -1,0 +1,28 @@
+/* odometer: block display; each column is a one-line window over a strip of digits. */
+.mm-odometer {
+  display: flex;
+  align-items: flex-start;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  color: var(--mm-color-ink);
+}
+.mm-odometer__col {
+  display: block;
+  height: 1.2em;
+  overflow: hidden;
+}
+.mm-odometer__strip {
+  display: flex;
+  flex-direction: column;
+}
+.mm-odometer__digit,
+.mm-odometer__fix,
+.mm-odometer__point {
+  display: block;
+  height: 1.2em;
+  line-height: 1.2;
+}
+.mm-odometer__fix { color: var(--mm-color-muted); }

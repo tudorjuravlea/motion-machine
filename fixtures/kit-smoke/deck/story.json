@@ -1,0 +1,28 @@
+{
+  "id": "kit-smoke-deck",
+  "kind": "deck",
+  "formats": ["16x9"],
+  "title": "kit-smoke deck: three presses",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "intro", "layout": "layouts/title-stack", "presses": 2, "cut": "transitions/hard-cut", "move": null,
+      "beats": [
+        { "at": 0, "step": 1, "slot": "headline", "fx": "entrances/rise", "text": "A press is the unit." },
+        { "at": 0, "step": 2, "slot": "sub", "fx": "entrances/fade", "text": "Every integer press is a rest." }
+      ],
+      "say": "Each press brings one idea."
+    },
+    {
+      "id": "outro", "layout": "layouts/title-stack", "presses": 1, "cut": "transitions/hard-cut", "move": null,
+      "beats": [
+        { "at": 0, "step": 1, "slot": "headline", "fx": "entrances/rise", "text": "Back never lands mid-entrance." },
+        { "at": 0.3, "step": 1, "slot": "sub", "fx": "entrances/fade", "text": "kit-smoke: three presses, two scenes" }
+      ],
+      "say": "The previous key always lands on a finished pose."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

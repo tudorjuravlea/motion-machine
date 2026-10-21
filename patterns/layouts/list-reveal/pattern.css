@@ -1,0 +1,76 @@
+/* list-reveal: a headline and up to six items that arrive in turn. Items without a beat vanish
+   from the flow, so a short list stays centred. */
+.list-reveal {
+  position: absolute;
+  inset: var(--mm-safe) calc(var(--mm-safe) + (var(--mm-frame-w) / 2 - var(--mm-safe)) * 0.08 * var(--mm-density)) calc(var(--mm-safe) * 2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: var(--mm-align);
+  text-align: var(--mm-align);
+  gap: calc(var(--mm-space-5) * var(--mm-density));
+}
+.list-reveal__headline {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: calc(var(--mm-size-h1) * var(--mm-headline-scale));
+  line-height: 1.05;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+  color: var(--mm-color-ink);
+}
+.list-reveal__headline[data-empty] { display: none; }
+.list-reveal__items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-space-3);
+}
+.list-reveal__item {
+  display: flex;
+  align-items: baseline;
+  justify-content: var(--mm-align);
+  gap: var(--mm-space-4);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-h2);
+  line-height: 1.15;
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+  color: var(--mm-color-ink);
+}
+.list-reveal__item::before {
+  content: "";
+  flex: none;
+  width: var(--mm-space-3);
+  height: var(--mm-space-3);
+  background: var(--mm-color-accent);
+  transform: translateY(calc(var(--mm-space-1) * -1));
+}
+.list-reveal__item[data-empty] { display: none; }
+[data-format="16x9"] .list-reveal__items { gap: var(--mm-space-4); }
+/* align: the brand's composition (--mm-align) by default; `left` or `center` with a beat param on any slot (data-p-align) or data-align on the layout root. */
+.list-reveal[data-align="center"],
+.list-reveal:has([data-p-align="center"]) {
+  align-items: center;
+  text-align: center;
+}
+.list-reveal[data-align="center"] .list-reveal__item,
+.list-reveal:has([data-p-align="center"]) .list-reveal__item { justify-content: center; }
+.list-reveal[data-align="left"],
+.list-reveal:has([data-p-align="left"]) {
+  align-items: start;
+  text-align: left;
+}
+.list-reveal[data-align="left"] .list-reveal__item,
+.list-reveal:has([data-p-align="left"]) .list-reveal__item { justify-content: start; }
+/* A deck rest shows the slots that have arrived: a slot the kit still hides takes no room, so the
+   visible content stays centred. (A film keeps the room, so nothing shifts as slots arrive.) */
+[data-kind="deck"] .list-reveal [data-slot][style*="visibility: hidden"] { display: none; }

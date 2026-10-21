@@ -1,0 +1,82 @@
+{
+  "id": "demo-endcard",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: layouts/endcard",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/endcard",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "line",
+          "fx": "entrances/fade",
+          "text": "One brief: a film, a deck."
+        },
+        {
+          "at": 0.5,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "motion-machine"
+        },
+        {
+          "at": 1.3,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "github.com/tudorjuravlea/motion-machine"
+        }
+      ],
+      "say": "A demo of the pattern."
+    },
+    {
+      "id": "demo-align",
+      "layout": "layouts/endcard",
+      "duration": 4.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "line",
+          "fx": "entrances/fade",
+          "text": "One brief: a film, a deck.",
+          "params": {
+            "align": "left"
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "motion-machine"
+        },
+        {
+          "at": 1.3,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "github.com/tudorjuravlea/motion-machine"
+        }
+      ],
+      "say": "The same layout with align set to left."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

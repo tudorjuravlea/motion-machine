@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>gate calibration: palette sheet</title>
+  <link rel="stylesheet" href="../../../patterns/text/highlight/pattern.css">
+  <style>
+    html, body { margin: 0; background: var(--mm-color-canvas); }
+    .sheet { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 16px; width: 1888px; }
+    .block { padding: 20px; border-radius: 14px; }
+    .line { margin: 0 0 8px; line-height: 1.1; }
+    .d { font-family: var(--mm-font-display); font-weight: 700; font-size: 96px; }
+    .b { font-family: var(--mm-font-text); font-size: 40px; }
+    .m { font-family: var(--mm-font-text); font-size: 24px; }
+    .x { font-family: var(--mm-font-display); font-weight: 700; font-size: 156px; }
+    .tile { display: inline-block; margin: 6px; padding: 10px 18px; border: 2px solid var(--mm-color-line); border-radius: 28px;
+            background: var(--mm-color-surface); color: var(--mm-color-ink); font-family: var(--mm-font-text); font-size: 32px; }
+    .pill { display: inline-block; width: 120px; height: 24px; margin: 6px; border-radius: 999px; background: var(--mm-color-muted); opacity: 0.45; }
+    .rule { display: inline-block; width: 64px; height: 8px; margin: 6px; background: var(--mm-color-accent); }
+    .mm-highlight__mark { --mm-hl-p: 1; }
+  </style>
+</head>
+<body>
+  <div class="sheet" id="sheet"></div>
+  <script type="module">
+    // A calibration sheet for G-LITERAL's pixel threshold: every text role on every surface
+    // role at display, body and micro sizes in the style's own faces (antialiased edges are two-colour
+    // blends), rounded bordered tiles, a role at partial opacity, and ink over the text/highlight
+    // pattern's accent tint at its weakest, default and strongest strength, up to the 9x16 display size
+    // (three-colour edges).
+    const preset = new URLSearchParams(location.search).get('preset') ?? 'editorial';
+    const style = await fetch(new URL(`../../../styles/presets/${preset}.json`, import.meta.url)).then((r) => r.json());
+    const root = document.documentElement.style;
+    for (const [k, v] of Object.entries(style.color)) root.setProperty(`--mm-color-${k}`, v);
+    const faces = [];
+    for (const [role, t] of Object.entries(style.type)) {
+      root.setProperty(`--mm-font-${role}`, `"${t.family}"`);
+      for (const f of t.files) faces.push(new FontFace(t.family, `url(${new URL(`../../../${f.src}`, import.meta.url)})`, { weight: String(f.weight), unicodeRange: f.unicodeRange ?? 'U+0-10FFFF' }));
+    }
+    for (const f of faces) document.fonts.add(f);
+    await Promise.all(faces.map((f) => f.load().catch(() => null)));
+    const roles = Object.keys(style.color);
+    const sheet = document.getElementById('sheet');
+    for (const bg of ['canvas', 'surface', 'accent', 'ink', 'line', 'muted']) {
+      const block = document.createElement('div');
+      block.className = 'block';
+      block.style.background = `var(--mm-color-${bg})`;
+      for (const fg of roles.filter((r) => r !== bg)) {
+        for (const size of ['d', 'b', 'm']) {
+          const p = document.createElement('p');
+          p.className = `line ${size}`;
+          p.style.color = `var(--mm-color-${fg})`;
+          p.textContent = size === 'd' ? 'Rag 38%' : 'Motion keeps its promise 0123';
+          block.append(p);
+        }
+      }
+      for (const [size, s] of [['b', 0.15], ['b', 0.35], ['b', 0.6], ['d', 0.35], ['x', 0.6]]) {
+        const p = document.createElement('p');
+        p.className = `line ${size}`;
+        p.style.color = `var(--mm-color-${bg === 'ink' ? 'canvas' : 'ink'})`;
+        p.innerHTML = `<span class="mm-highlight__mark" style="--mm-hl-strength:${s}">${size === 'b' ? `highlighted words ${s}` : 'Bold go'}</span>`;
+        block.append(p);
+      }
+      block.insertAdjacentHTML('beforeend', '<span class="tile">tile</span><span class="pill"></span><span class="rule"></span>');
+      sheet.append(block);
+    }
+    document.documentElement.dataset.ready = '';
+  </script>
+</body>
+</html>

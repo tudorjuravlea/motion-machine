@@ -1,0 +1,480 @@
+{
+  "id": "catalogue-entrances-2",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Entrances, part 2 of 3",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "87",
+      "source": "catalogue demo number, not a claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Entrances",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "How things arrive. Part 2 of 3."
+        }
+      ],
+      "say": "How things arrive.",
+      "duration": 3.6
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "punch-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "punch",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/punch",
+          "text": "Hello"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Lands from slightly large in one fast stamp.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/punch",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "punch: Lands from slightly large in one fast stamp.",
+      "duration": 4.1
+    },
+    {
+      "id": "punch-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "punch",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/punch",
+          "text": "Hello",
+          "params": {
+            "from": 1.3
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "from: 1.3. A bigger stamp.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "from: 1.3. A bigger stamp.",
+      "duration": 3.4
+    },
+    {
+      "id": "slam-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "slam",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/slam",
+          "text": "Hello"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Starts large and high, then lands hard and stays put.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/slam",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "slam: Starts large and high, then lands hard and stays put.",
+      "duration": 4.4
+    },
+    {
+      "id": "slam-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "slam",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/slam",
+          "text": "Hello",
+          "params": {
+            "from": 2
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "from: 2. Twice the size before it lands.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "from: 2. Twice the size before it lands.",
+      "duration": 3.5
+    },
+    {
+      "id": "mask-reveal-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "mask-reveal",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/mask-reveal",
+          "text": "Hello"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A clip wipe uncovers it. Nothing moves or scales.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/mask-reveal",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "mask-reveal: A clip wipe uncovers it. Nothing moves or scales.",
+      "duration": 4.1
+    },
+    {
+      "id": "mask-reveal-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "mask-reveal",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/mask-reveal",
+          "text": "Hello",
+          "params": {
+            "side": "down"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "side: down. The wipe now runs vertically.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "side: down. The wipe now runs vertically.",
+      "duration": 3.4
+    },
+    {
+      "id": "slats-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "slats",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/slats",
+          "text": "Hello"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Seen through slats that open one after another, like blinds.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/slats",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "slats: Seen through slats that open one after another, like blinds.",
+      "duration": 4.4
+    },
+    {
+      "id": "slats-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "slats",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/slats",
+          "text": "Hello",
+          "params": {
+            "slats": 12,
+            "axis": "horizontal"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "slats: 12, horizontal. Finer blinds, top to bottom.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "slats: 12, horizontal. Finer blinds, top to bottom.",
+      "duration": 3.5
+    },
+    {
+      "id": "letter-cascade-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "letter-cascade",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/letter-cascade",
+          "text": "Hello"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Each letter drops into place in a quick ripple.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/letter-cascade",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "letter-cascade: Each letter drops into place in a quick ripple.",
+      "duration": 4.1
+    },
+    {
+      "id": "letter-cascade-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "letter-cascade",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/letter-cascade",
+          "text": "Hello",
+          "params": {
+            "d": 90
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "d: 90 px. Each letter falls further.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "d: 90 px. Each letter falls further.",
+      "duration": 3.4
+    }
+  ],
+  "share": "Entrances (2/3): punch, slam, mask-reveal, slats, letter-cascade. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

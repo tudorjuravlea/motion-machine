@@ -1,0 +1,5 @@
+/* moves/morph: the travelling box in the surface colour and the dashed ghost of where it began. */
+.mm-morph { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+.mm-morph__ghost, .mm-morph__box { position: absolute; box-sizing: border-box; border-radius: var(--mm-radius-3); }
+.mm-morph__ghost { border: calc(var(--mm-space-1) * 0.35) dashed var(--mm-color-ink); }
+.mm-morph__box { background: var(--mm-color-surface); }

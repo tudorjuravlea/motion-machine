@@ -1,0 +1,284 @@
+{
+  "id": "kit-sketch-edge",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "16x9"
+  ],
+  "title": "Kit sketch, edge cases",
+  "scenes": [
+    {
+      "id": "desk",
+      "layout": "layouts/desktop",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "desk",
+          "fx": "entrances/sketch"
+        },
+        {
+          "at": 0.5,
+          "slot": "menu",
+          "fx": "entrances/fade",
+          "text": "File Edit"
+        },
+        {
+          "at": 0.3,
+          "slot": "caption",
+          "fx": "entrances/sketch",
+          "text": "Plan"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "border",
+      "layout": "layouts/comparison",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "left",
+          "fx": "entrances/sketch",
+          "text": "Before"
+        },
+        {
+          "at": 0.4,
+          "slot": "right",
+          "fx": "entrances/sketch",
+          "text": "After"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "small",
+      "layout": "layouts/list-reveal",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "item-1",
+          "fx": "entrances/sketch",
+          "params": {
+            "roughness": 2
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "paper",
+      "layout": "layouts/paper-cards",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "card-1",
+          "fx": "entrances/sketch",
+          "text": "Card"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "tile",
+      "layout": "layouts/bento-3",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "tile-1",
+          "fx": "entrances/sketch",
+          "text": "Plan",
+          "params": {
+            "dur": 1.5
+          },
+          "asset": "assets/grid.png"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "wire2",
+      "layout": "layouts/bento-3",
+      "duration": 3.5,
+      "cut": "transitions/hard-cut",
+      "move": "moves/push-in",
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/blur-fade",
+          "text": "Same words"
+        },
+        {
+          "at": 0.4,
+          "slot": "tile-1",
+          "fx": "entrances/sketch",
+          "text": "Plan"
+        },
+        {
+          "at": 0.6,
+          "slot": "tile-2",
+          "fx": "entrances/sketch",
+          "text": "Track"
+        },
+        {
+          "at": 0.8,
+          "slot": "tile-3",
+          "fx": "entrances/sketch",
+          "text": "Ship"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "ink2",
+      "layout": "layouts/bento-3",
+      "duration": 3.5,
+      "cut": "transitions/sketch-to-ink",
+      "move": "moves/push-in",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "New words",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-1",
+          "fx": "entrances/blur-fade",
+          "text": "Plan",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-2",
+          "fx": "entrances/fade",
+          "text": "Track",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "list2",
+      "layout": "layouts/list-reveal",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "item-2",
+          "fx": "entrances/sketch",
+          "text": "One two three",
+          "params": {
+            "each": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "item-4",
+          "fx": "entrances/fade",
+          "text": "Gone soon"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "list3",
+      "layout": "layouts/list-reveal",
+      "duration": 3,
+      "cut": "transitions/sketch-to-ink",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "item-2",
+          "fx": "entrances/fade",
+          "text": "One two three",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "wire3",
+      "layout": "layouts/bento-3",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Same words",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "tile-1",
+          "fx": "entrances/sketch",
+          "text": "Plan"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "ink3",
+      "layout": "layouts/title-stack",
+      "duration": 3,
+      "cut": "transitions/sketch-to-ink",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Same words",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": ""
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "language": "en",
+  "facts": []
+}

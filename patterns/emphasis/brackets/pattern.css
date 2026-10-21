@@ -1,0 +1,11 @@
+/* emphasis/brackets: L-shaped corners drawn with two borders each, in the accent. */
+.mm-brackets {
+  position: absolute;
+  box-sizing: border-box;
+  pointer-events: none;
+  border: 0 solid var(--mm-color-accent);
+}
+.mm-brackets--tl { border-top-width: calc(var(--mm-space-1) * 0.9); border-left-width: calc(var(--mm-space-1) * 0.9); }
+.mm-brackets--tr { border-top-width: calc(var(--mm-space-1) * 0.9); border-right-width: calc(var(--mm-space-1) * 0.9); }
+.mm-brackets--bl { border-bottom-width: calc(var(--mm-space-1) * 0.9); border-left-width: calc(var(--mm-space-1) * 0.9); }
+.mm-brackets--br { border-bottom-width: calc(var(--mm-space-1) * 0.9); border-right-width: calc(var(--mm-space-1) * 0.9); }

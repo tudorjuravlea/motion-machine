@@ -1,0 +1,9 @@
+.mm-typewriter__caret {
+  display: inline-block;
+  inline-size: var(--mm-space-0);
+  block-size: 0.9em;
+  margin-inline-end: calc(-1 * var(--mm-space-0));
+  vertical-align: -0.1em;
+  background: var(--mm-color-accent);
+}
+.mm-typewriter__rest { visibility: hidden; }

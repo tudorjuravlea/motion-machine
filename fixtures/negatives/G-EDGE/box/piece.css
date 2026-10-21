@@ -1,0 +1,2 @@
+/* The headline crosses the safe margin. */
+[data-scene="style"] [data-slot="headline"] { margin-left: calc(-1 * var(--mm-safe) - var(--mm-space-3)); }

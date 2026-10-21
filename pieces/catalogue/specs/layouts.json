@@ -1,0 +1,555 @@
+{
+ "title": "Layouts",
+ "sub": "Where things sit. Every slot names itself.",
+ "style": "nocturne-kinetic",
+ "template": "scenes",
+ "watch": "Read the frame.",
+ "watchSub": "Each layout fills its slots with its own description.",
+ "facts": [
+  {
+   "id": "f1",
+   "text": "1",
+   "source": "catalogue layout demo, not a claim"
+  }
+ ],
+ "items": [
+  {
+   "pattern": "layouts/statement",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/statement",
+     "min": 3.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "statement",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.3,
+       "slot": "sub",
+       "fx": "entrances/fade",
+       "text": "One big claim, an optional line beneath."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/title-stack",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/title-stack",
+     "min": 3.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "title-stack",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.3,
+       "slot": "sub",
+       "fx": "entrances/fade",
+       "text": "A rule, a headline, a sub: the opening."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/split",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 3.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "split",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.3,
+       "slot": "figure",
+       "fx": "entrances/rise",
+       "text": "Figure"
+      },
+      {
+       "at": 0.5,
+       "slot": "body",
+       "fx": "entrances/fade",
+       "text": "Words on one side,"
+      },
+      {
+       "at": 0.7,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "a figure on the other."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/stat-hero",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/stat-hero",
+     "min": 3.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "figure",
+       "fx": "entrances/rise",
+       "text": "1",
+       "fact": "f1",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.3,
+       "slot": "headline",
+       "fx": "entrances/rise",
+       "text": "stat-hero"
+      },
+      {
+       "at": 0.6,
+       "slot": "body",
+       "fx": "entrances/fade",
+       "text": "One figure is the whole picture."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/quote",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/quote",
+     "min": 3.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "A pulled line, with a bar above it.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.4,
+       "slot": "attribution",
+       "fx": "entrances/fade",
+       "text": "quote, with its attribution"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/list-reveal",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/list-reveal",
+     "min": 3.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "list-reveal",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.3,
+       "slot": "item-1",
+       "fx": "entrances/rise",
+       "text": "Up to six items"
+      },
+      {
+       "at": 0.5,
+       "slot": "item-2",
+       "fx": "entrances/rise",
+       "text": "arrive one"
+      },
+      {
+       "at": 0.7,
+       "slot": "item-3",
+       "fx": "entrances/rise",
+       "text": "after another"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/bento-3",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/bento-3",
+     "min": 3.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "bento-3",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.3,
+       "slot": "tile-1",
+       "fx": "entrances/pop",
+       "text": "The lead tile"
+      },
+      {
+       "at": 0.45,
+       "slot": "tile-2",
+       "fx": "entrances/pop",
+       "text": "a second"
+      },
+      {
+       "at": 0.6,
+       "slot": "tile-3",
+       "fx": "entrances/pop",
+       "text": "a third"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/comparison",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/comparison",
+     "min": 3.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "comparison",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.3,
+       "slot": "left",
+       "fx": "entrances/pop",
+       "text": "This side"
+      },
+      {
+       "at": 0.5,
+       "slot": "right",
+       "fx": "entrances/pop",
+       "text": "versus that side"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/grid-break",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/grid-break",
+     "min": 3.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "grid-break",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.33,
+       "slot": "tile-1",
+       "fx": "entrances/pop",
+       "text": "Same"
+      },
+      {
+       "at": 0.41000000000000003,
+       "slot": "tile-2",
+       "fx": "entrances/pop",
+       "text": "Same"
+      },
+      {
+       "at": 0.49,
+       "slot": "tile-3",
+       "fx": "entrances/pop",
+       "text": "Same"
+      },
+      {
+       "at": 0.5700000000000001,
+       "slot": "tile-4",
+       "fx": "entrances/pop",
+       "text": "Same"
+      },
+      {
+       "at": 0.65,
+       "slot": "tile-5",
+       "fx": "entrances/pop",
+       "text": "Same"
+      },
+      {
+       "at": 0.9,
+       "slot": "odd",
+       "fx": "entrances/punch",
+       "text": "The odd one"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/fan-stack",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/fan-stack",
+     "min": 3.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "fan-stack",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.3,
+       "slot": "card-1",
+       "fx": "entrances/pop",
+       "text": "Each card in front"
+      },
+      {
+       "at": 0.45,
+       "slot": "card-2",
+       "fx": "entrances/pop",
+       "text": "of the one before,"
+      },
+      {
+       "at": 0.6,
+       "slot": "card-3",
+       "fx": "entrances/pop",
+       "text": "every label"
+      },
+      {
+       "at": 0.75,
+       "slot": "card-4",
+       "fx": "entrances/pop",
+       "text": "still readable"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/paper-cards",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/paper-cards",
+     "min": 3.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "paper-cards",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.3,
+       "slot": "card-1",
+       "fx": "entrances/drop",
+       "text": "Torn paper notes"
+      },
+      {
+       "at": 0.45,
+       "slot": "card-2",
+       "fx": "entrances/drop",
+       "text": "pinned at"
+      },
+      {
+       "at": 0.6,
+       "slot": "card-3",
+       "fx": "entrances/drop",
+       "text": "staggered heights"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/media",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/media",
+     "min": 3.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "media",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.3,
+       "slot": "image",
+       "fx": "entrances/mask-reveal",
+       "asset": "assets/grid.png"
+      },
+      {
+       "at": 0.8,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "One picture, framed at its own proportions."
+      }
+     ]
+    }
+   ],
+   "assets": [
+    {
+     "from": "patterns/layouts/media/demo/assets/grid.png",
+     "to": "assets/grid.png"
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/caption-bar",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/caption-bar",
+     "min": 3.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "stage",
+       "fx": "devices/phone",
+       "text": "Dashboard",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.4,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "caption-bar: a stage, and a band beneath it."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/desktop",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/desktop",
+     "min": 3.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "desk",
+       "fx": "entrances/fade",
+       "params": {
+        "wall": "accent",
+        "instant": true
+       }
+      },
+      {
+       "at": 0.2,
+       "slot": "menu",
+       "fx": "entrances/fade",
+       "text": "Notes   File   Edit   View"
+      },
+      {
+       "at": 0.5,
+       "slot": "caption",
+       "fx": "entrances/rise",
+       "text": "desktop: the frame is a laptop screen."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/endcard",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/endcard",
+     "min": 3.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "line",
+       "fx": "entrances/fade",
+       "text": "endcard: the sign-off.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.3,
+       "slot": "headline",
+       "fx": "entrances/rise",
+       "text": "motion-machine"
+      },
+      {
+       "at": 0.6,
+       "slot": "body",
+       "fx": "entrances/fade",
+       "text": "github.com/tudorjuravlea/motion-machine"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

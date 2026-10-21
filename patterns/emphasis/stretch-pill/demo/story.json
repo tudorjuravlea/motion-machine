@@ -1,0 +1,46 @@
+{
+  "id": "demo-emphasis-stretch-pill",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: emphasis/stretch-pill",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Monthly",
+          "emphasis": "emphasis/stretch-pill"
+        },
+        {
+          "at": 1,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "The pill picks the option"
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

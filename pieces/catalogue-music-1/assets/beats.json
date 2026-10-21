@@ -1,0 +1,698 @@
+{
+  "bpm": 120,
+  "beats": [
+    0.499,
+    0.999,
+    1.499,
+    1.999,
+    2.499,
+    2.999,
+    3.499,
+    3.999,
+    4.499,
+    4.999,
+    5.499,
+    5.999,
+    6.499,
+    6.999,
+    7.499,
+    7.999,
+    8.499,
+    8.999,
+    9.499,
+    9.999,
+    10.499,
+    10.999,
+    11.499,
+    11.999,
+    12.499,
+    12.999,
+    13.499,
+    13.999,
+    14.499,
+    14.999,
+    15.499,
+    15.999,
+    16.499,
+    16.999,
+    17.499,
+    17.999,
+    18.499,
+    18.999,
+    19.499,
+    19.999,
+    20.499,
+    20.999,
+    21.499,
+    21.999,
+    22.499,
+    22.999,
+    23.499,
+    23.999,
+    24.499,
+    24.999,
+    25.499,
+    25.999,
+    26.499,
+    26.999,
+    27.499,
+    27.999,
+    28.499,
+    28.999,
+    29.499,
+    29.999,
+    30.499,
+    30.999,
+    31.499,
+    31.999,
+    32.499,
+    32.999,
+    33.499,
+    33.999,
+    34.499,
+    34.999
+  ],
+  "downbeats": [
+    0.499,
+    2.499,
+    4.499,
+    6.499,
+    8.499,
+    10.499,
+    12.499,
+    14.499,
+    16.499,
+    18.499,
+    20.499,
+    22.499,
+    24.499,
+    26.499,
+    28.499,
+    30.499,
+    32.499,
+    34.499
+  ],
+  "hits": [
+    {
+      "t": 0.5,
+      "strength": 1
+    },
+    {
+      "t": 0.998,
+      "strength": 0.831
+    },
+    {
+      "t": 1.5,
+      "strength": 0.994
+    },
+    {
+      "t": 1.998,
+      "strength": 0.842
+    },
+    {
+      "t": 2.5,
+      "strength": 0.963
+    },
+    {
+      "t": 2.998,
+      "strength": 0.856
+    },
+    {
+      "t": 3.5,
+      "strength": 1
+    },
+    {
+      "t": 3.998,
+      "strength": 0.907
+    },
+    {
+      "t": 4.5,
+      "strength": 0.996
+    },
+    {
+      "t": 4.998,
+      "strength": 0.848
+    },
+    {
+      "t": 5.5,
+      "strength": 1
+    },
+    {
+      "t": 5.998,
+      "strength": 0.86
+    },
+    {
+      "t": 6.5,
+      "strength": 0.978
+    },
+    {
+      "t": 6.998,
+      "strength": 0.86
+    },
+    {
+      "t": 7.5,
+      "strength": 0.964
+    },
+    {
+      "t": 7.998,
+      "strength": 0.861
+    },
+    {
+      "t": 8.5,
+      "strength": 1
+    },
+    {
+      "t": 8.998,
+      "strength": 0.831
+    },
+    {
+      "t": 9.5,
+      "strength": 0.994
+    },
+    {
+      "t": 9.998,
+      "strength": 0.877
+    },
+    {
+      "t": 10.5,
+      "strength": 0.986
+    },
+    {
+      "t": 10.998,
+      "strength": 0.843
+    },
+    {
+      "t": 11.5,
+      "strength": 1
+    },
+    {
+      "t": 11.998,
+      "strength": 1
+    },
+    {
+      "t": 12.5,
+      "strength": 0.996
+    },
+    {
+      "t": 12.998,
+      "strength": 0.845
+    },
+    {
+      "t": 13.5,
+      "strength": 1
+    },
+    {
+      "t": 13.998,
+      "strength": 0.859
+    },
+    {
+      "t": 14.5,
+      "strength": 0.995
+    },
+    {
+      "t": 14.998,
+      "strength": 0.841
+    },
+    {
+      "t": 15.5,
+      "strength": 0.985
+    },
+    {
+      "t": 15.998,
+      "strength": 0.927
+    },
+    {
+      "t": 16.5,
+      "strength": 1
+    },
+    {
+      "t": 16.998,
+      "strength": 0.83
+    },
+    {
+      "t": 17.5,
+      "strength": 0.995
+    },
+    {
+      "t": 17.998,
+      "strength": 0.956
+    },
+    {
+      "t": 18.5,
+      "strength": 1
+    },
+    {
+      "t": 18.998,
+      "strength": 0.836
+    },
+    {
+      "t": 19.5,
+      "strength": 0.995
+    },
+    {
+      "t": 19.998,
+      "strength": 1
+    },
+    {
+      "t": 20.5,
+      "strength": 0.995
+    },
+    {
+      "t": 20.998,
+      "strength": 0.841
+    },
+    {
+      "t": 21.5,
+      "strength": 1
+    },
+    {
+      "t": 21.998,
+      "strength": 0.94
+    },
+    {
+      "t": 22.5,
+      "strength": 0.993
+    },
+    {
+      "t": 22.998,
+      "strength": 0.83
+    },
+    {
+      "t": 23.5,
+      "strength": 1
+    },
+    {
+      "t": 23.998,
+      "strength": 0.92
+    },
+    {
+      "t": 24.5,
+      "strength": 1
+    },
+    {
+      "t": 24.998,
+      "strength": 0.844
+    },
+    {
+      "t": 25.5,
+      "strength": 0.996
+    },
+    {
+      "t": 25.998,
+      "strength": 1
+    },
+    {
+      "t": 26.5,
+      "strength": 0.993
+    },
+    {
+      "t": 26.998,
+      "strength": 0.834
+    },
+    {
+      "t": 27.5,
+      "strength": 0.974
+    },
+    {
+      "t": 27.998,
+      "strength": 1
+    },
+    {
+      "t": 28.5,
+      "strength": 0.994
+    },
+    {
+      "t": 28.998,
+      "strength": 0.838
+    },
+    {
+      "t": 29.5,
+      "strength": 1
+    },
+    {
+      "t": 29.998,
+      "strength": 0.983
+    },
+    {
+      "t": 30.5,
+      "strength": 0.98
+    },
+    {
+      "t": 30.998,
+      "strength": 0.832
+    },
+    {
+      "t": 31.5,
+      "strength": 0.997
+    },
+    {
+      "t": 31.998,
+      "strength": 0.857
+    },
+    {
+      "t": 32.5,
+      "strength": 1
+    },
+    {
+      "t": 32.998,
+      "strength": 0.856
+    },
+    {
+      "t": 33.5,
+      "strength": 1
+    },
+    {
+      "t": 33.998,
+      "strength": 1
+    },
+    {
+      "t": 34.5,
+      "strength": 0.981
+    }
+  ],
+  "strong": [
+    {
+      "t": 0.499,
+      "intensity": 0.839,
+      "kind": "beat"
+    },
+    {
+      "t": 1.499,
+      "intensity": 0.813,
+      "kind": "beat"
+    },
+    {
+      "t": 1.998,
+      "intensity": 0.706,
+      "kind": "onset"
+    },
+    {
+      "t": 2.499,
+      "intensity": 0.785,
+      "kind": "beat"
+    },
+    {
+      "t": 2.998,
+      "intensity": 0.684,
+      "kind": "onset"
+    },
+    {
+      "t": 3.499,
+      "intensity": 0.822,
+      "kind": "beat"
+    },
+    {
+      "t": 3.998,
+      "intensity": 0.75,
+      "kind": "onset"
+    },
+    {
+      "t": 4.499,
+      "intensity": 0.815,
+      "kind": "beat"
+    },
+    {
+      "t": 4.998,
+      "intensity": 0.664,
+      "kind": "onset"
+    },
+    {
+      "t": 5.499,
+      "intensity": 0.823,
+      "kind": "beat"
+    },
+    {
+      "t": 5.998,
+      "intensity": 0.719,
+      "kind": "onset"
+    },
+    {
+      "t": 6.499,
+      "intensity": 0.809,
+      "kind": "beat"
+    },
+    {
+      "t": 6.998,
+      "intensity": 0.666,
+      "kind": "onset"
+    },
+    {
+      "t": 7.499,
+      "intensity": 0.789,
+      "kind": "beat"
+    },
+    {
+      "t": 7.998,
+      "intensity": 0.725,
+      "kind": "onset"
+    },
+    {
+      "t": 8.499,
+      "intensity": 0.834,
+      "kind": "beat"
+    },
+    {
+      "t": 9.499,
+      "intensity": 0.812,
+      "kind": "beat"
+    },
+    {
+      "t": 9.998,
+      "intensity": 0.736,
+      "kind": "onset"
+    },
+    {
+      "t": 10.499,
+      "intensity": 0.795,
+      "kind": "beat"
+    },
+    {
+      "t": 10.998,
+      "intensity": 0.669,
+      "kind": "onset"
+    },
+    {
+      "t": 11.499,
+      "intensity": 0.841,
+      "kind": "beat"
+    },
+    {
+      "t": 11.998,
+      "intensity": 0.845,
+      "kind": "onset"
+    },
+    {
+      "t": 12.499,
+      "intensity": 0.814,
+      "kind": "beat"
+    },
+    {
+      "t": 12.998,
+      "intensity": 0.66,
+      "kind": "onset"
+    },
+    {
+      "t": 13.499,
+      "intensity": 0.821,
+      "kind": "beat"
+    },
+    {
+      "t": 13.998,
+      "intensity": 0.713,
+      "kind": "onset"
+    },
+    {
+      "t": 14.499,
+      "intensity": 0.823,
+      "kind": "beat"
+    },
+    {
+      "t": 14.998,
+      "intensity": 0.661,
+      "kind": "onset"
+    },
+    {
+      "t": 15.499,
+      "intensity": 0.797,
+      "kind": "beat"
+    },
+    {
+      "t": 15.998,
+      "intensity": 0.768,
+      "kind": "onset"
+    },
+    {
+      "t": 16.499,
+      "intensity": 0.83,
+      "kind": "beat"
+    },
+    {
+      "t": 16.998,
+      "intensity": 0.657,
+      "kind": "onset"
+    },
+    {
+      "t": 17.499,
+      "intensity": 0.812,
+      "kind": "beat"
+    },
+    {
+      "t": 17.998,
+      "intensity": 0.79,
+      "kind": "onset"
+    },
+    {
+      "t": 18.499,
+      "intensity": 0.811,
+      "kind": "beat"
+    },
+    {
+      "t": 19.499,
+      "intensity": 0.822,
+      "kind": "beat"
+    },
+    {
+      "t": 19.998,
+      "intensity": 0.847,
+      "kind": "onset"
+    },
+    {
+      "t": 20.499,
+      "intensity": 0.813,
+      "kind": "beat"
+    },
+    {
+      "t": 20.998,
+      "intensity": 0.657,
+      "kind": "onset"
+    },
+    {
+      "t": 21.499,
+      "intensity": 0.818,
+      "kind": "beat"
+    },
+    {
+      "t": 21.998,
+      "intensity": 0.768,
+      "kind": "onset"
+    },
+    {
+      "t": 22.499,
+      "intensity": 0.818,
+      "kind": "beat"
+    },
+    {
+      "t": 22.998,
+      "intensity": 0.659,
+      "kind": "onset"
+    },
+    {
+      "t": 23.499,
+      "intensity": 0.812,
+      "kind": "beat"
+    },
+    {
+      "t": 23.998,
+      "intensity": 0.761,
+      "kind": "onset"
+    },
+    {
+      "t": 24.499,
+      "intensity": 0.826,
+      "kind": "beat"
+    },
+    {
+      "t": 24.998,
+      "intensity": 0.667,
+      "kind": "onset"
+    },
+    {
+      "t": 25.499,
+      "intensity": 0.813,
+      "kind": "beat"
+    },
+    {
+      "t": 25.998,
+      "intensity": 0.837,
+      "kind": "onset"
+    },
+    {
+      "t": 26.499,
+      "intensity": 0.808,
+      "kind": "beat"
+    },
+    {
+      "t": 27.499,
+      "intensity": 0.807,
+      "kind": "beat"
+    },
+    {
+      "t": 27.998,
+      "intensity": 0.835,
+      "kind": "onset"
+    },
+    {
+      "t": 28.499,
+      "intensity": 0.813,
+      "kind": "beat"
+    },
+    {
+      "t": 29.499,
+      "intensity": 0.817,
+      "kind": "beat"
+    },
+    {
+      "t": 29.998,
+      "intensity": 0.802,
+      "kind": "onset"
+    },
+    {
+      "t": 30.499,
+      "intensity": 0.802,
+      "kind": "beat"
+    },
+    {
+      "t": 30.998,
+      "intensity": 0.662,
+      "kind": "onset"
+    },
+    {
+      "t": 31.499,
+      "intensity": 0.808,
+      "kind": "beat"
+    },
+    {
+      "t": 31.998,
+      "intensity": 0.715,
+      "kind": "onset"
+    },
+    {
+      "t": 32.499,
+      "intensity": 0.823,
+      "kind": "beat"
+    },
+    {
+      "t": 32.998,
+      "intensity": 0.676,
+      "kind": "onset"
+    },
+    {
+      "t": 33.499,
+      "intensity": 0.815,
+      "kind": "beat"
+    },
+    {
+      "t": 33.998,
+      "intensity": 0.83,
+      "kind": "onset"
+    },
+    {
+      "t": 34.499,
+      "intensity": 0.807,
+      "kind": "beat"
+    }
+  ],
+  "offsetS": 0.499,
+  "method": "declared-bpm phase fit (least squares)",
+  "durationS": 35
+}

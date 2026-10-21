@@ -1,0 +1,2 @@
+/* G-EDGE/platform: the headline sits low, inside the safe margin but where a Reel draws its buttons. */
+[data-scene="style"] [data-slot="headline"] { position: relative; top: calc(var(--mm-frame-h) * 0.3); }

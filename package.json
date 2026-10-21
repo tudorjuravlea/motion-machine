@@ -1,0 +1,67 @@
+{
+  "name": "motion-machine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Stories in motion, in any style, that a machine checks before you show them. Films and clicker decks as pure functions of time, from a brand-neutral pattern library.",
+  "keywords": [
+    "motion",
+    "video",
+    "animation",
+    "slides",
+    "clicker-deck",
+    "design-tokens",
+    "playwright",
+    "ffmpeg",
+    "claude-code",
+    "agent-skill",
+    "gate",
+    "design-system"
+  ],
+  "license": "Apache-2.0",
+  "author": "Tudor Juravlea",
+  "homepage": "https://github.com/tudorjuravlea/motion-machine#readme",
+  "bugs": {
+    "url": "https://github.com/tudorjuravlea/motion-machine/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tudorjuravlea/motion-machine.git"
+  },
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "bin": { "mm": "scripts/mm.mjs" },
+  "files": [
+    "runtime/",
+    "scripts/",
+    "patterns/",
+    "styles/",
+    "skill/",
+    "contracts/",
+    "references/",
+    "LICENSE",
+    "NOTICE",
+    "PROVENANCE.md",
+    "README.md",
+    "GUIDE.md",
+    "SPEC.md",
+    "AXIOMS.md",
+    "!**/out/",
+    "!**/.*/",
+    "!**/.tmp-*/"
+  ],
+  "scripts": {
+    "test": "node --test --test-concurrency=4 \"tests/**/*.test.mjs\"",
+    "test:unit": "node --test --test-concurrency=8 ${MM_TEST_SHARD:+--test-shard=$MM_TEST_SHARD} \"tests/*.test.mjs\" \"tests/contracts/*.test.mjs\" \"tests/docs/*.test.mjs\" \"tests/capture/!(brand).test.mjs\" \"tests/check/{ground-pixels,timing}.test.mjs\" \"tests/cli/{compose,export-designmd,help,media-frame,media-prep,mm-signals,pack-imports,release-check,router,timeline}.test.mjs\" \"tests/kit/!(*.browser|browser|golden-smoke|variants).test.mjs\" \"tests/sound/beats.test.mjs\" \"tests/studio/{geometry,history,json-splice,model,ops,story-edit}.test.mjs\"",
+    "test:browser": "node --test --test-concurrency=3 ${MM_TEST_SHARD:+--test-shard=$MM_TEST_SHARD} \"tests/capture/brand.test.mjs\" \"tests/check/!(ground-pixels|timing).test.mjs\" \"tests/cli/!(compose|export-designmd|help|media-frame|media-prep|mm-signals|pack-imports|release-check|router|timeline).test.mjs\" \"tests/kit/@(*.browser|browser|golden-smoke|variants).test.mjs\" \"tests/sound/!(beats).test.mjs\" \"tests/studio/!(geometry|history|json-splice|model|ops|story-edit).test.mjs\"",
+    "test:golden": "node --test --test-concurrency=2 ${MM_TEST_SHARD:+--test-shard=$MM_TEST_SHARD} \"tests/golden/*.test.mjs\"",
+    "test:groups": "node --no-warnings -e 'const fs=require(\"node:fs\"),s=require(\"./package.json\").scripts,seen=new Map();let bad=0;for(const k of [\"test:unit\",\"test:browser\",\"test:golden\"])for(const g of [...s[k].matchAll(/\"([^\"]+)\"/g)].map(m=>m[1]))for(const f of fs.globSync(g)){if(seen.has(f)){console.error(f+\" is in \"+seen.get(f)+\" and \"+k);bad=1}seen.set(f,k)}for(const f of fs.globSync(\"tests/**/*.test.mjs\"))if(!seen.has(f)){console.error(f+\" is in no group\");bad=1}console.log(seen.size+\" test files in 3 groups\");process.exit(bad)'",
+    "doctor": "node scripts/mm.mjs doctor",
+    "mm": "node scripts/mm.mjs",
+    "release-check": "node scripts/mm.mjs release-check"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "playwright": "^1.59.1"
+  }
+}

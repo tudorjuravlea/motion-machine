@@ -1,0 +1,10 @@
+/* emphasis/lens: a thin rim and a faint glass tint behind the focused text. */
+.mm-lens {
+  position: absolute;
+  z-index: -1;
+  box-sizing: border-box;
+  border-radius: var(--mm-radius-3);
+  border: calc(var(--mm-space-1) * 0.4) solid color-mix(in srgb, var(--mm-color-ink) 30%, transparent);
+  background: color-mix(in srgb, var(--mm-color-surface) 55%, transparent);
+  pointer-events: none;
+}

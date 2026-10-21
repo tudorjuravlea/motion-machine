@@ -1,0 +1,80 @@
+/* devices/browser: a generic window with a toolbar, three dots and an address pill. */
+.browser {
+  position: relative;
+  width: min(calc(var(--mm-frame-w) * 0.86), calc(var(--mm-frame-h) * 0.58 * 800 / 520));
+  aspect-ratio: 800 / 520;
+}
+.browser__window {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-ink);
+}
+.browser__bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--mm-space-2);
+  padding: var(--mm-space-2) var(--mm-space-3);
+}
+.browser__dot {
+  flex: none;
+  width: var(--mm-space-2);
+  height: var(--mm-space-2);
+  border-radius: var(--mm-radius-4);
+  background: var(--mm-color-muted);
+}
+.browser__address {
+  flex: 1 1 auto;
+  height: var(--mm-space-3);
+  margin-left: var(--mm-space-3);
+  border-radius: var(--mm-radius-4);
+  background: var(--mm-color-muted);
+  opacity: 0.45;
+}
+.browser__screen {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-space-3);
+  padding: var(--mm-space-5);
+  overflow: hidden;
+  background: var(--mm-color-surface);
+}
+.browser__label {
+  flex: none;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: var(--mm-size-body);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  color: var(--mm-color-surfaceInk);
+}
+.browser__label:empty { display: none; }
+.browser__row {
+  flex: none;
+  height: var(--mm-space-3);
+  border-radius: var(--mm-radius-4);
+  background: var(--mm-color-line);
+}
+.browser__row--short { width: 55%; }
+/* A beat's asset fills the screen edge to edge (object-fit cover, clipped by the screen) and the
+   placeholder title and rows give way to it; without an asset the <img> takes no room. */
+.browser__screen { position: relative; }
+.browser__media {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.browser__media:not([src]) { display: none; }
+.browser__screen:is(:has(> .browser__media[src]), :has(> .mm-screen:not(.mm-screen--bare))) > :is(.browser__label, .browser__row) { display: none; }
+/* size: large (a beat param, read as data-p-size): the window as tall as 0.74 of the frame height allows. */
+[data-p-size="large"] > .browser { width: min(calc(var(--mm-frame-w) * 0.86), calc(var(--mm-frame-h) * 0.74 * 800 / 520)); }

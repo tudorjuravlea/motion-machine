@@ -1,0 +1,473 @@
+{
+  "id": "catalogue-text-2",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Text, part 2 of 2",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Text",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Type that moves as it lands. Part 2 of 2."
+        }
+      ],
+      "say": "Type that moves as it lands.",
+      "duration": 4
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "highlight-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "highlight",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/highlight",
+          "text": "Marked"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A marker sweeps behind the words as they fade in.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "text/highlight",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "highlight: A marker sweeps behind the words as they fade in.",
+      "duration": 4.4
+    },
+    {
+      "id": "highlight-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "highlight",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/highlight",
+          "text": "Marked",
+          "params": {
+            "strength": 0.15
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "strength: 0.15. A fainter marker.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "strength: 0.15. A fainter marker.",
+      "duration": 3.4
+    },
+    {
+      "id": "kinetic-words-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "kinetic-words",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/kinetic-words",
+          "text": "Only|time|moves"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "One word at a time, each replacing the last.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "text/kinetic-words",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "kinetic-words: One word at a time, each replacing the last.",
+      "duration": 4.1
+    },
+    {
+      "id": "kinetic-words-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "kinetic-words",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/kinetic-words",
+          "text": "Only|time|moves",
+          "params": {
+            "d": 90
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "d: 90 px. Each word rises further.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "d: 90 px. Each word rises further.",
+      "duration": 3.4
+    },
+    {
+      "id": "masked-fill-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "masked-fill",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/masked-fill",
+          "text": "Fill"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A fill rises inside outlined letters, led by an edge.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "text/masked-fill",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "masked-fill: A fill rises inside outlined letters, led by an edge.",
+      "duration": 4.4
+    },
+    {
+      "id": "masked-fill-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "masked-fill",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/masked-fill",
+          "text": "Fill",
+          "params": {
+            "fill": "accent"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "fill: accent. It fills with colour.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "fill: accent. It fills with colour.",
+      "duration": 3.4
+    },
+    {
+      "id": "scramble-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "scramble",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/scramble",
+          "text": "Decoded"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Letters resolve left to right out of shuffling noise.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "text/scramble",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "scramble: Letters resolve left to right out of shuffling noise.",
+      "duration": 4.1
+    },
+    {
+      "id": "scramble-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "scramble",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/scramble",
+          "text": "Decoded",
+          "params": {
+            "pool": "01"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "pool: 0 and 1. Binary noise.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "pool: 0 and 1. Binary noise.",
+      "duration": 3.4
+    },
+    {
+      "id": "split-flap-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "split-flap",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/split-flap",
+          "text": "Board"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Departure-board tiles flip through letters and land in turn.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "text/split-flap",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "split-flap: Departure-board tiles flip through letters and land in turn.",
+      "duration": 4.1
+    },
+    {
+      "id": "split-flap-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "split-flap",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/split-flap",
+          "text": "Board",
+          "params": {
+            "flips": 14
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "flips: 14. The last tile spins longer.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "flips: 14. The last tile spins longer.",
+      "duration": 3.4
+    }
+  ],
+  "share": "Text (2/2): highlight, kinetic-words, masked-fill, scramble, split-flap. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

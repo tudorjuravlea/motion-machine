@@ -1,0 +1,36 @@
+name: Feature or pattern request
+description: Ask for a pattern, a gate rule, a verb or a change in behaviour
+labels: [enhancement]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What are you asking for?
+      options:
+        - A new pattern
+        - A change to an existing pattern
+        - A new or changed gate rule
+        - A CLI verb or flag
+        - Documentation
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: need
+    attributes:
+      label: What are you trying to make?
+      description: The piece you have in mind and where the current vocabulary stops. A short brief or a beat sheet is enough.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like to see?
+      description: For a pattern, name the group, the motion it should make and the nearest existing pattern. For a rule, give the piece that should fail and the measurement that shows it.
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: References
+      description: Anything that already does this, with its licence, so provenance is clear from the start. Describe the idea; do not paste code you do not have the right to share.

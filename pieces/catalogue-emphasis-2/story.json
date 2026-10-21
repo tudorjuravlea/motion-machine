@@ -1,0 +1,419 @@
+{
+  "id": "catalogue-emphasis-2",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Emphasis, part 2 of 2",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Emphasis",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Pointing the eye at what is there. Part 2 of 2."
+        }
+      ],
+      "say": "Pointing the eye at what is there.",
+      "duration": 4.3
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "shine-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "shine",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Shine",
+          "emphasis": "emphasis/shine"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "One band of light crosses the text and leaves.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "emphasis/shine",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "shine: One band of light crosses the text and leaves.",
+      "duration": 4.1
+    },
+    {
+      "id": "shine-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "shine",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Shine",
+          "emphasis": "emphasis/shine",
+          "params": {
+            "emphasis": {
+              "width": 40
+            }
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "width: 40. A broader band.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "width: 40. A broader band.",
+      "duration": 3.4
+    },
+    {
+      "id": "spotlight-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "spotlight",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Me",
+          "emphasis": "emphasis/spotlight"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Everything else dims, then the light lets go.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "emphasis/spotlight",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "spotlight: Everything else dims, then the light lets go.",
+      "duration": 4.1
+    },
+    {
+      "id": "spotlight-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "spotlight",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Me",
+          "emphasis": "emphasis/spotlight",
+          "params": {
+            "emphasis": {
+              "dim": 0.5
+            }
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "dim: 0.5. A gentler dim.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "dim: 0.5. A gentler dim.",
+      "duration": 3.4
+    },
+    {
+      "id": "stretch-pill-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "stretch-pill",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Monthly",
+          "emphasis": "emphasis/stretch-pill"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A pill runs in behind the word, then leaves.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "emphasis/stretch-pill",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "stretch-pill: A pill runs in behind the word, then leaves.",
+      "duration": 4.1
+    },
+    {
+      "id": "stretch-pill-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "stretch-pill",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Monthly",
+          "emphasis": "emphasis/stretch-pill",
+          "params": {
+            "emphasis": {
+              "strength": 1
+            }
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "strength: 1. A solid accent pill.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "strength: 1. A solid accent pill.",
+      "duration": 3.4
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "lens",
+      "layout": "layouts/list-reveal",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "lens",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "item-1",
+          "fx": "style:body",
+          "text": "Others soften",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "item-2",
+          "fx": "entrances/fade",
+          "text": "This one grows",
+          "emphasis": "emphasis/lens"
+        },
+        {
+          "at": 0,
+          "slot": "item-3",
+          "fx": "style:body",
+          "text": "Then everything clears",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "lens-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "lens",
+      "layout": "layouts/list-reveal",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "lens",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "item-1",
+          "fx": "style:body",
+          "text": "blur: 0.12",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "item-2",
+          "fx": "entrances/fade",
+          "text": "zoom: 0.1",
+          "emphasis": "emphasis/lens",
+          "params": {
+            "emphasis": {
+              "blur": 0.12,
+              "zoom": 0.1
+            }
+          }
+        },
+        {
+          "at": 0,
+          "slot": "item-3",
+          "fx": "style:body",
+          "text": "Stronger glass",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "lens-b",
+      "duration": 3.6
+    }
+  ],
+  "share": "Emphasis (2/2): shine, spotlight, stretch-pill, lens. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

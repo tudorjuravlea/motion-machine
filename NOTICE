@@ -1,0 +1,90 @@
+Motion Machine
+Copyright (c) 2026 Tudor Juravlea
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product includes third-party software and fonts, each under its own licence. Credits for ideas
+restated in our own words are in PROVENANCE.md.
+
+------------------------------------------------------------------------------------------------
+three.js (https://github.com/mrdoob/three.js), version 0.170.0, MIT License.
+Copyright (c) 2010-2024 three.js authors.
+Vendored at runtime/vendor/three/0.170.0/: three.module.min.js, and the addons RoundedBoxGeometry.js
+and RoomEnvironment.js, of which only the `three` import is rewritten to a relative path. The licence
+text travels beside them (runtime/vendor/three/0.170.0/LICENSE).
+
+------------------------------------------------------------------------------------------------
+drawably (https://github.com/danielwh2/drawably), MIT License.
+The hand-drawn pen stroke and boil in runtime/kit/rough.js re-implement its approach: points
+sampled along a shape, jittered by a seeded stream, smoothed through their midpoints with quadratic
+curves and drawn twice with a wilder second pass; the boil is three frames that add a small second
+jitter over one shared base. The code is rewritten in our own ES modules with a fixed sampling plan
+per box, so a sketch can morph and straighten, and the frame comes from the kit's time, not a CSS
+clock. patterns/transitions/sketch-to-ink takes the idea of handing each piece over as the pen closes
+it; no code is taken from the upstream films.
+
+MIT License
+
+Copyright (c) 2026 Daniel Belyi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+------------------------------------------------------------------------------------------------
+showcase (https://github.com/tudorjuravlea/showcase), MIT License, by the same author.
+Adapted into scripts/lib/ffmpeg.mjs, scripts/lib/sheet.mjs, scripts/stills.mjs, scripts/export.mjs and
+scripts/lib/standalone.mjs: the seek-then-screenshot frame loop piped to ffmpeg, the explicit BT.709
+matrix and tv-range colour recipe, the contact sheet composed in a second headless page, the
+dry-run-before-render habit, the order-independence determinism proof, and the lesson that a
+fixed-length picture needs its audio padded or trimmed to it.
+
+Derived in shape, not copied: patterns/devices/phone, patterns/devices/browser,
+patterns/devices/laptop and patterns/devices/screen-zoom take abstract device proportions (aspect
+ratio, bezel and corner radius, lid angle) and redraw them as generic CSS boxes; patterns/moves/hero-drift
+takes the float look's amplitudes and the hero-pose idea, scaled down and re-expressed as a pure
+function of progress on a DOM camera; patterns/moves/orbit takes the orbit look (a turn about Y with
+a smaller X sway) with reduced amplitudes.
+
+MIT License
+
+Copyright (c) 2026 Tudor Juravlea
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+------------------------------------------------------------------------------------------------
+Fonts, SIL Open Font License 1.1 (the licence travels in each font folder as LICENSE.txt):
+  Archivo        Copyright 2020 The Archivo Project Authors (https://github.com/Omnibus-Type/Archivo)
+  Fraunces       Copyright 2020 The Fraunces Project Authors (https://github.com/undercasetype/Fraunces)
+  Manrope        Copyright 2019 The Manrope Project Authors (https://github.com/sharanda/manrope)
+  IBM Plex Mono  Copyright © 2017 IBM Corp. with Reserved Font Name "Plex"

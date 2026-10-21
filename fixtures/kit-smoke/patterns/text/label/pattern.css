@@ -1,0 +1,3 @@
+/* Fixture stub: a text fragment the kit instantiates. Variables only. */
+.label { display: inline-flex; gap: var(--mm-space-2); font-size: var(--mm-size-body); }
+.label__tone { color: var(--mm-color-muted); }

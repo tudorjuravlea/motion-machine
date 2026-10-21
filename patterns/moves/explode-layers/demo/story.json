@@ -1,0 +1,57 @@
+{
+  "id": "demo-moves-explode-layers",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: moves/explode-layers",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/bento-3",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": "moves/explode-layers",
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Built in layers"
+        },
+        {
+          "at": 0.4,
+          "slot": "tile-1",
+          "fx": "entrances/fade",
+          "text": "Data"
+        },
+        {
+          "at": 0.5,
+          "slot": "tile-2",
+          "fx": "entrances/fade",
+          "text": "Logic"
+        },
+        {
+          "at": 0.6,
+          "slot": "tile-3",
+          "fx": "entrances/fade",
+          "text": "Interface"
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

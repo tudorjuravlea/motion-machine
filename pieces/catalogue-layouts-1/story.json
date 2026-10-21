@@ -1,0 +1,328 @@
+{
+  "id": "catalogue-layouts-1",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Layouts, part 1 of 2",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "1",
+      "source": "catalogue layout demo, not a claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Layouts",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Where things sit. Every slot names itself. Part 1 of 2."
+        }
+      ],
+      "say": "Where things sit. Every slot names itself.",
+      "duration": 4.3
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Read the frame.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Each layout fills its slots with its own description."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.95
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "statement",
+      "layout": "layouts/statement",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "statement",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "One big claim, an optional line beneath."
+        }
+      ],
+      "id": "statement-a",
+      "duration": 3.8
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "title-stack",
+      "layout": "layouts/title-stack",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "title-stack",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "A rule, a headline, a sub: the opening."
+        }
+      ],
+      "id": "title-stack-a",
+      "duration": 3.8
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "split",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "split",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Figure"
+        },
+        {
+          "at": 0.5,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "Words on one side,"
+        },
+        {
+          "at": 0.7,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "a figure on the other."
+        }
+      ],
+      "id": "split-a",
+      "duration": 4.05
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "stat-hero",
+      "layout": "layouts/stat-hero",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "1",
+          "fact": "f1",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "stat-hero"
+        },
+        {
+          "at": 0.6,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "One figure is the whole picture."
+        }
+      ],
+      "id": "stat-hero-a",
+      "duration": 3.8
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "quote",
+      "layout": "layouts/quote",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "A pulled line, with a bar above it.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "attribution",
+          "fx": "entrances/fade",
+          "text": "quote, with its attribution"
+        }
+      ],
+      "id": "quote-a",
+      "duration": 4.05
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "list-reveal",
+      "layout": "layouts/list-reveal",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "list-reveal",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "item-1",
+          "fx": "entrances/rise",
+          "text": "Up to six items"
+        },
+        {
+          "at": 0.5,
+          "slot": "item-2",
+          "fx": "entrances/rise",
+          "text": "arrive one"
+        },
+        {
+          "at": 0.7,
+          "slot": "item-3",
+          "fx": "entrances/rise",
+          "text": "after another"
+        }
+      ],
+      "id": "list-reveal-a",
+      "duration": 3.8
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "bento-3",
+      "layout": "layouts/bento-3",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "bento-3",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "tile-1",
+          "fx": "entrances/pop",
+          "text": "The lead tile"
+        },
+        {
+          "at": 0.45,
+          "slot": "tile-2",
+          "fx": "entrances/pop",
+          "text": "a second"
+        },
+        {
+          "at": 0.6,
+          "slot": "tile-3",
+          "fx": "entrances/pop",
+          "text": "a third"
+        }
+      ],
+      "id": "bento-3-a",
+      "duration": 3.8
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "comparison",
+      "layout": "layouts/comparison",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "comparison",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "left",
+          "fx": "entrances/pop",
+          "text": "This side"
+        },
+        {
+          "at": 0.5,
+          "slot": "right",
+          "fx": "entrances/pop",
+          "text": "versus that side"
+        }
+      ],
+      "id": "comparison-a",
+      "duration": 3.8
+    }
+  ],
+  "share": "Layouts (1/2): statement, title-stack, split, stat-hero, quote, list-reveal, bento-3, comparison. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

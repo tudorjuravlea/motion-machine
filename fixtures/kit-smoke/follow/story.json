@@ -1,0 +1,32 @@
+{
+  "id": "kit-smoke-follow",
+  "kind": "film",
+  "formats": ["16x9", "9x16", "1x1"],
+  "title": "kit-smoke follow-up: params, cascades, fragments, assets, overlays, units",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "one", "layout": "layouts/grid", "duration": 4, "cut": "transitions/hard-cut", "move": "moves/probe", "moveParams": { "k": "mv" },
+      "beats": [
+        { "at": 0.1, "slot": "headline", "fx": "entrances/probe", "text": "Params reach every kind.", "params": { "d": 0.5, "exit": { "side": "left" } },
+          "emphasis": "emphasis/probe", "out": 3.2, "exit": "exits/probe" },
+        { "at": 0.2, "slot": "sub", "fx": "entrances/fade", "text": "One bag for all.", "params": { "side": "left", "strength": 0.4 }, "emphasis": "emphasis/probe", "out": 3.2, "exit": "exits/probe" },
+        { "at": 0.3, "slot": "list", "fx": "entrances/fade", "text": "one|two|three|four|five|six|seven|eight|nine|ten", "params": { "each": true } },
+        { "at": 0.3, "slot": "steps", "fx": "entrances/fade" },
+        { "at": 0.5, "slot": "media", "fx": "devices/frame", "text": "Screen", "value": 42, "asset": "assets/img/dot.png" },
+        { "at": 0.5, "slot": "tag", "fx": "text/label", "text": "Label", "params": { "tone": "warm" } }
+      ],
+      "say": "Every kind of pattern gets its params."
+    },
+    {
+      "id": "two", "layout": "layouts/title-stack", "duration": 3, "cut": "transitions/probe", "cutParams": { "shape": "circle" }, "move": null,
+      "beats": [
+        { "at": 0.6, "slot": "headline", "fx": "entrances/fade", "text": "Cuts take params too." }
+      ],
+      "say": "And so does the cut."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

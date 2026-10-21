@@ -1,0 +1,84 @@
+/* split: headline and body on one side, a figure and its caption on the other (16x9); one column
+   in 9x16 and 1x1. An unused figure slot collapses the layout to one column. */
+.split {
+  position: absolute;
+  inset: var(--mm-safe) calc(var(--mm-safe) + (var(--mm-frame-w) / 2 - var(--mm-safe)) * 0.08 * var(--mm-density)) calc(var(--mm-safe) * 2);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "headline" "figure" "body" "caption";
+  align-content: center;
+  justify-items: var(--mm-align);
+  text-align: var(--mm-align);
+  gap: calc(var(--mm-space-4) * var(--mm-density));
+}
+.split__headline {
+  grid-area: headline;
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: calc(var(--mm-size-h1) * var(--mm-headline-scale));
+  line-height: 1.05;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+  color: var(--mm-color-ink);
+}
+.split__figure {
+  grid-area: figure;
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: var(--mm-size-display);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--mm-accent-text);
+}
+.split__body,
+.split__caption {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.3;
+  text-wrap: pretty;
+}
+.split__body { grid-area: body; color: var(--mm-color-ink); }
+.split__caption { grid-area: caption; color: var(--mm-color-muted); }
+.split [data-empty] { display: none; }
+
+[data-format="16x9"] .split {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas: "headline figure" "body caption";
+  column-gap: calc(var(--mm-space-6) * var(--mm-density));
+  row-gap: calc(var(--mm-space-5) * var(--mm-density));
+  align-items: start;
+}
+[data-format="16x9"] .split__figure { font-size: calc(var(--mm-size-display) * 1.4); align-self: end; }
+[data-format="16x9"] .split__headline { align-self: end; }
+[data-format="16x9"] .split:has(.split__figure[data-empty]) {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "headline" "body" "caption";
+}
+[data-format="9x16"] .split { gap: calc(var(--mm-space-5) * var(--mm-density)); }
+/* align: the brand's composition (--mm-align) by default; `left` or `center` with a beat param on any slot (data-p-align) or data-align on the layout root. */
+.split[data-align="center"],
+.split:has([data-p-align="center"]) {
+  justify-items: center;
+  text-align: center;
+}
+.split[data-align="left"],
+.split:has([data-p-align="left"]) {
+  justify-items: start;
+  text-align: left;
+}
+/* A deck rest shows the slots that have arrived: a slot the kit still hides takes no room, so the
+   visible content stays centred. (A film keeps the room, so nothing shifts as slots arrive.) */
+[data-kind="deck"] .split [data-slot][style*="visibility: hidden"] { display: none; }
+[data-kind="deck"][data-format="16x9"] .split:has(.split__figure[style*="visibility: hidden"]) {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "headline" "body" "caption";
+}

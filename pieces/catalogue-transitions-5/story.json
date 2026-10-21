@@ -1,0 +1,373 @@
+{
+  "id": "catalogue-transitions-5",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Transitions, part 5 of 5",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Transitions",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "How one scene hands over. Part 5 of 5."
+        }
+      ],
+      "say": "How one scene hands over.",
+      "duration": 3.7
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch three times.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "A card, the cut as shipped, then one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 4.25
+    },
+    {
+      "id": "zoom-out-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "zoom-out",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "The camera pulls back; the next settles from larger.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/zoom-out",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "The camera pulls back; the next settles from larger.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.65
+    },
+    {
+      "id": "zoom-out-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "zoom-out"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/zoom-out",
+      "duration": 3.34
+    },
+    {
+      "id": "zoom-out-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "zoom-out"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "depth: 1.2. A deeper pull."
+        }
+      ],
+      "say": "depth: 1.2. A deeper pull.",
+      "cut": "transitions/zoom-out",
+      "cutParams": {
+        "depth": 1.2
+      },
+      "duration": 3.34
+    },
+    {
+      "id": "zoom-through-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "zoom-through",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "The camera dives through this scene into the next.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/zoom-through",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "The camera dives through this scene into the next.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.65
+    },
+    {
+      "id": "zoom-through-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "zoom-through"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/zoom-through",
+      "duration": 3.34
+    },
+    {
+      "id": "zoom-through-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "zoom-through"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "depth: 1.4. A deeper dive."
+        }
+      ],
+      "say": "depth: 1.4. A deeper dive.",
+      "cut": "transitions/zoom-through",
+      "cutParams": {
+        "depth": 1.4
+      },
+      "duration": 3.34
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "shared-element",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "shared-element",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "One element flies from its box here to its box there.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/shared-element",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "shared-element-a",
+      "duration": 3.95
+    },
+    {
+      "cut": "transitions/shared-element",
+      "move": null,
+      "say": "shared-element",
+      "layout": "layouts/statement",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "shared-element",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.9,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "The name flew here."
+        }
+      ],
+      "id": "shared-element-b",
+      "duration": 3.3
+    },
+    {
+      "cut": "transitions/shared-element",
+      "move": null,
+      "say": "shared-element",
+      "layout": "layouts/split",
+      "cutParams": {
+        "fit": "stretch"
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "shared-element",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.9,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "fit: stretch. It fills the target box exactly."
+        }
+      ],
+      "id": "shared-element-c",
+      "duration": 3.65
+    }
+  ],
+  "share": "Transitions (5/5): zoom-out, zoom-through, shared-element. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

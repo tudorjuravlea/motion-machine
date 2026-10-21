@@ -1,0 +1,70 @@
+{
+  "id": "demo-title-stack",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: layouts/title-stack",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Most AI video looks like AI video."
+        },
+        {
+          "at": 1.0,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Centred title. Gradient. Every time."
+        }
+      ],
+      "say": "A demo of the pattern."
+    },
+    {
+      "id": "demo-align",
+      "layout": "layouts/title-stack",
+      "duration": 4.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Most AI video looks like AI video.",
+          "params": {
+            "align": "center"
+          }
+        },
+        {
+          "at": 1.0,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Centred title. Gradient. Every time."
+        }
+      ],
+      "say": "The same layout with align set to center."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

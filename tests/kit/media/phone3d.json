@@ -1,0 +1,70 @@
+{
+  "id": "kit-phone3d",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "16x9"
+  ],
+  "title": "Kit 3D phone",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "scenes": [
+    {
+      "id": "seq",
+      "layout": "layouts/caption-bar",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/rec/",
+          "params": {
+            "move": "hero"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "page",
+      "layout": "layouts/caption-bar",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/site/",
+          "params": {
+            "move": "turntable"
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 0.6,
+              "d": 1,
+              "params": {
+                "to": "Pricing"
+              }
+            }
+          ]
+        }
+      ],
+      "say": ""
+    }
+  ]
+}

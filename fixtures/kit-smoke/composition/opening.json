@@ -1,0 +1,64 @@
+{
+ "id": "kit-smoke-opening",
+ "kind": "film",
+ "formats": [
+  "9x16",
+  "16x9"
+ ],
+ "title": "kit-smoke opening: a gentle idle under a finished hook",
+ "language": "en",
+ "facts": [],
+ "audio": {
+  "track": null,
+  "bpm": null,
+  "beats": null
+ },
+ "scenes": [
+  {
+   "id": "hook",
+   "layout": "layouts/statement",
+   "duration": 4,
+   "cut": "transitions/hard-cut",
+   "move": "moves/idle-breathe",
+   "beats": [
+    {
+     "at": 0,
+     "slot": "headline",
+     "fx": "style:headline",
+     "text": "Most AI video looks like AI video.",
+     "params": {
+      "instant": true
+     }
+    },
+    {
+     "at": 1,
+     "slot": "sub",
+     "fx": "style:body",
+     "text": "Centred. Gradient. Fades."
+    }
+   ],
+   "say": "hook.",
+   "position": "opening"
+  },
+  {
+   "id": "next",
+   "layout": "layouts/title-stack",
+   "duration": 3,
+   "cut": "transitions/hard-cut",
+   "move": null,
+   "beats": [
+    {
+     "at": 0.2,
+     "slot": "headline",
+     "fx": "style:headline",
+     "text": "Nobody checks it."
+    }
+   ],
+   "say": "next."
+  }
+ ],
+ "cta": {
+  "text": "motion-machine",
+  "url": "github.com/tudorjuravlea/motion-machine"
+ }
+}

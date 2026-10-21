@@ -1,0 +1,7 @@
+/* On an empty slot this pattern is a rule that draws itself; on text it widens the line. */
+[data-fx="entrances/draw"]:empty {
+  inline-size: 100%;
+  block-size: var(--mm-space-1);
+  background: var(--mm-color-accent);
+  border-radius: var(--mm-radius-1);
+}

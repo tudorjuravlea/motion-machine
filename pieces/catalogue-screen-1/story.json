@@ -1,0 +1,381 @@
+{
+  "id": "catalogue-screen-1",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Screen actions, part 1 of 2",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Screen actions",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "What happens on a device screen. Part 1 of 2."
+        }
+      ],
+      "say": "What happens on a device screen.",
+      "duration": 4.05
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "scroll",
+      "layout": "layouts/caption-bar",
+      "duration": 5,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/app/",
+          "params": {
+            "size": "large",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 0.8,
+              "params": {
+                "to": "Pricing"
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "scroll: the page glides to a named mark."
+        }
+      ],
+      "id": "scroll-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "scroll",
+      "layout": "layouts/caption-bar",
+      "duration": 4.6,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/app/",
+          "params": {
+            "size": "large",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 0.6,
+              "params": {
+                "to": "Start",
+                "align": "center",
+                "settle": 1
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.3,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "align center, settle 1: more momentum."
+        }
+      ],
+      "id": "scroll-b"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "tap",
+      "layout": "layouts/caption-bar",
+      "duration": 4.8,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/app/",
+          "params": {
+            "size": "large",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 0.3,
+              "params": {
+                "to": "Start",
+                "align": "center"
+              }
+            },
+            {
+              "do": "screen/tap",
+              "at": 1.8,
+              "params": {
+                "at": "Start"
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "tap: a press ring, then a ripple."
+        }
+      ],
+      "id": "tap-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "tap",
+      "layout": "layouts/caption-bar",
+      "duration": 4.6,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/app/",
+          "params": {
+            "size": "large",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 0.3,
+              "params": {
+                "to": "Start",
+                "align": "center"
+              }
+            },
+            {
+              "do": "screen/tap",
+              "at": 1.6,
+              "params": {
+                "at": "Start",
+                "ripple": false
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.3,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "ripple false: just the press."
+        }
+      ],
+      "id": "tap-b"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "zoom-to",
+      "layout": "layouts/caption-bar",
+      "duration": 4.8,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/app/",
+          "params": {
+            "size": "large",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/zoom-to",
+              "at": 0.8,
+              "params": {
+                "at": "Pricing"
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "zoom-to: the screen pushes in on a mark."
+        }
+      ],
+      "id": "zoom-to-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "zoom-to",
+      "layout": "layouts/caption-bar",
+      "duration": 4.6,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/app/",
+          "params": {
+            "size": "large",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/zoom-to",
+              "at": 0.6,
+              "params": {
+                "at": "Pricing",
+                "s": 3
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.3,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "s 3: three times closer."
+        }
+      ],
+      "id": "zoom-to-b"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "swap",
+      "layout": "layouts/caption-bar",
+      "duration": 4.8,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/app/",
+          "params": {
+            "size": "large",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/tap",
+              "at": 0.8,
+              "params": {
+                "at": "40%,30%"
+              }
+            },
+            {
+              "do": "screen/swap",
+              "at": 1.4,
+              "params": {
+                "to": "assets/next.png"
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "swap: the screen moves on, as apps do."
+        }
+      ],
+      "id": "swap-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "swap",
+      "layout": "layouts/caption-bar",
+      "duration": 4.6,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/app/",
+          "params": {
+            "size": "large",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/swap",
+              "at": 0.8,
+              "params": {
+                "to": "assets/next.png",
+                "how": "fade"
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.3,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "how fade: a dissolve, not a slide."
+        }
+      ],
+      "id": "swap-b"
+    }
+  ],
+  "share": "Screen actions (1/2): scroll, tap, zoom-to, swap. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

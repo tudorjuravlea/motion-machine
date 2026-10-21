@@ -1,0 +1,265 @@
+{
+  "id": "catalogue-music-1",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Music",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": "assets/audio/track.wav",
+    "bpm": 120,
+    "beats": "assets/beats.json"
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Music",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "A track, its grid, cues on the beat."
+        }
+      ],
+      "say": "A track, its grid, cues on the beat.",
+      "duration": 4
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Turn the sound on.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Every arrival here lands on a beat."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 4
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "grid",
+      "layout": "layouts/list-reveal",
+      "duration": 4,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "mm beats",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "item-1",
+          "fx": "entrances/rise",
+          "text": "the tempo,",
+          "cue": "tick"
+        },
+        {
+          "at": 1,
+          "slot": "item-2",
+          "fx": "entrances/rise",
+          "text": "each beat,",
+          "cue": "tick"
+        },
+        {
+          "at": 1.5,
+          "slot": "item-3",
+          "fx": "entrances/rise",
+          "text": "each bar.",
+          "cue": "step"
+        }
+      ],
+      "id": "grid-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "strong",
+      "layout": "layouts/split",
+      "duration": 6,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "strong cues",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "Onset, contrast, loudness and bass rank each beat."
+        },
+        {
+          "at": 2,
+          "slot": "figure",
+          "fx": "entrances/slam",
+          "text": "Drop",
+          "cue": "hit"
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "beats.json",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "strong-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "snap",
+      "layout": "layouts/statement",
+      "duration": 4,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Cues snap to beats.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Over 40 ms off, the gate warns.",
+          "cue": "tick"
+        }
+      ],
+      "id": "snap-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "bed",
+      "layout": "layouts/statement",
+      "duration": 4,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "The bed sits under.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Six decibels below the track, by loudness.",
+          "cue": "bed"
+        }
+      ],
+      "id": "bed-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "loudness",
+      "layout": "layouts/statement",
+      "duration": 4,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Two passes to the target.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "G-LOUD checks loudness and true peak.",
+          "cue": "tick"
+        }
+      ],
+      "id": "loud-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "end",
+      "layout": "layouts/endcard",
+      "duration": 4,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "line",
+          "fx": "style:body",
+          "text": "Sound and picture, one clock.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "motion-machine",
+          "cue": "complete"
+        },
+        {
+          "at": 1,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "github.com/tudorjuravlea/motion-machine",
+          "cue": "tick"
+        }
+      ],
+      "id": "end-a"
+    }
+  ],
+  "share": "Music: grid, strong, snap, bed, loudness, end. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

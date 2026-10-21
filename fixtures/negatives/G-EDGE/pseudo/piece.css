@@ -1,0 +1,2 @@
+/* generated text positioned outside the safe area. */
+[data-scene="style"] [data-slot="sub"]::before { content: "Note:"; position: absolute; left: calc(-1 * var(--mm-safe)); }

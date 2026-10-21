@@ -1,0 +1,138 @@
+{
+  "id": "sketch-showcase-screen",
+  "kind": "film",
+  "formats": [
+    "9x16"
+  ],
+  "title": "Sketch showcase: the app screen, drawn and finished",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo app for the sketch showcase",
+      "source": "an invented app that carries no claim"
+    }
+  ],
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "scenes": [
+    {
+      "id": "lead",
+      "layout": "layouts/statement",
+      "duration": 1,
+      "move": null,
+      "position": "opening",
+      "say": "A lead-in, so neither screen is the hook (the hook draws its headline larger).",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Today",
+          "params": {
+            "instant": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "sketch",
+      "layout": "layouts/bento-3",
+      "duration": 12,
+      "move": null,
+      "say": "The app, drawn.",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Today",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-1",
+          "fx": "entrances/sketch",
+          "text": "Plan the week",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-2",
+          "fx": "entrances/sketch",
+          "text": "Track the work",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-3",
+          "fx": "entrances/sketch",
+          "text": "Ship on Friday",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "cut": "transitions/hard-cut"
+    },
+    {
+      "id": "hifi",
+      "layout": "layouts/bento-3",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "The app, finished.",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Today",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-1",
+          "fx": "entrances/fade",
+          "text": "Plan the week",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-2",
+          "fx": "entrances/fade",
+          "text": "Track the work",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-3",
+          "fx": "entrances/fade",
+          "text": "Ship on Friday",
+          "params": {
+            "instant": true
+          }
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "language": "en"
+}

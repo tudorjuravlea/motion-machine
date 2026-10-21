@@ -1,0 +1,3 @@
+/* Negative G-LITERAL/region: the accent rule (64x8 px) turned teal. 512 px is 0.025 % of the
+   frame, far under the 0.5 % budget; only the connected-region test sees it. */
+[data-scene="style"] .title-stack__rule { filter: hue-rotate(180deg); }

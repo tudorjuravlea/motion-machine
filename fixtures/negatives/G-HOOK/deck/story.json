@@ -1,0 +1,93 @@
+{
+  "id": "neg-g-hook-deck",
+  "kind": "deck",
+  "formats": [
+    "16x9"
+  ],
+  "title": "negative G-HOOK/deck: rest 0 is a blank slide",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/title-stack",
+      "presses": 2,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "step": 1,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "A press is the unit."
+        },
+        {
+          "at": 0,
+          "step": 2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Each press brings one idea."
+        }
+      ],
+      "say": "Section 1."
+    },
+    {
+      "id": "middle",
+      "layout": "layouts/title-stack",
+      "presses": 2,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "step": 1,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Rests are finished poses."
+        },
+        {
+          "at": 0,
+          "step": 2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Back always lands on a rest."
+        }
+      ],
+      "say": "Section 2."
+    },
+    {
+      "id": "end",
+      "layout": "layouts/title-stack",
+      "presses": 2,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "step": 1,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "The last press is quiet."
+        },
+        {
+          "at": 0,
+          "step": 2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "One element, then nothing."
+        }
+      ],
+      "say": "Section 3."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

@@ -1,0 +1,10 @@
+/* screen/tap: a ring in the accent colour with a translucent fill, sized from the spacing scale. */
+.mm-screen-fx .tap {
+  position: absolute;
+  width: calc(var(--mm-space-6) * 1.4);
+  height: calc(var(--mm-space-6) * 1.4);
+  box-sizing: border-box;
+  border: calc(var(--mm-space-1) * 0.75) solid var(--mm-color-accent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--mm-color-accent) 22%, transparent);
+}

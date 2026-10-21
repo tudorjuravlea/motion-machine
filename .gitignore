@@ -1,0 +1,42 @@
+node_modules
+out/
+*.log
+*.tgz
+coverage/
+
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Local tool state
+.claude/settings.local.json
+
+# Real-brand material stays local
+docs/private/
+
+# Scratch folders the tests create next to the pieces (they must sit at the repository's depth)
+.tmp-*/
+
+# Generated test inputs
+fixtures/sound/kit-smoke-cues/assets/
+!fixtures/negatives/G-LOUD/out/
+fixtures/negatives/G-LOUD/out/*
+!fixtures/negatives/G-LOUD/out/mix.wav
+fixtures/media/*.mp4
+fixtures/media/*.mov
+tests/kit/media/assets/rec/
+tests/kit/media/assets/site/
+tests/kit/media/assets/short/
+fixtures/device-film/assets/site-phone/
+fixtures/device-film/assets/site-laptop/
+fixtures/device-film/assets/rec/
+fixtures/device-film/assets/next.png
+fixtures/device-film/out/
+fixtures/launch-film/out/
+fixtures/phone-3d/assets/site-phone/
+fixtures/phone-3d/assets/rec/
+fixtures/phone-3d/out/
+pieces/catalogue-*/assets/audio/

@@ -1,0 +1,56 @@
+{
+  "id": "demo-data-odometer",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "data/odometer demo",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo figure for data/odometer",
+      "source": "demo fixture, an invented figure that carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "figure",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/odometer",
+          "fact": "f1",
+          "params": {
+            "suffix": "",
+            "size": "display"
+          },
+          "value": 12840
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Members joined this season"
+        }
+      ],
+      "say": "The figure arrives and holds: odometer."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

@@ -1,0 +1,4 @@
+/* Negative G-LITERAL/mask: an empty SVG as the wrapper's background-image masked the wrapper's
+   whole box from the pixel test, so the recoloured rule inside it shipped with "measured 0 %". */
+[data-scene="style"] .title-stack { background-image: url("assets/blank.svg"); }
+[data-scene="style"] .title-stack__rule { filter: hue-rotate(180deg); }

@@ -1,0 +1,2 @@
+/* generated text at the micro size, which the DOM text walk never saw. */
+[data-scene="style"] [data-slot="sub"]::after { content: " in small print"; font-size: var(--mm-size-micro); }

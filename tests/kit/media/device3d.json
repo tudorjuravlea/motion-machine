@@ -1,0 +1,131 @@
+{
+  "id": "kit-device3d",
+  "kind": "film",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Kit 3D devices",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "scenes": [
+    {
+      "id": "show",
+      "layout": "layouts/caption-bar",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/rec/",
+          "params": {
+            "move": "showcase"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "punch",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/rec/",
+          "params": {
+            "move": "still",
+            "model": "punch",
+            "metal": "titanium"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "lap",
+      "layout": "layouts/caption-bar",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "3d/laptop",
+          "asset": "assets/site/",
+          "params": {
+            "move": "hero",
+            "url": "planner.example"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "lapshow",
+      "layout": "layouts/caption-bar",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "3d/laptop",
+          "asset": "assets/site/",
+          "params": {
+            "move": "showcase",
+            "model": "chin"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "page",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/site/",
+          "params": {
+            "move": "still",
+            "statusTime": "10:24"
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 0.5,
+              "d": 1.6,
+              "params": {
+                "to": "Pricing"
+              }
+            }
+          ]
+        }
+      ],
+      "say": ""
+    }
+  ]
+}

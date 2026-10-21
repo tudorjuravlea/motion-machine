@@ -1,0 +1,2 @@
+/* A literal colour instead of var(--mm-color-muted). */
+[data-scene] [data-slot="sub"] { color: #6F675B; }

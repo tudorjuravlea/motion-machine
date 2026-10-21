@@ -1,0 +1,19 @@
+{
+  "id": "new-film",
+  "kind": "film",
+  "formats": ["9x16", "1x1", "16x9"],
+  "title": "Replace with the film's title",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "hook", "layout": "layouts/title-stack", "duration": 4, "cut": "transitions/hard-cut", "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "entrances/rise", "text": "Replace with the hook" }
+      ],
+      "say": "Replace with the narration for this scene."
+    }
+  ],
+  "cta": { "text": "Replace with the call to action", "url": "example.org" }
+}

@@ -1,0 +1,56 @@
+{
+  "id": "demo-screen-compare",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "16x9",
+    "1x1"
+  ],
+  "title": "screen/compare demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/caption-bar",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/after.png",
+          "screen": [
+            {
+              "do": "screen/compare",
+              "at": 1.2,
+              "d": 4.5,
+              "params": {
+                "to": "assets/before.png",
+                "stop": 0.5
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.6,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Before and after, side by side."
+        }
+      ],
+      "say": "A demo of screen/compare."
+    }
+  ]
+}

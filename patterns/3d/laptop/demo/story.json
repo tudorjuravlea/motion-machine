@@ -1,0 +1,57 @@
+{
+  "id": "demo-3d-laptop",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "1x1",
+    "9x16"
+  ],
+  "title": "Demo: 3d/laptop",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/caption-bar",
+      "duration": 6.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "3d/laptop",
+          "asset": "assets/app/",
+          "params": {
+            "move": "showcase"
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 2.2,
+              "params": {
+                "to": "Pricing"
+              }
+            }
+          ]
+        },
+        {
+          "at": 1.0,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "A laptop that turns to face you."
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

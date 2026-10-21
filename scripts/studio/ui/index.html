@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>studio</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="studio.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="tb-group tb-piece">
+    <h1 id="title" class="title">studio</h1>
+    <div id="formats" class="seg" role="group" aria-label="Format"></div>
+  </div>
+  <div class="tb-group tb-transport">
+    <button id="play" class="icon-btn play" type="button" aria-pressed="false" aria-label="Play (Space)">
+      <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8v10.4L13 8z"/></svg>
+      <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3h3v10H4zM9 3h3v10H9z"/></svg>
+    </button>
+    <span class="time" aria-live="off"><span id="time">00:00.00</span><span class="time-sep">/</span><span id="duration">00:00.00</span></span>
+    <span id="bar" class="barbeat" hidden></span>
+  </div>
+  <div class="tb-group tb-tools">
+    <button id="snap" class="toggle" type="button" aria-pressed="true" title="Snap to the playhead, music beats, scene and clip edges (S; hold Alt while dragging to skip)">Snap</button>
+    <span class="divider" aria-hidden="true"></span>
+    <button id="undo" class="icon-btn" type="button" aria-label="Undo (⌘Z)" title="Undo (⌘Z)" disabled>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 4 2.5 7.5 6 11M3 7.5h6.5a3.5 3.5 0 0 1 0 7H8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button id="redo" class="icon-btn" type="button" aria-label="Redo (⇧⌘Z)" title="Redo (⇧⌘Z)" disabled>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 4l3.5 3.5L10 11M13 7.5H6.5a3.5 3.5 0 0 0 0 7H8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <span class="divider" aria-hidden="true"></span>
+    <button id="gate-pill" class="pill" type="button" data-state="pass"><span class="dot" aria-hidden="true"></span><span class="pill-text">gate</span></button>
+    <button class="btn" type="button" data-run-gate title="Run the full gate (mm check) for this format">Run gate</button>
+    <button id="copy" class="btn" type="button" title="Copy the piece, format, time, selection and live verdicts as JSON for an agent">Copy<span class="long"> for agent</span></button>
+    <button id="keys-btn" class="icon-btn" type="button" aria-label="Keyboard shortcuts (?)" title="Keyboard shortcuts (?)" aria-haspopup="dialog">?</button>
+    <div class="menu-anchor">
+      <button id="export-btn" class="btn btn-primary" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="export" title="Check the gate, then render an MP4 per format (⌘E)">Export</button>
+      <section id="export" class="export-panel" role="dialog" aria-modal="false" aria-labelledby="export-h" hidden></section>
+    </div>
+  </div>
+</header>
+
+<div class="banners">
+<div id="banner" class="banner" role="note" hidden><strong>Read-only.</strong> <span id="banner-text"></span></div>
+<div id="paused" class="banner" role="status" hidden><strong>Exporting.</strong> Edits are paused while the export runs: the story the gate checked is the story it renders.</div>
+<div id="problem" class="banner banner-problem" role="alert" hidden><span id="problem-text"></span></div>
+<div id="offline" class="banner banner-problem" role="alert" hidden><strong>Disconnected.</strong> The studio server is not answering, so edits are not saved. The timeline shows the file as last read; the studio reconnects by itself.</div>
+<div id="stale" class="banner banner-problem" role="alert" hidden><strong>Restart the studio.</strong> <span id="stale-text"></span></div>
+<div id="live" class="banner" role="status" hidden><span id="live-text"></span></div>
+</div>
+
+<main class="work">
+  <section id="stage" class="stage" aria-label="Stage">
+    <div class="stage-hit" title="Click an element to select its beat"></div>
+    <div class="stage-outline" hidden></div>
+    <p class="stage-message" role="alert" hidden></p>
+  </section>
+  <aside class="side">
+    <section id="inspector" class="inspector" aria-label="Inspector"></section>
+    <section id="gate" class="gate" tabindex="-1" aria-labelledby="gate-h">
+      <h2 id="gate-h" class="side-h">Gate <span class="side-h-note">timing rules, live</span></h2>
+      <div class="gate-live"></div>
+      <div class="gate-full"></div>
+    </section>
+  </aside>
+</main>
+
+<section id="timeline" class="timeline" aria-label="Timeline. Tab into it; arrows move the selected beat a frame, Alt and arrows move between clips, up and down between lanes; press ? for the keys">
+  <div class="tl-scroll"></div>
+</section>
+<footer id="keybar" class="keybar" aria-label="Keys you can use now" data-context="play"></footer>
+
+<div id="keys" class="keys-overlay" hidden>
+  <div class="keys-dialog" role="dialog" aria-modal="true" aria-labelledby="keys-h">
+    <div class="keys-head"><h2 id="keys-h">Keyboard</h2><button class="icon-btn" type="button" data-close aria-label="Close (Esc)">×</button></div>
+    <div class="keys-cols">
+      <section>
+        <h3>Play</h3>
+        <dl>
+          <dt><kbd>Space</kbd></dt><dd>play or pause</dd>
+          <dt><kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd></dt><dd>back, stop, forward (again: faster)</dd>
+          <dt><kbd>,</kbd> <kbd>.</kbd></dt><dd>one frame back, forward; Shift: one second</dd>
+          <dt><kbd>←</kbd> <kbd>→</kbd></dt><dd>the same, outside the timeline</dd>
+          <dt><kbd>Home</kbd> <kbd>End</kbd></dt><dd>start, end</dd>
+          <dt><kbd>I</kbd> <kbd>O</kbd> <kbd>X</kbd></dt><dd>mark in, mark out (playback loops), clear</dd>
+        </dl>
+        <h3>View</h3>
+        <dl>
+          <dt><kbd>=</kbd> <kbd>−</kbd> <kbd>⇧Z</kbd></dt><dd>zoom in, out, fit (or ⌘ + wheel)</dd>
+          <dt><kbd>S</kbd></dt><dd>snap on or off (hold Alt while dragging)</dd>
+          <dt><kbd>?</kbd></dt><dd>this list</dd>
+          <dt><kbd>⌘E</kbd></dt><dd>export: check the gate, render the MP4s</dd>
+        </dl>
+      </section>
+      <section>
+        <h3>In the timeline</h3>
+        <dl>
+          <dt><kbd>Tab</kbd></dt><dd>into the timeline, on the selection (one stop)</dd>
+          <dt><kbd>←</kbd> <kbd>→</kbd></dt><dd>move a beat one frame (Shift: 0.1 s); move a scene one place</dd>
+          <dt><kbd>Alt</kbd> <kbd>←</kbd> <kbd>→</kbd></dt><dd>previous, next clip or scene in the row</dd>
+          <dt><kbd>↑</kbd> <kbd>↓</kbd></dt><dd>the row above, below</dd>
+          <dt><kbd>[</kbd> <kbd>]</kbd></dt><dd>a beat leaves a frame earlier, later; a scene ends a frame earlier, later (Shift: 0.1 s)</dd>
+          <dt><kbd>Enter</kbd></dt><dd>edit it in the inspector; <kbd>Esc</kbd> comes back</dd>
+          <dt><kbd>Delete</kbd></dt><dd>remove the beat</dd>
+          <dt><kbd>Esc</kbd></dt><dd>cancel a drag, or clear the selection</dd>
+          <dt><kbd>⌘Z</kbd> <kbd>⇧⌘Z</kbd></dt><dd>undo, redo</dd>
+        </dl>
+      </section>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

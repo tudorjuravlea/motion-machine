@@ -1,0 +1,4 @@
+/* Fixture stub: a device fragment with a picture. Variables only. */
+.frame { display: flex; flex-direction: column; gap: var(--mm-space-2); padding: var(--mm-space-3); border: var(--mm-space-0) solid var(--mm-color-line); border-radius: var(--mm-radius-2); }
+.frame__media { width: var(--mm-space-6); height: var(--mm-space-6); }
+.frame__screen, .frame__value { font-size: var(--mm-size-body); }

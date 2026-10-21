@@ -1,0 +1,53 @@
+/* bar-grow: columns on a baseline. No axes, no gridlines, no legend. */
+.mm-bars {
+  display: block;
+  width: 100%;
+  max-width: calc(var(--mm-frame-w) * 0.8);
+  padding-top: var(--mm-space-5);
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  color: var(--mm-color-ink);
+}
+.mm-bars__chart {
+  display: flex;
+  align-items: stretch;
+  gap: var(--mm-space-3);
+  height: calc(var(--mm-frame-h) * 0.34);
+}
+.mm-bars__col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-space-2);
+}
+.mm-bars__well {
+  position: relative;
+  flex: 1;
+}
+.mm-bars__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: var(--mm-radius-1) var(--mm-radius-1) 0 0;
+  background: var(--mm-color-accent);
+}
+.mm-bars__bar--quiet { background: var(--mm-color-muted); }
+.mm-bars__value {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.mm-bars__label {
+  text-align: center;
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  color: var(--mm-color-muted);
+}

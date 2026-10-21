@@ -1,0 +1,18 @@
+/* Capture-reference stub: an accent block over most of one side and the text on the
+   other, so consecutive shots differ in large regions as real shots do. Variables for colour,
+   family, size and space; the split itself is geometry. */
+.panel { position: absolute; inset: 0; }
+.panel__block { position: absolute; top: 0; bottom: 0; width: 46%; background: var(--mm-color-accent); }
+.panel--left .panel__block { left: 0; }
+.panel--right .panel__block { right: 0; }
+.panel__text {
+  position: absolute; top: var(--mm-safe); bottom: var(--mm-safe); width: 44%;
+  display: flex; flex-direction: column; justify-content: center; gap: var(--mm-space-4);
+}
+.panel--left .panel__text { right: var(--mm-safe); }
+.panel--right .panel__text { left: var(--mm-safe); }
+.panel__headline {
+  margin: 0; font-family: var(--mm-font-display); font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display); font-size: var(--mm-size-h2); line-height: 1.05; color: var(--mm-color-ink);
+}
+.panel__sub { margin: 0; font-family: var(--mm-font-text); font-weight: var(--mm-weight-text); font-size: var(--mm-size-body); color: var(--mm-color-muted); }

@@ -1,0 +1,14 @@
+/* 3d/phone: the WebGL canvas fills the slot; the 2D screen it copies is laid out out of sight. */
+.phone3d { position: relative; width: 100%; height: 100%; }
+.phone3d__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.phone3d__screen {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--mm-frame-h) * 0.3);
+  aspect-ratio: 940 / 2100;
+  visibility: hidden;
+  overflow: hidden;
+  border-radius: 12% / 5.4%;
+}
+.phone3d__screen .mm-screen { visibility: hidden; }

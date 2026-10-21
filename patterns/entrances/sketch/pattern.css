@@ -1,0 +1,29 @@
+/* entrances/sketch: while a slot is a sketch it shows only the pen. Its own fill, border, shadow,
+   mask and pictures are off, and every piece of text in it (the brand face) is ink, faded by
+   --mm-sketch-text, which pattern.js writes while the label arrives or hands over. A layout can
+   style a slot's insides with any specificity (bento-3's label plate is 0,5,0), so the wireframe
+   wins by !important: it is the one thing a sketched slot must be. */
+[data-slot][data-fx="entrances/sketch"] {
+  --mm-sketch-text: 1;
+  background: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  -webkit-mask: none !important;
+  mask: none !important;
+  color: color-mix(in srgb, var(--mm-color-ink) calc(var(--mm-sketch-text) * 100%), transparent) !important;
+}
+[data-slot][data-fx="entrances/sketch"] :not(.mm-sketch, .mm-sketch *) {
+  background: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  color: color-mix(in srgb, var(--mm-color-ink) calc(var(--mm-sketch-text) * 100%), transparent) !important;
+}
+[data-slot][data-fx="entrances/sketch"] [data-media] { visibility: hidden !important; }
+.mm-sketch { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.mm-sketch__pen {
+  fill: none;
+  stroke: var(--mm-color-ink);
+  stroke-width: calc(var(--mm-space-1) * 0.75);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

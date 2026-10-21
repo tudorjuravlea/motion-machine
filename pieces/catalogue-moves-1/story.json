@@ -1,0 +1,620 @@
+{
+  "id": "catalogue-moves-1",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Camera moves, part 1 of 2",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Camera moves",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "The camera, not the content, moves. Part 1 of 2."
+        }
+      ],
+      "say": "The camera, not the content, moves.",
+      "duration": 4.05
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "hold-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": "moves/hold",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "hold",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Frame",
+          "params": {}
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "The camera stays still, chosen by name.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "moves/hold",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "The camera stays still, chosen by name.",
+      "duration": 4.2
+    },
+    {
+      "id": "hold-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": "moves/hold",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "hold",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Frame",
+          "params": {}
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "No knobs: stillness on purpose.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "moves/hold",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "No knobs: stillness on purpose.",
+      "duration": 3.8
+    },
+    {
+      "id": "idle-breathe-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": "moves/idle-breathe",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "idle-breathe",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Frame",
+          "params": {}
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A faint swell keeps a held frame alive.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "moves/idle-breathe",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "A faint swell keeps a held frame alive.",
+      "duration": 4.2
+    },
+    {
+      "id": "idle-breathe-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": "moves/idle-breathe",
+      "moveParams": {
+        "amount": 0.012,
+        "cycles": 4
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "idle-breathe",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Frame",
+          "params": {}
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "amount: 0.012, cycles: 4. Quicker breaths.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "moves/idle-breathe",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "amount: 0.012, cycles: 4. Quicker breaths.",
+      "duration": 3.8
+    },
+    {
+      "id": "ken-burns-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": "moves/ken-burns",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "ken-burns",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Frame",
+          "params": {}
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A slow zoom with a small sideways creep.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "moves/ken-burns",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "A slow zoom with a small sideways creep.",
+      "duration": 4.2
+    },
+    {
+      "id": "ken-burns-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": "moves/ken-burns",
+      "moveParams": {
+        "dir": "left",
+        "to": 1.06
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "ken-burns",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Frame",
+          "params": {}
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "dir: left, to: 1.06.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "moves/ken-burns",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "dir: left, to: 1.06.",
+      "duration": 3.8
+    },
+    {
+      "id": "pan-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": "moves/pan",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "pan",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Frame",
+          "params": {}
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "The camera slides; the content moves the other way.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "moves/pan",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "The camera slides; the content moves the other way.",
+      "duration": 4.2
+    },
+    {
+      "id": "pan-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": "moves/pan",
+      "moveParams": {
+        "dir": "up",
+        "d": 160
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "pan",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Frame",
+          "params": {}
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "dir: up, d: 160. A longer sweep.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "moves/pan",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "dir: up, d: 160. A longer sweep.",
+      "duration": 3.8
+    },
+    {
+      "id": "push-in-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": "moves/push-in",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "push-in",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Frame",
+          "params": {}
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "The camera drifts in toward the scene.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "moves/push-in",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "The camera drifts in toward the scene.",
+      "duration": 4.2
+    },
+    {
+      "id": "push-in-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": "moves/push-in",
+      "moveParams": {
+        "to": 1.2,
+        "focus": "figure"
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "push-in",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Frame",
+          "params": {}
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "to: 1.2, toward the figure.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "moves/push-in",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "to: 1.2, toward the figure.",
+      "duration": 3.8
+    },
+    {
+      "id": "pull-back-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": "moves/pull-back",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "pull-back",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Frame",
+          "params": {}
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Starts close, then settles back to the full frame.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "moves/pull-back",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Starts close, then settles back to the full frame.",
+      "duration": 4.2
+    },
+    {
+      "id": "pull-back-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": "moves/pull-back",
+      "moveParams": {
+        "from": 1.3
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "pull-back",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Frame",
+          "params": {}
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "from: 1.3. It starts closer.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "moves/pull-back",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "from: 1.3. It starts closer.",
+      "duration": 3.8
+    }
+  ],
+  "share": "Camera moves (1/2): hold, idle-breathe, ken-burns, pan, push-in, pull-back. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

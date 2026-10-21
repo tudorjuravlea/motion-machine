@@ -1,0 +1,3 @@
+/* Negative G-TIME/runtime: no styles here. The static half refuses a transition timed through a
+   custom property in piece CSS, so piece.js injects it at run time instead, to keep this fixture
+   on the computed-style half. */

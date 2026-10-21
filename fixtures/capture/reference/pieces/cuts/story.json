@@ -1,0 +1,42 @@
+{
+  "id": "capture-reference-cuts",
+  "kind": "film",
+  "formats": ["16x9"],
+  "title": "capture reference: four shots joined by a hard cut, a crossfade and a push",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "open", "layout": "layouts/title-stack", "duration": 5, "cut": "transitions/hard-cut", "move": null,
+      "beats": [
+        { "at": 0.4, "slot": "headline", "fx": "entrances/fade", "text": "Only time moves things.", "params": { "dur": "slow" } },
+        { "at": 3.0, "slot": "sub", "fx": "entrances/fade", "text": "Every frame is drawn from t alone.", "params": { "dur": "quick" } }
+      ],
+      "say": "Opening shot."
+    },
+    {
+      "id": "left", "layout": "layouts/panel-left", "duration": 5.2, "cut": "transitions/hard-cut", "move": null,
+      "beats": [
+        { "at": 0.5, "slot": "headline", "fx": "entrances/rise", "text": "A hard cut lands here.", "params": { "dur": "standard" } },
+        { "at": 2.4, "slot": "sub", "fx": "entrances/fade", "text": "The block replaces the page in one frame.", "params": { "dur": "slow" } }
+      ],
+      "say": "Second shot after a hard cut."
+    },
+    {
+      "id": "middle", "layout": "layouts/title-stack", "duration": 3.8, "cut": "transitions/crossfade", "move": null,
+      "beats": [
+        { "at": 1.5, "slot": "headline", "fx": "entrances/fade", "text": "Then a dissolve.", "params": { "dur": "standard" } }
+      ],
+      "say": "Third shot after a crossfade."
+    },
+    {
+      "id": "right", "layout": "layouts/panel-right", "duration": 3.7, "cut": "transitions/push", "move": null,
+      "beats": [
+        { "at": 1.6, "slot": "headline", "fx": "entrances/rise", "text": "Then a push.", "params": { "dur": "quick" } }
+      ],
+      "say": "Last shot after a push."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

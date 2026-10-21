@@ -1,0 +1,29 @@
+/* data/flow: a stage the size of a figure; nodes are pills of real text, curves and pulses are SVG. */
+.mm-flow { display: block; width: calc((var(--mm-frame-w) - 2 * var(--mm-safe)) * 0.84); max-width: 100%; }   /* a definite width: a slot may shrink to its content */
+.mm-flow__stage { position: relative; height: calc(var(--mm-frame-h) * 0.32); }
+[data-format="16x9"] .mm-flow__stage { height: calc(var(--mm-frame-h) * 0.46); }
+.mm-flow__wires { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.mm-flow__edge { fill: none; stroke: var(--mm-color-line); stroke-width: calc(var(--mm-space-1) * 0.5); stroke-linecap: round; }
+.mm-flow__pulse { fill: var(--mm-color-accent); }
+.mm-flow__node, .mm-flow__ring {
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: calc(var(--mm-frame-h) * 0.1);
+}
+.mm-flow__node {
+  padding: var(--mm-space-2) var(--mm-space-4);
+  background: var(--mm-color-surface);
+  color: var(--mm-color-surfaceInk);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.15;
+  white-space: nowrap;
+}
+.mm-flow__node--sink {
+  background: var(--mm-color-accent);
+  color: var(--mm-color-accentInk);
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+}
+.mm-flow__ring { border: calc(var(--mm-space-1) * 0.5) solid var(--mm-color-accent); pointer-events: none; }

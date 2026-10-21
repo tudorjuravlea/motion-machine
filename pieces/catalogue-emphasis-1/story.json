@@ -1,0 +1,406 @@
+{
+  "id": "catalogue-emphasis-1",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Emphasis, part 1 of 2",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Emphasis",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Pointing the eye at what is there. Part 1 of 2."
+        }
+      ],
+      "say": "Pointing the eye at what is there.",
+      "duration": 4.3
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "indicate-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "indicate",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Look here",
+          "emphasis": "emphasis/indicate"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "One pulse: larger, tinted, then exactly as before.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "emphasis/indicate",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "indicate: One pulse: larger, tinted, then exactly as before.",
+      "duration": 4.1
+    },
+    {
+      "id": "indicate-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "indicate",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Look here",
+          "emphasis": "emphasis/indicate",
+          "params": {
+            "emphasis": {
+              "amp": 0.12,
+              "tint": 0
+            }
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "amp: 0.12, tint: 0. Bigger, no colour.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "amp: 0.12, tint: 0. Bigger, no colour.",
+      "duration": 3.5
+    },
+    {
+      "id": "circumscribe-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "circumscribe",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Look here",
+          "emphasis": "emphasis/circumscribe"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "An outline draws around the box, then wipes away.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "emphasis/circumscribe",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "circumscribe: An outline draws around the box, then wipes away.",
+      "duration": 4.4
+    },
+    {
+      "id": "circumscribe-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "circumscribe",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Here",
+          "emphasis": "emphasis/circumscribe"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Around one word this time.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Around one word this time.",
+      "duration": 3.4
+    },
+    {
+      "id": "brackets-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "brackets",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Launch",
+          "emphasis": "emphasis/brackets"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Corner brackets snap in and the word lifts slightly.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "emphasis/brackets",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "brackets: Corner brackets snap in and the word lifts slightly.",
+      "duration": 4.1
+    },
+    {
+      "id": "brackets-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "brackets",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Launch",
+          "emphasis": "emphasis/brackets",
+          "params": {
+            "emphasis": {
+              "lift": 0.08
+            }
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "lift: 0.08. A bigger lift.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "lift: 0.08. A bigger lift.",
+      "duration": 3.4
+    },
+    {
+      "id": "marker-circle-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "marker-circle",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "This one",
+          "emphasis": "emphasis/marker-circle"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A hand-drawn ring, a little over one turn.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "emphasis/marker-circle",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "marker-circle: A hand-drawn ring, a little over one turn.",
+      "duration": 4.1
+    },
+    {
+      "id": "marker-circle-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "marker-circle",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "This one",
+          "emphasis": "emphasis/marker-circle",
+          "params": {
+            "emphasis": {
+              "color": "ink",
+              "pad": 0.4
+            }
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "color: ink, pad: 0.4. Wider, in ink.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "color: ink, pad: 0.4. Wider, in ink.",
+      "duration": 3.5
+    }
+  ],
+  "share": "Emphasis (1/2): indicate, circumscribe, brackets, marker-circle. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

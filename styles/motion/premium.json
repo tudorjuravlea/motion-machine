@@ -1,0 +1,70 @@
+{
+  "name": "premium",
+  "version": 1,
+  "motion": {
+    "durations": {
+      "quick": 200,
+      "standard": 420,
+      "slow": 900,
+      "hold": 1500
+    },
+    "easings": {
+      "enter": "cubic-bezier(0.22, 0.61, 0.36, 1)",
+      "exit": "cubic-bezier(0.55, 0, 1, 0.45)",
+      "move": "cubic-bezier(0.65, 0, 0.35, 1)"
+    },
+    "spring": {
+      "ui": {
+        "bounce": 0.08,
+        "period": 0.4
+      },
+      "type": {
+        "k": 200,
+        "c": 28,
+        "m": 1
+      },
+      "heavy": {
+        "bounce": 0.12,
+        "period": 0.9
+      }
+    },
+    "travel": 1,
+    "overshootMax": 0.1,
+    "exitRatio": 0.7,
+    "stagger": {
+      "eachS": 0.05,
+      "capS": 0.5
+    }
+  },
+  "sound": {
+    "palette": "cinematic",
+    "bpm": 100,
+    "loudnessLufs": -14,
+    "cuesPer10s": [
+      1,
+      5
+    ]
+  },
+  "transitions": {
+    "opening": "transitions/blur-crossfade",
+    "topic": "transitions/crossfade",
+    "related": "transitions/push",
+    "climax": "transitions/zoom-through",
+    "outro": "transitions/color-dip",
+    "policy": "owns-exit"
+  },
+  "entrances": {
+    "headline": "entrances/blur-fade",
+    "body": "entrances/fade",
+    "figure": "entrances/count",
+    "plate": "entrances/mask-reveal"
+  },
+  "pacing": {
+    "holdMinS": 1.2,
+    "arrivalsPer10s": [
+      3,
+      6
+    ],
+    "energy": "medium"
+  }
+}

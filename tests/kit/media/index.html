@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>kit media</title>
+</head>
+<body>
+  <!-- the media slot. A story from this folder (?story=film|deck) over a shipped
+       preset (?preset=editorial|kinetic|calm-product) and the real pattern library; assets/ holds a
+       3 x 3 colour grid whose middle cell is #2E86DE. Font sources resolve from this page. -->
+  <script type="module">
+    import { mount } from '../../../runtime/kit/kit.js';
+    const q = new URLSearchParams(location.search);
+    const load = (f) => fetch(new URL(f, import.meta.url)).then((r) => r.json());
+    const [story, style] = await Promise.all([load(`${q.get('story') || 'film'}.json`), load(`../../../styles/presets/${q.get('preset') || 'editorial'}.json`)]);
+    for (const face of Object.values(style.type)) for (const f of face.files) f.src = `../../../${f.src}`;
+    if (q.get('finish')) style.devices = { finish: q.get('finish') };   // devices.browser.test: brand devices.finish
+    if (q.get('surfaceInk')) style.color.surfaceInk = q.get('surfaceInk');   // brand-text.browser.test
+    if (q.get('look')) style.finish = { grain: 0.6, halftone: 0.3, vignette: 0.8, edgeFringe: 0.5, paperEdge: 1 };   // finish.browser.test
+    if (q.get('frameHold')) style.motion.frameHold = Number(q.get('frameHold'));   // frame-hold.browser.test
+    if (q.has('boil')) style.motion.boil = Number(q.get('boil'));   // sketch.browser.test
+    if (q.get('accentText')) style.composition = { ...style.composition, accentText: q.get('accentText') === '1' };
+    if (q.get('ground')) style.ground = { blobs: [{ color: '#2a9d8f', x: -0.17, y: -0.16, w: 0.7, h: 0.52, alpha: 0.85 }, { color: '#e9c46a', x: 0.6, y: 0.1, w: 0.83, h: 0.6, alpha: 0.55 }], blur: 0.11, mark: { src: 'assets/mark.svg', width: 1.9, alpha: 0.08 } };   // ground.browser.test
+    await mount({ story, style, patternsBase: new URL('../../../patterns/', import.meta.url) });
+  </script>
+</body>
+</html>

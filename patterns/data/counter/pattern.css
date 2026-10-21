@@ -1,0 +1,10 @@
+/* counter: a block figure in the display face with tabular digits. */
+.mm-counter {
+  display: block;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+  color: var(--mm-color-ink);
+}

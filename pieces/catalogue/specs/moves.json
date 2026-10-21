@@ -1,0 +1,28 @@
+{
+  "title": "Camera moves",
+  "sub": "The camera, not the content, moves.",
+  "style": "calm-product",
+  "template": "move",
+  "items": [
+    { "pattern": "moves/hold", "how": "The camera stays still, chosen by name.", "knob": { "line": "No knobs: stillness on purpose.", "moveParams": {} } },
+    { "pattern": "moves/idle-breathe", "how": "A faint swell keeps a held frame alive.", "knob": { "line": "amount: 0.012, cycles: 4. Quicker breaths.", "moveParams": { "amount": 0.012, "cycles": 4 } } },
+    { "pattern": "moves/ken-burns", "how": "A slow zoom with a small sideways creep.", "knob": { "line": "dir: left, to: 1.06.", "moveParams": { "dir": "left", "to": 1.06 } } },
+    { "pattern": "moves/pan", "how": "The camera slides; the content moves the other way.", "knob": { "line": "dir: up, d: 160. A longer sweep.", "moveParams": { "dir": "up", "d": 160 } } },
+    { "pattern": "moves/push-in", "how": "The camera drifts in toward the scene.", "knob": { "line": "to: 1.2, toward the figure.", "moveParams": { "to": 1.2, "focus": "figure" } } },
+    { "pattern": "moves/pull-back", "how": "Starts close, then settles back to the full frame.", "knob": { "line": "from: 1.3. It starts closer.", "moveParams": { "from": 1.3 } } },
+    { "pattern": "moves/reframe", "how": "Re-centres on one element while pushing in.", "knob": { "line": "amount: 0.5. Halfway to the centre.", "moveParams": { "amount": 0.5 } } },
+    { "pattern": "moves/orbit", "layout": "layouts/bento-3", "how": "a gentle turn that parallaxes the layers.", "knob": { "line": "turn 10, gap 400.", "moveParams": { "turn": 10, "gap": 400 } } },
+    { "pattern": "moves/rack-focus", "layout": "layouts/bento-3", "how": "focus pulls from one depth to another.", "knob": { "line": "rest: keep. Far layers stay soft.", "moveParams": { "rest": "keep" } } },
+    { "pattern": "moves/hero-drift", "layout": "layouts/bento-3", "how": "a slow, shallow drift and a breath.", "knob": { "line": "tilt 3, float 40 px.", "moveParams": { "tilt": 3, "d": 40 } } },
+    { "pattern": "moves/explode-layers", "layout": "layouts/bento-3", "how": "the layers part in depth, then fold flat.", "minA": 4.3, "minB": 4.3, "knob": { "line": "tilt 35, gap 500.", "moveParams": { "tilt": 35, "gap": 500 } } },
+    { "pattern": "moves/morph", "template": "scenes", "scenes": [
+      { "layout": "layouts/comparison", "move": "moves/morph", "moveParams": { "from": "left", "to": "headline", "start": 1, "dur": 1.2 }, "min": 4, "beats": [
+        { "at": 0, "slot": "left", "fx": "style:body", "text": "This box", "params": { "instant": true } },
+        { "at": 0, "slot": "right", "fx": "style:body", "text": "morph: one box travels and becomes another.", "params": { "instant": true } },
+        { "at": 0.9, "slot": "headline", "fx": "entrances/fade", "text": "That box" } ] },
+      { "layout": "layouts/comparison", "move": "moves/morph", "moveParams": { "from": "left", "to": "headline", "start": 0.6, "dur": 2.4 }, "min": 4, "beats": [
+        { "at": 0, "slot": "left", "fx": "style:body", "text": "This box", "params": { "instant": true } },
+        { "at": 0, "slot": "right", "fx": "style:body", "text": "dur: 2.4. A slower change.", "params": { "instant": true } },
+        { "at": 0.5, "slot": "headline", "fx": "entrances/fade", "text": "That box" } ] } ] }
+  ]
+}

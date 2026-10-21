@@ -1,0 +1,7 @@
+<!doctype html>
+<!-- an infinite-scroll page: every scroll near the bottom appends 2,000 px more. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>infinite</title>
+<style>body { margin: 0; background: #F4EFE6; } .block { height: 2000px; border-top: 4px solid #B5451B; }</style></head>
+<body><div class="block"></div>
+<script>addEventListener('scroll', () => { if (scrollY + innerHeight > document.body.scrollHeight - 400) { const d = document.createElement('div'); d.className = 'block'; document.body.append(d); } });</script>
+</body></html>

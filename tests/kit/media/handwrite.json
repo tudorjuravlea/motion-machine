@@ -1,0 +1,60 @@
+{
+  "id": "kit-handwrite",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "16x9"
+  ],
+  "title": "Kit handwrite",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "scenes": [
+    {
+      "id": "one",
+      "layout": "layouts/statement",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/handwrite",
+          "text": "hello",
+          "params": {
+            "dur": 2
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "two",
+      "layout": "layouts/statement",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/handwrite",
+          "text": "Plan the week in one place",
+          "params": {
+            "dur": 2
+          }
+        }
+      ],
+      "say": ""
+    }
+  ]
+}

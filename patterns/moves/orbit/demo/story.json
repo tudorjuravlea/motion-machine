@@ -1,0 +1,57 @@
+{
+  "id": "demo-orbit",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: moves/orbit",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/bento-3",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": "moves/orbit",
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Three layers."
+        },
+        {
+          "at": 0.6,
+          "slot": "tile-1",
+          "fx": "entrances/pop",
+          "text": "near"
+        },
+        {
+          "at": 0.9,
+          "slot": "tile-2",
+          "fx": "entrances/pop",
+          "text": "middle"
+        },
+        {
+          "at": 1.2,
+          "slot": "tile-3",
+          "fx": "entrances/pop",
+          "text": "far"
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

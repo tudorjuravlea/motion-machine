@@ -1,0 +1,49 @@
+{
+  "id": "demo-exits-push-out",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "exits/push-out demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Pushed aside",
+          "out": 3.2,
+          "exit": "exits/push-out"
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Room for what comes next",
+          "out": 3.2,
+          "exit": "exits/push-out"
+        }
+      ],
+      "say": "A single scene that shows exits/push-out."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

@@ -1,0 +1,374 @@
+{
+  "id": "catalogue-data-2",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Data, part 2 of 2",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Illustrative numbers for the catalogue",
+      "source": "catalogue demo numbers, not a claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Data",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Numbers that arrive as a mechanism. Part 2 of 2."
+        }
+      ],
+      "say": "Numbers that arrive as a mechanism.",
+      "duration": 4
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "bar-to-line-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/bar-to-line",
+          "fact": "f1",
+          "params": {
+            "values": "32,48,41,67,82",
+            "labels": "Jan,Feb,Mar,Apr,May"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "bar-to-line: Bars shrink to dots, and a line joins them.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "bar-to-line: Bars shrink to dots, and a line joins them.",
+      "duration": 4.2
+    },
+    {
+      "id": "bar-to-line-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/bar-to-line",
+          "fact": "f1",
+          "params": {
+            "values": "32,48,41,67,82",
+            "labels": "Jan,Feb,Mar,Apr,May",
+            "max": 120
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "bar-to-line: max: 120. The same trend with headroom.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "max: 120. The same trend with headroom.",
+      "duration": 4
+    },
+    {
+      "id": "line-draw-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/line-draw",
+          "value": 14,
+          "fact": "f1",
+          "params": {
+            "points": "3,5,4,8,7,6,11,14",
+            "prefix": "+",
+            "suffix": "%"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "line-draw: A line draws itself, a dot riding its head.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "line-draw: A line draws itself, a dot riding its head.",
+      "duration": 4.1
+    },
+    {
+      "id": "line-draw-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/line-draw",
+          "value": 14,
+          "fact": "f1",
+          "params": {
+            "points": "3,5,4,8,7,6,11,14",
+            "prefix": "+",
+            "suffix": "%",
+            "thick": 3
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "line-draw: thick: 3. A bolder line.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "thick: 3. A bolder line.",
+      "duration": 3.4
+    },
+    {
+      "id": "funnel-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/funnel",
+          "fact": "f1",
+          "params": {
+            "values": "1000,640,320,120",
+            "labels": "Visited,Signed up,Activated,Paid"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "funnel: Stages narrow down the frame, each value counting.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "funnel: Stages narrow down the frame, each value counting.",
+      "duration": 4.1
+    },
+    {
+      "id": "funnel-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/funnel",
+          "fact": "f1",
+          "params": {
+            "values": "1000,640,320,120",
+            "labels": "Visited,Signed up,Activated,Paid",
+            "size": "h2"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "funnel: size: h2. Bigger values.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "size: h2. Bigger values.",
+      "duration": 3.4
+    },
+    {
+      "id": "flow-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/flow",
+          "params": {
+            "nodes": "Brief|Design,Build,Test|Launch"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "flow: One node fans out, pulses travel, all gather again.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "flow: One node fans out, pulses travel, all gather again.",
+      "duration": 4.2
+    },
+    {
+      "id": "flow-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/flow",
+          "params": {
+            "nodes": "Idea|Draft,Review|Ship"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "flow: Two middle nodes this time.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Two middle nodes this time.",
+      "duration": 4
+    },
+    {
+      "id": "stat-tile-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/stat-tile",
+          "value": 4280,
+          "fact": "f1",
+          "params": {
+            "label": "Weekly signups",
+            "delta": "+18%"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "stat-tile: A card: the figure counts, then label and change settle.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "stat-tile: A card: the figure counts, then label and change settle.",
+      "duration": 4.1
+    },
+    {
+      "id": "stat-tile-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/stat-tile",
+          "value": 4280,
+          "fact": "f1",
+          "params": {
+            "label": "Weekly signups",
+            "delta": "-4%"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "stat-tile: delta: -4%. The chip shows a drop.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "delta: -4%. The chip shows a drop.",
+      "duration": 3.4
+    }
+  ],
+  "share": "Data (2/2): bar-to-line, line-draw, funnel, flow, stat-tile. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

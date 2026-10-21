@@ -1,0 +1,72 @@
+{
+  "name": "calm",
+  "version": 1,
+  "motion": {
+    "durations": {
+      "quick": 240,
+      "standard": 520,
+      "slow": 1000,
+      "hold": 1800
+    },
+    "easings": {
+      "enter": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+      "exit": "cubic-bezier(0.4, 0, 1, 1)",
+      "move": "cubic-bezier(0.45, 0, 0.2, 1)"
+    },
+    "spring": {
+      "ui": {
+        "k": 420,
+        "c": 34,
+        "m": 1
+      },
+      "type": {
+        "k": 200,
+        "c": 28,
+        "m": 1
+      },
+      "heavy": {
+        "k": 180,
+        "c": 30,
+        "m": 2
+      }
+    },
+    "travel": 0.8,
+    "overshootMax": 0.05,
+    "exitRatio": 0.7,
+    "stagger": {
+      "eachS": 0.07,
+      "capS": 0.6
+    }
+  },
+  "sound": {
+    "palette": "soft-ui",
+    "bpm": 90,
+    "loudnessLufs": -14,
+    "cuesPer10s": [
+      1,
+      4
+    ]
+  },
+  "transitions": {
+    "opening": "transitions/hard-cut",
+    "topic": "transitions/crossfade",
+    "related": "transitions/push",
+    "climax": "transitions/zoom-through",
+    "outro": "transitions/color-dip",
+    "policy": "owns-exit"
+  },
+  "entrances": {
+    "headline": "entrances/rise",
+    "body": "entrances/fade",
+    "figure": "entrances/count",
+    "plate": "entrances/pop"
+  },
+  "pacing": {
+    "holdMinS": 1.6,
+    "arrivalsPer10s": [
+      2,
+      5
+    ],
+    "energy": "calm"
+  }
+}

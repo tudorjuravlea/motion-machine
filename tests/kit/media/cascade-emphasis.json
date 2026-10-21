@@ -1,0 +1,200 @@
+{
+  "id": "cascade-emphasis",
+  "kind": "film",
+  "formats": [
+    "9x16"
+  ],
+  "title": "cascade emphasis",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "brackets",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "One | two | three",
+          "params": {
+            "each": true
+          },
+          "emphasis": "emphasis/brackets"
+        }
+      ]
+    },
+    {
+      "id": "lens",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "One | two | three",
+          "params": {
+            "each": true
+          },
+          "emphasis": "emphasis/lens"
+        }
+      ]
+    },
+    {
+      "id": "marker-circle",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "One | two | three",
+          "params": {
+            "each": true
+          },
+          "emphasis": "emphasis/marker-circle"
+        }
+      ]
+    },
+    {
+      "id": "stretch-pill",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "One | two | three",
+          "params": {
+            "each": true
+          },
+          "emphasis": "emphasis/stretch-pill"
+        }
+      ]
+    },
+    {
+      "id": "circumscribe",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "One | two | three",
+          "params": {
+            "each": true
+          },
+          "emphasis": "emphasis/circumscribe"
+        }
+      ]
+    },
+    {
+      "id": "indicate",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "One | two | three",
+          "params": {
+            "each": true
+          },
+          "emphasis": "emphasis/indicate"
+        }
+      ]
+    },
+    {
+      "id": "shine",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "One | two | three",
+          "params": {
+            "each": true
+          },
+          "emphasis": "emphasis/shine"
+        }
+      ]
+    },
+    {
+      "id": "sketch",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/sketch",
+          "text": "One | two | three",
+          "params": {
+            "each": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "sketch-nested",
+      "layout": "layouts/desktop",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "desk",
+          "fx": "entrances/sketch",
+          "params": {
+            "wall": "accent"
+          }
+        },
+        {
+          "at": 0.1,
+          "slot": "menu",
+          "fx": "entrances/fade",
+          "text": "Finder   File   Edit   View"
+        }
+      ]
+    }
+  ]
+}

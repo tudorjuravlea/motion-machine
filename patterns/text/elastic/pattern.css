@@ -1,0 +1,3 @@
+/* text/elastic: letters on one baseline; a word never breaks while its letters are wide. */
+.mm-elastic__w { display: inline-block; white-space: nowrap; }
+.mm-elastic__l { display: inline-block; transform-origin: 50% 85%; }

@@ -1,0 +1,228 @@
+{
+ "title": "Devices",
+ "sub": "Frames for a product, drawn in CSS.",
+ "style": "calm-product",
+ "template": "scenes",
+ "items": [
+  {
+   "pattern": "devices/phone",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 4.6,
+     "beats": [
+      {
+       "at": 0.2,
+       "slot": "stage",
+       "fx": "devices/phone",
+       "text": "Dashboard"
+      },
+      {
+       "at": 1.2,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "phone: rises into frame with a settling tilt."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 4.6,
+     "beats": [
+      {
+       "at": 0.2,
+       "slot": "stage",
+       "fx": "devices/phone",
+       "text": "Dashboard",
+       "params": {
+        "tilt": 45,
+        "model": "punch"
+       }
+      },
+      {
+       "at": 1.2,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "tilt 45, a punch-hole camera."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "devices/laptop",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 4.6,
+     "beats": [
+      {
+       "at": 0.2,
+       "slot": "stage",
+       "fx": "devices/laptop",
+       "text": "Workspace"
+      },
+      {
+       "at": 1.2,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "laptop: the lid opens as it arrives."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 4.6,
+     "beats": [
+      {
+       "at": 0.2,
+       "slot": "stage",
+       "fx": "devices/laptop",
+       "text": "Workspace",
+       "params": {
+        "model": "chin",
+        "menu": "File,Edit,View"
+       }
+      },
+      {
+       "at": 1.2,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "model chin, with a menu bar."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "devices/browser",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 4.6,
+     "beats": [
+      {
+       "at": 0.2,
+       "slot": "stage",
+       "fx": "devices/browser",
+       "text": "Overview"
+      },
+      {
+       "at": 1.2,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "browser: a window that settles with a small lift."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 4.6,
+     "beats": [
+      {
+       "at": 0.2,
+       "slot": "stage",
+       "fx": "devices/browser",
+       "text": "Overview",
+       "params": {
+        "size": "large"
+       }
+      },
+      {
+       "at": 1.2,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "size large: the scene is the window."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "devices/cursor",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 4.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "stage",
+       "fx": "devices/browser",
+       "text": "Overview",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.5,
+       "slot": "overlay",
+       "fx": "devices/cursor",
+       "params": {
+        "path": "25,30 60,55 70,45"
+       }
+      },
+      {
+       "at": 1.3,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "cursor: follows a path, then clicks."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 4.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "stage",
+       "fx": "devices/browser",
+       "text": "Overview",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.5,
+       "slot": "overlay",
+       "fx": "devices/cursor",
+       "params": {
+        "path": "20,75 50,40 80,30",
+        "click": false
+       }
+      },
+      {
+       "at": 1.3,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "A new path, and no click."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "devices/screen-zoom",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 4,
+     "beats": [
+      {
+       "at": 0.2,
+       "slot": "stage",
+       "fx": "devices/screen-zoom",
+       "text": "screen-zoom: the screen grows until it fills the frame."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

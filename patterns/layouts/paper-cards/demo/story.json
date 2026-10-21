@@ -1,0 +1,57 @@
+{
+  "id": "demo-layouts-paper-cards",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: layouts/paper-cards",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/paper-cards",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Three things we learned"
+        },
+        {
+          "at": 0.7,
+          "slot": "card-1",
+          "fx": "entrances/drop",
+          "text": "Ask before you build"
+        },
+        {
+          "at": 1.1,
+          "slot": "card-2",
+          "fx": "entrances/drop",
+          "text": "Ship the smallest thing"
+        },
+        {
+          "at": 1.5,
+          "slot": "card-3",
+          "fx": "entrances/drop",
+          "text": "Measure what changed"
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

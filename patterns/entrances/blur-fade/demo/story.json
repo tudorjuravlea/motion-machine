@@ -1,0 +1,45 @@
+{
+  "id": "demo-entrances-blur-fade",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "entrances/blur-fade demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 4.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/blur-fade",
+          "text": "Out of focus, into view"
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "The blur is gone before you read"
+        }
+      ],
+      "say": "A single scene that shows entrances/blur-fade."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

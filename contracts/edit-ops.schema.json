@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:motion-machine:contracts:edit-ops",
+  "title": "Motion Machine edit ops: typed edits to a story, spoken by the studio, mm timeline and agents",
+  "description": "A batch of edits applied in order. Scenes are addressed by id (story.formats addresses the story itself), beats by index in the scene's beats array (the variant's beats when `format` names a variant that has beats). Every time a forward op writes is rounded to 0.01 s; an inverse (applied with ctx.inverse) writes back the exact old value. `before` (optional, on ops that may create a member) names the sibling key the created member goes in front of; inverses use it to put a removed key back where it was (on beat.param it names a key of params when the beat has params, else a key of the beat). `raw` (optional, on ops that write a value) is that value's JSON text and must parse to it; inverses carry it so that undo restores the original bytes. Rules this schema cannot express are the ops' (scripts/studio/ops.js): times inside the scene, beats and indexes in range, facts and patterns that exist, raw matching its value. A refused edit names one code: generated, deck, unknown-scene, ambiguous-scene, unknown-beat, out-of-range, bad-type, unknown-param, bad-value, schema.",
+  "type": "array",
+  "items": { "$ref": "#/$defs/editOp" },
+  "$defs": {
+    "editOp": {
+      "oneOf": [
+        { "$ref": "#/$defs/sceneDuration" },
+        { "$ref": "#/$defs/sceneOrder" },
+        { "$ref": "#/$defs/sceneCut" },
+        { "$ref": "#/$defs/sceneMove" },
+        { "$ref": "#/$defs/sceneSay" },
+        { "$ref": "#/$defs/beatAt" },
+        { "$ref": "#/$defs/beatOut" },
+        { "$ref": "#/$defs/beatSet" },
+        { "$ref": "#/$defs/beatParam" },
+        { "$ref": "#/$defs/beatAdd" },
+        { "$ref": "#/$defs/beatRemove" },
+        { "$ref": "#/$defs/storyFormats" }
+      ]
+    },
+    "scene": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,40}$" },
+    "beat": { "type": "integer", "minimum": 0, "maximum": 23 },
+    "format": { "enum": ["9x16", "1x1", "4x5", "16x9"] },
+    "time": { "type": "number", "minimum": 0, "maximum": 60 },
+    "before": { "type": "string", "minLength": 1 },
+    "paramValue": { "type": ["string", "number", "boolean"] },
+    "paramBag": { "type": "object", "additionalProperties": { "$ref": "#/$defs/paramValue" } },
+    "raw": { "type": "string" },
+    "sceneDuration": {
+      "type": "object", "additionalProperties": false, "required": ["op", "scene", "value"],
+      "properties": { "op": { "const": "scene.duration" }, "scene": { "$ref": "#/$defs/scene" }, "value": { "type": "number", "minimum": 0.01, "maximum": 60 }, "raw": { "$ref": "#/$defs/raw" } }
+    },
+    "sceneOrder": {
+      "type": "object", "additionalProperties": false, "required": ["op", "scene", "index"],
+      "properties": { "op": { "const": "scene.order" }, "scene": { "$ref": "#/$defs/scene" }, "index": { "type": "integer", "minimum": 0, "maximum": 39 } }
+    },
+    "sceneCut": {
+      "description": "sets cut; params replaces cutParams (null removes it, absent leaves it); pattern null removes cut so the scene arrives by its position",
+      "type": "object", "additionalProperties": false, "required": ["op", "scene", "pattern"],
+      "properties": {
+        "op": { "const": "scene.cut" }, "scene": { "$ref": "#/$defs/scene" },
+        "pattern": { "oneOf": [{ "type": "null" }, { "type": "string", "pattern": "^transitions/[a-z][a-z0-9-]*$" }] },
+        "params": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/paramBag" }] },
+        "before": { "$ref": "#/$defs/before" }, "raw": { "$ref": "#/$defs/raw" }
+      }
+    },
+    "sceneMove": {
+      "description": "sets move (null: no move); params replaces moveParams (null removes it, absent leaves it)",
+      "type": "object", "additionalProperties": false, "required": ["op", "scene", "pattern"],
+      "properties": {
+        "op": { "const": "scene.move" }, "scene": { "$ref": "#/$defs/scene" },
+        "pattern": { "oneOf": [{ "type": "null" }, { "type": "string", "pattern": "^moves/[a-z][a-z0-9-]*$" }] },
+        "params": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/paramBag" }] },
+        "format": { "$ref": "#/$defs/format" }, "before": { "$ref": "#/$defs/before" }, "raw": { "$ref": "#/$defs/raw" }
+      }
+    },
+    "sceneSay": {
+      "type": "object", "additionalProperties": false, "required": ["op", "scene", "value"],
+      "properties": { "op": { "const": "scene.say" }, "scene": { "$ref": "#/$defs/scene" }, "value": { "type": "string", "maxLength": 1200 }, "format": { "$ref": "#/$defs/format" }, "raw": { "$ref": "#/$defs/raw" } }
+    },
+    "beatAt": {
+      "description": "0 <= value < the scene's duration, and below the beat's out",
+      "type": "object", "additionalProperties": false, "required": ["op", "scene", "beat", "value"],
+      "properties": { "op": { "const": "beat.at" }, "scene": { "$ref": "#/$defs/scene" }, "beat": { "$ref": "#/$defs/beat" }, "value": { "$ref": "#/$defs/time" }, "format": { "$ref": "#/$defs/format" }, "raw": { "$ref": "#/$defs/raw" } }
+    },
+    "beatOut": {
+      "description": "null removes out; else at < value <= the scene's duration",
+      "type": "object", "additionalProperties": false, "required": ["op", "scene", "beat", "value"],
+      "properties": {
+        "op": { "const": "beat.out" }, "scene": { "$ref": "#/$defs/scene" }, "beat": { "$ref": "#/$defs/beat" },
+        "value": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/time" }] },
+        "format": { "$ref": "#/$defs/format" }, "before": { "$ref": "#/$defs/before" }, "raw": { "$ref": "#/$defs/raw" }
+      }
+    },
+    "beatSet": {
+      "description": "null removes an optional key; fx and slot cannot be removed",
+      "type": "object", "additionalProperties": false, "required": ["op", "scene", "beat", "key", "value"],
+      "properties": {
+        "op": { "const": "beat.set" }, "scene": { "$ref": "#/$defs/scene" }, "beat": { "$ref": "#/$defs/beat" },
+        "key": { "enum": ["text", "fx", "cue", "emphasis", "slot", "fact", "value", "asset"] },
+        "value": true,
+        "format": { "$ref": "#/$defs/format" }, "before": { "$ref": "#/$defs/before" }, "raw": { "$ref": "#/$defs/raw" }
+      },
+      "allOf": [
+        { "if": { "properties": { "key": { "const": "text" } } }, "then": { "properties": { "value": { "oneOf": [{ "type": "null" }, { "$ref": "urn:motion-machine:contracts:story#/properties/scenes/items/properties/beats/items/properties/text" }] } } } },
+        { "if": { "properties": { "key": { "const": "fx" } } }, "then": { "properties": { "value": { "$ref": "urn:motion-machine:contracts:story#/properties/scenes/items/properties/beats/items/properties/fx" } } } },
+        { "if": { "properties": { "key": { "const": "cue" } } }, "then": { "properties": { "value": { "oneOf": [{ "type": "null" }, { "$ref": "urn:motion-machine:contracts:story#/properties/scenes/items/properties/beats/items/properties/cue" }] } } } },
+        { "if": { "properties": { "key": { "const": "emphasis" } } }, "then": { "properties": { "value": { "oneOf": [{ "type": "null" }, { "$ref": "urn:motion-machine:contracts:story#/properties/scenes/items/properties/beats/items/properties/emphasis" }] } } } },
+        { "if": { "properties": { "key": { "const": "slot" } } }, "then": { "properties": { "value": { "$ref": "urn:motion-machine:contracts:story#/properties/scenes/items/properties/beats/items/properties/slot" } } } },
+        { "if": { "properties": { "key": { "const": "fact" } } }, "then": { "properties": { "value": { "oneOf": [{ "type": "null" }, { "$ref": "urn:motion-machine:contracts:story#/properties/scenes/items/properties/beats/items/properties/fact" }] } } } },
+        { "if": { "properties": { "key": { "const": "value" } } }, "then": { "properties": { "value": { "oneOf": [{ "type": "null" }, { "$ref": "urn:motion-machine:contracts:story#/properties/scenes/items/properties/beats/items/properties/value" }] } } } },
+        { "if": { "properties": { "key": { "const": "asset" } } }, "then": { "properties": { "value": { "oneOf": [{ "type": "null" }, { "$ref": "urn:motion-machine:contracts:story#/properties/scenes/items/properties/beats/items/properties/asset" }] } } } }
+      ]
+    },
+    "beatParam": {
+      "description": "null removes the key (the pattern default applies); the key is a param of the beat's fx pattern or one the kit reads; exit and emphasis take a bag of params, instant a boolean, every other key a plain value",
+      "type": "object", "additionalProperties": false, "required": ["op", "scene", "beat", "key", "value"],
+      "properties": {
+        "op": { "const": "beat.param" }, "scene": { "$ref": "#/$defs/scene" }, "beat": { "$ref": "#/$defs/beat" },
+        "key": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,40}$" },
+        "value": true,
+        "format": { "$ref": "#/$defs/format" }, "before": { "$ref": "#/$defs/before" }, "raw": { "$ref": "#/$defs/raw" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "key": { "enum": ["exit", "emphasis"] } } },
+          "then": { "properties": { "value": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/paramBag" }] } } },
+          "else": { "properties": { "value": { "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/paramValue" }] } } }
+        },
+        { "if": { "properties": { "key": { "const": "instant" } } }, "then": { "properties": { "value": { "type": ["null", "boolean"] } } } }
+      ]
+    },
+    "beatAdd": {
+      "description": "index defaults to the end of the beats array",
+      "type": "object", "additionalProperties": false, "required": ["op", "scene", "beat"],
+      "properties": {
+        "op": { "const": "beat.add" }, "scene": { "$ref": "#/$defs/scene" },
+        "beat": { "allOf": [
+          { "$ref": "urn:motion-machine:contracts:story#/properties/scenes/items/properties/beats/items" },
+          { "type": "object", "properties": { "params": { "type": "object", "propertyNames": { "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,40}$" } } } }
+        ] },
+        "index": { "type": "integer", "minimum": 0, "maximum": 23 }, "format": { "$ref": "#/$defs/format" }, "raw": { "$ref": "#/$defs/raw" }
+      }
+    },
+    "beatRemove": {
+      "type": "object", "additionalProperties": false, "required": ["op", "scene", "beat"],
+      "properties": { "op": { "const": "beat.remove" }, "scene": { "$ref": "#/$defs/scene" }, "beat": { "$ref": "#/$defs/beat" }, "format": { "$ref": "#/$defs/format" } }
+    },
+    "storyFormats": {
+      "description": "sets the formats the piece ships: a forward op writes them in the order 9x16, 1x1, 4x5, 16x9 whatever order it lists them in; its inverse writes the exact old list. Removing a format leaves the scenes' variants for it in place",
+      "type": "object", "additionalProperties": false, "required": ["op", "value"],
+      "properties": {
+        "op": { "const": "story.formats" },
+        "value": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/format" } },
+        "raw": { "$ref": "#/$defs/raw" }
+      }
+    }
+  }
+}

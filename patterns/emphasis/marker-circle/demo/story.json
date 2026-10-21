@@ -1,0 +1,46 @@
+{
+  "id": "demo-emphasis-marker-circle",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: emphasis/marker-circle",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Only 3 steps",
+          "emphasis": "emphasis/marker-circle"
+        },
+        {
+          "at": 1,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Ringed by hand, then released"
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

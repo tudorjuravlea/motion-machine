@@ -1,0 +1,262 @@
+{
+  "id": "catalogue-3d-1",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Real 3D",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Real 3D",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Real depth, drawn per frame."
+        }
+      ],
+      "say": "Real depth, drawn per frame.",
+      "duration": 3.6
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "phone",
+      "layout": "layouts/caption-bar",
+      "duration": 5.4,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/app/",
+          "params": {
+            "move": "hero"
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 2.2,
+              "params": {
+                "to": "Pricing"
+              }
+            }
+          ]
+        },
+        {
+          "at": 1,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "3d/phone: turns from edge-on to face you."
+        }
+      ],
+      "id": "phone-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "phone",
+      "layout": "layouts/caption-bar",
+      "duration": 5.4,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/app/",
+          "params": {
+            "move": "turntable",
+            "metal": "titanium"
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 2.2,
+              "params": {
+                "to": "Pricing"
+              }
+            }
+          ]
+        },
+        {
+          "at": 1,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "move turntable, in titanium."
+        }
+      ],
+      "id": "phone-b"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "laptop",
+      "layout": "layouts/caption-bar",
+      "duration": 5.6,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "3d/laptop",
+          "asset": "assets/app/",
+          "params": {
+            "move": "hero"
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 2.4,
+              "params": {
+                "to": "Pricing"
+              }
+            }
+          ]
+        },
+        {
+          "at": 1,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "3d/laptop: turns in while the lid opens."
+        }
+      ],
+      "id": "laptop-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "laptop",
+      "layout": "layouts/caption-bar",
+      "duration": 5.6,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "3d/laptop",
+          "asset": "assets/app/",
+          "params": {
+            "move": "showcase"
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 2.4,
+              "params": {
+                "to": "Pricing"
+              }
+            }
+          ]
+        },
+        {
+          "at": 1,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "move showcase: a slow half-turn."
+        }
+      ],
+      "id": "laptop-b"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "particles-to-shape",
+      "layout": "layouts/statement",
+      "duration": 4.4,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "3d/particles-to-shape",
+          "text": "Built",
+          "params": {
+            "dur": "slow"
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "particles-to-shape: a cloud in depth lands on the letters."
+        }
+      ],
+      "id": "particles-to-shape-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "particles-to-shape",
+      "layout": "layouts/statement",
+      "duration": 4.4,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "3d/particles-to-shape",
+          "text": "Built",
+          "params": {
+            "dur": "slow",
+            "particles": 2400,
+            "depth": 1.6
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "particles 2400, depth 1.6."
+        }
+      ],
+      "id": "particles-to-shape-b"
+    }
+  ],
+  "share": "Real 3D: phone, laptop, particles-to-shape. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

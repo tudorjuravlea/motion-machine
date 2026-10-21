@@ -1,0 +1,476 @@
+{
+  "id": "catalogue-text-1",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Text, part 1 of 2",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Text",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Type that moves as it lands. Part 1 of 2."
+        }
+      ],
+      "say": "Type that moves as it lands.",
+      "duration": 4
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "caption-karaoke-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "caption-karaoke",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/caption-karaoke",
+          "text": "Light each word"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Lights the words of each group in turn.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "text/caption-karaoke",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "caption-karaoke: Lights the words of each group in turn.",
+      "duration": 4.4
+    },
+    {
+      "id": "caption-karaoke-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "caption-karaoke",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/caption-karaoke",
+          "text": "Light each word",
+          "params": {
+            "group": 2
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "group: 2. Shorter groups.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "group: 2. Shorter groups.",
+      "duration": 3.4
+    },
+    {
+      "id": "date-flip-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "date-flip",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/date-flip",
+          "text": "2027",
+          "params": {
+            "from": "2026"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "The old value is struck through, then flips away.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "text/date-flip",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "date-flip: The old value is struck through, then flips away.",
+      "duration": 4.1
+    },
+    {
+      "id": "date-flip-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "date-flip",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/date-flip",
+          "text": "2027",
+          "params": {
+            "from": ""
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "from: empty. Just the flip.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "from: empty. Just the flip.",
+      "duration": 3.4
+    },
+    {
+      "id": "elastic-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "elastic",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/elastic",
+          "text": "Stretch"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A width wave runs out from the middle letter.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "text/elastic",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "elastic: A width wave runs out from the middle letter.",
+      "duration": 4.1
+    },
+    {
+      "id": "elastic-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "elastic",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/elastic",
+          "text": "Stretch",
+          "params": {
+            "amp": 0.08
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "amp: 0.08. A gentler swell.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "amp: 0.08. A gentler swell.",
+      "duration": 3.4
+    },
+    {
+      "id": "fit-headline-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "fit-headline",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/fit-headline",
+          "text": "Fitted"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Sizes the line to its measure, then rises in.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "text/fit-headline",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "fit-headline: Sizes the line to its measure, then rises in.",
+      "duration": 4.1
+    },
+    {
+      "id": "fit-headline-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "fit-headline",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/fit-headline",
+          "text": "Fitted",
+          "params": {
+            "grow": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "grow: true. It may grow to fill.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "grow: true. It may grow to fill.",
+      "duration": 3.4
+    },
+    {
+      "id": "handwrite-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "handwrite",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/handwrite",
+          "text": "hello"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Traces each outline in turn, then fills it.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "text/handwrite",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "handwrite: Traces each outline in turn, then fills it.",
+      "duration": 4.1
+    },
+    {
+      "id": "handwrite-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "handwrite",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/handwrite",
+          "text": "hello",
+          "params": {
+            "stroke": "accent"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "stroke: accent. The tracing line in colour.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "stroke: accent. The tracing line in colour.",
+      "duration": 3.4
+    }
+  ],
+  "share": "Text (1/2): caption-karaoke, date-flip, elastic, fit-headline, handwrite. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

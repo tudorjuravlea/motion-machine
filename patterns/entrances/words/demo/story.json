@@ -1,0 +1,45 @@
+{
+  "id": "demo-entrances-words",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "entrances/words demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 4.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/words",
+          "text": "Povești în mișcare, la timpul potrivit"
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Words arrive in turn, capped at half a second"
+        }
+      ],
+      "say": "A single scene that shows entrances/words."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

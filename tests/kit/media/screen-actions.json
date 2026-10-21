@@ -1,0 +1,259 @@
+{
+  "id": "kit-screen-actions",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "16x9"
+  ],
+  "title": "Kit screen actions",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "scenes": [
+    {
+      "id": "scroll",
+      "layout": "layouts/caption-bar",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/site/",
+          "params": {
+            "size": "large"
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 0.5,
+              "d": 1,
+              "params": {
+                "to": "Pricing",
+                "settle": 0
+              }
+            }
+          ]
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "short",
+      "layout": "layouts/caption-bar",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/short/",
+          "params": {
+            "size": "large"
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 0.5,
+              "d": 1,
+              "params": {
+                "to": "3000"
+              }
+            }
+          ]
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "seam",
+      "layout": "layouts/caption-bar",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/site/",
+          "params": {
+            "size": "large"
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 0.5,
+              "d": 1,
+              "params": {
+                "to": "5000",
+                "settle": 0
+              }
+            }
+          ]
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "tap",
+      "layout": "layouts/caption-bar",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/site/",
+          "params": {
+            "size": "large"
+          },
+          "screen": [
+            {
+              "do": "screen/tap",
+              "at": 0.5,
+              "d": 1,
+              "params": {
+                "at": "30%,40%"
+              }
+            }
+          ]
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "swap",
+      "layout": "layouts/caption-bar",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/site/",
+          "params": {
+            "size": "large"
+          },
+          "screen": [
+            {
+              "do": "screen/swap",
+              "at": 0.5,
+              "d": 0.6,
+              "params": {
+                "to": "assets/grid.png"
+              }
+            }
+          ]
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "zoom",
+      "layout": "layouts/caption-bar",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/site/",
+          "params": {
+            "size": "large"
+          },
+          "screen": [
+            {
+              "do": "screen/zoom-to",
+              "at": 0.5,
+              "d": 1,
+              "params": {
+                "at": "50%,25%",
+                "s": 2
+              }
+            }
+          ]
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "callout",
+      "layout": "layouts/caption-bar",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/site/",
+          "params": {
+            "size": "large"
+          },
+          "screen": [
+            {
+              "do": "screen/callout",
+              "at": 0.5,
+              "d": 3,
+              "params": {
+                "at": "30%,40%",
+                "text": "Here"
+              }
+            }
+          ]
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "emph",
+      "layout": "layouts/caption-bar",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/site/",
+          "params": {
+            "size": "large"
+          },
+          "emphasis": "emphasis/circumscribe",
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 3.5,
+              "d": 1,
+              "params": {
+                "to": "Pricing"
+              }
+            }
+          ]
+        }
+      ],
+      "say": ""
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "demo-text-caption-karaoke",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "text/caption-karaoke demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 4.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "text/caption-karaoke",
+          "text": "Each group lights word by word",
+          "params": {
+            "group": 3,
+            "dur": "hold"
+          }
+        }
+      ],
+      "say": "A single scene that shows text/caption-karaoke."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

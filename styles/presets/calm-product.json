@@ -1,0 +1,215 @@
+{
+  "name": "calm-product",
+  "version": 1,
+  "fictional": true,
+  "from": {
+    "brand": "styles/brands/linen.json",
+    "motion": "styles/motion/premium.json"
+  },
+  "color": {
+    "canvas": "#FAFAF7",
+    "ink": "#23262B",
+    "muted": "#6B7280",
+    "surface": "#FFFFFF",
+    "line": "#E6E6E1",
+    "accent": "#2F6F5E",
+    "accentInk": "#FFFFFF"
+  },
+  "type": {
+    "display": {
+      "family": "Manrope",
+      "weight": 700,
+      "tracking": -0.015,
+      "files": [
+        {
+          "src": "styles/fonts/manrope/manrope-latin-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/manrope/manrope-latin-ext-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        },
+        {
+          "src": "styles/fonts/manrope/manrope-latin-600-normal.woff2",
+          "weight": 600,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/manrope/manrope-latin-ext-600-normal.woff2",
+          "weight": 600,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        },
+        {
+          "src": "styles/fonts/manrope/manrope-latin-700-normal.woff2",
+          "weight": 700,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/manrope/manrope-latin-ext-700-normal.woff2",
+          "weight": 700,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        }
+      ]
+    },
+    "text": {
+      "family": "Manrope",
+      "weight": 400,
+      "tracking": 0,
+      "files": [
+        {
+          "src": "styles/fonts/manrope/manrope-latin-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/manrope/manrope-latin-ext-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        },
+        {
+          "src": "styles/fonts/manrope/manrope-latin-600-normal.woff2",
+          "weight": 600,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/manrope/manrope-latin-ext-600-normal.woff2",
+          "weight": 600,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        },
+        {
+          "src": "styles/fonts/manrope/manrope-latin-700-normal.woff2",
+          "weight": 700,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/manrope/manrope-latin-ext-700-normal.woff2",
+          "weight": 700,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        }
+      ]
+    },
+    "mono": {
+      "family": "IBM Plex Mono",
+      "weight": 400,
+      "tracking": 0,
+      "files": [
+        {
+          "src": "styles/fonts/ibm-plex-mono/ibm-plex-mono-latin-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/ibm-plex-mono/ibm-plex-mono-latin-ext-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        }
+      ]
+    }
+  },
+  "scale": {
+    "display": 0.92,
+    "h1": 0.58,
+    "h2": 0.42,
+    "body": 0.27,
+    "caption": 0.21,
+    "micro": 0.19
+  },
+  "space": [
+    4,
+    8,
+    16,
+    24,
+    40,
+    64,
+    104
+  ],
+  "radius": [
+    0,
+    6,
+    14,
+    28,
+    999
+  ],
+  "composition": {
+    "align": "left",
+    "headlineScale": 1,
+    "density": "airy"
+  },
+  "bans": [
+    "centered-title-on-gradient",
+    "fade-only",
+    "corner-labels",
+    "frame-borders",
+    "glow-on-ui",
+    "particle-burst"
+  ],
+  "allow": [],
+  "motion": {
+    "durations": {
+      "quick": 200,
+      "standard": 420,
+      "slow": 900,
+      "hold": 1500
+    },
+    "easings": {
+      "enter": "cubic-bezier(0.22, 0.61, 0.36, 1)",
+      "exit": "cubic-bezier(0.55, 0, 1, 0.45)",
+      "move": "cubic-bezier(0.65, 0, 0.35, 1)"
+    },
+    "spring": {
+      "ui": {
+        "bounce": 0.08,
+        "period": 0.4
+      },
+      "type": {
+        "k": 200,
+        "c": 28,
+        "m": 1
+      },
+      "heavy": {
+        "bounce": 0.12,
+        "period": 0.9
+      }
+    },
+    "travel": 1,
+    "overshootMax": 0.1,
+    "exitRatio": 0.7,
+    "stagger": {
+      "eachS": 0.05,
+      "capS": 0.5
+    }
+  },
+  "sound": {
+    "palette": "cinematic",
+    "bpm": 100,
+    "loudnessLufs": -14,
+    "cuesPer10s": [
+      1,
+      5
+    ]
+  },
+  "transitions": {
+    "opening": "transitions/blur-crossfade",
+    "topic": "transitions/crossfade",
+    "related": "transitions/push",
+    "climax": "transitions/zoom-through",
+    "outro": "transitions/color-dip",
+    "policy": "owns-exit"
+  },
+  "entrances": {
+    "headline": "entrances/blur-fade",
+    "body": "entrances/fade",
+    "figure": "entrances/count",
+    "plate": "entrances/mask-reveal"
+  },
+  "pacing": {
+    "holdMinS": 1.2,
+    "arrivalsPer10s": [
+      3,
+      6
+    ],
+    "energy": "medium"
+  }
+}

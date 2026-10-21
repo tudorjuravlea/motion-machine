@@ -1,0 +1,45 @@
+{
+  "id": "demo-text-split-flap",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "text/split-flap demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 4.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "text/split-flap",
+          "text": "Now boarding"
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Each tile flips, then lands"
+        }
+      ],
+      "say": "A single scene that shows text/split-flap."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

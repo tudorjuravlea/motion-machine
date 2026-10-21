@@ -1,0 +1,154 @@
+{
+  "id": "demo-swap-kinetic",
+  "kind": "film",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Style swap: one story, three brands",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "The three shipped presets compose a brand half with a motion half: editorial = paper x calm, kinetic = signal x kinetic, calm-product = linen x premium; this story is identical in all three pieces, only style.json differs.",
+      "source": "styles/presets/*.json, field from; pieces/demo-swap-*/story.json"
+    },
+    {
+      "id": "f2",
+      "text": "120 patterns in 12 groups, none carrying a brand.",
+      "source": "node scripts/mm.mjs pattern list; README.md"
+    },
+    {
+      "id": "f3",
+      "text": "Motion Machine is licensed Apache-2.0.",
+      "source": "README.md Status; LICENSE"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": 120,
+    "beats": "assets/beats.json"
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "layout": "layouts/statement",
+      "duration": 5.0,
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "One story. Three brands.",
+          "params": {
+            "instant": true
+          },
+          "fact": "f1",
+          "cue": "hit"
+        },
+        {
+          "at": 1.0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "Only the style file changes.",
+          "fact": "f1",
+          "cue": "tick"
+        }
+      ],
+      "say": "The same story, word for word, worn by three styles."
+    },
+    {
+      "id": "halves",
+      "layout": "layouts/comparison",
+      "duration": 5.0,
+      "position": "topic",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Brand, worn with motion.",
+          "cue": "hit"
+        },
+        {
+          "at": 0.5,
+          "slot": "left",
+          "fx": "style:plate",
+          "text": "brand: colour, type",
+          "cue": "tick"
+        },
+        {
+          "at": 1.0,
+          "slot": "right",
+          "fx": "style:plate",
+          "text": "motion: tempo, entrances"
+        }
+      ],
+      "say": "A brand half sets colour and type; a motion half sets tempo, curves and entrances."
+    },
+    {
+      "id": "library",
+      "layout": "layouts/stat-hero",
+      "duration": 5.0,
+      "position": "climax",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "patterns, none branded"
+        },
+        {
+          "at": 0.5,
+          "slot": "figure",
+          "fx": "style:figure",
+          "value": 120,
+          "text": "120",
+          "fact": "f2",
+          "cue": "hit"
+        },
+        {
+          "at": 1.0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "in 12 groups",
+          "fact": "f2"
+        }
+      ],
+      "say": "120 patterns, and the style decides how each one moves."
+    },
+    {
+      "id": "cta",
+      "layout": "layouts/endcard",
+      "duration": 5.0,
+      "position": "outro",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Motion Machine",
+          "cue": "complete"
+        },
+        {
+          "at": 1.0,
+          "slot": "line",
+          "fx": "style:headline",
+          "text": "One brief. Any style. Checked."
+        }
+      ],
+      "say": "One brief. Any style. Checked."
+    }
+  ],
+  "cta": {
+    "text": "One brief. Any style. Checked.",
+    "url": ""
+  }
+}

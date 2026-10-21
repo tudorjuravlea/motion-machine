@@ -1,0 +1,66 @@
+/* fan-stack: a headline over a stack of up to four cards, each later card in front of and below
+   the one before, so every card's label stays readable in the strip it leaves showing, like a pile
+   of notifications. The last card (card-4) is the front card: full size, accent edge. Earlier cards
+   step back in width (not scale: an entrance owns scale). Pair the cards with a springy entrance (entrances/pop or drop) so each one
+   settles on its own. Empty cards leave the stack. */
+.fan-stack {
+  position: absolute;
+  inset: var(--mm-safe) calc(var(--mm-safe) + (var(--mm-frame-w) / 2 - var(--mm-safe)) * 0.08 * var(--mm-density)) calc(var(--mm-safe) * 2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  gap: calc(var(--mm-space-5) * var(--mm-density));
+}
+.fan-stack__headline {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: calc(var(--mm-size-h1) * var(--mm-headline-scale));
+  line-height: 1.05;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+  text-align: var(--mm-align);
+  color: var(--mm-color-ink);
+}
+.fan-stack__headline[data-empty] { display: none; }
+.fan-stack__deck { display: flex; flex-direction: column; align-items: center; }
+[data-format="16x9"] .fan-stack__deck { width: 62%; align-self: center; }
+.fan-stack__card {
+  --mm-fan-strip: calc(var(--mm-size-body) * 1.2 + var(--mm-space-3) * 2);
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: calc(var(--mm-fan-strip) * 1.9);
+  margin-top: calc(var(--mm-fan-strip) * -0.9);
+  padding: var(--mm-space-3) var(--mm-space-4);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-surface);
+  color: var(--mm-color-surfaceInk);
+  font-family: var(--mm-font-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 calc(var(--mm-space-1) * -0.5) var(--mm-space-3) color-mix(in srgb, var(--mm-color-ink) 14%, transparent);
+}
+.fan-stack__card:first-child { margin-top: 0; }
+.fan-stack__card:nth-child(1) { width: 88%; }
+.fan-stack__card:nth-child(2) { width: 92%; }
+.fan-stack__card:nth-child(3) { width: 96%; }
+.fan-stack__card--top {
+  min-height: calc(var(--mm-fan-strip) * 2.4);
+  white-space: normal;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  box-shadow: inset 0 calc(var(--mm-space-1) * 0.8) 0 var(--mm-color-accent), 0 calc(var(--mm-space-1) * -0.5) var(--mm-space-3) color-mix(in srgb, var(--mm-color-ink) 14%, transparent);
+}
+.fan-stack__card[data-empty] { display: none; }
+.fan-stack[data-align="center"] .fan-stack__headline,
+.fan-stack:has([data-p-align="center"]) .fan-stack__headline { text-align: center; }
+.fan-stack[data-align="left"] .fan-stack__headline,
+.fan-stack:has([data-p-align="left"]) .fan-stack__headline { text-align: left; }

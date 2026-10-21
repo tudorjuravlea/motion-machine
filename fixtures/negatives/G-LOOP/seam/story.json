@@ -1,0 +1,62 @@
+{
+  "id": "g-loop-seam",
+  "kind": "loop",
+  "formats": [
+    "16x9"
+  ],
+  "title": "negative G-LOOP/seam: the last frame is not the first",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "The gate samples three instants for determinism.",
+      "source": "SPEC.md \u00a72.5"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  },
+  "scenes": [
+    {
+      "id": "a",
+      "layout": "layouts/title-stack",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Loop start",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Loop start"
+    },
+    {
+      "id": "b",
+      "layout": "layouts/title-stack",
+      "duration": 3.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "A different ending"
+        }
+      ],
+      "say": "A different ending"
+    }
+  ]
+}

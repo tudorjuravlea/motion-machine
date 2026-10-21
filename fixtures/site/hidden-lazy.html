@@ -1,0 +1,5 @@
+<!doctype html>
+<!-- A lazy image inside a closed panel never loads, as on a site with accordions (tests/cli/capture-site.test.mjs). -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>hidden lazy</title>
+<style>body { margin: 0; background: #FAFAF7; } main { height: 1200px; background: #2F6F5E; } .panel { display: none; }</style></head>
+<body><main id="main">Open</main><div class="panel"><img loading="lazy" src="lazy.png" width="200" height="200" alt=""></div></body></html>

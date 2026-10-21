@@ -1,0 +1,10 @@
+/* emphasis/marker-circle: the ring sits over the slot's box and draws outside it. */
+.mm-marker-circle { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.mm-marker-circle path {
+  fill: none;
+  stroke-width: calc(var(--mm-space-1) * 0.9);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.mm-marker-circle--accent path { stroke: var(--mm-color-accent); }
+.mm-marker-circle--ink path { stroke: var(--mm-color-ink); }

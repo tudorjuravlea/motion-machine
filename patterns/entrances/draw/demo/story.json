@@ -1,0 +1,44 @@
+{
+  "id": "demo-entrances-draw",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "entrances/draw demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 4.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Draw a line, then say it"
+        },
+        {
+          "at": 1,
+          "slot": "sub",
+          "fx": "entrances/draw"
+        }
+      ],
+      "say": "A single scene that shows entrances/draw."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

@@ -1,0 +1,170 @@
+/* devices/laptop: a generic notebook. The lid pivots on the deck's back edge; deck and lid take
+   their finish from the brand colours: a metal rim and a glass bezel on the lid, a shaded
+   deck with a lit front lip, and a soft two-part shadow. */
+.laptop {
+  position: relative;
+  filter:
+    drop-shadow(0 calc(var(--mm-frame-h) * 0.004) calc(var(--mm-frame-h) * 0.004) color-mix(in srgb, var(--mm-device-shade) 30%, transparent))
+    drop-shadow(0 calc(var(--mm-frame-h) * 0.03) calc(var(--mm-frame-h) * 0.035) color-mix(in srgb, var(--mm-device-shade) 20%, transparent))
+    drop-shadow(0 0 calc(var(--mm-frame-h) * 0.008) color-mix(in srgb, var(--mm-device-glint) 14%, transparent));   /* the metal's glow */
+  /* today's notebook proportions: the lid 0.814 of the base wide (a 1.494 slab), the base 0.027 of its width tall */
+  width: min(calc(var(--mm-frame-w) * 0.86), calc(var(--mm-frame-h) * 0.58 * 1.748));
+  aspect-ratio: 1.748;
+  display: flex;
+  flex-direction: column;
+}
+.laptop__hinge {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0 9.3%;
+  perspective: 2400px;
+}
+.laptop__lid {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 2.2% 1.6% 1.6%;
+  position: relative;
+  border: calc(var(--mm-frame-h) * 0.0035) solid transparent;
+  border-bottom-width: 0;
+  border-radius: var(--mm-radius-2) var(--mm-radius-2) 0 0;
+  box-shadow: inset 0 0 0 calc(var(--mm-frame-h) * 0.001) color-mix(in srgb, var(--mm-device-glint) 24%, transparent);   /* the lit inner edge */
+  background:
+    linear-gradient(var(--mm-device-glass), var(--mm-device-glass)) padding-box,
+    linear-gradient(160deg, var(--mm-device-rim-light) 0%, var(--mm-device-body) 12%, var(--mm-device-spec) 20%, var(--mm-device-body) 28%, var(--mm-device-body) 58%, var(--mm-device-rim-dark) 72%, var(--mm-device-body) 84%, var(--mm-device-spec) 93%, var(--mm-device-rim-light) 100%) border-box;
+  transform-origin: 50% 100%;
+}
+.laptop__screen {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-space-3);
+  padding: var(--mm-space-5);
+  overflow: hidden;
+  border-radius: var(--mm-radius-1);
+  background: var(--mm-color-surface);
+}
+.laptop__label {
+  flex: none;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: var(--mm-size-body);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  color: var(--mm-color-surfaceInk);
+}
+.laptop__label:empty { display: none; }
+.laptop__row {
+  flex: none;
+  height: var(--mm-space-3);
+  border-radius: var(--mm-radius-4);
+  background: var(--mm-color-line);
+}
+.laptop__row--short { width: 55%; }
+.laptop__deck {
+  position: relative;
+  flex: none;
+  height: 4.7%;
+  border-radius: 0 0 6% 6% / 0 0 90% 90%;   /* the base tapers underneath */
+  background: linear-gradient(to bottom, var(--mm-device-rim-light) 0 10%, var(--mm-device-body) 26%, var(--mm-device-rim-dark) 100%);
+}
+.laptop__notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 16%;
+  height: 40%;
+  translate: -50% 0;
+  border-radius: 0 0 var(--mm-radius-2) var(--mm-radius-2);
+  /* a blend of two roles, so drawn as an image: a flat fill must be a palette role (G-LITERAL) */
+  background: linear-gradient(var(--mm-device-rim-dark), var(--mm-device-rim-dark));
+}
+/* A beat's asset fills the screen edge to edge (object-fit cover, clipped by the screen) and the
+   placeholder title and rows give way to it; without an asset the <img> takes no room. */
+.laptop__screen { position: relative; }
+.laptop__media {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.laptop__media:not([src]) { display: none; }
+.laptop__screen:is(:has(> .laptop__media[src]), :has(> .mm-screen:not(.mm-screen--bare))) > :is(.laptop__label, .laptop__row) { display: none; }
+/* size: large (a beat param, read as data-p-size): the notebook as tall as 0.74 of the frame height allows. */
+[data-p-size="large"] > .laptop { width: min(calc(var(--mm-frame-w) * 0.86), calc(var(--mm-frame-h) * 0.74 * 1.748)); }
+/* The camera notch (model, read as data-p-model: notch by default, or plain) hangs from the top of
+   the lid into the screen: 0.12 of the lid wide, 0.052 of it tall. The menu bar (params.menu, at
+   most 5 items) runs across the top of the screen; both sit over the kit's screen layer. */
+.laptop__cam {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 0;
+  width: 12%;
+  height: 5.2%;
+  translate: -50% 0;
+  border-radius: 0 0 calc(var(--mm-frame-h) * 0.006) calc(var(--mm-frame-h) * 0.006);
+  background: var(--mm-device-glass);
+}
+[data-p-model="plain"] .laptop__cam { display: none; }
+.laptop__menu {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 4.6%;
+  display: flex;
+  align-items: center;
+  gap: 1.6em;
+  padding: 0 2.2%;
+  box-sizing: border-box;
+  background: color-mix(in srgb, var(--mm-color-surface) 86%, transparent);
+  color: var(--mm-color-surfaceInk);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  font-size: var(--mm-size-micro);
+  line-height: 1;
+}
+.laptop__menu:empty { display: none; }
+/* premium glass on the lid: a top highlight and a diagonal reflection over the screen, under the menu and camera */
+.laptop__screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(to bottom, color-mix(in srgb, var(--mm-device-glint) 10%, transparent) 0, transparent 14%),
+    linear-gradient(120deg, transparent 0 12%, color-mix(in srgb, var(--mm-device-glint) 6%, transparent) 20%, color-mix(in srgb, var(--mm-device-glint) 12%, transparent) 26%, color-mix(in srgb, var(--mm-device-glint) 4%, transparent) 32%, transparent 42%);   /* toward the top corner: the middle stays true */
+}
+/* your own frame (beat param `frame`): a whole-notebook image (lid and base); the screen
+   fills its measured hole and the built-in lid, deck and notch step aside; the lid does not open. */
+[data-frame] > .laptop { width: auto; height: calc(var(--mm-frame-h) * 0.58); aspect-ratio: var(--mm-df-ar); }
+[data-p-size="large"][data-frame] > .laptop { width: auto; height: calc(var(--mm-frame-h) * 0.74); max-width: calc(var(--mm-frame-w) * 0.86); }
+[data-frame] .laptop__hinge { position: absolute; inset: 0; margin: 0; perspective: none; }
+[data-frame] .laptop__lid { padding: 0; border: 0; background: none; box-shadow: none; border-radius: 0; }
+[data-frame] .laptop__screen { position: absolute; left: var(--mm-df-x); top: var(--mm-df-y); width: var(--mm-df-w); height: var(--mm-df-h); border-radius: var(--mm-df-r); }
+[data-frame] .laptop__deck, [data-frame] .laptop__cam { display: none !important; }
+[data-frame] .laptop__screen::after { content: none; }   /* a maker's frame brings its own glass */
+/* model chin: the earlier notebook face: thin side bezels (0.017 of the lid wide), a deeper
+   top (0.044 of its height) holding a small round camera, and a chin (0.055); no notch. Padding is a
+   share of the lid's width, so the heights are converted at the lid's 1.494 proportion. */
+[data-p-model="chin"] .laptop__lid { padding: calc(2.94% - var(--mm-frame-h) * 0.0035) calc(1.7% - var(--mm-frame-h) * 0.0035) 3.68%; }   /* less the rim */
+[data-p-model="chin"] .laptop__cam {
+  top: 1.45%;
+  width: 0.75%;
+  height: auto;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle closest-side, var(--mm-device-lens-ring) 0 30%, var(--mm-device-glass) 60% 100%);
+}
+[data-p-model="chin"] .laptop__cam .island__text { display: none; }

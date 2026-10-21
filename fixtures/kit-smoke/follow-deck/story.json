@@ -1,0 +1,25 @@
+{
+  "id": "kit-smoke-follow-deck",
+  "kind": "deck",
+  "formats": ["16x9"],
+  "title": "kit-smoke follow-up deck: a camera move across presses",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "intro", "layout": "layouts/title-stack", "presses": 1, "cut": "transitions/hard-cut", "move": null,
+      "beats": [ { "at": 0, "step": 1, "slot": "headline", "fx": "entrances/rise", "text": "A deck can move its camera." } ],
+      "say": "First a still scene."
+    },
+    {
+      "id": "moving", "layout": "layouts/title-stack", "presses": 3, "cut": "transitions/hard-cut", "move": "moves/probe", "moveParams": { "k": "deck" },
+      "beats": [
+        { "at": 0, "step": 1, "slot": "headline", "fx": "entrances/rise", "text": "Progress is presses." },
+        { "at": 0, "step": 2, "slot": "sub", "fx": "entrances/fade", "text": "Each rest is a finished picture." }
+      ],
+      "say": "Then the camera travels across three presses."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

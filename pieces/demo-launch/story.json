@@ -1,0 +1,238 @@
+{
+  "id": "demo-launch",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "16x9",
+    "4x5"
+  ],
+  "title": "Demo: a launch film (one device scene of seven)",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "layout": "layouts/statement",
+      "duration": 3.2,
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Your week, finally quiet.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Your week, finally quiet.",
+      "position": "opening"
+    },
+    {
+      "id": "name",
+      "layout": "layouts/statement",
+      "duration": 4.4,
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "3d/particles-to-shape",
+          "text": "Quillmere",
+          "params": {
+            "dur": "slow"
+          }
+        },
+        {
+          "at": 1.8,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "The calm planner."
+        }
+      ],
+      "say": "Quillmere, the calm planner.",
+      "position": "related"
+    },
+    {
+      "id": "why",
+      "layout": "layouts/grid-break",
+      "duration": 5.4,
+      "move": null,
+      "beats": [
+        {
+          "at": 0.38,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Most weeks look like this."
+        },
+        {
+          "at": 0.72,
+          "slot": "tile-1",
+          "fx": "entrances/pop",
+          "text": "Meeting"
+        },
+        {
+          "at": 0.84,
+          "slot": "tile-2",
+          "fx": "entrances/pop",
+          "text": "Meeting"
+        },
+        {
+          "at": 0.96,
+          "slot": "tile-3",
+          "fx": "entrances/pop",
+          "text": "Meeting"
+        },
+        {
+          "at": 1.08,
+          "slot": "tile-4",
+          "fx": "entrances/pop",
+          "text": "Meeting"
+        },
+        {
+          "at": 1.2,
+          "slot": "tile-5",
+          "fx": "entrances/pop",
+          "text": "Meeting"
+        },
+        {
+          "at": 1.7,
+          "slot": "odd",
+          "fx": "entrances/punch",
+          "text": "Focus",
+          "emphasis": "emphasis/marker-circle"
+        }
+      ],
+      "say": "Most weeks are meetings. Quillmere finds the focus.",
+      "position": "topic",
+      "cut": "transitions/crossfade"
+    },
+    {
+      "id": "app",
+      "layout": "layouts/caption-bar",
+      "duration": 5,
+      "move": null,
+      "beats": [
+        {
+          "at": 0.38,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/app.png",
+          "params": {
+            "size": "large"
+          },
+          "screen": [
+            {
+              "do": "screen/tap",
+              "at": 2.38,
+              "params": {
+                "at": "50%,37%"
+              }
+            },
+            {
+              "do": "screen/callout",
+              "at": 2.78,
+              "params": {
+                "at": "50%,37%",
+                "text": "Focus first"
+              }
+            }
+          ]
+        },
+        {
+          "at": 1.4,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "Plan the week in one place."
+        }
+      ],
+      "say": "Plan the week in one place.",
+      "position": "topic",
+      "cut": "transitions/crossfade"
+    },
+    {
+      "id": "flow",
+      "layout": "layouts/title-stack",
+      "duration": 4.6,
+      "move": null,
+      "beats": [
+        {
+          "at": 0.25,
+          "slot": "headline",
+          "fx": "data/flow",
+          "params": {
+            "nodes": "Inbox|Plan,Focus,Rest|Done",
+            "dur": "slow"
+          }
+        },
+        {
+          "at": 2.6,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "Everything finds its time."
+        }
+      ],
+      "say": "Everything finds its time.",
+      "position": "climax"
+    },
+    {
+      "id": "when",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "move": null,
+      "beats": [
+        {
+          "at": 0.38,
+          "slot": "headline",
+          "fx": "text/date-flip",
+          "text": "Monday",
+          "params": {
+            "from": "Someday",
+            "dur": "slow"
+          }
+        },
+        {
+          "at": 1.8,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "Start this week."
+        }
+      ],
+      "say": "Not someday. Monday.",
+      "position": "topic",
+      "cut": "transitions/crossfade"
+    },
+    {
+      "id": "end",
+      "layout": "layouts/endcard",
+      "duration": 3.4,
+      "move": null,
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Quillmere"
+        },
+        {
+          "at": 0.5,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "quillmere.example"
+        }
+      ],
+      "say": "Quillmere.",
+      "position": "outro"
+    }
+  ],
+  "cta": {
+    "text": "Quillmere",
+    "url": "quillmere.example"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "id": "demo-entrances-assemble",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: entrances/assemble",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/statement",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/assemble",
+          "text": "Made of parts",
+          "params": {
+            "dur": 2.2
+          }
+        },
+        {
+          "at": 2.6,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Dots gather into the words"
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

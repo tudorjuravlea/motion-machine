@@ -1,0 +1,14 @@
+{
+  "swap-editorial.png": "pieces/demo-swap-editorial, 16x9, rest of scene 2 (halves) at 6.333 s",
+  "swap-kinetic.png": "pieces/demo-swap-kinetic, 16x9, rest of scene 2 (halves) at 6.300 s",
+  "swap-calm-product.png": "pieces/demo-swap-calm-product, 16x9, rest of scene 2 (halves) at 6.433 s",
+  "golden-editorial-9x16.png": "pieces/golden-film-editorial, 9x16, first rest (the poster instant) at 1.033 s",
+  "golden-editorial-16x9.png": "pieces/golden-film-editorial, 16x9, first rest (the poster instant) at 1.033 s",
+  "site-harbour-pine.png": "fixtures/capture/site/index.html at 1440 x 900",
+  "palette-harbour-pine.png": "pieces/demo-film/capture/harbour-pine.json color roles (as captured, before the muted fix)",
+  "contact-golden-kinetic.png": "pieces/golden-film-kinetic, 16x9, t = 0.5 to 29.5 s every 1 s, through framePng",
+  "check-golden-kinetic.png": "pieces/golden-film-kinetic/out/check.json {\"PASS\":29,\"SKIP\":7,\"WARN\":1}",
+  "library-wall.png": "120 patterns from patterns/*/*/PATTERN.md; stills from each demo/out/nocturne-kinetic (mm pattern stills), sound patterns drawn as a note",
+  "golden-editorial-9x16-screen.png": "golden-editorial-9x16.png extended with its canvas #F4EFE6 to 1188 x 2616 (the phone screen's shape, 10 % side margin)",
+  "golden-editorial-16x9-screen.png": "golden-editorial-16x9.png extended with its canvas #F4EFE6 to 2112 x 1452 (the laptop screen's shape, 10 % side margin)"
+}

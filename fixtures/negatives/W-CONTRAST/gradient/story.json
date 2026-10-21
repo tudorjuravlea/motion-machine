@@ -1,0 +1,235 @@
+{
+  "id": "launch-film",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "16x9",
+    "4x5"
+  ],
+  "title": "W-CONTRAST/gradient: the desktop wallpaper is ink, and the caption over it fades into the gradient.",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "open",
+      "layout": "layouts/desktop",
+      "duration": 3,
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "desk",
+          "fx": "entrances/fade",
+          "params": {
+            "wall": "accent",
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "menu",
+          "fx": "entrances/fade",
+          "text": "Notes   File   Edit   View",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Your desk, awake.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Your desk, awake."
+    },
+    {
+      "id": "hello",
+      "layout": "layouts/statement",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "text/handwrite",
+          "text": "hello",
+          "params": {
+            "dur": "hold"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Written by hand.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Hello."
+    },
+    {
+      "id": "notch",
+      "layout": "layouts/desktop",
+      "duration": 5.2,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "desk",
+          "fx": "entrances/fade",
+          "params": {
+            "wall": "ink",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/island",
+              "at": 0.6,
+              "d": 1.2,
+              "params": {
+                "w": 0.42,
+                "h": 0.1,
+                "text": "Recording 00:12"
+              }
+            },
+            {
+              "do": "screen/island",
+              "at": 2.3,
+              "d": 1,
+              "params": {
+                "close": true
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.1,
+          "slot": "menu",
+          "fx": "entrances/fade",
+          "text": "Notes   File   Edit   View"
+        },
+        {
+          "at": 0.3,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "Your voice lives here."
+        }
+      ],
+      "say": "The notch opens into a widget, closes, and opens again."
+    },
+    {
+      "id": "phone",
+      "layout": "layouts/caption-bar",
+      "duration": 4.2,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.12,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Today",
+          "params": {
+            "size": "large"
+          },
+          "screen": [
+            {
+              "do": "screen/island",
+              "at": 0.8,
+              "d": 1.2,
+              "params": {
+                "w": 0.86,
+                "h": 0.12,
+                "text": "Timer 04:12"
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.3,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "A live status on the phone."
+        }
+      ],
+      "say": "On the phone, the island shows a timer."
+    },
+    {
+      "id": "morph",
+      "layout": "layouts/comparison",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": "moves/morph",
+      "moveParams": {
+        "from": "left",
+        "to": "headline",
+        "start": 1.0,
+        "dur": 1.2
+      },
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "left",
+          "fx": "style:body",
+          "text": "Preview"
+        },
+        {
+          "at": 0.25,
+          "slot": "right",
+          "fx": "style:body",
+          "text": "Share"
+        },
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "One tap, now playing.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "One tap, and the preview becomes the player."
+    },
+    {
+      "id": "cta",
+      "layout": "layouts/endcard",
+      "duration": 3,
+      "position": "outro",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Launch films, checked."
+        },
+        {
+          "at": 0.5,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "github.com/tudorjuravlea/motion-machine"
+        }
+      ],
+      "say": "Launch films, checked."
+    }
+  ],
+  "cta": {
+    "text": "Launch films, checked.",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

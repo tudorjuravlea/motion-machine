@@ -1,0 +1,6 @@
+/* Render mode (SPEC §2.3, AXIOM 1): injected by the kit when <html data-render> is present.
+   Every frame is drawn from `t`, so CSS transitions and animations are switched off here. */
+*, *::before, *::after {
+  transition: none !important;
+  animation: none !important;
+}

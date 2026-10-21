@@ -1,0 +1,73 @@
+/* layouts/desktop: the whole frame is a laptop screen. A menu bar runs across the top with a notch
+   at its centre (data-island: screen/island grows it), the wallpaper is a two-colour gradient from
+   a palette role into the canvas, and one caption sits under the notch. The desk is a screen
+   (data-screen): it takes an asset and screen actions like a device screen. */
+.desktop { position: absolute; inset: 0; }
+.desktop__desk {
+  --mm-wall: var(--mm-color-accent);
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--mm-wall) 0%, var(--mm-color-canvas) 100%);
+}
+[data-p-wall="ink"] { --mm-wall: var(--mm-color-ink); }
+[data-p-wall="surface"] { --mm-wall: var(--mm-color-surface); }
+.desktop__bar {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: calc(var(--mm-size-micro) * 1.9);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--mm-space-4);
+  box-sizing: border-box;
+  background: var(--mm-color-canvas);
+}
+.desktop__menu {
+  color: var(--mm-color-ink);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  font-size: var(--mm-size-micro);
+  line-height: 1;
+  white-space: pre;
+}
+.desktop__notch {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 13%;
+  height: 100%;
+  translate: -50% 0;
+  border-radius: 0 0 calc(var(--mm-frame-h) * 0.012) calc(var(--mm-frame-h) * 0.012);
+  background: var(--mm-device-island);
+}
+.desktop__caption, .desktop__headline {
+  position: absolute;
+  z-index: 4;
+  left: var(--mm-safe);
+  right: var(--mm-safe);
+  margin: 0;
+  text-align: center;
+  color: var(--mm-color-ink);
+  text-wrap: balance;
+}
+.desktop__caption {
+  top: calc(var(--mm-size-micro) * 1.9 + var(--mm-frame-h) * 0.14);
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: calc(var(--mm-size-h2) * var(--mm-headline-scale));
+  line-height: 1.1;
+}
+.desktop__headline {
+  top: 50%;
+  translate: 0 -50%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: calc(var(--mm-size-h1) * var(--mm-headline-scale));
+  line-height: 1.05;
+}
+.desktop [data-empty] { visibility: hidden; }

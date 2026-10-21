@@ -1,0 +1,16 @@
+/* wipe: the plate that rides the edge. pattern.js writes the fill, the box and the corner radii as
+   --mm-tx-wipe-* on the outgoing section's inline style, which the kit restores on every seek. */
+.mm-scene[style*="--mm-tx-wipe-fill"] {
+  isolation: isolate;
+}
+.mm-scene[style*="--mm-tx-wipe-fill"]::after {
+  content: "";
+  position: absolute;
+  inset: var(--mm-tx-wipe-inset);
+  width: var(--mm-tx-wipe-w);
+  height: var(--mm-tx-wipe-h);
+  border-radius: var(--mm-tx-wipe-radius);
+  background: var(--mm-tx-wipe-fill);
+  z-index: 1;
+  pointer-events: none;
+}

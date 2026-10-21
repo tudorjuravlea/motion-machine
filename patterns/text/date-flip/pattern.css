@@ -1,0 +1,15 @@
+/* text/date-flip: the old and new values share one cell; each flips on its own edge. */
+.mm-date-flip { display: inline-grid; perspective: 6em; }
+.mm-date-flip__old, .mm-date-flip__new { grid-area: 1 / 1; position: relative; backface-visibility: hidden; }
+.mm-date-flip__old { transform-origin: 50% 0%; color: color-mix(in srgb, currentColor 55%, transparent); }
+.mm-date-flip__new { transform-origin: 50% 100%; }
+.mm-date-flip__strike {
+  position: absolute;
+  left: -0.06em;
+  right: -0.06em;
+  top: 52%;
+  height: 0.08em;
+  border-radius: 0.04em;
+  background: var(--mm-color-accent);   /* a graphic stroke, not text */
+  transform-origin: 0 50%;
+}

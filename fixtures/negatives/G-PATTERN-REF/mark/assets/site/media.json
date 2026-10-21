@@ -1,0 +1,39 @@
+{
+  "kind": "page",
+  "device": "phone",
+  "viewport": {
+    "w": 390,
+    "h": 844,
+    "scale": 3
+  },
+  "height": 1555,
+  "tiles": [
+    {
+      "file": "page-1.jpg",
+      "y": 0,
+      "h": 1555
+    }
+  ],
+  "marks": {
+    "Pricing": {
+      "x": 0,
+      "y": 1035,
+      "w": 390,
+      "h": 245
+    },
+    "Price": {
+      "x": 20,
+      "y": 1125,
+      "w": 350,
+      "h": 64
+    },
+    "Start": {
+      "x": 113,
+      "y": 1378,
+      "w": 164,
+      "h": 57
+    }
+  },
+  "url": "fixtures/site/demo.html",
+  "captured": "2026-10-18T21:15:06.217Z"
+}

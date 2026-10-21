@@ -1,0 +1,3 @@
+/* Negative G-PLACEHOLDER/marker: the sub made a list item whose ::marker says TODO. */
+[data-scene="style"] [data-slot="sub"] { display: list-item; list-style-position: inside; }
+[data-scene="style"] [data-slot="sub"]::marker { content: "TODO "; }

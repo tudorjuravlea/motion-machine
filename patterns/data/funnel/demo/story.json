@@ -1,0 +1,55 @@
+{
+  "id": "demo-data-funnel",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "data/funnel demo",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo figure for data/funnel",
+      "source": "demo fixture, an invented figure that carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "figure",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/funnel",
+          "fact": "f1",
+          "params": {
+            "values": "1000,640,320,120",
+            "labels": "Visited,Signed up,Activated,Paid"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Where visitors go next"
+        }
+      ],
+      "say": "The figure arrives and holds: funnel."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

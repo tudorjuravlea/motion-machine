@@ -1,0 +1,11 @@
+/* screen/island: the text inside an open island, in the lightest palette role on the island. */
+[data-island] { overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.island__text {
+  color: var(--mm-device-island-ink);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-display);
+  font-size: var(--mm-size-micro);
+  line-height: 1;
+  white-space: nowrap;
+}
+.island__text:empty { display: none; }

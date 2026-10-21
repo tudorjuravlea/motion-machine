@@ -1,0 +1,70 @@
+/* endcard: the last frame. A sign-off aligned as the brand composes: an optional closing
+   line above the wordmark (the line to remember, H-LAST), the headline (a lead, as in statement),
+   then one unbroken line (a URL). */
+.endcard {
+  position: absolute;
+  inset: var(--mm-safe) calc(var(--mm-safe) + (var(--mm-frame-w) / 2 - var(--mm-safe)) * 0.08 * var(--mm-density)) calc(var(--mm-safe) * 2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: var(--mm-align);
+  gap: calc(var(--mm-space-5) * var(--mm-density));
+  text-align: var(--mm-align);
+}
+.endcard__rule {
+  width: var(--mm-space-6);
+  height: var(--mm-space-1);
+  background: var(--mm-color-accent);
+}
+.endcard__headline {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: calc(var(--mm-size-display) * var(--mm-headline-scale) * 0.8);
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+  color: var(--mm-color-ink);
+}
+.endcard__line {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-h2);
+  line-height: 1.15;
+  overflow-wrap: normal;
+  text-wrap: balance;
+  color: var(--mm-color-ink);
+}
+.endcard__body {
+  margin: 0;
+  max-width: none;
+  white-space: nowrap;
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.3;
+  color: var(--mm-color-muted);
+}
+.endcard [data-empty] { display: none; }
+[data-format="1x1"] .endcard__headline { font-size: calc(var(--mm-size-display) * var(--mm-headline-scale) * 0.64); }
+[data-format="16x9"] .endcard__line { max-width: 70%; }
+/* align: the brand's composition (--mm-align) by default; `left` or `center` with a beat param on any slot (data-p-align) or data-align on the layout root. */
+.endcard[data-align="center"],
+.endcard:has([data-p-align="center"]) {
+  align-items: center;
+  text-align: center;
+}
+.endcard[data-align="left"],
+.endcard:has([data-p-align="left"]) {
+  align-items: start;
+  text-align: left;
+}
+/* A deck rest shows the slots that have arrived: a slot the kit still hides takes no room, so the
+   visible content stays centred. (A film keeps the room, so nothing shifts as slots arrive.) */
+[data-kind="deck"] .endcard [data-slot][style*="visibility: hidden"] { display: none; }

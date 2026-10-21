@@ -1,0 +1,72 @@
+{
+  "id": "demo-layout-desktop",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: layouts/desktop",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/desktop",
+      "duration": 6.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "desk",
+          "fx": "entrances/fade",
+          "params": {
+            "wall": "accent",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/island",
+              "at": 1.2,
+              "params": {
+                "w": 0.42,
+                "h": 0.1,
+                "text": "Recording"
+              }
+            },
+            {
+              "do": "screen/island",
+              "at": 3.8,
+              "params": {
+                "close": true
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.2,
+          "slot": "menu",
+          "fx": "entrances/fade",
+          "text": "Notes   File   Edit   View"
+        },
+        {
+          "at": 0.5,
+          "slot": "caption",
+          "fx": "entrances/rise",
+          "text": "Your voice lives here."
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

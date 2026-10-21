@@ -1,0 +1,381 @@
+{
+ "id": "kit-smoke-composition",
+ "kind": "film",
+ "formats": [
+  "9x16",
+  "1x1",
+  "16x9"
+ ],
+ "title": "kit-smoke composition: brand composition, the hook, the zoom, bounded entrances",
+ "language": "en",
+ "facts": [],
+ "audio": {
+  "track": null,
+  "bpm": null,
+  "beats": null
+ },
+ "scenes": [
+  {
+   "id": "hook",
+   "layout": "layouts/statement",
+   "duration": 2.5,
+   "cut": "transitions/hard-cut",
+   "move": null,
+   "beats": [
+    {
+     "at": 0,
+     "slot": "headline",
+     "fx": "style:headline",
+     "text": "Most AI video looks like AI video.",
+     "params": {
+      "instant": true
+     }
+    },
+    {
+     "at": 0.4,
+     "slot": "sub",
+     "fx": "style:body",
+     "text": "Centred. Gradient. Fades."
+    }
+   ],
+   "say": "hook.",
+   "position": "opening"
+  },
+  {
+   "id": "title",
+   "layout": "layouts/title-stack",
+   "duration": 2.5,
+   "cut": "transitions/hard-cut",
+   "move": null,
+   "beats": [
+    {
+     "at": 0.2,
+     "slot": "headline",
+     "fx": "style:headline",
+     "text": "Nobody checks it before you post it."
+    }
+   ],
+   "say": "title."
+  },
+  {
+   "id": "split",
+   "layout": "layouts/split",
+   "duration": 2.5,
+   "cut": "transitions/hard-cut",
+   "move": null,
+   "beats": [
+    {
+     "at": 0.2,
+     "slot": "headline",
+     "fx": "style:headline",
+     "text": "Only time moves things."
+    },
+    {
+     "at": 0.2,
+     "slot": "figure",
+     "fx": "style:figure",
+     "text": "900",
+     "value": 900
+    },
+    {
+     "at": 0.5,
+     "slot": "body",
+     "fx": "style:body",
+     "text": "frames, each drawn from t alone"
+    }
+   ],
+   "say": "split."
+  },
+  {
+   "id": "compare",
+   "layout": "layouts/comparison",
+   "duration": 2.5,
+   "cut": "transitions/hard-cut",
+   "move": null,
+   "beats": [
+    {
+     "at": 0.2,
+     "slot": "headline",
+     "fx": "style:headline",
+     "text": "One brand file."
+    },
+    {
+     "at": 0.4,
+     "slot": "left",
+     "fx": "style:plate",
+     "text": "brand: colour, type, space"
+    },
+    {
+     "at": 0.6,
+     "slot": "right",
+     "fx": "style:plate",
+     "text": "motion: tempo, curves, cuts"
+    }
+   ],
+   "say": "compare."
+  },
+  {
+   "id": "bento",
+   "layout": "layouts/bento-3",
+   "duration": 2.5,
+   "cut": "transitions/hard-cut",
+   "move": null,
+   "beats": [
+    {
+     "at": 0.2,
+     "slot": "headline",
+     "fx": "style:headline",
+     "text": "A library of patterns."
+    },
+    {
+     "at": 0.5,
+     "slot": "tile-1",
+     "fx": "entrances/drop",
+     "text": "entrances"
+    },
+    {
+     "at": 0.7,
+     "slot": "tile-2",
+     "fx": "entrances/drop",
+     "text": "transitions"
+    },
+    {
+     "at": 0.9,
+     "slot": "tile-3",
+     "fx": "entrances/drop",
+     "text": "sound"
+    }
+   ],
+   "say": "bento."
+  },
+  {
+   "id": "stat",
+   "layout": "layouts/stat-hero",
+   "duration": 2.5,
+   "cut": "transitions/hard-cut",
+   "move": null,
+   "beats": [
+    {
+     "at": 0.2,
+     "slot": "headline",
+     "fx": "style:headline",
+     "text": "Measured, not felt."
+    },
+    {
+     "at": 0.3,
+     "slot": "figure",
+     "fx": "entrances/count",
+     "text": "35 rules",
+     "value": 35,
+     "params": {
+      "suffix": " rules"
+     }
+    },
+    {
+     "at": 0.6,
+     "slot": "body",
+     "fx": "style:body",
+     "text": "determinism, legibility, pacing"
+    }
+   ],
+   "say": "stat."
+  },
+  {
+   "id": "list",
+   "layout": "layouts/list-reveal",
+   "duration": 2.5,
+   "cut": "transitions/hard-cut",
+   "move": null,
+   "beats": [
+    {
+     "at": 0.2,
+     "slot": "headline",
+     "fx": "style:headline",
+     "text": "Three checks."
+    },
+    {
+     "at": 0.4,
+     "slot": "item-1",
+     "fx": "style:body",
+     "text": "legible at phone size"
+    },
+    {
+     "at": 0.6,
+     "slot": "item-2",
+     "fx": "style:body",
+     "text": "nothing mid-motion at a rest"
+    }
+   ],
+   "say": "list."
+  },
+  {
+   "id": "quote",
+   "layout": "layouts/quote",
+   "duration": 2.5,
+   "cut": "transitions/hard-cut",
+   "move": null,
+   "beats": [
+    {
+     "at": 0.2,
+     "slot": "headline",
+     "fx": "style:headline",
+     "text": "Every frame a legal still."
+    },
+    {
+     "at": 0.4,
+     "slot": "attribution",
+     "fx": "style:body",
+     "text": "the house rules"
+    }
+   ],
+   "say": "quote."
+  },
+  {
+   "id": "end",
+   "layout": "layouts/endcard",
+   "duration": 2.5,
+   "cut": "transitions/hard-cut",
+   "move": null,
+   "beats": [
+    {
+     "at": 0.2,
+     "slot": "headline",
+     "fx": "style:headline",
+     "text": "One brief. Any style."
+    },
+    {
+     "at": 0.4,
+     "slot": "body",
+     "fx": "style:body",
+     "text": "github.com/tudorjuravlea/motion-machine"
+    }
+   ],
+   "say": "end."
+  },
+  {
+   "id": "force-center",
+   "layout": "layouts/statement",
+   "duration": 2.5,
+   "cut": "transitions/hard-cut",
+   "move": null,
+   "beats": [
+    {
+     "at": 0.2,
+     "slot": "headline",
+     "fx": "style:headline",
+     "text": "Centred on request.",
+     "params": {
+      "align": "center"
+     }
+    }
+   ],
+   "say": "force-center."
+  },
+  {
+   "id": "force-left",
+   "layout": "layouts/statement",
+   "duration": 2.5,
+   "cut": "transitions/hard-cut",
+   "move": null,
+   "beats": [
+    {
+     "at": 0.2,
+     "slot": "headline",
+     "fx": "style:headline",
+     "text": "Left on request.",
+     "params": {
+      "align": "left"
+     }
+    }
+   ],
+   "say": "force-left."
+  },
+  {
+   "id": "zoom",
+   "layout": "layouts/title-stack",
+   "duration": 3,
+   "cut": "transitions/zoom-through",
+   "move": null,
+   "beats": [
+    {
+     "at": 0,
+     "slot": "headline",
+     "fx": "style:headline",
+     "text": "Measured, not felt.",
+     "params": {
+      "instant": true
+     }
+    },
+    {
+     "at": 0.9,
+     "slot": "sub",
+     "fx": "style:body",
+     "text": "the zoom swaps on an empty frame"
+    }
+   ],
+   "say": "zoom."
+  },
+  {
+   "id": "slam",
+   "layout": "layouts/title-stack",
+   "duration": 2.5,
+   "cut": "transitions/hard-cut",
+   "move": null,
+   "beats": [
+    {
+     "at": 0.2,
+     "slot": "headline",
+     "fx": "entrances/slam",
+     "text": "Nobody checks it before you post it."
+    }
+   ],
+   "say": "slam."
+  },
+  {
+   "id": "punch",
+   "layout": "layouts/statement",
+   "duration": 2.5,
+   "cut": "transitions/hard-cut",
+   "move": null,
+   "beats": [
+    {
+     "at": 0.2,
+     "slot": "headline",
+     "fx": "entrances/punch",
+     "text": "Povești în mișcare, every one checked."
+    }
+   ],
+   "say": "punch."
+  },
+  {
+   "id": "counter",
+   "layout": "layouts/stat-hero",
+   "duration": 2.5,
+   "cut": "transitions/hard-cut",
+   "move": null,
+   "beats": [
+    {
+     "at": 0.2,
+     "slot": "figure",
+     "fx": "data/counter",
+     "text": "35 rules",
+     "value": 35,
+     "params": {
+      "suffix": " rules"
+     }
+    },
+    {
+     "at": 0.5,
+     "slot": "headline",
+     "fx": "style:headline",
+     "text": "Rules, counted."
+    }
+   ],
+   "say": "counter."
+  }
+ ],
+ "cta": {
+  "text": "motion-machine",
+  "url": "github.com/tudorjuravlea/motion-machine"
+ }
+}

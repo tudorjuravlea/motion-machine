@@ -1,0 +1,59 @@
+{
+  "id": "kit-screen-deck",
+  "kind": "deck",
+  "formats": [
+    "16x9",
+    "9x16"
+  ],
+  "title": "Kit screen actions, deck",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "scenes": [
+    {
+      "id": "call",
+      "layout": "layouts/caption-bar",
+      "presses": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "step": 1,
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/site/",
+          "params": {
+            "size": "large"
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "step": 1,
+              "params": {
+                "to": "Pricing"
+              }
+            },
+            {
+              "do": "screen/callout",
+              "step": 2,
+              "params": {
+                "at": "30%,40%",
+                "text": "Here"
+              }
+            }
+          ]
+        }
+      ],
+      "say": ""
+    }
+  ]
+}

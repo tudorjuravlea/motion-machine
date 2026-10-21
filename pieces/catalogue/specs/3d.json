@@ -1,0 +1,203 @@
+{
+ "title": "Real 3D",
+ "sub": "Real depth, drawn per frame.",
+ "style": "calm-product",
+ "template": "scenes",
+ "items": [
+  {
+   "pattern": "3d/phone",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 5.4,
+     "beats": [
+      {
+       "at": 0.1,
+       "slot": "stage",
+       "fx": "3d/phone",
+       "asset": "assets/app/",
+       "params": {
+        "move": "hero"
+       },
+       "screen": [
+        {
+         "do": "screen/scroll",
+         "at": 2.2,
+         "params": {
+          "to": "Pricing"
+         }
+        }
+       ]
+      },
+      {
+       "at": 1,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "3d/phone: turns from edge-on to face you."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 5.4,
+     "beats": [
+      {
+       "at": 0.1,
+       "slot": "stage",
+       "fx": "3d/phone",
+       "asset": "assets/app/",
+       "params": {
+        "move": "turntable",
+        "metal": "titanium"
+       },
+       "screen": [
+        {
+         "do": "screen/scroll",
+         "at": 2.2,
+         "params": {
+          "to": "Pricing"
+         }
+        }
+       ]
+      },
+      {
+       "at": 1,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "move turntable, in titanium."
+      }
+     ]
+    }
+   ],
+   "assets": [
+    {
+     "from": "patterns/3d/phone/demo/assets/app",
+     "to": "assets/app"
+    }
+   ]
+  },
+  {
+   "pattern": "3d/laptop",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 5.6,
+     "beats": [
+      {
+       "at": 0.1,
+       "slot": "stage",
+       "fx": "3d/laptop",
+       "asset": "assets/app/",
+       "params": {
+        "move": "hero"
+       },
+       "screen": [
+        {
+         "do": "screen/scroll",
+         "at": 2.4,
+         "params": {
+          "to": "Pricing"
+         }
+        }
+       ]
+      },
+      {
+       "at": 1,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "3d/laptop: turns in while the lid opens."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 5.6,
+     "beats": [
+      {
+       "at": 0.1,
+       "slot": "stage",
+       "fx": "3d/laptop",
+       "asset": "assets/app/",
+       "params": {
+        "move": "showcase"
+       },
+       "screen": [
+        {
+         "do": "screen/scroll",
+         "at": 2.4,
+         "params": {
+          "to": "Pricing"
+         }
+        }
+       ]
+      },
+      {
+       "at": 1,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "move showcase: a slow half-turn."
+      }
+     ]
+    }
+   ],
+   "assets": [
+    {
+     "from": "patterns/3d/laptop/demo/assets/app",
+     "to": "assets/app"
+    }
+   ]
+  },
+  {
+   "pattern": "3d/particles-to-shape",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/statement",
+     "duration": 4.4,
+     "beats": [
+      {
+       "at": 0.2,
+       "slot": "headline",
+       "fx": "3d/particles-to-shape",
+       "text": "Built",
+       "params": {
+        "dur": "slow"
+       }
+      },
+      {
+       "at": 0.4,
+       "slot": "sub",
+       "fx": "entrances/fade",
+       "text": "particles-to-shape: a cloud in depth lands on the letters."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/statement",
+     "duration": 4.4,
+     "beats": [
+      {
+       "at": 0.2,
+       "slot": "headline",
+       "fx": "3d/particles-to-shape",
+       "text": "Built",
+       "params": {
+        "dur": "slow",
+        "particles": 2400,
+        "depth": 1.6
+       }
+      },
+      {
+       "at": 0.4,
+       "slot": "sub",
+       "fx": "entrances/fade",
+       "text": "particles 2400, depth 1.6."
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

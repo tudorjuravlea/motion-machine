@@ -1,0 +1,493 @@
+{
+  "id": "catalogue-transitions-2",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Transitions, part 2 of 5",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Transitions",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "How one scene hands over. Part 2 of 5."
+        }
+      ],
+      "say": "How one scene hands over.",
+      "duration": 3.7
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch three times.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "A card, the cut as shipped, then one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 4.25
+    },
+    {
+      "id": "color-dip-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "color-dip",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Dips into a flat colour, then rises out of it.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/color-dip",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Dips into a flat colour, then rises out of it.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.95
+    },
+    {
+      "id": "color-dip-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "color-dip"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/color-dip",
+      "duration": 3.34
+    },
+    {
+      "id": "color-dip-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "color-dip"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "veil: ink, hold: 0.6. A longer dark beat."
+        }
+      ],
+      "say": "veil: ink, hold: 0.6. A longer dark beat.",
+      "cut": "transitions/color-dip",
+      "cutParams": {
+        "veil": "ink",
+        "hold": 0.6
+      },
+      "duration": 3.93
+    },
+    {
+      "id": "light-leak-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "light-leak",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A warm glow washes across and peaks at the swap.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/light-leak",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "A warm glow washes across and peaks at the swap.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.95
+    },
+    {
+      "id": "light-leak-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 1.12,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "light-leak"
+        },
+        {
+          "at": 1.24,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 1.36,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/light-leak",
+      "duration": 3.82
+    },
+    {
+      "id": "light-leak-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 1.12,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "light-leak"
+        },
+        {
+          "at": 1.24,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 1.36,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "No knobs: the glow takes the accent."
+        }
+      ],
+      "say": "No knobs: the glow takes the accent.",
+      "cut": "transitions/light-leak",
+      "cutParams": {},
+      "duration": 4.11
+    },
+    {
+      "id": "wipe-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "wipe",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A coloured plate sweeps across and cuts the old away.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/wipe",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "A coloured plate sweeps across and cuts the old away.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.95
+    },
+    {
+      "id": "wipe-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "wipe"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/wipe",
+      "duration": 3.34
+    },
+    {
+      "id": "wipe-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "wipe"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "plate: surface, direction: up."
+        }
+      ],
+      "say": "plate: surface, direction: up.",
+      "cut": "transitions/wipe",
+      "cutParams": {
+        "plate": "surface",
+        "direction": "up"
+      },
+      "duration": 3.34
+    },
+    {
+      "id": "push-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "push",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "The new scene slides in and pushes the old out.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/push",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "The new scene slides in and pushes the old out.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.95
+    },
+    {
+      "id": "push-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "push"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/push",
+      "duration": 3.34
+    },
+    {
+      "id": "push-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "push"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "direction: up. Both travel upwards."
+        }
+      ],
+      "say": "direction: up. Both travel upwards.",
+      "cut": "transitions/push",
+      "cutParams": {
+        "direction": "up"
+      },
+      "duration": 3.34
+    }
+  ],
+  "share": "Transitions (2/5): color-dip, light-leak, wipe, push. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

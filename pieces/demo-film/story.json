@@ -1,0 +1,570 @@
+{
+  "id": "demo-film",
+  "kind": "film",
+  "generator": "pieces/demo-film/capture/build-story.mjs",
+  "formats": [
+    "16x9",
+    "9x16"
+  ],
+  "title": "Motion Machine: written, not edited",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "A piece is a story (story.json) worn by a style (style.json); the kit draws every frame from t alone. There is no timeline to edit.",
+      "source": "SPEC.md §1-§2; skill/motion-machine/SKILL.md"
+    },
+    {
+      "id": "f2",
+      "text": "The same story renders as a film and as a clicker deck. This film ships in 16x9 and 9x16; pieces/demo-deck tells the same story in presses.",
+      "source": "SPEC.md §1, §10; pieces/demo-film/story.json formats"
+    },
+    {
+      "id": "f3",
+      "text": "pieces/demo-swap-editorial, demo-swap-kinetic and demo-swap-calm-product are one story (only id differs) in the three shipped presets: editorial = paper x calm, kinetic = signal x kinetic, calm-product = linen x premium. The tiles are their frames at the rest of scene 2.",
+      "source": "styles/presets/*.json field from; pieces/demo-swap-*/story.json; capture/assets.json swap-*"
+    },
+    {
+      "id": "f4",
+      "text": "The phone and laptop show pieces/golden-film-editorial at its first rest (the poster instant, 1.033 s) rendered in 9x16 and in 16x9 from the one story.",
+      "source": "pieces/golden-film-editorial/story.json formats; capture/assets.json golden-editorial-*"
+    },
+    {
+      "id": "f5",
+      "text": "mm brand capture on fixtures/capture/site/index.html (the fictional Harbour & Pine) read seven colour roles; accent #D2491F, the most saturated colour on buttons, links and headings.",
+      "source": "pieces/demo-film/capture/harbour-pine.json; harbour-pine.capture-notes.md"
+    },
+    {
+      "id": "f6",
+      "text": "Capture warned that Harbour & Pine's muted #6A7478 on canvas #F6F1E7 is 4.26:1, below the 4.5:1 W-CONTRAST asks of video text; it was darkened to #636C70 (4.77:1) before the skill was made.",
+      "source": "pieces/demo-film/capture/harbour-pine.capture-notes.md; harbour-pine-fixed.json"
+    },
+    {
+      "id": "f7",
+      "text": "mm motion capture on pieces/golden-film-kinetic/out/golden-film-kinetic-16x9.mp4 read 900 frames and found 7 cuts, 18 arrivals, energy high.",
+      "source": "pieces/demo-film/capture/kinetic-ref.capture-notes.md"
+    },
+    {
+      "id": "f8",
+      "text": "mm skill new --brand harbour-pine-fixed.json wrote the skill harbour-pine-motion: SKILL.md, style/ (brand, motion, style), fonts/ with licences, facts.md; 21 files.",
+      "source": "pieces/demo-film/capture/harbour-pine-skill/"
+    },
+    {
+      "id": "f9",
+      "text": "pieces/golden-film-kinetic is 30 s at 30 fps: 900 frames, each drawn from t alone; mm export --prove rendered every one a second time in a fresh page and found them byte-identical. The sheet shows one frame a second, t = 0.5 to 29.5 s.",
+      "source": "pieces/golden-film-kinetic/out/export.json; SPEC.md §2; capture/assets.json contact-golden-kinetic"
+    },
+    {
+      "id": "f10",
+      "text": "The gate checks 37 rules: 20 errors (G-) and 17 warnings (W-). On pieces/golden-film-kinetic: 31 PASS, 1 WARN, 5 SKIP.",
+      "source": "SPEC.md §7; scripts/check/ (20 G-*.mjs, 17 W-*.mjs); pieces/golden-film-kinetic/out/check.json"
+    },
+    {
+      "id": "f11",
+      "text": "120 patterns in 12 groups: 3d 3, data 10, devices 5, emphasis 8, entrances 18, exits 4, layouts 15, moves 12, screen 8, sound 9, text 10, transitions 18. None carries a brand. The wall shows each one's demo still in this film's style.",
+      "source": "node scripts/mm.mjs pattern list; node scripts/pattern-lint.mjs; capture/assets.json library-wall"
+    },
+    {
+      "id": "f12",
+      "text": "mm sound places synthesised cues on the beats and mixes to the style's loudness target, -14 LUFS.",
+      "source": "styles/motion/kinetic.json sound.loudnessLufs; references/sound.md"
+    },
+    {
+      "id": "f13",
+      "text": "Motion Machine is licensed Apache-2.0.",
+      "source": "README.md Status; LICENSE"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": 120,
+    "beats": "assets/beats.json"
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "layout": "layouts/statement",
+      "duration": 4,
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Written, not edited.",
+          "params": {
+            "instant": true
+          },
+          "cue": "hit"
+        },
+        {
+          "at": 1,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "One story file, drawn from time.",
+          "fact": "f1",
+          "cue": "tick",
+          "emphasis": "emphasis/indicate",
+          "params": {
+            "dur": "slow"
+          }
+        }
+      ],
+      "say": "Hook. Nothing here was edited on a timeline: it was written as a story and drawn."
+    },
+    {
+      "id": "brands",
+      "layout": "layouts/bento-3",
+      "duration": 5,
+      "cut": "transitions/push",
+      "cutParams": {
+        "direction": "right"
+      },
+      "move": "moves/push-in",
+      "moveParams": {
+        "target": "media"
+      },
+      "beats": [
+        {
+          "at": 0.38,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "One story. Three brands.",
+          "fact": "f3"
+        },
+        {
+          "at": 0.5,
+          "slot": "tile-1",
+          "fx": "style:plate",
+          "text": "paper × calm",
+          "asset": "assets/media/swap-editorial.png",
+          "fact": "f3",
+          "cue": "hit"
+        },
+        {
+          "at": 0.75,
+          "slot": "tile-2",
+          "fx": "style:plate",
+          "text": "signal × kinetic",
+          "asset": "assets/media/swap-kinetic.png",
+          "fact": "f3"
+        },
+        {
+          "at": 1,
+          "slot": "tile-3",
+          "fx": "style:plate",
+          "text": "linen × premium",
+          "asset": "assets/media/swap-calm-product.png",
+          "fact": "f3",
+          "cue": "tick"
+        }
+      ],
+      "say": "The same story file, worn by the three shipped presets: real frames from the three swap films."
+    },
+    {
+      "id": "phone",
+      "layout": "layouts/caption-bar",
+      "duration": 4,
+      "cut": "transitions/push",
+      "move": "moves/push-in",
+      "moveParams": {
+        "target": "media",
+        "to": 1.08
+      },
+      "beats": [
+        {
+          "at": 0.38,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/media/golden-editorial-9x16-screen.png",
+          "params": {
+            "size": "large"
+          },
+          "fact": "f4"
+        },
+        {
+          "at": 1,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "9x16 for the feed.",
+          "fact": "f2",
+          "cue": "hit"
+        }
+      ],
+      "say": "The golden film, portrait, at its poster instant."
+    },
+    {
+      "id": "laptop",
+      "layout": "layouts/caption-bar",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": "moves/push-in",
+      "moveParams": {
+        "target": "media",
+        "to": 1.08
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/laptop",
+          "asset": "assets/media/golden-editorial-16x9-screen.png",
+          "params": {
+            "size": "large"
+          },
+          "fact": "f4",
+          "cue": "hit"
+        },
+        {
+          "at": 0.5,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "16x9 for the screen. Same story.",
+          "fact": "f2",
+          "cue": "tick"
+        }
+      ],
+      "say": "And the same instant, landscape: one story, every format."
+    },
+    {
+      "id": "site",
+      "layout": "layouts/caption-bar",
+      "duration": 4.5,
+      "cut": "transitions/push",
+      "cutParams": {
+        "direction": "up"
+      },
+      "move": "moves/pan",
+      "moveParams": {
+        "target": "media",
+        "dir": "down",
+        "d": 120
+      },
+      "beats": [
+        {
+          "at": 0.38,
+          "slot": "stage",
+          "fx": "devices/browser",
+          "asset": "assets/media/site-harbour-pine.png",
+          "params": {
+            "size": "large"
+          },
+          "fact": "f5"
+        },
+        {
+          "at": 1,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "Point it at a website: mm brand capture.",
+          "fact": "f5",
+          "cue": "hit"
+        }
+      ],
+      "say": "Harbour and Pine is a fixture site. Capture reads its colours and type."
+    },
+    {
+      "id": "palette",
+      "layout": "layouts/media",
+      "duration": 4.5,
+      "cut": "transitions/push",
+      "cutParams": {
+        "direction": "up"
+      },
+      "move": "moves/push-in",
+      "moveParams": {
+        "target": "media",
+        "to": 1.06
+      },
+      "beats": [
+        {
+          "at": 0.38,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "It read seven colours.",
+          "fact": "f5"
+        },
+        {
+          "at": 0.5,
+          "slot": "image",
+          "fx": "entrances/mask-reveal",
+          "asset": "assets/media/palette-harbour-pine.png",
+          "fact": "f5",
+          "cue": "hit"
+        },
+        {
+          "at": 1,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "Accent #D2491F, from buttons and links.",
+          "fact": "f5",
+          "cue": "tick"
+        }
+      ],
+      "say": "Seven colour roles, as captured."
+    },
+    {
+      "id": "catch",
+      "layout": "layouts/quote",
+      "duration": 4,
+      "position": "related",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Its grey read 4.26:1. Video needs 4.5.",
+          "fact": "f6",
+          "emphasis": "emphasis/circumscribe",
+          "cue": "hit"
+        },
+        {
+          "at": 1,
+          "slot": "attribution",
+          "fx": "style:body",
+          "text": "Caught. Fixed.",
+          "fact": "f6",
+          "cue": "tick",
+          "emphasis": "emphasis/shine",
+          "params": {
+            "dur": "slow"
+          }
+        }
+      ],
+      "say": "And it flags what would fail on video before anyone builds on it."
+    },
+    {
+      "id": "film",
+      "layout": "layouts/list-reveal",
+      "duration": 4,
+      "cut": "transitions/push",
+      "cutParams": {
+        "direction": "right"
+      },
+      "move": null,
+      "beats": [
+        {
+          "at": 0.38,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Show it a film.",
+          "fact": "f7"
+        },
+        {
+          "at": 0.5,
+          "slot": "item-1",
+          "fx": "style:plate",
+          "text": "7 cuts",
+          "fact": "f7",
+          "cue": "hit"
+        },
+        {
+          "at": 0.75,
+          "slot": "item-2",
+          "fx": "style:plate",
+          "text": "18 arrivals",
+          "fact": "f7"
+        },
+        {
+          "at": 1,
+          "slot": "item-3",
+          "fx": "style:plate",
+          "text": "energy: high",
+          "fact": "f7",
+          "cue": "tick",
+          "emphasis": "emphasis/indicate",
+          "params": {
+            "dur": "slow"
+          }
+        }
+      ],
+      "say": "Motion capture reads a film's grammar: cuts, arrivals, energy. Never its content."
+    },
+    {
+      "id": "skill",
+      "layout": "layouts/statement",
+      "duration": 4,
+      "cut": "transitions/push",
+      "cutParams": {
+        "direction": "right"
+      },
+      "move": null,
+      "beats": [
+        {
+          "at": 0.38,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Make the brand a skill.",
+          "fact": "f8"
+        },
+        {
+          "at": 0.5,
+          "slot": "sub",
+          "fx": "entrances/typewriter",
+          "text": "mm skill new --brand harbour-pine.json",
+          "fact": "f8",
+          "cue": "hit",
+          "emphasis": "emphasis/indicate",
+          "params": {
+            "dur": "hold"
+          }
+        }
+      ],
+      "say": "Brand and motion become a thin skill any agent can load."
+    },
+    {
+      "id": "time",
+      "layout": "layouts/media",
+      "duration": 5.5,
+      "cut": "transitions/push",
+      "cutParams": {
+        "direction": "right"
+      },
+      "move": "moves/pan",
+      "moveParams": {
+        "target": "media",
+        "dir": "right",
+        "d": 120
+      },
+      "beats": [
+        {
+          "at": 0.38,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Drawn from time alone.",
+          "fact": "f9"
+        },
+        {
+          "at": 0.5,
+          "slot": "image",
+          "fx": "entrances/mask-reveal",
+          "asset": "assets/media/contact-golden-kinetic.png",
+          "fact": "f9",
+          "cue": "hit"
+        },
+        {
+          "at": 1.5,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "900 frames, rendered twice: byte-identical.",
+          "fact": "f9",
+          "cue": "tick"
+        }
+      ],
+      "say": "A contact sheet of the golden film. Render it again and every frame is the same, byte for byte."
+    },
+    {
+      "id": "gate",
+      "layout": "layouts/media",
+      "duration": 5,
+      "position": "climax",
+      "move": "moves/pan",
+      "moveParams": {
+        "target": "media",
+        "dir": "down",
+        "d": 160
+      },
+      "beats": [
+        {
+          "at": 0.25,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "37 rules, measured.",
+          "fact": "f10"
+        },
+        {
+          "at": 0.5,
+          "slot": "image",
+          "fx": "entrances/mask-reveal",
+          "asset": "assets/media/check-golden-kinetic.png",
+          "fact": "f10",
+          "cue": "hit"
+        },
+        {
+          "at": 1,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "The golden film: 31 pass, 1 warn, 5 skip.",
+          "fact": "f10",
+          "cue": "tick"
+        }
+      ],
+      "say": "The gate measures every cut. This is its real report on the golden film."
+    },
+    {
+      "id": "library",
+      "layout": "layouts/media",
+      "duration": 4.5,
+      "cut": "transitions/grid-dissolve",
+      "move": "moves/ken-burns",
+      "moveParams": {
+        "target": "media"
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "image",
+          "fx": "entrances/fade",
+          "asset": "assets/media/library-wall.png",
+          "params": {
+            "frame": "bleed",
+            "instant": true
+          },
+          "fact": "f11"
+        },
+        {
+          "at": 0.5,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "120 patterns. None branded.",
+          "fact": "f11",
+          "cue": "hit"
+        },
+        {
+          "at": 1.5,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "12 groups, drawn in any brand.",
+          "fact": "f11",
+          "cue": "tick"
+        }
+      ],
+      "say": "120 patterns, every one in this film's brand because none carries its own."
+    },
+    {
+      "id": "cta",
+      "layout": "layouts/endcard",
+      "duration": 4,
+      "position": "outro",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Motion Machine",
+          "cue": "complete"
+        },
+        {
+          "at": 0.5,
+          "slot": "line",
+          "fx": "style:headline",
+          "text": "One brief. Any style. Checked."
+        },
+        {
+          "at": 1,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Apache-2.0",
+          "fact": "f13"
+        }
+      ],
+      "say": "One brief. Any style. Checked."
+    }
+  ],
+  "cta": {
+    "text": "One brief. Any style. Checked.",
+    "url": ""
+  }
+}

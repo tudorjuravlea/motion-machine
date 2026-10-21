@@ -1,0 +1,12 @@
+/* transitions/sketch-to-ink: while pattern.js has written --mm-tx-ink on the incoming section's
+   inline style, that section is see-through: its canvas, ground and finish wait, and so do the
+   layout's own decorations (anything that is not a slot, not inside one and holds none), which
+   arrive with --mm-tx-deco at the end, so the outgoing scene shows under the slots being inked.
+   --mm-tx-alpha on a slot is that slot's opacity for the cut; it outranks whatever its entrance
+   writes (an instant blur-fade, a fade), since the cut decides what is seen while it runs. The kit
+   restores every one of these inline styles on every seek, so at rest no rule matches. */
+.mm-scene[style*="--mm-tx-ink"] { background: none; }
+.mm-scene[style*="--mm-tx-ink"] > .mm-ground,
+.mm-scene[style*="--mm-tx-ink"] > .mm-finish { visibility: hidden; }
+.mm-scene[style*="--mm-tx-ink"] > .mm-camera :not([data-slot], [data-slot] *, :has([data-slot])) { opacity: var(--mm-tx-deco) !important; }
+[data-slot][style*="--mm-tx-alpha"] { opacity: var(--mm-tx-alpha) !important; }

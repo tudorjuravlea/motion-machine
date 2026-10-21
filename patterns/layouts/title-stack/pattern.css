@@ -1,0 +1,60 @@
+/* title-stack: a rule, a headline, a sub, lifted above the middle of the safe box (H-FILL). The
+   headline uses the display role: a lead (0.8, 0.64 in 1x1) times --mm-headline-scale, a step larger
+   as the hook. Every length is a --mm-* variable; formats reflow via [data-format]. */
+.title-stack {
+  position: absolute;
+  inset: var(--mm-safe) calc(var(--mm-safe) + (var(--mm-frame-w) / 2 - var(--mm-safe)) * 0.08 * var(--mm-density)) calc(var(--mm-safe) * 2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: var(--mm-align);
+  text-align: var(--mm-align);
+  gap: calc(var(--mm-space-4) * var(--mm-density));
+}
+.title-stack__rule {
+  width: var(--mm-space-6);
+  height: var(--mm-space-1);
+  background: var(--mm-color-accent);
+}
+.title-stack__headline {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: calc(var(--mm-size-display) * var(--mm-headline-scale) * 0.8);
+  line-height: 1.05;
+  text-wrap: balance;
+  color: var(--mm-color-ink);
+}
+.title-stack__sub {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.3;
+  text-wrap: pretty;
+  color: var(--mm-color-muted);
+}
+[data-format="16x9"] .title-stack__headline { max-width: 85%; line-height: 1; }
+[data-format="16x9"] .title-stack__sub { max-width: 70%; }
+[data-format="9x16"] .title-stack { gap: calc(var(--mm-space-5) * var(--mm-density)); }
+[data-format="9x16"] .title-stack__rule { width: var(--mm-space-5); }
+[data-format="1x1"] .title-stack__headline { font-size: calc(var(--mm-size-display) * var(--mm-headline-scale) * 0.64); }
+[data-format="1x1"] .title-stack__sub { max-width: 90%; }
+/* align: the brand's composition (--mm-align) by default; `left` or `center` with a beat param on any slot (data-p-align) or data-align on the layout root. */
+.title-stack[data-align="center"],
+.title-stack:has([data-p-align="center"]) {
+  align-items: center;
+  text-align: center;
+}
+.title-stack[data-align="left"],
+.title-stack:has([data-p-align="left"]) {
+  align-items: start;
+  text-align: left;
+}
+/* A deck rest shows the slots that have arrived: a slot the kit still hides takes no room, so the
+   visible content stays centred. (A film keeps the room, so nothing shifts as slots arrive.) */
+[data-kind="deck"] .title-stack [data-slot][style*="visibility: hidden"] { display: none; }

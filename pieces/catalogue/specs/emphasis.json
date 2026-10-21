@@ -1,0 +1,33 @@
+{
+  "title": "Emphasis",
+  "sub": "Pointing the eye at what is there.",
+  "style": "nocturne-kinetic",
+  "template": "figure",
+  "items": [
+    { "pattern": "emphasis/indicate", "figure": { "fx": "entrances/rise", "text": "Look here", "emphasis": "emphasis/indicate" }, "how": "One pulse: larger, tinted, then exactly as before.",
+      "knob": { "line": "amp: 0.12, tint: 0. Bigger, no colour.", "figure": { "params": { "emphasis": { "amp": 0.12, "tint": 0 } } } } },
+    { "pattern": "emphasis/circumscribe", "figure": { "fx": "entrances/rise", "text": "Look here", "emphasis": "emphasis/circumscribe" }, "how": "An outline draws around the box, then wipes away.",
+      "knob": { "line": "Around one word this time.", "figure": { "text": "Here" } } },
+    { "pattern": "emphasis/brackets", "figure": { "fx": "entrances/rise", "text": "Launch", "emphasis": "emphasis/brackets" }, "how": "Corner brackets snap in and the word lifts slightly.",
+      "knob": { "line": "lift: 0.08. A bigger lift.", "figure": { "params": { "emphasis": { "lift": 0.08 } } } } },
+    { "pattern": "emphasis/marker-circle", "figure": { "fx": "entrances/rise", "text": "This one", "emphasis": "emphasis/marker-circle" }, "how": "A hand-drawn ring, a little over one turn.",
+      "knob": { "line": "color: ink, pad: 0.4. Wider, in ink.", "figure": { "params": { "emphasis": { "color": "ink", "pad": 0.4 } } } } },
+    { "pattern": "emphasis/shine", "figure": { "fx": "entrances/rise", "text": "Shine", "emphasis": "emphasis/shine" }, "how": "One band of light crosses the text and leaves.",
+      "knob": { "line": "width: 40. A broader band.", "figure": { "params": { "emphasis": { "width": 40 } } } } },
+    { "pattern": "emphasis/spotlight", "figure": { "fx": "entrances/rise", "text": "Me", "emphasis": "emphasis/spotlight" }, "how": "Everything else dims, then the light lets go.",
+      "knob": { "line": "dim: 0.5. A gentler dim.", "figure": { "params": { "emphasis": { "dim": 0.5 } } } } },
+    { "pattern": "emphasis/stretch-pill", "figure": { "fx": "entrances/rise", "text": "Monthly", "emphasis": "emphasis/stretch-pill" }, "how": "A pill runs in behind the word, then leaves.",
+      "knob": { "line": "strength: 1. A solid accent pill.", "figure": { "params": { "emphasis": { "strength": 1 } } } } },
+    { "pattern": "emphasis/lens", "template": "scenes", "scenes": [
+      { "layout": "layouts/list-reveal", "min": 4.2, "beats": [
+        { "at": 0, "slot": "headline", "fx": "style:headline", "text": "lens", "params": { "instant": true } },
+        { "at": 0, "slot": "item-1", "fx": "style:body", "text": "Others soften", "params": { "instant": true } },
+        { "at": 0.4, "slot": "item-2", "fx": "entrances/fade", "text": "This one grows", "emphasis": "emphasis/lens" },
+        { "at": 0, "slot": "item-3", "fx": "style:body", "text": "Then everything clears", "params": { "instant": true } } ] },
+      { "layout": "layouts/list-reveal", "min": 3.6, "beats": [
+        { "at": 0, "slot": "headline", "fx": "style:headline", "text": "lens", "params": { "instant": true } },
+        { "at": 0, "slot": "item-1", "fx": "style:body", "text": "blur: 0.12", "params": { "instant": true } },
+        { "at": 0.4, "slot": "item-2", "fx": "entrances/fade", "text": "zoom: 0.1", "emphasis": "emphasis/lens", "params": { "emphasis": { "blur": 0.12, "zoom": 0.1 } } },
+        { "at": 0, "slot": "item-3", "fx": "style:body", "text": "Stronger glass", "params": { "instant": true } } ] } ] }
+  ]
+}

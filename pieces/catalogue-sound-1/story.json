@@ -1,0 +1,454 @@
+{
+  "id": "catalogue-sound-1",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Sound cues",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Sound cues",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Synthesised, never sampled. Turn the sound on."
+        }
+      ],
+      "say": "Synthesised, never sampled. Turn the sound on.",
+      "duration": 3.6
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Listen as it lands.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Each cue plays on its own moment."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.65
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "tick",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "tick",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Chip",
+          "cue": "tick"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A small arrival: a chip, a word, a bar.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/tick",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "tick-a",
+      "duration": 4.25
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "step",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "step",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Next",
+          "cue": "step"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Progress moving on: an item, a stage.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/step",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "step-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "press",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "press",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/punch",
+          "text": "Press",
+          "cue": "press"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A button pressed, or a deck advanced.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/press",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "press-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "hit",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "hit",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/slam",
+          "text": "Land",
+          "cue": "hit"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A slam, or a figure landing.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/hit",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "hit-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/push",
+      "move": null,
+      "say": "swipe",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0.7,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "swipe",
+          "cue": "swipe"
+        },
+        {
+          "at": 0.85,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "A cut between scenes; it sits on the cut."
+        },
+        {
+          "at": 1,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "sound/swipe"
+        }
+      ],
+      "id": "swipe-a",
+      "duration": 4.4
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "riser",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "riser",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 1.6,
+          "slot": "figure",
+          "fx": "entrances/slam",
+          "text": "Peak",
+          "cue": "riser"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "The second before a climax; it ends on the landing.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/riser",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "riser-a",
+      "duration": 5.55
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "success",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "success",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Done",
+          "cue": "success"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A good outcome, landing.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/success",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "success-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "bed",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "bed",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "Hold",
+          "cue": "bed"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A quiet loop under a held rest.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/bed",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "bed-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "complete",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "complete",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "The end",
+          "cue": "complete"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "The end card.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/complete",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "complete-a",
+      "duration": 4.2
+    }
+  ],
+  "share": "Sound cues: tick, step, press, hit, swipe, riser, success, bed, complete. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

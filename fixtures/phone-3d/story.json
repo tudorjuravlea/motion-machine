@@ -1,0 +1,138 @@
+{
+  "id": "phone-3d",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "16x9",
+    "4x5"
+  ],
+  "title": "3D phone proof",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "layout": "layouts/statement",
+      "duration": 3.5,
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Your app, in your hand.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Your app, in your hand."
+    },
+    {
+      "id": "hero",
+      "layout": "layouts/caption-bar",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.12,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/rec/",
+          "params": {
+            "move": "hero"
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "It turns to face you, playing."
+        }
+      ],
+      "say": "The phone turns to face you, playing the app."
+    },
+    {
+      "id": "spin",
+      "layout": "layouts/caption-bar",
+      "duration": 7,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.12,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/site-phone/",
+          "params": {
+            "move": "turntable"
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 1.0,
+              "params": {
+                "to": "Pricing"
+              }
+            },
+            {
+              "do": "screen/scroll",
+              "at": 3.0,
+              "params": {
+                "to": "Start",
+                "align": "center"
+              }
+            },
+            {
+              "do": "screen/tap",
+              "at": 4.6,
+              "params": {
+                "at": "Start"
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.3,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "Scroll and tap, in three dimensions."
+        }
+      ],
+      "say": "It turns slowly while the page scrolls and a tap lands."
+    },
+    {
+      "id": "cta",
+      "layout": "layouts/endcard",
+      "duration": 4,
+      "move": null,
+      "beats": [
+        {
+          "at": 0.12,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Your app, in 3D."
+        },
+        {
+          "at": 0.5,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "github.com/tudorjuravlea/motion-machine"
+        }
+      ],
+      "say": "Your app, in 3D.",
+      "cut": "transitions/hard-cut"
+    }
+  ],
+  "cta": {
+    "text": "Your app, in 3D.",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

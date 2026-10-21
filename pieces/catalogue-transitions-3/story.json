@@ -1,0 +1,389 @@
+{
+  "id": "catalogue-transitions-3",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Transitions, part 3 of 5",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Transitions",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "How one scene hands over. Part 3 of 5."
+        }
+      ],
+      "say": "How one scene hands over.",
+      "duration": 3.7
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch three times.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "A card, the cut as shipped, then one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 4.25
+    },
+    {
+      "id": "whip-pan-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "whip-pan",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A fast pan, its blur swelling with the speed.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/whip-pan",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "A fast pan, its blur swelling with the speed.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.65
+    },
+    {
+      "id": "whip-pan-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.36,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "whip-pan"
+        },
+        {
+          "at": 0.48,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 0.6,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/whip-pan",
+      "duration": 3.06
+    },
+    {
+      "id": "whip-pan-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.36,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "whip-pan"
+        },
+        {
+          "at": 0.48,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 0.6,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "direction: down, amount: 2."
+        }
+      ],
+      "say": "direction: down, amount: 2.",
+      "cut": "transitions/whip-pan",
+      "cutParams": {
+        "direction": "down",
+        "amount": 2
+      },
+      "duration": 3.06
+    },
+    {
+      "id": "iris-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "iris",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A growing circle opens from the centre of the frame.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/iris",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "A growing circle opens from the centre of the frame.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.95
+    },
+    {
+      "id": "iris-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "iris"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/iris",
+      "duration": 3.34
+    },
+    {
+      "id": "iris-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "iris"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "shape: diamond."
+        }
+      ],
+      "say": "shape: diamond.",
+      "cut": "transitions/iris",
+      "cutParams": {
+        "shape": "diamond"
+      },
+      "duration": 3.34
+    },
+    {
+      "id": "clock-wipe-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "clock-wipe",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A hand sweeps round the centre from twelve o'clock.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/clock-wipe",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "A hand sweeps round the centre from twelve o'clock.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.65
+    },
+    {
+      "id": "clock-wipe-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "clock-wipe"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/clock-wipe",
+      "duration": 3.34
+    },
+    {
+      "id": "clock-wipe-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "clock-wipe"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "direction: counter. Anticlockwise."
+        }
+      ],
+      "say": "direction: counter. Anticlockwise.",
+      "cut": "transitions/clock-wipe",
+      "cutParams": {
+        "direction": "counter"
+      },
+      "duration": 3.34
+    }
+  ],
+  "share": "Transitions (3/5): whip-pan, iris, clock-wipe. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

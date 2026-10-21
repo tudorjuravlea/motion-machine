@@ -1,0 +1,588 @@
+{
+ "title": "Screen actions",
+ "sub": "What happens on a device screen.",
+ "style": "editorial",
+ "template": "scenes",
+ "items": [
+  {
+   "pattern": "screen/scroll",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 5,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "stage",
+       "fx": "devices/phone",
+       "asset": "assets/app/",
+       "params": {
+        "size": "large",
+        "instant": true
+       },
+       "screen": [
+        {
+         "do": "screen/scroll",
+         "at": 0.8,
+         "params": {
+          "to": "Pricing"
+         }
+        }
+       ]
+      },
+      {
+       "at": 0.4,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "scroll: the page glides to a named mark."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 4.6,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "stage",
+       "fx": "devices/phone",
+       "asset": "assets/app/",
+       "params": {
+        "size": "large",
+        "instant": true
+       },
+       "screen": [
+        {
+         "do": "screen/scroll",
+         "at": 0.6,
+         "params": {
+          "to": "Start",
+          "align": "center",
+          "settle": 1
+         }
+        }
+       ]
+      },
+      {
+       "at": 0.3,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "align center, settle 1: more momentum."
+      }
+     ]
+    }
+   ],
+   "assets": [
+    {
+     "from": "patterns/screen/scroll/demo/assets/app",
+     "to": "assets/app"
+    }
+   ]
+  },
+  {
+   "pattern": "screen/tap",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 4.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "stage",
+       "fx": "devices/phone",
+       "asset": "assets/app/",
+       "params": {
+        "size": "large",
+        "instant": true
+       },
+       "screen": [
+        {
+         "do": "screen/scroll",
+         "at": 0.3,
+         "params": {
+          "to": "Start",
+          "align": "center"
+         }
+        },
+        {
+         "do": "screen/tap",
+         "at": 1.8,
+         "params": {
+          "at": "Start"
+         }
+        }
+       ]
+      },
+      {
+       "at": 0.4,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "tap: a press ring, then a ripple."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 4.6,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "stage",
+       "fx": "devices/phone",
+       "asset": "assets/app/",
+       "params": {
+        "size": "large",
+        "instant": true
+       },
+       "screen": [
+        {
+         "do": "screen/scroll",
+         "at": 0.3,
+         "params": {
+          "to": "Start",
+          "align": "center"
+         }
+        },
+        {
+         "do": "screen/tap",
+         "at": 1.6,
+         "params": {
+          "at": "Start",
+          "ripple": false
+         }
+        }
+       ]
+      },
+      {
+       "at": 0.3,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "ripple false: just the press."
+      }
+     ]
+    }
+   ],
+   "assets": [
+    {
+     "from": "patterns/screen/tap/demo/assets/app",
+     "to": "assets/app"
+    }
+   ]
+  },
+  {
+   "pattern": "screen/zoom-to",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 4.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "stage",
+       "fx": "devices/phone",
+       "asset": "assets/app/",
+       "params": {
+        "size": "large",
+        "instant": true
+       },
+       "screen": [
+        {
+         "do": "screen/zoom-to",
+         "at": 0.8,
+         "params": {
+          "at": "Pricing"
+         }
+        }
+       ]
+      },
+      {
+       "at": 0.4,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "zoom-to: the screen pushes in on a mark."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 4.6,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "stage",
+       "fx": "devices/phone",
+       "asset": "assets/app/",
+       "params": {
+        "size": "large",
+        "instant": true
+       },
+       "screen": [
+        {
+         "do": "screen/zoom-to",
+         "at": 0.6,
+         "params": {
+          "at": "Pricing",
+          "s": 3
+         }
+        }
+       ]
+      },
+      {
+       "at": 0.3,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "s 3: three times closer."
+      }
+     ]
+    }
+   ],
+   "assets": [
+    {
+     "from": "patterns/screen/zoom-to/demo/assets/app",
+     "to": "assets/app"
+    }
+   ]
+  },
+  {
+   "pattern": "screen/swap",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 4.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "stage",
+       "fx": "devices/phone",
+       "asset": "assets/app/",
+       "params": {
+        "size": "large",
+        "instant": true
+       },
+       "screen": [
+        {
+         "do": "screen/tap",
+         "at": 0.8,
+         "params": {
+          "at": "40%,30%"
+         }
+        },
+        {
+         "do": "screen/swap",
+         "at": 1.4,
+         "params": {
+          "to": "assets/next.png"
+         }
+        }
+       ]
+      },
+      {
+       "at": 0.4,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "swap: the screen moves on, as apps do."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 4.6,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "stage",
+       "fx": "devices/phone",
+       "asset": "assets/app/",
+       "params": {
+        "size": "large",
+        "instant": true
+       },
+       "screen": [
+        {
+         "do": "screen/swap",
+         "at": 0.8,
+         "params": {
+          "to": "assets/next.png",
+          "how": "fade"
+         }
+        }
+       ]
+      },
+      {
+       "at": 0.3,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "how fade: a dissolve, not a slide."
+      }
+     ]
+    }
+   ],
+   "assets": [
+    {
+     "from": "patterns/screen/swap/demo/assets/app",
+     "to": "assets/app"
+    },
+    {
+     "from": "patterns/screen/swap/demo/assets/next.png",
+     "to": "assets/next.png"
+    }
+   ]
+  },
+  {
+   "pattern": "screen/callout",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 6.6,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "stage",
+       "fx": "devices/phone",
+       "asset": "assets/app/",
+       "params": {
+        "size": "large",
+        "instant": true
+       },
+       "screen": [
+        {
+         "do": "screen/scroll",
+         "at": 0.3,
+         "params": {
+          "to": "Pricing"
+         }
+        },
+        {
+         "do": "screen/callout",
+         "at": 1.4,
+         "d": 3.5,
+         "params": {
+          "at": "Price",
+          "text": "One plan"
+         }
+        }
+       ]
+      },
+      {
+       "at": 0.4,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "callout: a leader line to a short label."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 6,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "stage",
+       "fx": "devices/phone",
+       "asset": "assets/app/",
+       "params": {
+        "size": "large",
+        "instant": true
+       },
+       "screen": [
+        {
+         "do": "screen/scroll",
+         "at": 0.3,
+         "params": {
+          "to": "Pricing"
+         }
+        },
+        {
+         "do": "screen/callout",
+         "at": 1.2,
+         "d": 3.2,
+         "params": {
+          "at": "Price",
+          "text": "One plan",
+          "side": "left"
+         }
+        }
+       ]
+      },
+      {
+       "at": 0.3,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "side left: the label moves over."
+      }
+     ]
+    }
+   ],
+   "assets": [
+    {
+     "from": "patterns/screen/callout/demo/assets/app",
+     "to": "assets/app"
+    }
+   ]
+  },
+  {
+   "pattern": "screen/island",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 5.8,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "stage",
+       "fx": "devices/phone",
+       "text": "Today",
+       "params": {
+        "size": "large",
+        "instant": true
+       },
+       "screen": [
+        {
+         "do": "screen/island",
+         "at": 0.8,
+         "params": {
+          "text": "Timer 04:12"
+         }
+        },
+        {
+         "do": "screen/island",
+         "at": 3.2,
+         "params": {
+          "close": true
+         }
+        }
+       ]
+      },
+      {
+       "at": 0.4,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "island: the cutout opens into a live status."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 5,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "stage",
+       "fx": "devices/phone",
+       "text": "Today",
+       "params": {
+        "size": "large",
+        "instant": true
+       },
+       "screen": [
+        {
+         "do": "screen/island",
+         "at": 0.6,
+         "params": {
+          "w": 0.5,
+          "h": 0.06,
+          "text": "Recording"
+         }
+        },
+        {
+         "do": "screen/island",
+         "at": 3,
+         "params": {
+          "close": true
+         }
+        }
+       ]
+      },
+      {
+       "at": 0.3,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "w 0.5, h 0.06: a slimmer widget."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "screen/play",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 5.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "stage",
+       "fx": "devices/phone",
+       "asset": "assets/rec/",
+       "params": {
+        "size": "large",
+        "instant": true
+       },
+       "screen": [
+        {
+         "do": "screen/play",
+         "at": 0.6,
+         "d": 4,
+         "params": {}
+        }
+       ]
+      },
+      {
+       "at": 0.4,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "play: a screen recording plays on the device."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 5.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "stage",
+       "fx": "devices/phone",
+       "asset": "assets/rec/",
+       "params": {
+        "size": "large",
+        "instant": true
+       },
+       "screen": [
+        {
+         "do": "screen/play",
+         "at": 0.6,
+         "d": 4,
+         "params": {
+          "from": 0.5,
+          "rate": 0.5
+         }
+        }
+       ]
+      },
+      {
+       "at": 0.3,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "rate 0.5: half speed."
+      }
+     ]
+    }
+   ],
+   "assets": [
+    {
+     "from": "patterns/screen/play/demo/assets/rec",
+     "to": "assets/rec"
+    }
+   ]
+  }
+ ]
+}

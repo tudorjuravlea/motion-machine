@@ -1,0 +1,12 @@
+{
+  "name": "motion-machine",
+  "displayName": "Motion Machine",
+  "version": "0.1.0",
+  "description": "Directs a short motion piece (a film or a clicker deck) from one brief through seven gated rounds, and measures every cut with the mm check gate.",
+  "author": { "name": "Tudor Juravlea" },
+  "homepage": "https://github.com/tudorjuravlea/motion-machine",
+  "repository": "https://github.com/tudorjuravlea/motion-machine",
+  "license": "Apache-2.0",
+  "keywords": ["motion", "video", "animation", "slides", "film", "deck", "design", "skill"],
+  "skills": ["./skill/"]
+}

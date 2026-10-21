@@ -1,0 +1,55 @@
+{
+  "id": "demo-entrances-count",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "entrances/count demo",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "An illustrative figure for this demo",
+      "source": "demo fixture, not a claim about the world"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 4.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/count",
+          "value": 87,
+          "fact": "f1",
+          "params": {
+            "suffix": "%"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Illustrative figure, not a claim"
+        }
+      ],
+      "say": "A single scene that shows entrances/count."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}
