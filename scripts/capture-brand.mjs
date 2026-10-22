@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// `capture-brand --from <url|path/to/index.html|figma-export.json|DESIGN.md> --name <name> --out <piece>/capture/<name>.json`
+// `capture-brand --from <url|path/to/index.html|figma-export.json|DESIGN.md> --name <name> [--out <piece>/capture/<name>.json]`
+// (without --out the half is written to brands/<name>.json inside the repository's git-ignored private folder)
 // (`mm brand capture`, SPEC §13): reads a brand's look and writes a brand half plus
 // `<out>.capture-notes.md` with the evidence for every guess. Best effort, and it says so: the
 // director approves the composed style before it is used.
@@ -25,8 +26,11 @@ import { ROLES, parseDesignMd } from './export-designmd.mjs';
 import { ROOT } from './lib/browser.mjs';
 import { isArgsError, usageText } from './lib/cli.mjs';
 import { bin } from './lib/ffmpeg.mjs';
+import { familyLabel, unsafeStyleValues } from './lib/style-values.mjs';
 
 export { ROOT };
+/** Where a capture lands without --out: a git-ignored folder inside the repository, so `mm style compose` can still read it. */
+const DEFAULT_OUT_DIR = join('docs', 'private', 'brands');
 const fail = (message, exitCode = 2) => Object.assign(new Error(message), { exitCode });
 const explain = (v) => (v.errors ?? []).map((e) => `${e.instancePath || '/'} ${e.message}`).join('; ');
 
@@ -246,7 +250,7 @@ async function readSite(target) {
 }
 
 const tally = (rows, keyOf, weightOf) => { const m = new Map(); for (const r of rows) { const k = keyOf(r); const e = m.get(k) ?? { key: k, n: 0, sel: r[3] ?? r.sel }; e.n += weightOf(r); m.set(k, e); } return [...m.values()].sort((a, b) => b.n - a.n); };
-const famOf = (stack) => { const parts = stack.split(',').map((s) => s.trim().replace(/^["']|["']$/g, '')); return { family: parts.find((p) => !GENERIC.has(p.toLowerCase())) ?? parts[0], generic: parts.find((p) => GENERIC.has(p.toLowerCase()))?.toLowerCase() ?? null }; };
+const famOf = (stack) => { const parts = stack.split(',').map((s) => s.trim().replace(/^["']|["']$/g, '')); return { family: familyLabel(parts.find((p) => !GENERIC.has(p.toLowerCase())) ?? parts[0]), generic: parts.find((p) => GENERIC.has(p.toLowerCase()))?.toLowerCase() ?? null }; };
 const pct = (n, total) => `${Math.round((1000 * n) / total) / 10}%`;
 
 /** Maps raw page tallies to the seven roles and three faces, each with its evidence line. */
@@ -333,7 +337,7 @@ export function extractTokens(json) {
     const size = typeof node.fontSize === 'number' ? node.fontSize : parseFloat(node.fontSize);
     let tr = node.letterSpacing; if (tr && typeof tr === 'object') tr = tr.unit === 'PERCENT' ? tr.value / 100 : tr.value / (size || 16);
     else if (typeof tr === 'string') tr = tr.endsWith('em') ? parseFloat(tr) : parseFloat(tr) / (size || 16);
-    fonts.push({ name: nameOf(path), family, weight: weightOf(node.fontWeight ?? node.weight ?? node.fontName?.style), size: Number.isFinite(size) ? size : null, tracking: Number.isFinite(tr) ? tr : 0 });
+    fonts.push({ name: nameOf(path), family: familyLabel(family), weight: weightOf(node.fontWeight ?? node.weight ?? node.fontName?.style), size: Number.isFinite(size) ? size : null, tracking: Number.isFinite(tr) ? tr : 0 });
     return true;
   };
   const walk = (node, path) => {
@@ -350,7 +354,7 @@ export function extractTokens(json) {
       const mode = cols[v.variableCollectionId]?.defaultModeId ?? Object.keys(v.valuesByMode ?? {})[0];
       const val = v.valuesByMode?.[mode];
       if (v.resolvedType === 'COLOR') { const c = colourOfValue(val); if (c) colors.push({ name: v.name, hex: c }); }
-      else if (v.resolvedType === 'STRING' && /font.*family|typeface/i.test(v.name) && typeof val === 'string') fonts.push({ name: v.name, family: val, weight: null, size: null, tracking: 0 });
+      else if (v.resolvedType === 'STRING' && /font.*family|typeface/i.test(v.name) && typeof val === 'string') fonts.push({ name: v.name, family: familyLabel(val), weight: null, size: null, tracking: 0 });
     }
     const { meta, ...rest } = json; walk(rest, []);
   } else walk(json, []);
@@ -537,6 +541,8 @@ function finish({ name, source, out, mapped, via, extra = {} }) {
   if (rd) radius = rd; else copied.push('radius');
   const brand = { name, version: 1, fictional: false, source, color, type, scale, space, radius, composition: tpl.composition, bans: tpl.bans, allow: [], ...(extra.ask?.length ? { ask: extra.ask } : {}) };
   const v = validators().brand;
+  const unsafe = unsafeStyleValues(brand);
+  if (unsafe.length) throw fail(`the captured brand half has values that cannot go into a style, nothing written: ${unsafe.join('; ')}`, 1);
   if (!v(brand)) throw fail(`the captured brand half is invalid, nothing written: ${explain(v)}`, 1);
 
   const warnings = [];
@@ -584,7 +590,7 @@ export async function captureBrand({ from, name, out, color: typedColors }) {
   const source = host ?? (rel.startsWith('..') ? basename(target) : rel.split(sep).join('/'));
   name ??= out ? slug(basename(out).replace(/\.json$/i, '')) : slug(host ?? basename(dirname(resolve(target))));   // --out harbour-pine.json names the brand harbour-pine
   if (!/^[a-z][a-z0-9-]{1,40}$/.test(name)) throw fail(`--name must match ^[a-z][a-z0-9-]{1,40}$: ${name}`);
-  out ??= join(ROOT, 'styles', 'brands', `${name}.json`);
+  out ??= join(ROOT, DEFAULT_OUT_DIR, `${name}.json`);
 
   if (kind === 'stills') {
     const { files, px } = readStills(target);
@@ -608,7 +614,7 @@ export async function main(argv) {
   try {
     const a = parseArgs({ args: argv, options: { from: { type: 'string' }, name: { type: 'string' }, out: { type: 'string' }, color: { type: 'string', multiple: true } }, strict: true }).values;
     const r = await captureBrand(a);
-    console.log(`wrote ${a.out ?? `styles/brands/${r.brand.name}.json`} and ${relative(process.cwd(), r.notesPath)}`);
+    console.log(`wrote ${a.out ?? join(DEFAULT_OUT_DIR, `${r.brand.name}.json`)} and ${relative(process.cwd(), r.notesPath)}`);
     if (r.bannedHit.length) console.log(`note: banned-list font captured (advice only): ${r.bannedHit.join(', ')}`);
     for (const w of r.warnings) console.log(`warning: ${w}`);
     return 0;

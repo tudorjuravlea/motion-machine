@@ -158,7 +158,7 @@ brand half (colour, type, composition) worn with a motion half (tempo, curves, c
   wins; from stills the fonts land in `ask`, and W-ASK warns until they are set) and `mm motion capture --from <video> --out
   <piece>/capture/<name>.json [--name <name>] [--fps N]`; `--name` defaults to the `--out`
   basename (2 to 41 lowercase letters, digits, hyphens), and the notes land beside it as
-  `<out-name>.capture-notes.md`. Read every guess in the notes with the director, and fix a
+  `<out-name>.capture-notes.md` (no `--out`: `brands/<name>.json` in the git-ignored `docs/private`). Read every guess in the notes with the director, and fix a
   warning (a muted colour under 4.5:1 on the canvas) in the half before composing. Capture takes a
   reference's grammar, never its content (H-REF); a captured brand is not fictional and stays out
   of shipped presets and `styles/`.

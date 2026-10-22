@@ -62,3 +62,16 @@ test('the composed file names no absolute path', () => {
   execFileSync('node', [join(ROOT, 'scripts', 'compose.mjs'), '--brand', 'signal', '--motion', 'kinetic', '--out', out]);
   assert.doesNotMatch(readFileSync(out, 'utf8'), /"\/|[A-Za-z]:\\|\/Users\//);
 });
+
+test('a brand half whose family name could end a style rule is refused, naming the family, and nothing is written', () => {
+  const half = read('styles/brands/paper.json');
+  half.name = 'hostile';
+  half.type.display.family = 'x"</style><script>1</script>';
+  const p = join(tmp, 'hostile.json'); writeFileSync(p, JSON.stringify(half));
+  const out = join(tmp, 'hostile-style.json');
+  const r = run('--brand', p, '--motion', 'calm', '--out', out);
+  assert.notEqual(r.status, 0);
+  assert.match(r.stderr, /type\.display/);
+  assert.ok(r.stderr.includes('x"</style><script>1</script>') || /unsafe|not allowed/.test(r.stderr), r.stderr);
+  assert.equal(existsSync(out), false);
+});

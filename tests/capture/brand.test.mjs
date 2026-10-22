@@ -229,3 +229,29 @@ test('brand capture of a saved page: it cannot read an unreferenced sibling and 
     assert.deepEqual(spy.hits, [], `the page reached ${spy.hits.join(', ')}`);
   } finally { await spy.close(); }
 });
+
+test('with no --out the half lands in the git-ignored private brands folder, and nothing is written under styles/', async () => {
+  const name = `default-out-${process.pid}`;
+  const dest = join(ROOT, 'docs', 'private', 'brands', `${name}.json`);
+  const notes = dest.replace(/\.json$/, '.capture-notes.md');
+  const before = spawnSync('git', ['status', '--porcelain', 'styles/'], { cwd: ROOT, encoding: 'utf8' }).stdout;
+  try {
+    const r = await captureBrand({ from: SITE, name });
+    assert.equal(existsSync(dest), true, 'the half is written to the private brands folder');
+    assert.equal(r.notesPath, notes);
+    assert.equal(existsSync(join(ROOT, 'styles', 'brands', `${name}.json`)), false);
+    assert.equal(existsSync(join(ROOT, 'styles', 'brands', `${name}.capture-notes.md`)), false);
+    assert.equal(spawnSync('git', ['status', '--porcelain', 'styles/'], { cwd: ROOT, encoding: 'utf8' }).stdout, before);
+    assert.ok(validateBrand(JSON.parse(readFileSync(dest, 'utf8'))));
+  } finally { rmSync(dest, { force: true }); rmSync(notes, { force: true }); }
+});
+
+test('a page whose computed font-family is hostile maps to a bundled family, and the half and notes never carry it raw', async () => {
+  const dir = join(tmp, 'hostile'); mkdirSync(dir);
+  writeFileSync(join(dir, 'index.html'), `<!doctype html><title>x</title><body style="margin:0;background:#101820;color:#F2E9DC"><h1 style="font-family:'x&quot;&lt;/style&gt;&lt;script&gt;1&lt;/script&gt;', serif">A heading that names a hostile family</h1><p style="font-family:'y&quot;&lt;/style&gt;&lt;script&gt;2&lt;/script&gt;', monospace">Body text in another one, long enough to carry the most characters on the page.</p>`);
+  const o = join(tmp, 'hostile-out.json');
+  const r = await captureBrand({ from: join(dir, 'index.html'), name: 'hostile', out: o });
+  const bundled = new Set(['Fraunces', 'Manrope', 'IBM Plex Mono', 'Archivo']);
+  for (const role of ['display', 'text', 'mono']) assert.ok(bundled.has(r.brand.type[role].family) || existsSync(join(ROOT, r.brand.type[role].files[0].src)), `${role}: ${r.brand.type[role].family}`);
+  for (const text of [readFileSync(o, 'utf8'), readFileSync(r.notesPath, 'utf8')]) assert.doesNotMatch(text, /<\/?script|<\/style/i);
+});

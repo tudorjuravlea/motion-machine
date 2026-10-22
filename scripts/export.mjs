@@ -33,6 +33,7 @@ import { ROOT, VIEWPORTS, framePng, openPiece, serveRoot, launchBrowser } from '
 import { ExportBusy, Unreadable, holdForExport } from './lib/story-edit.mjs';
 import { versionOf } from './lib/story-version.mjs';
 import { UsageError, fontFiles, resolvePiece, runMain } from './lib/cli.mjs';
+import { isSafeFamily, unsafeStyleValues } from './lib/style-values.mjs';
 import { assertTools, loopSeam, probe, runFfmpeg, ssim, startEncoder } from './lib/ffmpeg.mjs';
 import { buildStandalone } from './lib/standalone.mjs';
 import { momentsOf } from './stills.mjs';
@@ -353,6 +354,7 @@ async function exportDeck(dir, story, o, shared, manifest) {
   const outDir = join(dir, 'out');
   const format = (o.formats ?? story.formats)[0];
   const style = JSON.parse(readFileSync(join(dir, 'style.json'), 'utf8'));
+  assertHandoutStyle(style);   // before any frame is rendered
   const standalone = buildStandalone(dir, join(outDir, 'deck'), { story, style });
   manifest.deck = { dir: standalone.dir, modules: standalone.modules, warnings: standalone.warnings };
   for (const w of standalone.warnings) log(`  warning: ${w}`);
@@ -415,26 +417,29 @@ async function exportDeck(dir, story, o, shared, manifest) {
 const prefix = (story, i) => story.scenes.slice(0, i).reduce((s, sc) => s + sc.presses, 0);
 
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-// Style values go into a <style> element: a family name or a colour that could end the rule or the element is refused
-// (a captured brand takes both from a page the author does not control).
-const safeFamily = (name, fallback) => (/^[\w .'-]{1,64}$/.test(String(name ?? '')) ? name : fallback);
-const safeColor = (value, fallback) => (/^[\w#(),.%/ -]{1,64}$/.test(String(value ?? '')) ? value : fallback);
 const FONT_MIME = { '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.otf': 'font/otf' };
 
 /** @font-face rules that carry the style's own font files inside the page (data URIs), so the PDF is set in the brand's faces and never in a system font. */
 export function handoutFontFaces(style, dir) {
   return fontFiles(style).flatMap(({ family, file }) => {
     const abs = join(dir, file.src);
-    if (!existsSync(abs) || safeFamily(family, null) === null) return [];
+    if (!existsSync(abs) || !isSafeFamily(family)) return [];
     const data = readFileSync(abs).toString('base64');
     return [`@font-face { font-family: "${family}"; font-weight: ${file.weight}; src: url(data:${FONT_MIME[extname(abs).toLowerCase()] ?? 'font/woff2'};base64,${data}); ${file.unicodeRange ? `unicode-range: ${file.unicodeRange}; ` : ''}}`];
   }).join('\n  ');
 }
 
+/** Refuses a style whose font family or colour could end the handout's <style> element (a captured brand takes both from a page the author does not control). */
+export function assertHandoutStyle(style) {
+  const problems = unsafeStyleValues(style);
+  if (problems.length) throw new UsageError(`the handout cannot be built from this style: ${problems.join('; ')}`, 2);
+}
+
 export function handoutHtml({ story, style, dir, pngs, rests, sceneOf, viewport }) {
+  assertHandoutStyle(style);
   const total = rests.length - 1;
-  const text = safeFamily(style.type?.text?.family ?? style.type?.display?.family, 'serif'), display = safeFamily(style.type?.display?.family, text), mono = safeFamily(style.type?.mono?.family, text);
-  const c = Object.fromEntries(Object.entries(style.color ?? {}).map(([k, v]) => [k, safeColor(v, undefined)]));
+  const text = style.type?.text?.family ?? style.type?.display?.family ?? 'serif', display = style.type?.display?.family ?? text, mono = style.type?.mono?.family ?? text;
+  const c = style.color ?? {};
   // The slide sits in a frame of its own aspect ratio, so no bars: fit the viewport into 273 x 146 mm.
   const k = Math.min(273 / viewport.width, 146 / viewport.height);
   const fw = (viewport.width * k).toFixed(2), fh = (viewport.height * k).toFixed(2);

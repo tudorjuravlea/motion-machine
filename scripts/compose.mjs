@@ -9,6 +9,7 @@ import { parseArgs } from 'node:util';
 import { validators } from './lib/validate.mjs';
 import { ROOT } from './lib/browser.mjs';
 import { isArgsError, usageText } from './lib/cli.mjs';
+import { unsafeStyleValues } from './lib/style-values.mjs';
 
 export { ROOT };
 const explain = (v) => (v.errors ?? []).map((e) => `${e.instancePath || '/'} ${e.message}`).join('; ');
@@ -43,6 +44,8 @@ export function compose({ brand, motion, name, from }) {
   const m = JSON.parse(readFileSync(resolveHalf('motion', motion), 'utf8'));
   const v = validators();
   if (!v.brand(b)) throw fail(`brand half ${brand} is invalid: ${explain(v.brand)}`, 1);
+  const unsafe = unsafeStyleValues(b);
+  if (unsafe.length) throw fail(`brand half ${brand} has values that cannot go into a style: ${unsafe.join('; ')}`, 1);
   if (!v.motion(m)) throw fail(`motion half ${motion} is invalid: ${explain(v.motion)}`, 1);
   const recorded = from ?? { brand: repoRelative(resolveHalf('brand', brand), 'brand'), motion: repoRelative(resolveHalf('motion', motion), 'motion') };
   const style = {

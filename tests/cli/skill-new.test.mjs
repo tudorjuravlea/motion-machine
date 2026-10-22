@@ -4,7 +4,7 @@
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { validators, ROOT } from '../../scripts/lib/validate.mjs';
@@ -128,4 +128,69 @@ test('SKILL.md has a gate section: it says how to tune the warnings, and names w
   assert.ok(text.includes('"filmS":[10,90]') && text.includes('frame-borders'));
   assert.deepEqual(JSON.parse(readFileSync(join(out, 'style/style.json'), 'utf8')).gate, { length: { filmS: [10, 90] }, liftBans: ['frame-borders'] });
   assert.doesNotMatch(text, /\{\{/);
+});
+
+test('a brand with a ground mark carries it: ground/<name> exists, the style points at ../ground/<name>, and mm new from that style finds it', () => {
+  const sk = join(tmp, 'draftline-motion');
+  const res = run('--brand', 'draftline', '--out', sk);
+  assert.equal(res.status, 0, res.stderr);
+  assert.ok(existsSync(join(sk, 'ground', 'draftline-grid.svg')), 'the mark file is copied into the skill');
+  const style = JSON.parse(readFileSync(join(sk, 'style', 'style.json'), 'utf8'));
+  assert.equal(style.ground.mark.src, '../ground/draftline-grid.svg');
+  assert.equal(JSON.parse(readFileSync(join(sk, 'style', 'brand.json'), 'utf8')).ground.mark.src, '../ground/draftline-grid.svg');
+  assert.ok(validateStyle(style), JSON.stringify(validateStyle.errors));
+  const work = join(ROOT, `.tmp-cli-skill-mark-${process.pid}`);
+  try {
+    const n = spawnSync('node', [join(ROOT, 'scripts', 'mm.mjs'), 'new', '--kind', 'film', '--style', join(sk, 'style', 'style.json'), '--dir', join(work, 'piece')], { encoding: 'utf8' });
+    assert.equal(n.status, 0, n.stdout + n.stderr);
+    const piece = JSON.parse(readFileSync(join(work, 'piece', 'style.json'), 'utf8'));
+    assert.ok(existsSync(join(work, 'piece', piece.ground.mark.src)), `the piece's mark ${piece.ground.mark.src} exists`);
+  } finally { rmSync(work, { recursive: true, force: true }); }
+});
+
+test('a brand with no ground mark writes no ground/ folder', () => {
+  assert.equal(existsSync(join(dir, 'ground')), false);
+});
+
+test('SKILL.md lists each font family with the licence read from its licence file', () => {
+  const t = readFileSync(join(dir, 'SKILL.md'), 'utf8');
+  const style = JSON.parse(readFileSync(join(dir, 'style/style.json'), 'utf8'));
+  const families = [...new Set(Object.values(style.type).map((f) => f.family))];
+  assert.ok(families.length >= 2);
+  for (const fam of families) assert.match(t, new RegExp(`^- ${fam}: SIL OFL 1\\.1$`, 'm'), fam);
+  assert.doesNotMatch(t, /\(SIL OFL, licence files/);
+});
+
+test('a family whose licence file is not a known one, or is missing, lists the warning', () => {
+  const half = JSON.parse(readFileSync(join(ROOT, 'styles/brands/paper.json'), 'utf8'));
+  half.name = 'oddfont';
+  const base = join(tmp, 'odd'); mkdirSync(join(base, 'fonts', 'plain'), { recursive: true }); mkdirSync(join(base, 'fonts', 'bare'), { recursive: true });
+  const src = join(ROOT, 'styles/fonts/manrope/manrope-latin-400-normal.woff2');
+  copyFileSync(src, join(base, 'fonts/plain/plain-400.woff2')); copyFileSync(src, join(base, 'fonts/bare/bare-400.woff2'));
+  writeFileSync(join(base, 'fonts/plain/LICENSE.txt'), 'All rights reserved. Not for redistribution.');
+  const face = (family, d) => ({ family, weight: 400, tracking: 0, files: [{ weight: 400, src: `fonts/${d}/${d}-400.woff2`, unicodeRange: 'U+0000-00FF' }] });
+  half.type = { display: face('Plain Sans', 'plain'), text: face('Bare Sans', 'bare'), mono: half.type.mono };
+  const p = join(base, 'oddfont.json'); writeFileSync(p, JSON.stringify(half));
+  const out = join(tmp, 'oddfont-motion');
+  const res = run('--brand', p, '--out', out);
+  assert.equal(res.status, 0, res.stderr);
+  const t = readFileSync(join(out, 'SKILL.md'), 'utf8');
+  assert.match(t, /^- Plain Sans: licence not recognised: check before sharing this skill$/m);
+  assert.match(t, /^- Bare Sans: licence not recognised: check before sharing this skill$/m);
+  assert.match(t, /^- IBM Plex Mono: SIL OFL 1\.1$/m);
+});
+
+test('engine.json records the engine version and commit, and SKILL.md says so', () => {
+  const e = JSON.parse(readFileSync(join(dir, 'engine.json'), 'utf8'));
+  const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'));
+  assert.deepEqual(Object.keys(e), ['engine', 'version', 'commit']);
+  assert.equal(e.engine, 'motion-machine');
+  assert.equal(e.version, pkg.version);
+  const head = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: ROOT, encoding: 'utf8' });
+  if (head.status === 0) { assert.match(e.commit, /^[0-9a-f]{40}$/); assert.equal(e.commit, head.stdout.trim()); } else assert.equal(e.commit, null);
+  const t = readFileSync(join(dir, 'SKILL.md'), 'utf8');
+  assert.ok(t.includes(`made with Motion Machine ${pkg.version}`));
+  if (e.commit) assert.ok(t.includes(`(${e.commit.slice(0, 7)})`));
+  assert.match(t, /G-PATTERN-REF/);
+  assert.doesNotMatch(t, /\{\{/);
 });

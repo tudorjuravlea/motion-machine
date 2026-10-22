@@ -36,7 +36,7 @@ export const USAGE = {
   'pattern list': ['mm pattern list', 'the complete patterns, as pattern-lint judges them'],
   'pattern lint': ['mm pattern lint [<group>/<name> | <name>] [--json]', 'lint every pattern, or the one named'],
   'pattern stills': ['mm pattern stills <group>/<name> [--style preset|path|all] [--format F] [--patterns dir]', 'photograph a pattern\'s demo in a style (--patterns: a patterns folder other than the repo\'s)'],
-  'brand capture': ['mm brand capture --from <url|index.html|figma-export.json|DESIGN.md|folder of stills> [--name <name>] [--color role=#hex]… --out <path>.json', 'capture a brand half; --name defaults to the --out basename; a typed --color always wins'],
+  'brand capture': ['mm brand capture --from <url|index.html|figma-export.json|DESIGN.md|folder of stills> [--name <name>] [--color role=#hex]… [--out <path>.json]', 'capture a brand half; --out defaults to brands/<name>.json in the git-ignored private folder of the repo; --name defaults to the --out basename; a typed --color always wins'],
   'brand mascot': ['mm brand mascot <file.svg> --brand <path> [--as <name>] [--out <path>] [--json]', 'import a mascot drawn in any vector tool into a brand half, by its layer names (body, face, eye-left, eye-right, mouth, arm-*, leg-*, shadow; any other name an extra part), normalised into the mascot box with colours mapped to palette roles; --as adds it to the brand\'s cast under that name; --out writes elsewhere than --brand'],
   'motion capture': ['mm motion capture --from <video> --out <path>.json [--name <name>] [--fps 10]', 'capture a motion half from a reference video; --name defaults to the --out basename'],
   'style compose': ['mm style compose --brand <name|path> --motion <name|path> --out <path> [--name <style-name>]', 'merge a brand half and a motion half into a style'],
@@ -154,12 +154,22 @@ export function resolveFontSrc(src, styleFile) {
   return hit;
 }
 
-/** A copy of a style with every font `src`, and a ground mark named by its repo path (`styles/…`), rewritten to a
+/** Absolute path of a ground mark `src` as written in a style file: relative to the style file's own folder first
+ *  (a skill's `../ground/x.svg`), then, when it begins `styles/`, from the repo root; null when neither exists. */
+export function findMarkSrc(src, styleFile, root = ROOT) {
+  const own = resolve(dirname(styleFile), src);
+  if (existsSync(own)) return own;
+  const repo = join(root, src);
+  return src.startsWith('styles/') && existsSync(repo) ? repo : null;
+}
+
+/** A copy of a style with every font `src`, and a ground mark found beside the style file or by its repo path (`styles/…`), rewritten to a
  *  path relative to `pieceDir`, so a page scaffolded anywhere in the repo still finds them. */
 export function relativiseFonts(style, styleFile, pieceDir) {
   const out = structuredClone(style);
   for (const { file } of fontFiles(out)) file.src = relative(pieceDir, resolveFontSrc(file.src, styleFile)).split(sep).join('/');
   const mark = out.ground?.mark;
-  if (mark?.src?.startsWith('styles/') && existsSync(join(ROOT, mark.src))) mark.src = relative(pieceDir, join(ROOT, mark.src)).split(sep).join('/');
+  const found = mark?.src ? findMarkSrc(mark.src, styleFile) : null;
+  if (found) mark.src = relative(pieceDir, found).split(sep).join('/');
   return out;
 }

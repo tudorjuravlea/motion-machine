@@ -22,6 +22,8 @@ brief, treatment, style, style frames, animatic, cut, deliver):
 
 If neither is available, stop and say so. Do not improvise the workflow from this file.
 
+{{engine_made_with}}
+
 ## The style is pinned
 
 Every piece made with this skill uses the composed style at `{{style_path}}` (relative to this
@@ -31,8 +33,10 @@ do not edit the composed file by hand. To change the look or the tempo, edit the
 again with the engine's `mm style compose`, then show the director the swatch and tempo sheet
 (gate 3) before using it.
 
-Fonts are in `fonts/` (SIL OFL, licence files beside them). The style's font paths point there, so
-the piece carries its own faces.
+Fonts are in `fonts/`, with their licence files beside them. The style's font paths point there, so
+the piece carries its own faces. The licence of each family, read from its licence file:
+
+{{fonts_licences}}
 
 ## Facts
 

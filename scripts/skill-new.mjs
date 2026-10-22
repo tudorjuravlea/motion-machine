@@ -7,9 +7,12 @@
 //   style/     brand.json, motion.json and the composed style.json (`from` relative to the skill; font
 //              `src` relative to the style file's own folder, so `../fonts/...`, which is how `mm new
 //              --style <skill>/style/style.json` resolves them)
-//   fonts/     only the font files the brand uses, with their licence files
+//   fonts/     only the font files the brand uses, with their licence files (SKILL.md lists each family's licence)
+//   engine.json  the engine version and commit the skill was made with
+//   ground/    the brand's ground mark, when it has one (`../ground/<file>` from the style file)
 // `--brand` is a shipped name (paper) or the path to a brand half, such as one `mm brand capture` wrote.
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import { basename, dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
@@ -20,6 +23,20 @@ const TEMPLATE = join(ROOT, 'skill', 'templates', 'brand-skill');
 const ENGINE_SKILL = 'skill/motion-machine/SKILL.md';
 const fail = (message, exitCode = 2) => Object.assign(new Error(message), { exitCode });
 const fill = (text, vars) => text.replace(/\{\{(\w+)\}\}/g, (_, k) => { if (!(k in vars)) throw fail(`template placeholder {{${k}}} has no value`, 1); return vars[k]; });
+const UNKNOWN_LICENCE = 'licence not recognised: check before sharing this skill';
+/** The licence a copied LICENSE.txt grants, by name; anything else, or no file, is the warning. */
+function licenceOf(file) {
+  const text = existsSync(file) ? readFileSync(file, 'utf8') : '';
+  if (/SIL OPEN FONT LICENSE/i.test(text)) return 'SIL OFL 1.1';
+  if (/Apache License/i.test(text)) return 'Apache 2.0';
+  return UNKNOWN_LICENCE;
+}
+/** The engine this skill is made with: package version and checkout commit (null outside a git checkout). */
+function engineInfo() {
+  const git = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: ROOT, encoding: 'utf8' });
+  const commit = git.status === 0 && /^[0-9a-f]{40}$/.test(git.stdout.trim()) ? git.stdout.trim() : null;
+  return { engine: 'motion-machine', version: JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')).version, commit };
+}
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
 /** styles/fonts/<family>/<file> becomes fonts/<family>/<file>; anything else lands in fonts/. */
@@ -38,6 +55,7 @@ export function skillNew({ brand, motion = 'calm', out, license = 'Apache-2.0', 
 
   // fonts: copy what the brand uses (and each family's licence), then point the half at the copies
   const missing = [];
+  const licences = new Map();   // family -> licence read from the LICENSE.txt copied beside its files
   for (const face of Object.values(b.type ?? {})) {
     for (const f of face.files ?? []) {
       const from = findFontSrc(f.src, brandPath);   // beside the half first (a captured half), then the repo
@@ -47,10 +65,22 @@ export function skillNew({ brand, motion = 'calm', out, license = 'Apache-2.0', 
       copyFileSync(from, to);
       const lic = join(dirname(from), 'LICENSE.txt');
       if (existsSync(lic)) copyFileSync(lic, join(dirname(to), 'LICENSE.txt'));
+      const got = licenceOf(lic);
+      if (!licences.has(face.family) || got === UNKNOWN_LICENCE) licences.set(face.family, got);
       f.src = fromStyleFolder(f.src);
     }
   }
   if (missing.length) throw fail(`font file(s) listed in the brand half are missing (G-LOCAL): ${missing.join(', ')}`, 1);
+
+  // the ground mark: copied to ground/<name>, and named from the style folder like a font
+  const mark = b.ground?.mark;
+  if (mark?.src) {
+    const from = findFontSrc(mark.src, brandPath);
+    if (!from) throw fail(`the ground mark listed in the brand half is missing (G-LOCAL): ${mark.src}`, 1);
+    mkdirSync(join(dest, 'ground'), { recursive: true });
+    copyFileSync(from, join(dest, 'ground', basename(from)));
+    mark.src = `../ground/${basename(from)}`;
+  }
 
   mkdirSync(join(dest, 'style'), { recursive: true });
   writeFileSync(join(dest, 'style', 'brand.json'), `${JSON.stringify(b, null, 2)}\n`);
@@ -58,11 +88,16 @@ export function skillNew({ brand, motion = 'calm', out, license = 'Apache-2.0', 
   const style = compose({ brand: join(dest, 'style', 'brand.json'), motion: join(dest, 'style', 'motion.json'), name: `${b.name}-${m.name}`, from: { brand: 'style/brand.json', motion: 'style/motion.json' } });
   writeFileSync(join(dest, 'style', 'style.json'), `${JSON.stringify(style, null, 2)}\n`);
 
+  const engine = engineInfo();
+  writeFileSync(join(dest, 'engine.json'), `${JSON.stringify(engine, null, 2)}\n`);
+
   const inForce = b.bans.filter((x) => !b.allow.includes(x));
   const vars = {
     name: `${b.name}-motion`, title: `${cap(b.name)} motion`,
     description: `Make Motion Machine films and clicker decks in the ${b.name} look with ${m.name} motion. Use when the user asks for a motion piece, reel, explainer or clicker deck for ${b.name}. Loads the Motion Machine engine skill first.`,
     compatibility: 'Needs the Motion Machine engine skill, Node 22 or newer, Playwright Chromium and ffmpeg.',
+    fonts_licences: [...licences].map(([family, lic]) => `- ${family}: ${lic}`).join('\n'),
+    engine_made_with: `This skill was made with Motion Machine ${engine.version}${engine.commit ? ` (${engine.commit.slice(0, 7)})` : ''}; an engine without the patterns the skill uses fails \`mm check\` with G-PATTERN-REF. \`engine.json\` records it.`,
     license, version: '0.1.0', brand: b.name, motion: m.name, engine_skill: ENGINE_SKILL,
     style_path: 'style/style.json', brand_path: 'style/brand.json', motion_path: 'style/motion.json',
     bans_section: [

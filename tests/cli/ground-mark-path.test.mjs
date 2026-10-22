@@ -22,3 +22,10 @@ test('a mark already relative to its piece is left alone', () => {
   const out = relativiseFonts(style, styleFile, join(ROOT, 'pieces/x'));
   assert.equal(out.ground.mark.src, 'assets/ground/grid.svg');
 });
+
+test('a mark relative to the style file is rewritten relative to the scaffolded page', () => {
+  const skillStyle = join(ROOT, 'styles/grounds/style/style.json');   // ../draftline-grid.svg from here is styles/grounds/draftline-grid.svg
+  const style = { type: {}, ground: { blobs: [], blur: 0, mark: { src: '../draftline-grid.svg', width: 1, alpha: 0.1 } } };
+  const out = relativiseFonts(style, skillStyle, join(ROOT, 'pieces/x'));
+  assert.equal(out.ground.mark.src, '../../styles/grounds/draftline-grid.svg');
+});
