@@ -14,6 +14,8 @@ npx playwright install chromium
 node scripts/mm.mjs doctor
 ```
 
+ffmpeg and ffprobe are found on `PATH`; to use binaries kept elsewhere (a static build in a tool's own folder), set `MM_FFMPEG` and `MM_FFPROBE` to their paths.
+
 `doctor` prints `ok` for Node, Chromium, ffmpeg and ffprobe, and never installs anything. Run the
 rest of this guide in a folder of your own, `tour/`, and delete it at the end.
 

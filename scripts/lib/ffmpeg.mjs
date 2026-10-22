@@ -7,9 +7,15 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { MissingToolError } from './cli.mjs';
 
+/** The binary to run for `ffmpeg` or `ffprobe`: the path in MM_FFMPEG or MM_FFPROBE when set, else the name (found on PATH). */
+export function bin(name, env = process.env) {
+  const path = env[name === 'ffprobe' ? 'MM_FFPROBE' : 'MM_FFMPEG'];
+  return path || name;
+}
+
 /** { ok, version, major } for `ffmpeg` or `ffprobe`; ok is false when the binary cannot run. */
 export function toolVersion(name) {
-  const r = spawnSync(name, ['-version'], { encoding: 'utf8' });
+  const r = spawnSync(bin(name), ['-version'], { encoding: 'utf8' });
   if (r.error || r.status !== 0) return { ok: false, version: null, major: null };
   const m = /version\s+n?(\d+)(?:\.(\d+))?[^\s]*/.exec(r.stdout);
   // Distro and git builds ("N-12345-gabc", "git-2024-…") carry no semver: accept them as new enough.
@@ -20,7 +26,7 @@ export function toolVersion(name) {
 export function assertTools(names = ['ffmpeg', 'ffprobe']) {
   for (const n of names) {
     const v = toolVersion(n);
-    if (!v.ok) throw new MissingToolError(n, 'install ffmpeg 6 or newer (macOS: brew install ffmpeg); mm never installs it');
+    if (!v.ok) throw new MissingToolError(n, 'install ffmpeg 6 or newer (macOS: brew install ffmpeg), or name its binaries in MM_FFMPEG and MM_FFPROBE; mm never installs it');
     if (n === 'ffmpeg' && v.major != null && v.major < 6) throw new MissingToolError(n, `found ${v.version}, need 6 or newer`);
   }
 }
@@ -64,7 +70,7 @@ function waitFor(proc, label) {
  * would otherwise wait for a 'drain' that never comes.
  */
 export function startEncoder(opts) {
-  const proc = spawn('ffmpeg', encodeArgs(opts), { stdio: ['pipe', 'ignore', 'pipe'] });
+  const proc = spawn(bin('ffmpeg'), encodeArgs(opts), { stdio: ['pipe', 'ignore', 'pipe'] });
   const done = waitFor(proc, 'ffmpeg');
   let dead = null;
   // settles once ffmpeg is gone, with the error a write must throw
@@ -89,7 +95,7 @@ export function startEncoder(opts) {
 
 /** Runs ffmpeg with `args`; resolves with stderr, rejects with a message that carries it. */
 export function runFfmpeg(args) {
-  const proc = spawn('ffmpeg', ['-y', '-hide_banner', ...args], { stdio: ['ignore', 'ignore', 'pipe'] });
+  const proc = spawn(bin('ffmpeg'), ['-y', '-hide_banner', ...args], { stdio: ['ignore', 'ignore', 'pipe'] });
   return waitFor(proc, 'ffmpeg');
 }
 
@@ -102,7 +108,7 @@ const probeFormat = (file) => (/\.wav$/i.test(file) ? ['-f', 'wav'] : []);
 
 /** ffprobe's JSON for a file: { streams, format }. */
 export function probe(file) {
-  const r = spawnSync('ffprobe', ['-v', 'error', '-count_frames', '-show_streams', '-show_format', '-of', 'json', ...probeFormat(file), file], { encoding: 'utf8', maxBuffer: 16 << 20 });
+  const r = spawnSync(bin('ffprobe'), ['-v', 'error', '-count_frames', '-show_streams', '-show_format', '-of', 'json', ...probeFormat(file), file], { encoding: 'utf8', maxBuffer: 16 << 20 });
   if (r.error) throw r.error.code === 'ENOENT' ? new MissingToolError('ffprobe') : r.error;
   if (r.status !== 0) throw new Error(`ffprobe failed on ${file}: ${r.stderr.trim()}`);
   return JSON.parse(r.stdout);

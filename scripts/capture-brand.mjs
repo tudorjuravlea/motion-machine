@@ -24,6 +24,7 @@ import { validators } from './lib/validate.mjs';
 import { ROLES, parseDesignMd } from './export-designmd.mjs';
 import { ROOT } from './lib/browser.mjs';
 import { isArgsError, usageText } from './lib/cli.mjs';
+import { bin } from './lib/ffmpeg.mjs';
 
 export { ROOT };
 const fail = (message, exitCode = 2) => Object.assign(new Error(message), { exitCode });
@@ -426,7 +427,7 @@ function readStills(folder) {
   if (!files.length) throw fail(`no stills (.png, .jpg, .webp) and no index.html in ${folder}`);
   const px = [];
   for (const f of files) {
-    const r = spawnSync('ffmpeg', ['-v', 'error', '-i', join(folder, f), '-vf', 'scale=96:-2:flags=area', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], { maxBuffer: 64 << 20 });
+    const r = spawnSync(bin('ffmpeg'), ['-v', 'error', '-i', join(folder, f), '-vf', 'scale=96:-2:flags=area', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], { maxBuffer: 64 << 20 });
     if (r.status !== 0) throw fail(`could not read ${f}: ${String(r.stderr).trim()}`);
     for (let i = 0; i + 2 < r.stdout.length; i += 6) px.push([r.stdout[i], r.stdout[i + 1], r.stdout[i + 2]]);
   }

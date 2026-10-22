@@ -23,7 +23,7 @@ import { basename, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
 import { isArgsError, usageText } from './lib/cli.mjs';
-import { probe } from './lib/ffmpeg.mjs';
+import { bin, probe } from './lib/ffmpeg.mjs';
 import { DEFAULTS, gainFor, peakDbOf, planEdit, renderVoice, wav16, wordsFrom } from './lib/footage.mjs';
 import { TARGET_LUFS } from './check/_loudness.mjs';
 import { measureLoudness } from './sound.mjs';
@@ -40,7 +40,7 @@ const sha1 = (file) => new Promise((ok, no) => {
 /** The first audio stream (stream 0 of the audio streams, never a second spatial track) as mono float samples. */
 function decodeAudio(file) {
   return new Promise((ok, no) => {
-    const p = spawn('ffmpeg', ['-v', 'error', '-nostdin', '-i', file, '-map', '0:a:0', '-vn', '-ac', '1', '-ar', String(RATE), '-f', 'f32le', '-'], { stdio: ['ignore', 'pipe', 'pipe'] });
+    const p = spawn(bin('ffmpeg'), ['-v', 'error', '-nostdin', '-i', file, '-map', '0:a:0', '-vn', '-ac', '1', '-ar', String(RATE), '-f', 'f32le', '-'], { stdio: ['ignore', 'pipe', 'pipe'] });
     const chunks = []; let err = '';
     p.stdout.on('data', (c) => chunks.push(c));
     p.stderr.on('data', (c) => { err += c; });

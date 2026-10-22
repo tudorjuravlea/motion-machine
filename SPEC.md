@@ -763,7 +763,7 @@ grammar and never its content; **H-SOUND** the largest motion event of each scen
 
 | Verb | Does | Writes |
 |---|---|---|
-| `doctor` | verifies Node ≥ 22, Playwright Chromium, ffmpeg ≥ 6; never installs | report |
+| `doctor` | verifies Node ≥ 22, Playwright Chromium, ffmpeg ≥ 6 (on `PATH`, or the binaries `MM_FFMPEG` and `MM_FFPROBE` name, which every verb then uses); never installs | report |
 | `new --kind film\|deck --style <preset\|path> (--id <id> \| --dir <folder>)` | scaffolds `pieces/<id>/`, or `<folder>` (any new folder under the repo root; `--id` then defaults to the folder name), from `runtime/skeletons/<kind>/`, copies the style in, with its font files and a ground mark named by its repo path copied into `assets/` and their `src` rewritten. `piece.js` imports the kit by a relative path computed from where the piece lives | piece folder |
 | `serve [piece] [--port N] [--format 16x9\|9x16\|1x1\|4x5] [--t S] [--press N]` | local preview with play clock, keyboard, `?t=`/`?press=` | URL |
 | `stills [piece] [--format F]` | every rest, every mid-entrance, a 12-frame strip through each move; a contact sheet; a phone-width sheet | `out/stills/`, `out/contact.png`, `out/phone.png` |

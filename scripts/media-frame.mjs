@@ -11,11 +11,12 @@ import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
 import { isArgsError, usageText } from './lib/cli.mjs';
+import { bin } from './lib/ffmpeg.mjs';
 
 const fail = (msg, code = 2) => Object.assign(new Error(msg), { exitCode: code });
 
 function sizeOf(file) {
-  const r = spawnSync('ffprobe', ['-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=width,height', '-of', 'csv=p=0', file], { encoding: 'utf8' });
+  const r = spawnSync(bin('ffprobe'), ['-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=width,height', '-of', 'csv=p=0', file], { encoding: 'utf8' });
   const [w, h] = String(r.stdout).trim().split(',').map(Number);
   if (r.status !== 0 || !(w > 0 && h > 0)) throw fail(`could not read ${file} as an image`);
   return { w, h };
@@ -65,7 +66,7 @@ export function frame({ file, name, piece = '.', key = false }) {
   if (!existsSync(file)) throw fail(`not found: ${file}`);
   if (!/^[a-z0-9][a-z0-9-]{0,60}$/.test(name)) throw fail(`--name must be lowercase letters, digits and hyphens: ${name}`);
   const { w, h } = sizeOf(file);
-  const r = spawnSync('ffmpeg', ['-v', 'error', '-i', file, '-frames:v', '1', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-'], { maxBuffer: 1 << 28 });
+  const r = spawnSync(bin('ffmpeg'), ['-v', 'error', '-i', file, '-frames:v', '1', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-'], { maxBuffer: 1 << 28 });
   if (r.status !== 0) throw fail(`could not decode ${file}: ${String(r.stderr).trim()}`);
   if (key) keyScreen(r.stdout, w, h);
   const screen = measureHole(r.stdout, w, h);
@@ -73,7 +74,7 @@ export function frame({ file, name, piece = '.', key = false }) {
   const dir = join(resolve(piece), 'assets', 'frames');
   mkdirSync(dir, { recursive: true });
   if (key) {   // the keyed pixels are written out, not the original file
-    const wr = spawnSync('ffmpeg', ['-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', `${w}x${h}`, '-i', '-', join(dir, `${name}.png`)], { input: r.stdout, maxBuffer: 1 << 28 });
+    const wr = spawnSync(bin('ffmpeg'), ['-v', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', `${w}x${h}`, '-i', '-', join(dir, `${name}.png`)], { input: r.stdout, maxBuffer: 1 << 28 });
     if (wr.status !== 0) throw fail(`could not write ${name}.png: ${String(wr.stderr).trim()}`, 1);
   } else copyFileSync(file, join(dir, `${name}.png`));
   const meta = { image: { w, h }, screen };

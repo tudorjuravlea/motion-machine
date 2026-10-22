@@ -20,6 +20,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
 import { isArgsError, usageText } from './lib/cli.mjs';
 import { grayPng, matteSmoother } from './lib/footage-matte.mjs';
+import { bin } from './lib/ffmpeg.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const HELPER = join(HERE, 'lib', 'segment.swift');
@@ -62,7 +63,7 @@ function run(cmd, args) {
 /** Decodes the masks in frame order at w x h grey (ffmpeg) and writes each smoothed one as PNG into dest. */
 function smoothInto(src, ext, frames, { w, h, fps }, feather, dest) {
   return new Promise((ok, no) => {
-    const p = spawn('ffmpeg', ['-v', 'error', '-nostdin', '-framerate', String(fps), '-start_number', '1', '-i', join(src, `f%05d.${ext}`), '-frames:v', String(frames),
+    const p = spawn(bin('ffmpeg'), ['-v', 'error', '-nostdin', '-framerate', String(fps), '-start_number', '1', '-i', join(src, `f%05d.${ext}`), '-frames:v', String(frames),
       '-vf', `scale=${w}:${h}:flags=bilinear,format=gray`, '-f', 'rawvideo', '-pix_fmt', 'gray', '-'], { stdio: ['ignore', 'pipe', 'pipe'] });
     const size = w * h;
     let pending = Buffer.alloc(0), written = 0, err = '';

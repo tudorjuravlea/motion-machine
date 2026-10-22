@@ -24,7 +24,7 @@ import { ROOT } from './lib/browser.mjs';
 import { isArgsError, resolvePiece, usageText, UsageError } from './lib/cli.mjs';
 import { ExportBusy, holdForExport } from './lib/story-edit.mjs';
 import { patternsBaseOf } from './lib/patterns-base.mjs';
-import { inputOf } from './lib/ffmpeg.mjs';
+import { bin, inputOf } from './lib/ffmpeg.mjs';
 import { decodePcm } from './beats.mjs';
 import { schedule as buildSchedule } from '../runtime/kit/schedule.js';
 import { DRIFT_S, beatsOf, cueEvents, cueName, nearest } from './lib/cues.mjs';
@@ -61,13 +61,13 @@ export function run(cmd, args, { cwd } = {}) {
 }
 
 export async function ffmpeg(args) {
-  const r = await run('ffmpeg', ['-hide_banner', '-nostdin', '-y', ...args]);
+  const r = await run(bin('ffmpeg'), ['-hide_banner', '-nostdin', '-y', ...args]);
   if (r.code !== 0) throw new Error(`ffmpeg failed (${args.slice(0, 6).join(' ')} …): ${r.stderr.trim().split('\n').slice(-3).join(' | ')}`);
   return r;
 }
 
 export async function probe(file) {
-  const r = await run('ffprobe', ['-v', 'error', '-print_format', 'json', '-show_streams', '-show_format', ...(/\.wav$/i.test(file) ? ['-f', 'wav'] : []), file]);
+  const r = await run(bin('ffprobe'), ['-v', 'error', '-print_format', 'json', '-show_streams', '-show_format', ...(/\.wav$/i.test(file) ? ['-f', 'wav'] : []), file]);
   if (r.code !== 0) throw new Error(`ffprobe cannot read ${file}: ${r.stderr.trim()}`);
   return JSON.parse(r.stdout);
 }
@@ -88,7 +88,7 @@ export async function hasAudio(file) {
 /** Integrated loudness (LUFS), loudness range and true peak (dBTP) by ffmpeg's ebur128; null without audio. */
 export async function measureLoudness(file) {
   if (!(await hasAudio(file))) return null;
-  const r = await run('ffmpeg', ['-hide_banner', '-nostdin', '-nostats', ...inputOf(file), '-vn', '-af', 'ebur128=peak=true:framelog=quiet', '-f', 'null', '-']);
+  const r = await run(bin('ffmpeg'), ['-hide_banner', '-nostdin', '-nostats', ...inputOf(file), '-vn', '-af', 'ebur128=peak=true:framelog=quiet', '-f', 'null', '-']);
   const text = r.stderr.slice(r.stderr.lastIndexOf('Summary:'));
   const num = (re) => { const m = text.match(re); return m ? Number(m[1]) : null; };
   const lufs = num(/I:\s+(-?[\d.]+|-inf)\s+LUFS/) ?? (/I:\s+-inf/.test(text) ? -Infinity : null);
@@ -215,7 +215,7 @@ const AAC = ['-c:a', 'aac', '-b:a', '192k', '-ar', String(SR)];
 /** Two-pass loudnorm of `chain` (a filter graph ending in one unlabelled output) into `out`; linear when the measured peak allows it. */
 async function loudnormTwoPass(args, chain, { target, tp, D, out }) {
   const ln = `I=${target}:TP=${tp}:LRA=20`;
-  const p1 = await run('ffmpeg', ['-hide_banner', '-nostdin', '-nostats', ...args, '-filter_complex', `${chain},loudnorm=${ln}:print_format=json[o]`, '-map', '[o]', '-f', 'null', '-']);
+  const p1 = await run(bin('ffmpeg'), ['-hide_banner', '-nostdin', '-nostats', ...args, '-filter_complex', `${chain},loudnorm=${ln}:print_format=json[o]`, '-map', '[o]', '-f', 'null', '-']);
   const m = p1.stderr.match(/\{[^{}]*"input_i"[^{}]*\}/);
   if (p1.code !== 0 || !m) throw new Error(`loudnorm pass 1 failed: ${p1.stderr.trim().split('\n').slice(-3).join(' | ')}`);
   const j = JSON.parse(m[0]);

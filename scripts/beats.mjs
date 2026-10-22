@@ -11,7 +11,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { usageText } from './lib/cli.mjs';
-import { inputOf } from './lib/ffmpeg.mjs';
+import { bin, inputOf } from './lib/ffmpeg.mjs';
 
 export const SAMPLE_RATE = 48000;
 const N = 512;                 // FFT frame: 10.7 ms
@@ -25,7 +25,7 @@ const ONSET_OFFSET_S = (0.75 * N) / SAMPLE_RATE - 0.0016;
 /** Decodes any audio file ffmpeg reads to mono float32 PCM at 48 kHz. */
 export function decodePcm(file, { sampleRate = SAMPLE_RATE } = {}) {
   return new Promise((ok, fail) => {
-    const p = spawn('ffmpeg', ['-v', 'error', '-nostdin', ...inputOf(file), '-vn', '-f', 'f32le', '-ac', '1', '-ar', String(sampleRate), '-'], { stdio: ['ignore', 'pipe', 'pipe'] });
+    const p = spawn(bin('ffmpeg'), ['-v', 'error', '-nostdin', ...inputOf(file), '-vn', '-f', 'f32le', '-ac', '1', '-ar', String(sampleRate), '-'], { stdio: ['ignore', 'pipe', 'pipe'] });
     const chunks = []; let err = '';
     p.stdout.on('data', (c) => chunks.push(c));
     p.stderr.on('data', (c) => { err += c; });

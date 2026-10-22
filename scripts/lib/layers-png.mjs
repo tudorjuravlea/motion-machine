@@ -8,6 +8,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { deflateSync } from 'node:zlib';
 import { decodePng } from '../check/_pixels.mjs';
+import { bin } from './ffmpeg.mjs';
 
 const CRC = Uint32Array.from({ length: 256 }, (_, n) => { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; return c >>> 0; });
 function crc32(buf) {
@@ -70,7 +71,7 @@ export function readPicture(file) {
   const dir = mkdtempSync(join(tmpdir(), 'mm-layers-'));
   try {
     const out = join(dir, 'p.png');
-    const r = spawnSync('ffmpeg', ['-v', 'error', '-y', '-i', file, '-frames:v', '1', '-pix_fmt', 'rgba', out], { encoding: 'utf8' });
+    const r = spawnSync(bin('ffmpeg'), ['-v', 'error', '-y', '-i', file, '-frames:v', '1', '-pix_fmt', 'rgba', out], { encoding: 'utf8' });
     if (r.error?.code === 'ENOENT') throw new Error(`ffmpeg not found on PATH: it reads pictures that are not 8-bit PNGs (${file})`);
     if (r.status !== 0) throw new Error(`could not read ${file} as a picture`);
     return decodePng(readFileSync(out));

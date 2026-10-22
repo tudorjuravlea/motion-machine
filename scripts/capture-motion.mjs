@@ -42,6 +42,7 @@ import { fileURLToPath } from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
 import { parseEasing } from '../runtime/kit/ease.js';
 import { spring } from '../runtime/kit/springs.js';
+import { bin } from './lib/ffmpeg.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -93,7 +94,7 @@ function run(cmd, args) {
 
 /** The video stream's frame rate, read from ffmpeg's banner (null when it gives none). */
 export async function sourceFps(video) {
-  const { log } = await run('ffmpeg', ['-hide_banner', '-nostdin', '-i', video]);
+  const { log } = await run(bin('ffmpeg'), ['-hide_banner', '-nostdin', '-i', video]);
   const m = /Stream #[^\n]*Video:[^\n]*?([\d.]+) fps/.exec(log) ?? /Stream #[^\n]*Video:[^\n]*?([\d.]+) tbr/.exec(log);
   return m ? Number(m[1]) : null;
 }
@@ -176,7 +177,7 @@ export async function extractFrames(video, { fps = null, width = ANALYSIS_WIDTH 
   };
   const early = [];
   const code = await new Promise((ok, fail) => {
-    const p = spawn('ffmpeg', ['-hide_banner', '-nostdin', '-i', video, '-an', '-vf', vf, '-f', 'rawvideo', '-'], { stdio: ['ignore', 'pipe', 'pipe'] });
+    const p = spawn(bin('ffmpeg'), ['-hide_banner', '-nostdin', '-i', video, '-an', '-vf', vf, '-f', 'rawvideo', '-'], { stdio: ['ignore', 'pipe', 'pipe'] });
     p.on('error', (e) => fail(Object.assign(new Error(e.code === 'ENOENT' ? 'ffmpeg not found on PATH' : `ffmpeg: ${e.message}`), { setup: true })));
     p.stderr.on('data', (c) => { log += c; if (!geo) { setup(); if (geo) early.splice(0).forEach(take); } });
     p.stdout.on('data', (c) => { if (geo) take(c); else early.push(c); }); // frame bytes can precede the banner line

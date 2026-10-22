@@ -1,4 +1,5 @@
-// mm doctor: verifies Node >= 22, Playwright's Chromium, ffmpeg >= 6 and ffprobe. Never installs
+// mm doctor: verifies Node >= 22, Playwright's Chromium, ffmpeg >= 6 and ffprobe (on PATH, or at
+// MM_FFMPEG and MM_FFPROBE). Never installs
 // anything (SPEC §8). Exit 0 when all are present, 2 naming each missing tool.
 import { existsSync } from 'node:fs';
 import { chromium } from 'playwright';
@@ -15,9 +16,9 @@ export async function doctor() {
   rows.push({ tool: 'chromium', ok: !!chromiumPath && existsSync(chromiumPath), detail: chromiumPath ?? 'not installed', fix: 'run `npx playwright install chromium` (mm never installs it)' });
 
   const ff = toolVersion('ffmpeg');
-  rows.push({ tool: 'ffmpeg', ok: ff.ok && (ff.major == null || ff.major >= 6), detail: ff.ok ? ff.version : 'not found on PATH', fix: ff.ok ? 'ffmpeg 6 or newer is required' : 'install ffmpeg 6 or newer (macOS: brew install ffmpeg)' });
+  rows.push({ tool: 'ffmpeg', ok: ff.ok && (ff.major == null || ff.major >= 6), detail: ff.ok ? ff.version : 'not found (PATH or MM_FFMPEG)', fix: ff.ok ? 'ffmpeg 6 or newer is required' : 'install ffmpeg 6 or newer (macOS: brew install ffmpeg), or set MM_FFMPEG to its binary' });
   const fp = toolVersion('ffprobe');
-  rows.push({ tool: 'ffprobe', ok: fp.ok, detail: fp.ok ? fp.version : 'not found on PATH', fix: 'ships with ffmpeg; install ffmpeg 6 or newer' });
+  rows.push({ tool: 'ffprobe', ok: fp.ok, detail: fp.ok ? fp.version : 'not found (PATH or MM_FFPROBE)', fix: 'ships with ffmpeg; install ffmpeg 6 or newer, or set MM_FFPROBE to its binary' });
 
   for (const r of rows) console.log(`${r.ok ? 'ok     ' : 'MISSING'}  ${r.tool.padEnd(9)} ${r.detail}${r.ok ? '' : `  → ${r.fix}`}`);
   const missing = rows.filter((r) => !r.ok);
