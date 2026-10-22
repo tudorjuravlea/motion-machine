@@ -41,11 +41,38 @@
 .mm-garden__b-spot { fill: color-mix(in srgb, var(--mm-color-ink) 42%, transparent); }
 .mm-garden__b-throat { fill: color-mix(in srgb, var(--mm-color-accent) 40%, transparent); }
 .mm-garden__b-filament { fill: none; stroke: var(--mm-color-muted); stroke-linecap: round; }
-.mm-garden__b-anther { fill: color-mix(in srgb, var(--mm-color-ink) 62%, transparent); }
+.mm-garden__b-anther { fill: color-mix(in srgb, var(--mm-color-ink) 45%, transparent); }
 .mm-garden__b-stigma { fill: var(--mm-color-muted); }
 .mm-garden__b-stem { fill: var(--mm-color-muted); }
 .mm-garden__b-tendril { fill: none; stroke: var(--mm-color-muted); stroke-linecap: round; stroke-linejoin: round; }
 /* a broad leaf: one half in shade, light veins over it */
 .mm-garden__b-shade { fill: color-mix(in srgb, var(--mm-color-ink) 16%, transparent); }
-.mm-garden__b-vein { fill: none; stroke: color-mix(in srgb, var(--mm-color-canvas) 40%, transparent); stroke-linecap: round; }
-.mm-garden__b-vein-fine { fill: none; stroke: color-mix(in srgb, var(--mm-color-canvas) 24%, transparent); stroke-linecap: round; }
+.mm-garden__b-vein { fill: none; stroke: color-mix(in srgb, var(--mm-color-canvas) 30%, transparent); stroke-linecap: round; }
+.mm-garden__b-vein-fine { fill: none; stroke: color-mix(in srgb, var(--mm-color-canvas) 15%, transparent); stroke-linecap: round; }
+/* text: type: the caret at the typing position, the look of entrances/typewriter's caret, in the ink */
+.mm-garden__caret {
+  position: absolute;
+  inline-size: var(--mm-space-0);
+  block-size: 0.9em;
+  transform: translateY(-50%);
+  background: var(--mm-color-ink);
+  pointer-events: none;
+}
+.mm-garden__text--typed { display: block; }
+/* an edged botanical part strokes its flat role in the same role, so the ink line over it reads as
+   the part's own hue darkened on both sides of the edge */
+.mm-garden__b-edge-accent { stroke: var(--mm-color-accent); stroke-linejoin: round; }
+.mm-garden__b-edge-surface { stroke: var(--mm-color-surface); stroke-linejoin: round; }
+.mm-garden__b-edge-accentInk { stroke: var(--mm-color-accentInk); stroke-linejoin: round; }
+.mm-garden__b-edge-line { stroke: var(--mm-color-line); stroke-linejoin: round; }
+.mm-garden__b-edge-muted { stroke: var(--mm-color-muted); stroke-linejoin: round; }
+/* a cupped petal's turned-back rim: the canvas at an alpha, and the line its fold casts */
+.mm-garden__b-rimlight { fill: color-mix(in srgb, var(--mm-color-canvas) 14%, transparent); }
+.mm-garden__b-fold { fill: none; stroke: color-mix(in srgb, var(--mm-color-ink) 22%, transparent); stroke-linecap: round; stroke-linejoin: round; }
+/* a lily tepal's creased half and an anther's pollen under its ink */
+.mm-garden__b-crease { fill: color-mix(in srgb, var(--mm-color-accent) 14%, transparent); }
+.mm-garden__b-pollen { fill: var(--mm-color-accent); }
+/* a camellia petal's shadow on the petal beneath, and the deep streaks from its claw */
+.mm-garden__b-cast { fill: color-mix(in srgb, var(--mm-color-ink) 7%, transparent); }
+.mm-garden__b-streak { fill: none; stroke: color-mix(in srgb, var(--mm-color-ink) 14%, transparent); stroke-linecap: round; }
+.mm-garden__b-stem-shade { fill: color-mix(in srgb, var(--mm-color-ink) 30%, transparent); }

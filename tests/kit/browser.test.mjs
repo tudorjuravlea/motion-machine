@@ -151,6 +151,22 @@ test('deck: ← from mid-press lands on the previous integer; mid-press next sna
   await close();
 });
 
+test('deck: a click on the slide goes one press forward, like →; a click on a link or button does not', async () => {
+  const { page, close } = await open('deck');
+  await page.evaluate(() => window.mm.goto(1));
+  await page.mouse.click(400, 300);
+  assert.equal(await page.evaluate(() => window.mm.position()), 2);
+  await page.evaluate(() => {
+    const b = document.createElement('button');
+    b.id = 'probe-button'; b.textContent = 'probe';
+    Object.assign(b.style, { position: 'fixed', left: '0', top: '0', zIndex: '99' });
+    document.body.append(b);
+  });
+  await page.click('#probe-button');
+  assert.equal(await page.evaluate(() => window.mm.position()), 2, 'a button keeps its own click');
+  await close();
+});
+
 test('deck: arriving by hash draws the rest', async () => {
   const a = await open('deck', '', '#2');
   assert.equal(await a.page.evaluate(() => window.mm.position()), 2);

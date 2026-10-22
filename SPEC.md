@@ -508,6 +508,11 @@ the headline's box, only tendril tips reach into its descender band, the whole b
 and the bed is ornament that may run off the frame's bottom and side edges (it is not bounded by
 `--mm-safe`, which bounds text). Loose petals may keep floating at rest within about 1 % of the frame's
 short side, a function of the piece time (`drift: float`); `drift: settle` holds them still.
+With `text: type` the line is typed in reading order over the first `typeShare` of the entrance: while
+it is typed its text sits in one block clipped to the characters typed so far, measured from their laid-out
+glyph boxes (nothing splits the text, so every glyph stays where the plain text sets it), a caret in the
+ink marks the typing position, and every plant starts once the letter it roots on is whole while every
+window still ends by p = 1; from `typeShare` on the slot holds its plain text node.
 `exits/wither` recedes that garden in reverse growth order, every kind and the bed (petals fly back into
 their blooms, blooms close, stems sink below the frame); it passes the piece time to the garden's drawing,
 so a floating petal leaves its path without a jump. With `type: keep` its last frame is the bare slot.
@@ -846,8 +851,9 @@ and W-MIX's peak sub-check therefore stays unmeasured (SKIP, partial).
 
 A press is the unit. `data-step` elements of the current scene arrive on their press; when a
 scene's presses are exhausted, the next press cuts to the next scene with its `cut` pattern. Space,
-`→`, `PageDown` and `Enter` advance; `←`, `PageUp` and `Backspace` go to the previous rest, never
-to a mid-entrance. The URL hash carries the press; arriving by hash draws the rest without
+`→`, `PageDown`, `Enter` and a plain click on the slide advance (a click on a link or a control keeps
+its own action, and a deck inside a frame, such as the studio's stage, leaves clicks to the page
+around it); `←`, `PageUp` and `Backspace` go to the previous rest, never to a mid-entrance. The URL hash carries the press; arriving by hash draws the rest without
 replaying. Idle motion (`moves/idle-*`) is slow and bounded so a held pose lives without competing
 with the voice. The handout prints one rest per page with the scene's `say` as notes.
 

@@ -71,7 +71,8 @@ const params = {
   lean: { type: 'number', default: 0, meaning: 'the whole garden leans right (positive) or left (negative), -0.4 to 0.4 rad' },
   layer: { type: 'enum(weave|behind)', default: 'weave', meaning: 'weave passes some stems in front of the letters; behind keeps every stem under them' },
   sway: { type: 'enum(none|breathe)', default: 'none', meaning: 'after landing, breathe sways the ornament by its height above the root; the text never moves' },
-  text: { type: 'enum(fade|present)', default: 'fade', meaning: 'the text fades in first, or is there from the first frame' },
+  text: { type: 'enum(fade|present|type)', default: 'fade', meaning: 'the text fades in first, is there from the first frame, or is typed letter by letter while each letter\'s plants grow once it is there' },
+  typeShare: { type: 'number', default: 0.5, meaning: 'text type: the share of the entrance the typing takes, 0.1 to 0.9; the plants of the last letter grow in the rest' },
   bed: { type: 'boolean', default: false, meaning: 'botanical: the flowers grow as a bed rising from below the headline toward its baseline, across the frame, instead of from the letters' },
   petals: { type: 'number', default: 8, meaning: 'botanical bed: loose petals that leave the blooms and drift in the air, 0 to 24' },
   drift: { type: 'enum(float|settle)', default: 'float', meaning: 'botanical: the loose petals keep floating slowly, within a small bound, or settle and hold still' },
@@ -95,7 +96,8 @@ export function settingsOf(ctx) {
     lean: num(p.lean, 0, -0.4, 0.4),
     layer: p.layer === 'behind' ? 'behind' : 'weave',
     sway: p.sway === 'breathe' ? 'breathe' : 'none',
-    text: p.text === 'present' ? 'present' : 'fade',
+    text: p.text === 'present' || p.text === 'type' ? p.text : 'fade',
+    typeShare: num(p.typeShare, 0.5, 0.1, 0.9),
     bed: p.bed === true || p.bed === 'true',
     petals: Math.round(num(p.petals, 8, 0, 24)),
     drift: p.drift === 'settle' ? 'settle' : 'float',
@@ -192,11 +194,11 @@ function lettersOf(el, font, fontPx) {
   const walker = doc.createTreeWalker(el, 4);
   const range = doc.createRange();
   const out = [];
-  let word = 0, space = true, n = 0;
+  let word = 0, space = true, n = 0, ci = 0;
   for (let node = walker.nextNode(); node; node = walker.nextNode()) {
     if (node.parentElement?.closest('svg')) continue;
     const s = node.textContent;
-    for (let i = 0; i < s.length;) {
+    for (let i = 0; i < s.length; ci++) {
       const cp = s.codePointAt(i), len = cp > 0xffff ? 2 : 1, ch = String.fromCodePoint(cp);
       if (/\s/.test(ch)) { if (!space) word++; space = true; i += len; continue; }
       space = false;
@@ -204,7 +206,7 @@ function lettersOf(el, font, fontPx) {
       const r = range.getClientRects()[0];
       if (r && r.width > 0) {
         const cell = cellOf(doc, font, ch);
-        out.push({ ch, index: n, word, cell, x: (r.left - box.left) / k, top: (r.top - box.top) / k, base: (r.top - box.top) / k + cell.ascent * fontPx });
+        out.push({ ch, index: n, ci, word, cell, x: (r.left - box.left) / k, top: (r.top - box.top) / k, base: (r.top - box.top) / k + cell.ascent * fontPx });
       }
       n++; i += len;
     }
@@ -398,7 +400,7 @@ export function plan(el, ctx) {
   const hit = models.get(key);
   if (hit) return hit;
 
-  const model = { key, em, set, letters: letters.map((l) => ({ ch: l.ch, index: l.index, x: l.x, base: l.base, anchors: [] })), elements: [], inkArea: 0, front: 0, box: { W, H } };
+  const model = { key, em, set, letters: letters.map((l) => ({ ch: l.ch, index: l.index, ci: l.ci, x: l.x, base: l.base, anchors: [] })), elements: [], inkArea: 0, front: 0, box: { W, H } };
   if (!letters.length) { remember(key, model); return model; }
   // the signed distance to the nearest letter's ink, in em, at a slot point
   const inkAt = (x, y) => {
@@ -891,12 +893,99 @@ export function plan(el, ctx) {
       if (set.kind !== 'circuits' && rnd() < 0.4) { pts = pts.slice(0, Math.max(6, Math.round(pts.length * (0.7 + rnd() * 0.18)))); lands = false; pts = pts.concat(spiral(rnd, pts.at(-1), tangentAt(pts, 1), bulge < 0 ? 1 : -1, em * 0.05, em * 0.03).pts.slice(1)); }
       if (pts.some(([X, Y]) => grid.at(X, Y) === -1)) continue;
       claim(pts, id);
+      const n0 = els.length;
       const t0 = 0.22 + spread * (i / Math.max(1, nL - 1)) + rnd() * 0.08;
       const L = lengthOf(pts) / em;
       stem(pts, set.kind === 'circuits'
         ? { w0: em * 0.018, w1: em * 0.018, t0, dur: Math.max(0.3, L * 0.5), root: Math.max(p0[1], p3[1]), id, ease: 'inOut3', shape: 'trace', bridge: true, lands: true }
         : { w0: em * 0.018, w1: em * 0.007, t0, dur: Math.max(0.34, L * 0.6), root: Math.max(p0[1], p3[1]), id, bridge: true, lands });
+      rootOn(n0, i + 1);
     }
+  }
+
+  // cubic segments through waypoints, tangents from their neighbours; the first leaves along
+  // `startAng` (straight up by default), the last arrives along `endAng` when given
+  const through = (way, endAng, startAng = -Math.PI / 2) => {
+    const tan = way.map((p, i) => {
+      if (i === 0) { const d = Math.hypot(way[1][0] - p[0], way[1][1] - p[1]); return [Math.cos(startAng) * d, Math.sin(startAng) * d]; }
+      if (i === way.length - 1 && endAng != null) { const d = Math.hypot(p[0] - way[i - 1][0], p[1] - way[i - 1][1]); return [Math.cos(endAng) * d, Math.sin(endAng) * d]; }
+      const a = way[Math.max(0, i - 1)], b = way[Math.min(way.length - 1, i + 1)];
+      return [(b[0] - a[0]) / 2, (b[1] - a[1]) / 2];
+    });
+    const segs = [];
+    for (let i = 0; i + 1 < way.length; i++) {
+      const p0 = way[i], p3 = way[i + 1];
+      segs.push({ p0, c1: [p0[0] + tan[i][0] / 3, p0[1] + tan[i][1] / 3], c2: [p3[0] - tan[i + 1][0] / 3, p3[1] - tan[i + 1][1] / 3], p3, len: Math.hypot(p3[0] - p0[0], p3[1] - p0[1]), a0: startAng, turn: 0 });
+    }
+    return segs;
+  };
+
+  // -- botanical on the letters: each anchor grows a cluster in the bed's look. A short curving
+  // stem leaves the letter (up from its top, down from its feet) and ends in one large bloom clear of
+  // the line, a camellia, peony or lily (a smaller one below the line); broad leaves fan from the stem;
+  // a lily carries a slender bud beside it; a sweet pea grows a spray of flowers up its stem and ends
+  // in a tendril; a bud stands alone. A bloom that does not fit opens smaller, then as a bud.
+  const CLUSTER = { camellia: 1.15, peony: 1, lily: 1.05, sweetpea: 0.5, bud: 0.3 };
+  function cluster(l, a, k, ps) {
+    const id = ++plantId, rnd = rndOf(`cluster|${l.index}|${k}`);
+    const form = ps.bloom === 'bouquet' ? BOUQUET[Math.floor(rnd() * BOUQUET.length)] : ps.bloom === 'none' ? 'bud' : ps.bloom;
+    const down = isDown(a), dir = down ? 1 : -1, x = l.x + a.x * em, y = l.base + a.y * em;
+    const reachE = em * (down ? between(rnd, 0.9, 1.3) : between(rnd, 1.5, 2.0) + 0.35 * Math.min(2, k)) * set.stemScale;
+    const lean = between(rnd, -0.4, 0.4) + set.lean;
+    const head = [x + Math.sin(lean) * reachE, y + dir * Math.cos(lean) * reachE];
+    const mid = [(x + head[0]) / 2 + between(rnd, -0.14, 0.14) * em, (y + head[1]) / 2];
+    const t0 = 0.12 + spread * (l.index / Math.max(1, nL - 1)) + 0.1 * k + rnd() * 0.05;
+    const g = grown(through([[x, y], mid, head], null, dir * Math.PI / 2 + lean * 0.5), { id, rnd, t0, root: y, w0: em * 0.04, w1: em * 0.018, curl: form === 'sweetpea', curlR: em * 0.1 });
+    if (!g) return;
+    const e = g.e;
+    e.cls = 'mm-garden__b-stem';
+    const n = e.pts.length - 1, tipI = form === 'sweetpea' ? Math.min(n, e.joints?.at(-1) ?? n) : n;
+    const at = (u) => { const i = clamp(Math.round(u * tipI), 1, tipI); return { p: e.pts[i], tan: tangentAt(e.pts.slice(0, tipI + 1), i / tipI), t: reach(e.t0, e.dur, i / n), i }; };
+    // a bud is a bud element (the budget's own type), drawn as the botanical bud
+    const flower = (f, p, r, ang, t, extra = {}) => { els.push({ type: f === 'bud' ? 'bud' : 'bloom', form: f, botany: true, x: p[0], y: p[1], r, ang, tilt: f === 'camellia' ? between(rnd, 0.86, 0.95) : f === 'peony' ? between(rnd, 0.62, 0.8) : between(rnd, 0.5, 0.85), seed: Math.floor(rnd() * 1e6), t0: t, dur: f === 'camellia' ? 1.1 : 0.85, root: y, id, n: 5, twist: 0, notch: false, ...extra }); };
+    // leaves first, so the bloom lies over them
+    const nLeaves = 3 + Math.floor(rnd() * 3);
+    for (let j = 0; j < nLeaves; j++) {
+      const q = at(between(rnd, 0.3, 0.95)), side = j % 2 ? 1 : -1, ang = q.tan + side * between(rnd, 0.6, 1.3);
+      const len = em * between(rnd, 0.6, 0.9) * (down ? 0.75 : 1), cx = q.p[0] + Math.cos(ang) * len * 0.5, cy = q.p[1] + Math.sin(ang) * len * 0.5;
+      if (!okBlob(cx, cy, len * 0.28, id, len * 0.45)) continue;
+      grid.disc(cx, cy, len * 0.28, id);
+      const tone = form === 'camellia' || rnd() < 0.25 ? 'deep' : 'sage';
+      els.push({ type: 'leaf', shape: 'broad', x: q.p[0], y: q.p[1], ang, len, wid: len * between(rnd, 0.42, 0.52), tone, light: tone === 'sage' && rnd() < 0.2, skew: between(rnd, 0.82, 1), bend: between(rnd, -1.2, 1.4) * side, t0: q.t, dur: 0.6, root: y, id });
+      hang(e, q.i);
+    }
+    const tip = e.pts[tipI], te = tangentAt(e.pts.slice(0, tipI + 1), 1), tEnd = reach(e.t0, e.dur, tipI / n);
+    if (form === 'sweetpea') {
+      // a spray: flowers up the stem's top half, alternating sides, the last at the tip
+      let side = rnd() < 0.5 ? -1 : 1;
+      for (const u of [0.55, 0.78, 1]) {
+        const q = at(u), r = em * between(rnd, 0.3, 0.36) * (down ? 0.8 : 1), p = [q.p[0] + Math.cos(q.tan + side * 1.2) * r * 0.6, q.p[1] + Math.sin(q.tan + side * 1.2) * r * 0.6];
+        if (!okBlob(p[0], p[1], r * 0.6, id, r)) continue;
+        grid.disc(p[0], p[1], r * 0.6, id);
+        flower('sweetpea', p, r, side > 0 ? -0.35 : Math.PI + 0.35, q.t + 0.15);
+        hang(e, q.i);
+        side = -side;
+      }
+      return;
+    }
+    if (form === 'lily') {
+      const q = at(0.6), side = rnd() < 0.5 ? -1 : 1, ba = q.tan + side * 0.55, r = em * 0.12;
+      const p = [q.p[0] + Math.cos(ba) * em * 0.3, q.p[1] + Math.sin(ba) * em * 0.3];
+      if (okBlob(p[0], p[1], r * 1.2, id, r * 2.6)) { grid.disc(p[0], p[1], r * 1.2, id); flower('bud', p, r, ba, q.t + 0.2, { budPaint: 'lilybud' }); hang(e, q.i); }
+    }
+    // blooms may overlap their neighbours' rims, as in a bed; their cores stay clear
+    const R0 = em * between(rnd, 0.82, 1.02) * CLUSTER[form] * (down ? 0.7 : 1);
+    const r = form === 'bud' ? null : [1, 0.82, 0.66].map((f) => R0 * f).find((v) => okBlob(tip[0], tip[1], v * 0.45, id, v * 0.9));
+    if (r) {
+      grid.disc(tip[0], tip[1], r * 0.45, id);
+      flower(form, tip, r, form === 'lily' ? te + between(rnd, -0.5, 0.5) : -Math.PI / 2 + between(rnd, -0.2, 0.2), tEnd);
+    } else {
+      const rb = em * between(rnd, 0.17, 0.22);
+      if (!okBlob(tip[0], tip[1], rb * 0.8, id)) return;
+      grid.disc(tip[0], tip[1], rb * 0.8, id);
+      flower('bud', tip, rb, te, tEnd, { budPaint: rnd() < 0.6 ? 'peony' : 'camellia' });
+    }
+    hang(e, tipI);
   }
 
   // -- the botanical bed: the plants bedLayout places, grown from below the frame. Each stem rises
@@ -910,22 +999,6 @@ export function plan(el, ctx) {
     const bed = bedLayout({ frame, box: { W, H }, base: lastBase, em, blocks, seed: set.seed, petals: set.petals, density: set.density });
     const U = bed.U, step = U * 0.006;
     model.U = U; model.bed = true;
-    // cubic segments through waypoints, tangents from their neighbours; the first leaves straight up,
-    // the last arrives along `endAng` when given
-    const through = (way, endAng) => {
-      const tan = way.map((p, i) => {
-        if (i === 0) { const d = Math.hypot(way[1][0] - p[0], way[1][1] - p[1]); return [0, -d]; }
-        if (i === way.length - 1 && endAng != null) { const d = Math.hypot(p[0] - way[i - 1][0], p[1] - way[i - 1][1]); return [Math.cos(endAng) * d, Math.sin(endAng) * d]; }
-        const a = way[Math.max(0, i - 1)], b = way[Math.min(way.length - 1, i + 1)];
-        return [(b[0] - a[0]) / 2, (b[1] - a[1]) / 2];
-      });
-      const segs = [];
-      for (let i = 0; i + 1 < way.length; i++) {
-        const p0 = way[i], p3 = way[i + 1];
-        segs.push({ p0, c1: [p0[0] + tan[i][0] / 3, p0[1] + tan[i][1] / 3], c2: [p3[0] - tan[i + 1][0] / 3, p3[1] - tan[i + 1][1] / 3], p3, len: Math.hypot(p3[0] - p0[0], p3[1] - p0[1]) });
-      }
-      return segs;
-    };
     const main = [];   // each plant's own bloom, where loose petals leave from
     bed.plants.forEach((p, pi) => {
       const id = ++plantId, rnd = rndOf(`bed|${pi}`), depth = p.depth, root = p.root[1], climber = p.type === 'sweetpea';
@@ -933,20 +1006,22 @@ export function plan(el, ctx) {
       const r0 = U * 0.016, top = climber ? [p.tip[0], p.tip[1] + r0] : p.head;
       const way = [p.root], mids = climber ? 3 : Math.hypot(top[0] - p.root[0], top[1] - p.root[1]) > 0.45 * U ? 2 : 1;
       for (let k = 1; k <= mids; k++) {
-        const f = k / (mids + 1), wob = climber ? (k % 2 ? 1 : -1) * U * between(rnd, 0.025, 0.05) : U * between(rnd, -0.03, 0.03);
+        const f = k / (mids + 1), wob = climber ? (k % 2 ? 1 : -1) * U * between(rnd, 0.03, 0.06) : U * between(rnd, -0.05, 0.05);
         way.push([p.root[0] + (top[0] - p.root[0]) * f + wob, p.root[1] + (top[1] - p.root[1]) * f]);
       }
       way.push(top);
       const { pts } = chainPts(through(way, climber ? null : p.ang), step);
       const dur = 0.5 + 0.9 * (lengthOf(pts) / U), tEnd = p.t0 + dur;
-      const w0 = U * (p.type === 'camellia' ? 0.011 : climber ? 0.0045 : 0.008), w1 = U * (climber ? 0.0025 : 0.0042);
+      const w0 = U * (p.type === 'camellia' ? 0.008 : climber ? 0.0042 : 0.0055), w1 = U * (climber ? 0.0025 : 0.0032);
       const e = tag(stem(pts, { w0, w1, t0: p.t0, dur, root, id }));
       e.cls = 'mm-garden__b-stem';
       const n = pts.length - 1;
       const on = (u) => { const i = clamp(Math.round(u * n), 1, n); return { p: pts[i], tan: tangentAt(pts, i / n), t: reach(p.t0, dur, i / n), i }; };
       for (const lf of bed.leaves.filter((q) => q.plant === pi)) {
-        const q = on(lf.u);
-        els.push(tag({ type: 'leaf', shape: 'broad', x: q.p[0], y: q.p[1], ang: q.tan + lf.side * lf.turn, len: lf.len, wid: lf.wid, tone: lf.tone, skew: lf.skew, bend: lf.bend * lf.side, t0: q.t, dur: 0.7, root, id, on: e, at: q.i }));
+        const q = on(lf.u), la = q.tan + lf.side * lf.turn, ox = Math.cos(la) * (lf.out ?? 0), oy = Math.sin(la) * (lf.out ?? 0);
+        // a leaf that points up stops short of the space under the text
+        const up = -Math.sin(la), room = q.p[1] + oy - bed.ceil, len = up > 0.15 ? Math.min(lf.len, Math.max(lf.len * 0.5, room / up)) : lf.len;
+        els.push(tag({ type: 'leaf', shape: 'broad', x: q.p[0] + ox, y: q.p[1] + oy, ang: la, len, wid: lf.wid * (len / lf.len), tone: lf.tone, light: lf.light, skew: lf.skew, bend: lf.bend * lf.side, t0: q.t, dur: 0.7, root, id, on: e, at: q.i }));
       }
       const bloom = (form, x, y, r, ang, t0, extra = {}) => els.push(tag({ type: 'bloom', form, x, y, r, ang, tilt: p.tilt, botany: true, seed: Math.floor(rnd() * 1e6), t0, dur: form === 'camellia' ? 1.5 : 1.1, root, id, n: 5, twist: 0, notch: false, ...extra }));
       // a short pedicel from u along the stem, out to one side and up, ending in a bud of `len` px;
@@ -965,7 +1040,7 @@ export function plan(el, ctx) {
         main[pi] = els.at(-1);
         const side = rnd() < 0.5 ? -1 : 1;
         if (p.type === 'camellia' && rnd() < 0.7) sideBud(0.8, U * 0.06, 'camellia', side);
-        if (p.type === 'peony' && rnd() < 0.5) sideBud(0.78, U * 0.05, 'peony', side);
+        if (p.type === 'peony' && rnd() < 0.25) sideBud(0.78, U * 0.05, 'peony', side);
         if (p.type === 'lily') { const nb = 1 + Math.floor(rnd() * 2); for (let k = 0; k < nb; k++) sideBud(0.72 + 0.1 * k, U * between(rnd, 0.05, 0.07), 'lilybud', k % 2 ? -side : side); }
       } else if (p.type === 'bud') {
         bloom('bud', p.head[0], p.head[1], p.r, p.ang, tEnd - 0.05, { budPaint: rnd() < 0.6 ? 'peony' : 'camellia' });
@@ -974,10 +1049,10 @@ export function plan(el, ctx) {
         if (rnd() < 0.6) sideBud(0.75, p.r * 0.75, 'lilybud', rnd() < 0.5 ? -1 : 1);
       } else if (climber) {
         // flowers on pedicels up the top half, alternating sides, smaller toward the top
-        const nf = 3 + Math.floor(rnd() * 3);
+        const nf = 5 + Math.floor(rnd() * 3);
         let side = rnd() < 0.5 ? -1 : 1;
         for (let k = 0; k < nf; k++) {
-          const q = on(0.45 + (0.42 * k) / Math.max(1, nf - 1)), pl = U * between(rnd, 0.022, 0.038), pa = q.tan + side * between(rnd, 0.7, 1.1);
+          const q = on(0.32 + (0.58 * k) / Math.max(1, nf - 1)), pl = U * between(rnd, 0.022, 0.038), pa = q.tan + side * between(rnd, 0.7, 1.1);
           const end = [q.p[0] + Math.cos(pa) * pl, q.p[1] + Math.sin(pa) * pl], fr = p.r * (1 - 0.08 * k);
           if (end[1] - fr * 1.2 < bed.ceil) break;
           const ped = tag(stem(densify([q.p, end], step), { w0: U * 0.0028, w1: U * 0.0024, t0: q.t, dur: 0.3, root, id, shape: 'line' }));
@@ -1014,9 +1089,12 @@ export function plan(el, ctx) {
   // several sets (mix) each anchor draws its set from a stream of the seed and the letter.
   const sets = partSets(set);
   model.sets = sets;
+  // every part grown from here on roots on letter i (text: type starts it once that letter is there)
+  const rootOn = (n0, i) => { for (const x of els.slice(n0)) x.letter = i; };
   const grow1 = (l, a, k, ps, list, once) => {
     if (ps.kind === 'circuits') return circuit(l, a, k);
     if (ps.kind === 'crystals') return crystal(l, a, k);
+    if (ps.kind === 'botanical') return cluster(l, a, k, ps);
     if (ps.stem === 'curve' || ps.stem === 'branch') {
       const n0 = els.length;
       plant(l, a, k, ps);
@@ -1041,10 +1119,12 @@ export function plan(el, ctx) {
     const cap = second ? (third ? 3 : 2) : 1;
     const pick = sets.length > 1 ? random(`garden|${set.seed}|mix|${l.index}`) : null, once = new Set();
     let up = 0, down = 0;
+    const n0 = els.length;
     list.forEach((a, k) => {
       if (isDown(a)) { if (down >= 1) return; down++; } else { if (up >= cap) return; up++; }
       grow1(l, a, k, pick ? sets[Math.floor(pick() * sets.length)] : sets[0], list, once);
     });
+    rootOn(n0, letters.indexOf(l));
   }
   if (set.bridges && (set.kind === 'vines' || set.kind === 'circuits')) bridges();
   model.botany = model.elements.some((e) => e.botany || e.shape === 'broad' || e.type === 'petal');
@@ -1055,17 +1135,21 @@ export function plan(el, ctx) {
   if (!grew()) {
     const best = letters.flatMap((l, i) => model.letters[i].anchors.filter((a) => !isDown(a)).map((a, k) => ({ l, a, k, list: model.letters[i].anchors }))).sort((p, q) => p.l.line - q.l.line || p.a.ny - q.a.ny);
     for (const { l, a, list } of best) {
+      const n0 = model.elements.length;
       grow1(l, a, 9, sets[0], list, new Set());
+      for (const x of model.elements.slice(n0)) x.letter = letters.indexOf(l);
       if (grew()) break;
     }
     model.boxShare = boxShareOf(model);
   }
   weave(model, set, em);
-  // growth windows: seconds of the garden's own clock, mapped onto [0.06, 1] of the entrance
-  let end = 0;
-  for (const e of model.elements) end = Math.max(end, e.t0 + e.dur);
-  const k = end > 0 ? 0.94 / end : 1;
-  for (const e of model.elements) { e.s = 0.06 + e.t0 * k; e.e = 0.06 + (e.t0 + e.dur) * k; }
+  // growth windows: seconds of the garden's own clock, mapped onto [0.06, 1] of the entrance; typed,
+  // each plant starts once its letter is whole
+  if (set.text === 'type' && !model.bed) {
+    const all = typeReveal(Math.max(1, ...letters.map((l) => l.ci + 1)), set.typeShare);
+    model.reveal = letters.map((l) => all[l.ci]);
+    typedWindows(model.elements, (i) => model.reveal[i].done);
+  } else typedWindows(model.elements, null);
   // a bed is drawn row by row, back to front; within a row (and in every other garden) by part
   model.elements.sort((p, q) => (p.depth ?? 0) - (q.depth ?? 0) || z(p) - z(q));
   remember(key, model);
@@ -1073,6 +1157,40 @@ export function plan(el, ctx) {
 }
 
 const Z = { stem: 0, trace: 0, line: 0, leaf: 1, dot: 1, tuft: 1, bud: 2, shard: 2, via: 2, pad: 2, bloom: 3 };
+
+/**
+ * When each of n characters of a typed line shows: [{ at, done }] in entrance progress. The typing
+ * takes the first `share` of the entrance, one even slot per character in reading order (a space
+ * takes its slot too); a character waits for most of its slot, then wipes in over its last 40 %, so
+ * it is whole at the slot's end and the last one exactly at `share`.
+ */
+export function typeReveal(n, share) {
+  const slot = share / Math.max(1, n);
+  return Array.from({ length: n }, (_, j) => ({ at: (j + 0.6) * slot, done: (j + 1) * slot }));
+}
+
+/**
+ * Growth windows [s, e] (entrance progress) for elements whose t0 and dur are seconds of the
+ * garden's own clock. Without `doneOf`, or for an element on no letter, the whole clock maps onto
+ * [0.06, 1]. With it, each plant (the elements of one id) on a letter starts when doneOf(letter) says
+ * the letter is whole and keeps its own clock's order and proportions; every plant grows at one
+ * speed, the fastest that lets the slowest to fit end exactly at p = 1.
+ */
+export function typedWindows(elements, doneOf) {
+  let end = 0;
+  for (const e of elements) if (!doneOf || e.letter == null) end = Math.max(end, e.t0 + e.dur);
+  const k = end > 0 ? 0.94 / end : 1;
+  const plants = new Map();
+  for (const e of elements) {
+    if (!doneOf || e.letter == null) { e.s = 0.06 + e.t0 * k; e.e = 0.06 + (e.t0 + e.dur) * k; continue; }
+    const p = plants.get(e.id) ?? { from: Infinity, to: 0, at: 0, els: [] };
+    p.from = Math.min(p.from, e.t0); p.to = Math.max(p.to, e.t0 + e.dur); p.at = Math.max(p.at, doneOf(e.letter)); p.els.push(e);
+    plants.set(e.id, p);
+  }
+  let speed = Infinity;
+  for (const p of plants.values()) speed = Math.min(speed, (1 - p.at) / Math.max(1e-9, p.to - p.from));
+  for (const p of plants.values()) for (const e of p.els) { e.s = p.at + (e.t0 - p.from) * speed; e.e = e.s + e.dur * speed; }
+}
 
 /**
  * A stem's width at u along it (0 root, 1 tip), by its profile: a straight taper from w0 to w1 by
@@ -1353,15 +1471,19 @@ export function frondLeaflets(rnd, length, size) {
 export const GRADIENTS = {
   // a bloom's petal shows only its outer lobe past the ring inside it: a crease of shade where it
   // leaves that ring, a light rim
-  camellia: { base: 'accent', stops: [[0, 'ink', 0.2], [0.76, 'ink', 0.17], [0.88, 'ink', 0], [0.88, 'canvas', 0], [1, 'canvas', 0.42]] },
+  camellia: { base: 'accent', stops: [[0, 'ink', 0.44], [0.3, 'ink', 0.24], [0.6, 'ink', 0.08], [0.78, 'ink', 0], [0.78, 'canvas', 0], [1, 'canvas', 0.14]] },
   // a loose camellia petal shows whole: deeper at its base, light at its rim
   coral: { base: 'accent', stops: [[0, 'ink', 0.3], [0.5, 'ink', 0], [0.5, 'canvas', 0], [1, 'canvas', 0.26]] },
-  sweetpea: { base: 'accent', stops: [[0, 'canvas', 0.16], [0.5, 'canvas', 0.4], [1, 'canvas', 0.64]] },
-  peony: { base: 'surface', stops: [[0, 'ink', 0.26], [0.45, 'ink', 0.12], [0.82, 'ink', 0], [1, 'ink', 0]] },
-  lily: { base: 'accentInk', stops: [[0, 'accent', 0.5], [0.45, 'accent', 0], [0.45, 'canvas', 0], [1, 'canvas', 0.18]] },
+  sweetpea: { base: 'accent', stops: [[0, 'canvas', 0.12], [0.5, 'canvas', 0.24], [1, 'canvas', 0.46]] },
+  // a sweet pea's wings: the pale surface, flushed with the accent toward the rim
+  wing: { base: 'surface', stops: [[0, 'accent', 0], [0.6, 'accent', 0.06], [1, 'accent', 0.26]] },
+  peony: { base: 'surface', stops: [[0, 'accentInk', 0.4], [0.45, 'accentInk', 0.16], [0.8, 'accentInk', 0.03], [1, 'accentInk', 0]] },
+  lily: { base: 'accentInk', stops: [[0, 'accent', 0.5], [0.22, 'accent', 0.16], [0.42, 'accent', 0], [0.42, 'canvas', 0], [1, 'canvas', 0.12]] },
   lilybud: { base: 'accentInk', stops: [[0, 'muted', 1], [0.5, 'muted', 0.45], [1, 'muted', 0]] },
   deep: { base: 'line', stops: [[0, 'ink', 0.3], [0.5, 'ink', 0], [0.5, 'canvas', 0], [1, 'canvas', 0.2]] },
-  sage: { base: 'muted', stops: [[0, 'ink', 0.28], [0.5, 'ink', 0], [0.5, 'canvas', 0], [1, 'canvas', 0.2]] },
+  sage: { base: 'muted', stops: [[0, 'ink', 0.46], [0.6, 'ink', 0.24], [0.9, 'ink', 0.06], [1, 'ink', 0.02]] },
+  // the lighter sage leaves, a minority: the muted lit toward its tip
+  sagelight: { base: 'muted', stops: [[0, 'canvas', 0.06], [1, 'canvas', 0.36]] },
 };
 
 const n1 = (v) => Math.round(v * 10) / 10;
@@ -1427,6 +1549,81 @@ function roundVeins(L, W, n, from = 0.3) {
 const lineW = (w) => ({ 'stroke-width': r2(Math.max(0.5, w)), 'vector-effect': 'non-scaling-stroke' });
 
 /**
+ * A broad petal with an irregular wavy rim, in its own frame from its base at the origin to its rim
+ * at x = L, W wide: a narrow claw (`claw` of the width) widening fast to a round rim, the rim dented
+ * by two seeded waves (`waves` and twice that plus one, `depth` deep) and, with `notch`, at its
+ * middle; `skew` makes one side fuller. Every random choice comes from `rnd`, drawn here. Returns
+ * { pts, rim, c }: the closed outline, the rim's own points (base side excluded) and the rim's centre.
+ */
+export function wavyPetal(L, W, rnd, { claw = 0.3, waves = 2, depth = 0.08, notch = 0, skew = 0 } = {}) {
+  const b = W / 2, a = clamp(b, L * 0.18, L * 0.62), X0 = L - a;
+  const p1 = rnd() * TAU, p2 = rnd() * TAU, mix = between(rnd, 0.3, 0.6), f2 = waves * 2 + 1;
+  const side = (u, sg) => [X0 * u, sg * b * (1 + skew * sg) * (claw + (1 - claw) * Math.sin((u * Math.PI) / 2) ** 0.7)];
+  const pts = [], rim = [];
+  for (let k = 0; k <= 10; k++) pts.push(side(k / 10, -1));
+  const N = 36;
+  for (let k = 1; k < N; k++) {
+    const v = k / N, th = -Math.PI / 2 + v * Math.PI;
+    const w = (1 - mix) * Math.sin(v * Math.PI * waves + p1) + mix * Math.sin(v * Math.PI * f2 + p2);
+    const m = 1 - depth * (0.5 + 0.5 * w) - notch * Math.exp(-((th / 0.13) ** 2));
+    const q = [X0 + a * Math.cos(th) * m, b * (1 + skew * Math.sin(th)) * Math.sin(th) * m];
+    pts.push(q); rim.push(q);
+  }
+  for (let k = 10; k >= 0; k--) pts.push(side(k / 10, 1));
+  return { pts, rim, c: [X0, 0] };
+}
+
+// The turned-back rim of a cupped petal: the band between its rim (the middle `span` of it) and the
+// rim pulled `deep` of the way toward the petal's base, as a closed path, and its inner edge, where
+// the fold casts its line.
+function foldOf(shape, deep = 0.2, span = 0.7) {
+  const n = shape.rim.length, i0 = Math.round(n * (1 - span) / 2), i1 = n - 1 - i0;
+  const outer = shape.rim.slice(i0, i1 + 1);
+  const inner = outer.map(([x, y], k) => { const f = deep * Math.sin((Math.PI * (k + 0.5)) / outer.length) ** 0.6; return [x - (x - shape.c[0] * 0.35) * f, y - y * f * 0.6]; });
+  return { d: pathOf(outer.concat(inner.slice().reverse()), true), line: lineD(inner) };
+}
+
+// Fine radial veins of a broad petal: `n` lines from near its claw out to most of the way to its rim.
+function fanVeins(shape, n, from = 0.25, to = 0.7) {
+  const r = shape.rim, L = shape.c[0];
+  let d = '';
+  for (let j = 0; j < n; j++) {
+    const q = r[Math.round(((j + 0.5) / n) * (r.length - 1))], a = [L * from, q[1] * 0.12], b = [a[0] + (q[0] - a[0]) * to, a[1] + (q[1] - a[1]) * to];
+    d += curve(a, [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + (b[1] - a[1]) * 0.12], b);
+  }
+  return d;
+}
+
+// A point of a 3-vector projected on the frame (orthographic: the frame's x and y), and vector helpers
+const v3 = { add: (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]], mul: (a, k) => [a[0] * k, a[1] * k, a[2] * k], cross: (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]], unit: (a) => { const l = Math.hypot(...a) || 1; return [a[0] / l, a[1] / l, a[2] / l]; } };
+
+/**
+ * A lily's tepal in three quarters, in the bloom's frame: it leaves the throat at the origin along
+ * the cone round the flower's axis `ax` (half-angle `cone`) at azimuth `phi`, sweeps out and recurves
+ * by `curl` toward its tip, `L` long and `W` wide. Returns { pts, mid, z, facing, tip } projected on
+ * the frame: the outline, its midline, the depth of its middle (toward the viewer is positive), and
+ * whether the viewer sees its inner face.
+ */
+export function tepal3(ax, phi, L, W, { cone = 1.0, curl = 0.9, waist = 0.14 } = {}) {
+  const up = Math.abs(ax[2]) > 0.98 ? [1, 0, 0] : [0, 0, 1];
+  const u = v3.unit(v3.cross(ax, up)), v = v3.cross(ax, u);
+  const radial = v3.add(v3.mul(u, Math.cos(phi)), v3.mul(v, Math.sin(phi))), tang = v3.add(v3.mul(u, -Math.sin(phi)), v3.mul(v, Math.cos(phi)));
+  const M = 16, mid = [[0, 0, 0]], dirs = [];
+  for (let k = 0; k <= M; k++) {
+    const s = k / M, a = cone * (0.55 + 0.45 * Math.min(1, s * 2.2)) + curl * s * s;
+    dirs.push(v3.add(v3.mul(ax, Math.cos(a)), v3.mul(radial, Math.sin(a))));
+    if (k) mid.push(v3.add(mid[k - 1], v3.mul(dirs[k], L / M)));
+  }
+  const half = (s) => (W / 2) * (waist * (1 - s) + (1 - waist) * Math.sin(Math.PI * s ** 0.7) ** 0.85 * (1 - s) ** 0.18);
+  const left = [], right = [];
+  for (let k = 0; k <= M; k++) { const h = half(k / M); left.push(v3.add(mid[k], v3.mul(tang, h))); right.push(v3.add(mid[k], v3.mul(tang, -h))); }
+  const P = (q) => [q[0], q[1]];
+  // the inner face looks along sin(a) ax - cos(a) radial, at the middle of the tepal
+  const am = cone + curl * 0.25, inner = Math.sin(am) * ax[2] - Math.cos(am) * radial[2];
+  return { pts: left.map(P).concat(right.reverse().map(P)), mid: mid.map(P), z: mid[M >> 1][2], facing: inner >= 0, tip: P(mid[M]) };
+}
+
+/**
  * The shapes of an illustrated bloom at (x, y), facing `e.ang`, of radius `e.r`, at local progress
  * t: [{ d, tf, paint | cls, attrs, ...meta }], each a path in its own frame placed by `tf`. A
  * camellia is seven rings of rounded petals drawn from the outside in round a deep heart; a peony is
@@ -1444,122 +1641,148 @@ function botany(e, x, y, t, mode, o) {
   const plane = tfOf(x, y, rot(face), scl(1, tilt));
   const bs = sc(t / 0.32);
   if (e.form === 'camellia') {
-    // each petal runs from 30 % of its ring's radius to the ring, so the ring inside it hides all
-    // but its round outer lobe; lobes overlap their neighbours by a fifth
-    const rings = [[1, 11], [0.86, 10], [0.72, 9], [0.59, 8], [0.47, 7], [0.36, 6], [0.25, 5], [0.15, 3]];
+    // [radius, petals, where a petal starts as a share of its ring]: a few very large, broad petals
+    // with wavy rims, then smaller and smaller cupped petals whose rims curl back, folding into a
+    // tight swirl at the heart
+    const rings = [[1, 8, 0.34], [0.84, 7, 0.32], [0.68, 7, 0.3], [0.54, 6, 0.28], [0.41, 6, 0.26], [0.3, 5, 0.24], [0.2, 4, 0.2], [0.12, 3, 0.15]];
     const spin = rnd() * TAU;
-    const petals = rings.map(([k, n], ri) => Array.from({ length: n }, (_, i) => {
-      const inner = R * k * 0.3, L = R * k - inner, W = Math.min(2 * R * k * Math.sin(Math.PI / n) * 1.45, L * 0.98);
-      const th = spin + ri * 0.47 + (i * TAU) / n + (rnd() - 0.5) * 0.22;
-      const l = L * between(rnd, 0.95, 1.05), w = W * between(rnd, 0.9, 1.1);
-      return { inner, th, l, w, d: pathOf(roundPetal(l, w, { ruffle: 0.04, n: 2, notch: 0.07, phase: rnd() * 3, claw: 0.35 }), true) };
+    const petals = rings.map(([k, n, from], ri) => Array.from({ length: n }, (_, i) => {
+      const inner = R * k * from, L = (R * k - inner) * between(rnd, 0.88, 1.12);
+      const W = Math.min(2 * R * k * Math.sin(Math.PI / n) * between(rnd, 1.3, 1.65), L * (ri < 2 ? 1.35 : 1.2));
+      const th = spin + ri * 0.61 + ((i + (rnd() - 0.5) * 0.4) * TAU) / n;
+      const sh = wavyPetal(L, W, rnd, { claw: 0.3, waves: 1 + Math.floor(rnd() * 2), depth: between(rnd, 0.05, ri < 2 ? 0.14 : 0.1), notch: rnd() < 0.35 ? 0.05 : 0, skew: between(rnd, -0.14, 0.14) });
+      // the shadow a petal casts on the one beneath it: its own outline a little larger
+      const grown = (f) => pathOf(sh.pts.map(([px, py]) => [px * (1 + 0.6 * f) + R * k * 0.02 * f * 10, py * (1 + f)]), true);
+      const shadow = ri ? [grown(0.045), grown(0.1)] : null;
+      return { inner, th, d: pathOf(sh.pts, true), shadow, fold: ri >= 1 && rnd() < 0.8 ? foldOf(sh, between(rnd, 0.12, ri < 3 ? 0.22 : 0.32), between(rnd, 0.4, 0.8)) : null, veins: ri < 5 ? fanVeins(sh, 9, 0.32, 0.7) : '' };
     }));
     if (bs <= 0.001) return out;
-    out.push({ d: oval(0, 0, R * 0.36), tf: plane + scl(bs), cls: 'mm-garden__b-on-accent', ring: -1 });
+    out.push({ d: oval(0, 0, R * 0.42), tf: plane + scl(bs), cls: 'mm-garden__b-on-accent', ring: -1 });
     rings.forEach(([k], ri) => {
-      const open = clamp01((t - 0.06 - 0.06 * ri) / 0.5), s = bs * (0.3 + 0.7 * sc(open)), turn = (1 - out3(open)) * 0.5;
-      // the inner rings sit a little higher, so the bloom reads as a cup seen from the front
-      const lift = mov(0, -(1 - k) * 0.16 * R);
-      if (ri === rings.length - 2) out.push({ d: oval(0, 0, R * 0.2), tf: plane + scl(s) + lift, cls: 'mm-garden__b-core', ring: ri });
+      const open = clamp01((t - 0.06 - 0.05 * ri) / 0.5), s = bs * (0.3 + 0.7 * sc(open)), turn = (1 - out3(open)) * 0.5;
+      // the inner rings sit higher, so the bloom reads as a cup seen from the front
+      const lift = mov(0, -(1 - k) * 0.2 * R);
+      if (ri === 4) out.push({ d: oval(0, 0, R * 0.3), tf: plane + scl(s) + lift, cls: 'mm-garden__b-core', ring: ri });
       for (const q of petals[ri]) {
         const tf = plane + scl(s) + lift + rot(q.th + turn) + mov(q.inner, 0);
-        out.push({ d: q.d, tf, paint: 'camellia', ring: ri });
-        out.push({ d: q.d, tf, cls: 'mm-garden__b-detail', attrs: lineW(R * 0.004), ring: ri });
-        if (R * k * s > 34) out.push({ d: roundVeins(q.l, q.w, 5, 0.72), tf, cls: 'mm-garden__b-fine', attrs: lineW(R * 0.003), ring: ri });
+        if (q.shadow) for (const d of q.shadow) out.push({ d, tf, cls: 'mm-garden__b-cast', ring: ri });
+        out.push({ d: q.d, tf, paint: 'camellia', edge: R * 0.008, ring: ri });
+        if (q.veins && R * k * s > 30) out.push({ d: q.veins, tf, cls: 'mm-garden__b-streak', attrs: lineW(R * 0.004), ring: ri });
+        if (q.fold) {
+          out.push({ d: q.fold.d, tf, cls: 'mm-garden__b-rimlight', ring: ri });
+          out.push({ d: q.fold.line, tf, cls: 'mm-garden__b-fold', attrs: lineW(R * 0.005), ring: ri });
+        }
+        out.push({ d: q.d, tf, cls: 'mm-garden__b-detail', attrs: lineW(R * 0.005), ring: ri });
       }
     });
     return out;
   }
   if (e.form === 'peony') {
-    // a cup seen from a little above: a flared ring of ruffled petals in the tilted plane, a back
-    // wall of upright petals, the golden heart of stamens, then a front wall of upright petals over
-    // the heart's lower half
-    const spin = rnd() * TAU;
-    const petal = (L, W) => { const n = 5 + Math.floor(rnd() * 3), l = L * between(rnd, 0.9, 1.08), w = W * between(rnd, 0.88, 1.12); return { l, w, n, d: pathOf(roundPetal(l, w, { ruffle: between(rnd, 0.12, 0.2), n, phase: rnd() * 3, claw: 0.38 }), true) }; };
-    const flare = Array.from({ length: 11 }, (_, i) => ({ th: spin + (i * TAU) / 11 + (rnd() - 0.5) * 0.25, ...petal(R * 0.72, R * 0.52) }));
-    const wall = (n, cy, spread, L, W, fan) => Array.from({ length: n }, (_, i) => {
-      const f = n > 1 ? i / (n - 1) - 0.5 : 0;
-      return { x: f * spread * R + (rnd() - 0.5) * 0.06 * R, y: cy * R + Math.abs(f) * (cy < 0.2 ? 0.1 : -0.16) * R, th: -Math.PI / 2 + f * fan + (rnd() - 0.5) * 0.2, ...petal(L * R * (1 - 0.3 * Math.abs(f)), W * R) };
-    });
-    const back = wall(9, 0.1, 1.5, 0.84, 0.42, 2.6), middle = wall(6, 0.24, 0.95, 0.42, 0.36, 2.2), front = wall(7, 0.5, 1.35, 0.56, 0.42, 1.9);
-    const gold = Array.from({ length: 22 }, () => { const a = rnd() * TAU, d = Math.sqrt(rnd()); return { x: Math.cos(a) * d * R * 0.3, y: -0.06 * R + Math.sin(a) * d * R * 0.13, r: R * between(rnd, 0.025, 0.045), deep: rnd() < 0.25 }; });
+    // a globe of many thin, ruffled petals: a back fan, guard petals at the sides, golden stamens
+    // peeking at the top, a crowd of small ruffled petals round them and a bowl of broad petals in front
+    const petal = (L, W, ruff) => {
+      const n = 5 + Math.floor(rnd() * 4), l = L * between(rnd, 0.88, 1.1), w = W * between(rnd, 0.85, 1.15);
+      const sh = wavyPetal(l, w, rnd, { claw: 0.34, waves: n, depth: ruff * between(rnd, 0.8, 1.25), skew: between(rnd, -0.15, 0.15) });
+      return { l, n, d: pathOf(sh.pts, true), veins: fanVeins(sh, 3, 0.35, 0.5) };
+    };
+    const fan = Array.from({ length: 9 }, (_, i) => ({ th: -Math.PI + 0.32 + (i / 8) * (Math.PI - 0.64) + (rnd() - 0.5) * 0.18, y: 0.04, ...petal(R * 0.8, R * 0.5, 0.2) }));
+    const guards = [Math.PI + 0.2, Math.PI * 0.84, -0.2, Math.PI * 0.16].map((a) => ({ th: a + (rnd() - 0.5) * 0.2, y: 0.1, ...petal(R * 0.86, R * 0.6, 0.16) }));
+    const gold = Array.from({ length: 22 }, () => { const a = rnd() * TAU, d = Math.sqrt(rnd()); return { x: Math.cos(a) * d * R * 0.2, y: -0.21 * R + Math.sin(a) * d * R * 0.08, r: R * between(rnd, 0.012, 0.026), deep: rnd() < 0.35 }; });
+    const crowd = Array.from({ length: 18 }, () => {
+      const a = rnd() * TAU, d = Math.sqrt(rnd()), x = Math.cos(a) * d * R * 0.44, y = -0.02 * R + Math.sin(a) * d * R * 0.26;
+      return { x, y, th: Math.atan2(y + 0.3 * R, x) + (rnd() - 0.5) * 0.9, ...petal(R * between(rnd, 0.3, 0.44), R * between(rnd, 0.3, 0.42), 0.22) };
+    }).sort((p, q) => p.y - q.y);
+    const bowl = Array.from({ length: 6 }, (_, i) => ({ th: 0.12 * Math.PI + (i / 5) * 0.76 * Math.PI + (rnd() - 0.5) * 0.2, ...petal(R * 0.62, R * 0.64, 0.1) }));
     if (bs <= 0.001) return out;
     const upright = tfOf(x, y, rot(face));
     const put = (q, tf, ri) => {
-      out.push({ d: q.d, tf, paint: 'peony', ruffle: q.n, ring: ri });
-      out.push({ d: q.d, tf, cls: 'mm-garden__b-fine', attrs: lineW(R * 0.006), ring: ri });
-      if (q.l > 30) out.push({ d: roundVeins(q.l, q.w, 3, 0.45), tf, cls: 'mm-garden__b-fine', attrs: lineW(R * 0.004), ring: ri });
+      out.push({ d: q.d, tf, paint: 'peony', edge: R * 0.006, ruffle: q.n, ring: ri });
+      if (q.l > 26) out.push({ d: q.veins, tf, cls: 'mm-garden__b-fine', attrs: lineW(R * 0.004), ring: ri });
+      out.push({ d: q.d, tf, cls: 'mm-garden__b-detail', attrs: lineW(R * 0.012), ring: ri });
     };
-    const o1 = clamp01((t - 0.05) / 0.5), s1 = bs * (0.3 + 0.7 * sc(o1));
-    for (const q of flare) put(q, tfOf(x, y, rot(face), scl(1, tilt * 0.7)) + scl(s1) + rot(q.th + (1 - out3(o1)) * 0.4) + mov(R * 0.28, 0), 0);
-    const s2 = bs * (0.35 + 0.65 * sc((t - 0.15) / 0.55));
-    for (const q of back) put(q, upright + scl(s2) + mov(q.x, q.y) + rot(q.th), 1);
-    const g = sc((t - 0.3) / 0.45);
+    const o1 = clamp01((t - 0.05) / 0.5), s1 = bs * (0.3 + 0.7 * sc(o1)), sq = scl(1, Math.min(1, tilt * 1.15));
+    for (const q of fan) put(q, upright + sq + scl(s1) + mov(0, q.y * R) + rot(q.th + (1 - out3(o1)) * 0.3), 0);
+    for (const q of guards) put(q, upright + sq + scl(s1) + mov(0, q.y * R) + rot(q.th - (1 - out3(o1)) * 0.3), 1);
+    const g = sc((t - 0.25) / 0.45);
     if (g > 0.001) {
-      out.push({ d: oval(0, -0.06 * R, R * 0.32 * g, R * 0.15 * g), tf: upright, cls: 'mm-garden__b-gold' });
+      out.push({ d: oval(0, -0.2 * R, R * 0.13 * g, R * 0.05 * g), tf: upright, cls: 'mm-garden__b-gold' });
       for (const q of gold) out.push({ d: oval(q.x, q.y, q.r * g), tf: upright, cls: q.deep ? 'mm-garden__b-gold-deep' : 'mm-garden__b-gold' });
     }
-    const s3 = bs * sc((t - 0.35) / 0.55);
-    if (s3 > 0.001) for (const q of [...middle, ...front]) put(q, upright + scl(s3) + mov(q.x, q.y) + rot(q.th), 2);
+    const s2 = bs * sc((t - 0.3) / 0.55);
+    if (s2 > 0.001) for (const q of crowd) put(q, upright + scl(s2) + mov(q.x, q.y) + rot(q.th), 2);
+    const s3 = bs * sc((t - 0.4) / 0.55);
+    if (s3 > 0.001) for (const q of bowl) put(q, upright + sq + scl(s3) + mov(0, 0.02 * R) + rot(q.th), 3);
     return out;
   }
   if (e.form === 'lily') {
+    // a trumpet in three quarters: six tepals on a cone round the flower's axis, sweeping out and
+    // recurving at their tips, drawn from the back to the front; golden, orange toward the throat,
+    // spotted, each creased along its midrib; short stamens with orange-brown anthers
+    const az = clamp(0.1 + 0.6 * (e.tilt ?? 0.75), 0.3, 0.75), ang = e.ang ?? -Math.PI / 2, pl = Math.sqrt(1 - az * az);
+    const ax = [Math.cos(ang) * pl, Math.sin(ang) * pl, az];
     const spin = rnd() * TAU;
     const tepals = Array.from({ length: 6 }, (_, i) => {
-      const L = R * between(rnd, 0.9, 1.02), W = R * (i % 2 ? 0.5 : 0.4), bend = (i % 2 ? 1 : -1) * between(rnd, 0.08, 0.18);
-      const p = pointPetal(L, W, { bend, waist: 0.16 });
-      const spots = Array.from({ length: 3 + Math.floor(rnd() * 3) }, () => { const u = between(rnd, 0.12, 0.5), [mx, my] = p.mid(u); return [mx, my + (rnd() < 0.5 ? -1 : 1) * p.half(u) * between(rnd, 0.2, 0.55), R * between(rnd, 0.012, 0.02)]; });
-      let mid = `M${n1(p.mid(0.04)[0])} ${n1(p.mid(0.04)[1])}`;
-      for (let k = 1; k <= 8; k++) { const [mx, my] = p.mid(0.04 + (0.76 * k) / 8); mid += `L${n1(mx)} ${n1(my)}`; }
-      let veins = '';
-      for (const sg of [-1, 1]) { const a = p.mid(0.1), b = p.mid(0.7), c = p.mid(0.4); veins += curve([a[0], a[1] + sg * p.half(0.1) * 0.4], [c[0], c[1] + sg * p.half(0.4) * 0.5], [b[0], b[1] + sg * p.half(0.7) * 0.4]); }
-      return { th: spin + (i * Math.PI) / 3 + (rnd() - 0.5) * 0.16, d: pathOf(p.pts, true), mid, spots, veins };
+      const L = R * between(rnd, 0.92, 1.05), W = R * (i % 2 ? 0.72 : 0.6) * between(rnd, 0.92, 1.08);
+      const g = tepal3(ax, spin + (i * Math.PI) / 3 + (rnd() - 0.5) * 0.2, L, W, { cone: between(rnd, 0.55, 0.75), curl: between(rnd, 1.0, 1.4) });
+      const a = Math.atan2(g.tip[1], g.tip[0]), c = Math.cos(-a), sn = Math.sin(-a), loc = (q) => [q[0] * c - q[1] * sn, q[0] * sn + q[1] * c];
+      const pts = g.pts.map(loc), mid = g.mid.map(loc), M = mid.length - 1;
+      const spots = Array.from({ length: g.facing ? 4 + Math.floor(rnd() * 3) : 1 + Math.floor(rnd() * 2) }, () => { const m = mid[2 + Math.floor(rnd() * 6)], off = (rnd() - 0.5) * W * 0.5; return [m[0], m[1] + off, R * between(rnd, 0.008, 0.014)]; });
+      return { a, d: pathOf(pts, true), shade: pathOf(pts.slice(0, M + 1).concat(mid.slice().reverse()), true), mid: lineD(mid.slice(1, M - 2)), z: g.z, facing: g.facing, spots };
+    }).sort((p, q) => p.z - q.z);
+    const stamens = Array.from({ length: 6 }, (_, i) => {
+      const ph = spin + (i * Math.PI) / 3 + Math.PI / 6, rad = [Math.cos(ph), Math.sin(ph)];
+      const len = R * between(rnd, 0.32, 0.44), sp = R * between(rnd, 0.06, 0.12);
+      return { end: [ax[0] * len + rad[0] * sp * az, ax[1] * len + rad[1] * sp * az], bow: (rnd() - 0.5) * 0.3 };
     });
-    const stamens = Array.from({ length: 6 }, (_, i) => ({ th: spin + (i * Math.PI) / 3 + Math.PI / 6 + (rnd() - 0.5) * 0.3, L: R * between(rnd, 0.72, 0.95), bow: R * between(rnd, -0.1, 0.1) }));
     if (bs <= 0.001) return out;
     const open = clamp01((t - 0.08) / 0.55), s = bs * (0.38 + 0.62 * sc(open)), turn = (1 - out3(open)) * 0.35;
-    for (const i of [0, 2, 4, 1, 3, 5]) {
-      const q = tepals[i], tf = plane + scl(s) + rot(q.th + turn);
-      out.push({ d: q.d, tf, paint: 'lily' });
-      out.push({ d: q.d, tf, cls: 'mm-garden__b-detail', attrs: lineW(R * 0.006) });
-      out.push({ d: q.mid, tf, cls: 'mm-garden__b-midrib', attrs: lineW(R * 0.008) });
-      if (R * s > 30) out.push({ d: q.veins, tf, cls: 'mm-garden__b-fine', attrs: lineW(R * 0.005) });
+    const base = tfOf(x, y, scl(s));
+    tepals.forEach((q, k) => {
+      const tf = base + rot(q.a + turn);
+      out.push({ d: q.d, tf, paint: 'lily', edge: R * 0.007 });
+      out.push({ d: q.shade, tf, cls: q.facing ? 'mm-garden__b-crease' : 'mm-garden__b-shade' });
+      out.push({ d: q.mid, tf, cls: 'mm-garden__b-midrib', attrs: lineW(R * 0.012) });
       for (const [sx, sy, sr] of q.spots) out.push({ d: oval(sx, sy, sr * 1.4, sr), tf, cls: 'mm-garden__b-spot' });
-    }
-    out.push({ d: oval(0, 0, R * 0.17), tf: plane + scl(s), cls: 'mm-garden__b-throat' });
+      out.push({ d: q.d, tf, cls: 'mm-garden__b-detail', attrs: lineW(R * 0.006) });
+    });
     const st = sc((t - 0.45) / 0.45);
     if (st > 0.001) {
+      const sf = tfOf(x, y, scl(s * st));
       for (const q of stamens) {
-        const tf = plane + scl(st) + rot(q.th), end = [q.L, q.bow];
-        out.push({ d: curve([0, 0], [q.L * 0.5, q.bow * 1.6], end), tf, cls: 'mm-garden__b-filament', attrs: lineW(R * 0.011) });
-        out.push({ d: oval(end[0], end[1], R * 0.07, R * 0.028), tf, cls: 'mm-garden__b-anther' });
+        const [ex, ey] = q.end, mx = ex / 2 - ey * q.bow, my = ey / 2 + ex * q.bow, a = Math.atan2(ey, ex);
+        out.push({ d: curve([0, 0], [mx, my], q.end), tf: sf, cls: 'mm-garden__b-filament', attrs: lineW(R * 0.006) });
+        out.push({ d: oval(0, 0, R * 0.055, R * 0.022), tf: sf + mov(ex, ey) + rot(a + Math.PI / 2), cls: 'mm-garden__b-pollen' });
+        out.push({ d: oval(0, 0, R * 0.055, R * 0.022), tf: sf + mov(ex, ey) + rot(a + Math.PI / 2), cls: 'mm-garden__b-anther' });
       }
-      const tf = plane + scl(st) + rot(spin);
-      out.push({ d: curve([0, 0], [R * 0.4, R * 0.05], [R * 0.82, 0]), tf, cls: 'mm-garden__b-filament', attrs: lineW(R * 0.014) });
-      out.push({ d: oval(R * 0.84, 0, R * 0.035), tf, cls: 'mm-garden__b-stigma' });
+      const pe = [ax[0] * R * 0.48, ax[1] * R * 0.48];
+      out.push({ d: curve([0, 0], [pe[0] * 0.5, pe[1] * 0.5 + R * 0.03], pe), tf: sf, cls: 'mm-garden__b-filament', attrs: lineW(R * 0.009) });
+      out.push({ d: oval(pe[0], pe[1], R * 0.03), tf: sf, cls: 'mm-garden__b-stigma' });
     }
     return out;
   }
   if (e.form === 'sweetpea') {
+    // seen from the side: a large upright standard with a wavy, notched rim and a crease down its
+    // middle, two pale wings flushed with the standard's colour at their rims, a keel, a green calyx
     const flip = Math.cos(e.ang ?? 0) < 0 ? -1 : 1, base = tfOf(x, y, rot(e.ang ?? 0), scl(1, flip));
-    const std = roundPetal(R * 0.95, R * 1.3, { ruffle: 0.08, n: 6, phase: rnd() * 3, claw: 0.25 });
-    const wings = [-0.55, -0.18].map((a) => ({ a: a + (rnd() - 0.5) * 0.1, d: pathOf(roundPetal(R * 0.6, R * 0.5, { ruffle: 0.05, n: 3, phase: rnd() * 3, claw: 0.3 }), true) }));
-    const keel = pathOf(pointPetal(R * 0.5, R * 0.24, { bend: 0.14, waist: 0.3 }).pts, true);
-    const calyx = pathOf(pointPetal(R * 0.42, R * 0.34, { waist: 0.5 }).pts, true), sepal = pathOf(pointPetal(R * 0.32, R * 0.1).pts, true);
+    const std = wavyPetal(R * 1.05, R * 1.55, rnd, { claw: 0.22, waves: 3, depth: 0.1, notch: 0.08, skew: between(rnd, -0.1, 0.1) });
+    const wings = [-0.38, 0.04].map((a) => ({ a: a + (rnd() - 0.5) * 0.12, d: pathOf(wavyPetal(R * 0.74, R * 0.6, rnd, { claw: 0.3, waves: 2, depth: 0.08 }).pts, true) }));
+    const keel = pathOf(pointPetal(R * 0.55, R * 0.26, { bend: 0.2, waist: 0.3 }).pts, true);
+    const calyx = pathOf(pointPetal(R * 0.42, R * 0.34, { waist: 0.5 }).pts, true), sepal = pathOf(pointPetal(R * 0.34, R * 0.1).pts, true);
     if (bs <= 0.001) return out;
     const sw = scl(bs), su = scl(0.35 + 0.65 * sc((t - 0.15) / 0.6));
     out.push({ d: calyx, tf: base + sw, paint: 'sage', part: 'calyx' });
     for (const a of [-0.55, 0.55]) out.push({ d: sepal, tf: base + sw + mov(R * 0.25, 0) + rot(a), paint: 'sage', part: 'calyx' });
-    const stdTf = base + sw + mov(R * 0.3, 0) + rot(-1.25) + su;
-    const stdD = pathOf(std, true);
-    out.push({ d: stdD, tf: stdTf, paint: 'sweetpea', part: 'standard' });
-    out.push({ d: stdD, tf: stdTf, cls: 'mm-garden__b-detail', attrs: lineW(R * 0.012) });
-    if (R * bs > 14) out.push({ d: roundVeins(R * 0.95, R * 1.3, 7, 0.3), tf: stdTf, cls: 'mm-garden__b-fine', attrs: lineW(R * 0.008) });
-    const wingAt = (w) => base + sw + mov(R * 0.32, R * 0.04) + rot(w.a);
-    out.push({ d: wings[0].d, tf: wingAt(wings[0]), paint: 'peony', part: 'wing' });
+    const stdTf = base + sw + mov(R * 0.26, 0) + rot(-1.45) + su;
+    const stdD = pathOf(std.pts, true);
+    out.push({ d: stdD, tf: stdTf, paint: 'sweetpea', edge: R * 0.02, part: 'standard' });
+    if (R * bs > 14) out.push({ d: fanVeins(std, 7, 0.25, 0.6), tf: stdTf, cls: 'mm-garden__b-fine', attrs: lineW(R * 0.008) });
+    out.push({ d: lineD([[R * 0.1, 0], [R * 0.85, R * 0.02]]), tf: stdTf, cls: 'mm-garden__b-fold', attrs: lineW(R * 0.014) });
+    out.push({ d: stdD, tf: stdTf, cls: 'mm-garden__b-detail', attrs: lineW(R * 0.014) });
+    const wingAt = (w) => base + sw + mov(R * 0.3, R * 0.04) + rot(w.a);
+    out.push({ d: wings[0].d, tf: wingAt(wings[0]), paint: 'wing', edge: R * 0.016, part: 'wing' });
     out.push({ d: wings[0].d, tf: wingAt(wings[0]), cls: 'mm-garden__b-detail', attrs: lineW(R * 0.012) });
-    out.push({ d: keel, tf: base + sw + mov(R * 0.3, R * 0.1) + rot(0.12), paint: 'peony', part: 'keel' });
-    out.push({ d: wings[1].d, tf: wingAt(wings[1]), paint: 'peony', part: 'wing' });
+    out.push({ d: keel, tf: base + sw + mov(R * 0.3, R * 0.12) + rot(0.16), paint: 'wing', part: 'keel' });
+    out.push({ d: wings[1].d, tf: wingAt(wings[1]), paint: 'wing', edge: R * 0.016, part: 'wing' });
     out.push({ d: wings[1].d, tf: wingAt(wings[1]), cls: 'mm-garden__b-detail', attrs: lineW(R * 0.012) });
     return out;
   }
@@ -1576,7 +1799,7 @@ function botany(e, x, y, t, mode, o) {
     return out;
   }
   const body = pathOf(roundPetal(R * 2, R * 1.7, { claw: 0.45, ruffle: 0.02, n: 3 }), true);
-  const sepals = [-0.42, 0.42, 0].map((a) => ({ a: a + (rnd() - 0.5) * 0.12, d: pathOf(pointPetal(R * (a ? 1.15 : 0.9), R * 0.42).pts, true) }));
+  const sepals = [-0.5, 0.5, 0].map((a) => ({ a: a + (rnd() - 0.5) * 0.12, d: pathOf(pointPetal(R * (a ? 0.95 : 0.8), R * 0.72, { waist: 0.4 }).pts, true) }));
   const s = sc(t);
   if (s <= 0.001) return out;
   const tf = tfOf(x, y, rot(e.ang ?? -Math.PI / 2), scl(s));
@@ -1616,24 +1839,27 @@ export function petalAt(e, x, T = 0, ramp = 0) {
   return { x: px, y: py, ang, s: clamp01(x * 5), flip: Math.cos(tumble) };
 }
 
-const BED_WEIGHTS = { back: [['sweetpea', 0.38], ['lilybud', 0.24], ['lily', 0.38]], mid: [['peony', 0.42], ['lily', 0.38], ['bud', 0.2]], front: [['peony', 0.55], ['lily', 0.3], ['bud', 0.15]] };
-const BED_SIZE = { camellia: [0.23, 0.23], peony: [0.088, 0.115], lily: [0.1, 0.13], bud: [0.03, 0.042], lilybud: [0.06, 0.08], sweetpea: [0.055, 0.07] };
-const BED_SPAN = { peony: 1.6, lily: 1.6, bud: 2.8, lilybud: 2.4, sweetpea: 3.0 };
-const BED_LEAVES = { camellia: [4, 5, 0.22, 0.32, 0.8], peony: [3, 4, 0.12, 0.17, 0.4], lily: [3, 5, 0.1, 0.15, 0.35], bud: [2, 3, 0.08, 0.11, 0.45], lilybud: [2, 3, 0.08, 0.12, 0.35], sweetpea: [3, 5, 0.045, 0.065, 0.15] };
+const BED_WEIGHTS = { back: [['lily', 0.3], ['lilybud', 0.32], ['peony', 0.14], ['foliage', 0.24]], mid: [['peony', 0.28], ['lily', 0.3], ['bud', 0.14], ['foliage', 0.28]], front: [['peony', 0.36], ['lily', 0.32], ['foliage', 0.32]] };
+const BED_SIZE = { camellia: [0.25, 0.25], peony: [0.09, 0.125], lily: [0.11, 0.145], bud: [0.028, 0.038], lilybud: [0.065, 0.09], sweetpea: [0.04, 0.05], foliage: [0.02, 0.02] };
+const BED_SPAN = { peony: 1.7, lily: 1.6, bud: 2.4, lilybud: 2.2, foliage: 6 };
+// leaves per plant: [fewest, most, shortest, longest (in U), share in the deep tone]
+const BED_LEAVES = { camellia: [3, 5, 0.22, 0.34, 1], peony: [3, 5, 0.1, 0.15, 0.08], lily: [3, 5, 0.09, 0.14, 0.05], bud: [2, 3, 0.07, 0.1, 0.1], lilybud: [2, 3, 0.07, 0.11, 0], sweetpea: [5, 8, 0.05, 0.075, 0], foliage: [5, 8, 0.08, 0.13, 0.15] };
 
 /**
  * The bed: where each plant of a botanical bed roots and blooms, in the slot's own pixels, from the
  * frame (`frame`, the stage in slot pixels), the text box (W x H from the slot's origin), the last
  * baseline `base`, other text `blocks`, the seed and the number of loose petals. Returns { U, ceil,
- * plants, leaves, petals }. U, the bed's unit, is the frame's short side, less when the room under
- * the text is short. Every bloom sits under the text box (its top at least 3 % of the short side
- * below the box and below any block near it); only the tendril tips of the climbing sweet peas reach
- * up toward the last baseline, never above it. Plants root below the frame's bottom edge, in rows:
- * a back row of sweet pea climbers, lily buds and lilies reaching up to the text, one hero camellia
- * left of centre (a landscape frame) or near the middle (a portrait one), rows of peonies, lilies and
- * buds, and a front row of large peonies and lilies cut by the frame's bottom edge. Each plant has
- * broad leaves on its stem, deep teal or sage. Petals float in the air above the bed, never by the
- * text, each leaving a bloom of its own colour.
+ * massTop, plants, leaves, petals }. U, the bed's unit, is the frame's short side, less when the room
+ * under the text is short. The bed is one dense, overlapping mass of blooms and leaves whose top
+ * line (`massTop`) sits low, about 0.44 of the room under the text from the frame's bottom (0.62 in
+ * a portrait frame), with a few things rising above it: one hero camellia, about half the short
+ * side across, left of centre (near the middle in a portrait frame); two climbing sweet pea sprays,
+ * one at the far left and one right of centre, reaching up toward the text; slender lily buds. In the
+ * mass, rows of peonies, lilies, buds and leafy sprays overlap from back to front, the front row cut by
+ * the frame's bottom edge; every plant carries leaves near its bloom. Every bloom sits under the text
+ * box (its top at least 3 % of the short side below the box and below any block near it); only the
+ * climbers' tendril tips reach toward the last baseline, never above it. Petals float in the air
+ * between the text and the mass, never by the text, each leaving a bloom of its own colour.
  */
 export function bedLayout({ frame, box, base, em, blocks = [], seed = 1, petals = 8, density = 1 }) {
   const rnd = random(`garden|${seed}|bed`);
@@ -1641,52 +1867,59 @@ export function bedLayout({ frame, box, base, em, blocks = [], seed = 1, petals 
   const near = blocks.filter((b) => b.y0 < box.H + 0.35 * S);
   const ceilAt = (x0, x1) => Math.max(box.H + gap, ...near.filter((b) => b.x1 > x0 && b.x0 < x1).map((b) => b.y1 + gap));
   const tipAt = (x) => Math.max(base + 0.04 * em, ...near.filter((b) => b.x1 + gap > x && b.x0 - gap < x).map((b) => b.y1 + gap));
-  const ceil = box.H + gap, bedH = frame.y1 - ceil;
-  const U = Math.min(S, Math.max(0.3 * S, bedH / 0.62));
+  const ceil = box.H + gap, room = frame.y1 - ceil;
+  const U = Math.min(S, Math.max(0.3 * S, room / 0.62));
   const portrait = Hf > Wf * 1.2;
+  const massTop = frame.y1 - Math.min(room - 0.12 * U, (portrait ? 0.62 : 0.44) * room);
   const hits = (x, y, r) => blocks.some((b) => Math.hypot(clamp(x, b.x0, b.x1) - x, clamp(y, b.y0, b.y1) - y) < r);
   const pick = (list) => { let v = rnd() * list.reduce((a, [, w]) => a + w, 0); for (const [k, w] of list) { v -= w; if (v <= 0) return k; } return list.at(-1)[0]; };
   const plants = [];
-  const facing = { camellia: [-0.15, 0.15], peony: [-0.35, 0.35], lily: [-1, 1], bud: [-0.4, 0.4], lilybud: [-0.25, 0.25], sweetpea: [-0.2, 0.2] };
-  const TILT = { camellia: [0.86, 0.95], peony: [0.62, 0.8], lily: [0.55, 0.85] };
+  const facing = { camellia: [-0.15, 0.15], peony: [-0.3, 0.3], lily: [-1.1, 1.1], bud: [-0.4, 0.4], lilybud: [-0.25, 0.25], sweetpea: [-0.2, 0.2], foliage: [-0.6, 0.6] };
+  const TILT = { camellia: [0.86, 0.95], peony: [0.62, 0.8], lily: [0.45, 0.85] };
   const add = (type, x, y, r, row, depth) => {
-    const p = { type, root: [x + between(rnd, -0.08, 0.08) * U, frame.y1 + between(rnd, 0.01, 0.04) * U], head: [x, y], r, ang: -Math.PI / 2 + between(rnd, ...facing[type]), tilt: TILT[type] ? between(rnd, ...TILT[type]) : 1, depth, row, seed: Math.floor(rnd() * 1e6) };
-    p.t0 = 0.05 + 0.45 * ((x - frame.x0) / Wf) + 0.2 * rnd() + ({ front: 0, mid: 0.12, back: 0.3, hero: 0.1 })[row];
+    const p = { type, root: [x + between(rnd, -0.1, 0.1) * U, frame.y1 + between(rnd, 0.01, 0.04) * U], head: [x, y], r, ang: -Math.PI / 2 + between(rnd, ...facing[type]), tilt: TILT[type] ? between(rnd, ...TILT[type]) : 1, depth, row, seed: Math.floor(rnd() * 1e6) };
+    p.t0 = 0.05 + 0.45 * ((x - frame.x0) / Wf) + 0.2 * rnd() + ({ front: 0, mid: 0.12, back: 0.3, hero: 0.1, climb: 0.2 })[row];
     plants.push(p);
     return p;
   };
-  const Rh = U * (portrait ? 0.21 : 0.23);
-  const hx = frame.x0 + Wf * (portrait ? between(rnd, 0.32, 0.62) : between(rnd, 0.24, 0.4));
-  let hy = Math.max(ceilAt(hx - Rh, hx + Rh) + Rh, ceil + 0.05 * U + Rh + Math.max(0, bedH - 0.9 * U) * 0.45);
+  const Rh = U * BED_SIZE.camellia[0];
+  const hx = frame.x0 + Wf * (portrait ? between(rnd, 0.36, 0.6) : between(rnd, 0.28, 0.4));
+  let hy = Math.max(ceilAt(hx - Rh, hx + Rh) + Rh + 0.02 * U, massTop - 0.35 * Rh);
   while (hits(hx, hy, Rh) && hy < frame.y1) hy += 0.02 * U;
-  const rows = [{ kind: 'back', y0: ceil + 0.03 * U, y1: ceil + 0.24 * U }];
-  const midTop = ceil + 0.26 * U, midBottom = frame.y1 - 0.3 * U;
-  const nMid = midBottom < midTop - 0.1 * U ? 0 : Math.max(1, Math.round((midBottom - midTop) / (0.24 * U)) + 1);
-  for (let i = 0; i < nMid; i++) { const c = nMid === 1 ? (midTop + Math.max(midTop, midBottom)) / 2 : midTop + (i / (nMid - 1)) * (midBottom - midTop); rows.push({ kind: 'mid', y0: c - 0.09 * U, y1: c + 0.09 * U }); }
-  rows.push({ kind: 'front', y0: frame.y1 - 0.2 * U, y1: frame.y1 + 0.02 * U });
-  const hero = add('camellia', hx, hy, Rh, 'hero', 1.5 + nMid);
+  // rows of the mass, back to front: [kind, top, bottom of the band the heads sit in]
+  const rows = [{ kind: 'back', y0: massTop - 0.08 * U, y1: massTop + 0.07 * U }];
+  const midTop = massTop + 0.1 * U, midBottom = frame.y1 - 0.12 * U;
+  const nMid = midBottom < midTop ? 0 : Math.max(1, Math.round((midBottom - midTop) / (0.13 * U)) + 1);
+  for (let i = 0; i < nMid; i++) { const c = nMid === 1 ? (midTop + midBottom) / 2 : midTop + (i / (nMid - 1)) * (midBottom - midTop); rows.push({ kind: 'mid', y0: c - 0.05 * U, y1: c + 0.05 * U }); }
+  rows.push({ kind: 'front', y0: frame.y1 - 0.06 * U, y1: frame.y1 + 0.04 * U });
+  const hero = add('camellia', hx, hy, Rh, 'hero', 1.5);
+  // two climbing sweet pea sprays: one at the far left, one right of centre (near the right in a portrait frame)
+  for (const [f0, f1] of portrait ? [[0.05, 0.14], [0.78, 0.9]] : [[0.04, 0.1], [0.6, 0.7]]) {
+    const cx = frame.x0 + Wf * between(rnd, f0, f1), r = U * between(rnd, ...BED_SIZE.sweetpea);
+    add('sweetpea', cx, Math.max(massTop + between(rnd, -0.02, 0.06) * U, ceilAt(cx - r, cx + r) + r), r, 'climb', 1);
+  }
   rows.forEach((row, ri) => {
-    let x = frame.x0 - 0.04 * U + rnd() * 0.08 * U, prev = null;
-    while (x < frame.x1 + 0.04 * U) {
+    let x = frame.x0 - 0.05 * U + rnd() * 0.06 * U, prev = null;
+    while (x < frame.x1 + 0.05 * U) {
       let type = pick(BED_WEIGHTS[row.kind]);
       if (type === prev) type = pick(BED_WEIGHTS[row.kind]);
-      const r = U * between(rnd, ...BED_SIZE[type]) * (row.kind === 'front' && type === 'peony' ? 1.15 : 1);
-      const step = (r * BED_SPAN[type] * between(rnd, 0.85, 1.15)) / density;
+      const r = U * between(rnd, ...BED_SIZE[type]) * (row.kind === 'front' && type === 'peony' ? 1.12 : 1);
+      const step = ((type === 'foliage' ? U * 0.12 : r * BED_SPAN[type]) * between(rnd, 0.85, 1.15)) / density;
       const cx = x + step * 0.5;
-      let cy = between(rnd, row.y0, row.y1);
+      let cy = type === 'lilybud' ? between(rnd, row.y0 - 0.14 * U, row.y0) : between(rnd, row.y0, row.y1);
       cy = Math.max(cy, ceilAt(cx - r, cx + r) + r);
       x += step;
       const dh = Math.hypot(cx - hero.head[0], cy - hero.head[1]);
-      if (row.kind === 'front' ? dh < Rh * 0.72 : dh < (Rh + r) * 0.82) continue;
+      if (row.kind === 'front' ? dh < Rh * 0.6 : dh < (Rh + r) * (row.kind === 'back' ? 0.95 : 0.8)) continue;
       if (hits(cx, cy, r * 1.1) || cy - r > frame.y1 - 0.02 * U) continue;
       prev = type;
-      add(type, cx, cy, r, row.kind, row.kind === 'back' ? 1 : row.kind === 'front' ? 3 + nMid : 2 + ri - 1);
+      add(type, cx, cy, r, row.kind, row.kind === 'back' ? 1 : row.kind === 'front' ? 3 + nMid : 2 + ri);
     }
   });
   // every bed shows each flower: convert plants until it has two peonies, two lilies, two sweet peas and a bud
   const count = (t) => plants.filter((p) => p.type === t).length;
   const need = [['sweetpea', 2, ['back', 'mid']], ['peony', 2, ['mid', 'front']], ['lily', 2, ['back', 'mid', 'front']], ['bud', 1, ['mid', 'front', 'back']]];
-  const keep = { sweetpea: 2, peony: 2, lily: 2, bud: 1, lilybud: 0 };
+  const keep = { sweetpea: 2, peony: 2, lily: 2, bud: 1, lilybud: 0, foliage: 0 };
   for (const [type, n, rowsOk] of need) {
     for (const p of plants) {
       if (count(type) >= n) break;
@@ -1696,40 +1929,49 @@ export function bedLayout({ frame, box, base, em, blocks = [], seed = 1, petals 
       p.head[1] = Math.max(p.head[1], ceilAt(p.head[0] - p.r, p.head[0] + p.r) + p.r);
     }
   }
-  for (const p of plants) {
-    if (p.type === 'sweetpea') {
-      p.tendrils = 1 + Math.floor(rnd() * 3);
-      p.tip = [p.head[0] + between(rnd, -0.03, 0.03) * U, 0];
-      p.tip[1] = Math.min(p.head[1] - 0.06 * U, tipAt(p.tip[0]) + between(rnd, 0, 0.05) * U);
-      p.tip[1] = Math.max(p.tip[1], tipAt(p.tip[0]));
-    }
+  for (const [i, p] of plants.entries()) {
+    if (p.type !== 'sweetpea') continue;
+    p.tendrils = 2 + Math.floor(rnd() * 3);
+    // the spray right of centre reaches up toward the text; the one at the edge stops lower
+    const high = i > 1 && plants.indexOf(plants.find((q) => q.type === 'sweetpea')) !== i;
+    p.tip = [p.head[0] + between(rnd, -0.04, 0.04) * U, 0];
+    p.tip[1] = high ? tipAt(p.tip[0]) + between(rnd, 0.01, 0.06) * U : Math.max(tipAt(p.tip[0]), Math.min(p.head[1] - 0.2 * U, massTop - between(rnd, 0.18, 0.26) * U));
+    p.tip[1] = Math.min(p.tip[1], p.head[1] - 0.06 * U);
+    p.tip[1] = Math.max(p.tip[1], tipAt(p.tip[0]));
   }
   const leaves = [];
   plants.forEach((p, i) => {
     const [n0, n1, l0, l1, deep] = BED_LEAVES[p.type];
     const n = n0 + Math.floor(rnd() * (n1 - n0 + 1));
     for (let k = 0; k < n; k++) {
-      const len = U * between(rnd, l0, l1);
-      // a camellia's big leaves spread sideways from under its bloom; others lean up and out
-      leaves.push({ plant: i, u: p.type === 'camellia' ? between(rnd, 0.6, 0.94) : p.type === 'sweetpea' ? between(rnd, 0.15, 0.5) : between(rnd, 0.3, 0.85), side: k % 2 ? 1 : -1, len, wid: len * (p.type === 'lily' || p.type === 'lilybud' ? 0.32 : between(rnd, 0.46, 0.56)), tone: rnd() < deep ? 'deep' : 'sage', turn: p.type === 'camellia' ? between(rnd, 1.15, 1.75) : between(rnd, 0.55, 1.1), skew: between(rnd, 0.82, 1), bend: between(rnd, -1.2, 1.4) });
+      const big = p.type === 'camellia' && k === 0;
+      const len = U * between(rnd, l0, l1) * (big ? 1.3 : 1), tone = rnd() < deep ? 'deep' : 'sage';
+      // a camellia's big leaves spread sideways from under its bloom; a spray fans its leaves along
+      // its stem; others crowd their leaves up and out round the bloom
+      const u = p.type === 'camellia' ? between(rnd, big ? 0.9 : 0.7, 0.97) : p.type === 'sweetpea' ? between(rnd, 0.12, 0.8) : p.type === 'foliage' ? between(rnd, 0.35, 1) : between(rnd, 0.5, 0.92);
+      leaves.push({ plant: i, u, out: p.type === 'camellia' ? p.r * between(rnd, 0.45, 0.7) : 0, side: big || k % 2 ? 1 : -1, len, wid: len * (p.type === 'lily' || p.type === 'lilybud' || p.type === 'sweetpea' ? 0.36 : between(rnd, 0.42, 0.52)), tone, light: tone === 'sage' && rnd() < 0.22, turn: big ? between(rnd, 0.95, 1.2) : p.type === 'camellia' ? between(rnd, 1.6, 2.4) : between(rnd, 0.5, 1.3), skew: between(rnd, 0.82, 1), bend: between(rnd, -1.2, 1.4) });
     }
   });
   if (!leaves.some((l) => l.tone === 'deep')) leaves.find((l) => plants[l.plant].type === 'camellia').tone = 'deep';
   if (!leaves.some((l) => l.tone === 'sage')) leaves.at(-1).tone = 'sage';
   const out = [];
   const FORMS_OF = [['camellia', 0.4], ['sweetpea', 0.35], ['lily', 0.25]];
+  const airTop = Math.max(frame.y0 + 0.04 * U, ceil - 0.06 * U), airBottom = Math.max(airTop + 0.04 * U, massTop - 0.06 * U);
   for (let i = 0; i < petals; i++) {
-    const form = pick(FORMS_OF), r = U * between(rnd, 0.03, 0.045);
-    let hxp = frame.x0 + Wf * ((i + between(rnd, 0.2, 0.8)) / petals), hyp = between(rnd, ceil - 0.14 * U, ceil + 0.1 * U);
+    const form = pick(FORMS_OF), r = U * between(rnd, 0.024, 0.034);
+    let hxp = frame.x0 + Wf * ((i + between(rnd, 0.2, 0.8)) / petals), hyp = between(rnd, airTop, airBottom);
     hxp = clamp(hxp, frame.x0 + 2 * r, frame.x1 - 2 * r);
-    if (hxp > -2 * r && hxp < box.W + 2 * r && hyp < box.H + 2 * r) hyp = box.H + 2 * r + between(rnd, 0, 0.08) * U;
+    if (hxp > -2 * r && hxp < box.W + 2 * r && hyp < box.H + 2 * r) hyp = box.H + 2 * r + between(rnd, 0, 0.06) * U;
     for (let k = 0; k < 6 && hits(hxp, hyp, 2 * r); k++) hyp += 0.04 * U;
+    // never over the hero camellia: out to its nearer side
+    const dx = hxp - hero.head[0], reachH = Rh * 1.45 + 2 * r;
+    if (Math.hypot(dx, hyp - hero.head[1]) < reachH) hxp = hero.head[0] + Math.sign(dx || 1) * Math.sqrt(Math.max(0, reachH * reachH - (hyp - hero.head[1]) ** 2));
     hyp = clamp(hyp, frame.y0 + 2 * r, frame.y1 - 0.3 * U);
     const from = plants.filter((p) => p.type === form);
     const src = (from.length ? from : [hero]).reduce((a, p) => (Math.abs(p.head[0] - hxp) < Math.abs(a.head[0] - hxp) ? p : a));
     out.push({ form, r, home: [hxp, hyp], src: plants.indexOf(src), lift: U * between(rnd, 0.05, 0.12), a0: rnd() * TAU, turn: between(rnd, -2.5, 2.5), spin: between(rnd, 0.6, 1.6), phase: rnd() * TAU, amp: U * between(rnd, 0.008, 0.014), seed: Math.floor(rnd() * 1e6), lag: between(rnd, 0, 0.5), dur: between(rnd, 1.3, 2) });
   }
-  return { U, ceil, plants, leaves, petals: out };
+  return { U, ceil, massTop, plants, leaves, petals: out };
 }
 
 const scaleOf = (x, mode, o) => (mode === 'wither' ? 1 - (1 - x) * (1 - x) : pop(x, o));
@@ -1856,7 +2098,7 @@ function emit(layer, sh) {
     const g = sh.paint ? GRADIENTS[sh.paint] : null, extra = sh.extra ? ` ${sh.extra}` : '';
     const one = (cls, attrs) => { const p = add(layer, cls, sh.d, attrs); if (sh.tf) p.setAttribute('transform', sh.tf); };
     if (g) {
-      one(`mm-garden__b-on-${g.base}${extra}`);
+      one(`mm-garden__b-on-${g.base}${sh.edge ? ` mm-garden__b-edge-${g.base}` : ''}${extra}`, sh.edge ? lineW(sh.edge) : undefined);
       one(`mm-garden__b-fill${extra}`, { fill: `url(#${layer.dataset.pid}-${sh.paint})` });
       layer.dataset.used = '1';
     } else one(sh.cls, sh.attrs);
@@ -1941,7 +2183,12 @@ export function paint(el, model, g, { mode = 'grow', sway = 0, time = 0 } = {}) 
         const layer = r.layer === 'front' ? front : back;
         let pts = W(seg, e.root);
         if (e.wave && x < 1) pts = waved(pts, e, x, em);
-        if (e.type === 'stem') add(layer, e.cls ?? 'mm-garden__stem', ribbon(pts, i0, widthAt));
+        if (e.type === 'stem') {
+          const d = ribbon(pts, i0, widthAt);
+          add(layer, e.cls ?? 'mm-garden__stem', d);
+          // a botanical stem is the muted darkened by the ink
+          if (e.cls === 'mm-garden__b-stem') add(layer, 'mm-garden__b-stem-shade', d);
+        }
         else add(layer, e.cls ?? (e.type === 'trace' ? 'mm-garden__trace' : 'mm-garden__line'), lineD(pts), { 'stroke-width': r2(e.w0) });
         // a kelp ribbon's midrib, short of its rounded tip
         if (e.profile === 'kelp') { const v = pts.slice(0, Math.max(0, Math.floor(n * 0.9) - i0 + 1)); if (v.length > 1) add(layer, 'mm-garden__vein', lineD(v), { 'stroke-width': r2(Math.max(0.6, em * 0.007)) }); }
@@ -1958,10 +2205,15 @@ export function paint(el, model, g, { mode = 'grow', sway = 0, time = 0 } = {}) 
     if (e.type === 'petal') {
       const q = petalAt(e, x, time, ramp);
       if (q.s <= 0.001) continue;
-      const loc = e.form === 'lily' ? pointPetal(e.r * 2.3, e.r * 1.15, { bend: 0.12 }).pts : roundPetal(e.r * 2, e.r * (e.form === 'camellia' ? 1.9 : 1.6), { ruffle: 0.06, n: 4, claw: 0.32, notch: e.form === 'camellia' ? 0.05 : 0 });
+      // a curled petal: a wavy rim, one edge turned back as a light band with the line it casts
+      const pr = random(`garden|petal-shape|${e.seed ?? 0}`), camellia = e.form === 'camellia';
+      const sh = wavyPetal(e.r * 2.3, e.r * (camellia ? 1.4 : e.form === 'lily' ? 1.0 : 1.25), pr, { claw: 0.28, waves: 2, depth: between(pr, 0.06, 0.14), notch: camellia || e.form === 'sweetpea' ? 0.06 : 0, skew: between(pr, -0.22, 0.22) });
+      const fold = foldOf(sh, between(pr, 0.22, 0.34), between(pr, 0.5, 0.8));
       const fl = q.flip < 0 ? -(0.55 + 0.45 * -q.flip) : 0.55 + 0.45 * q.flip;
-      const d = pathOf(loc, true), tf = tfOf(q.x, q.y, rot(q.ang), scl(q.s, q.s * fl), mov(-e.r, 0));
-      emit(back, { d, tf, paint: e.form === 'camellia' ? 'coral' : e.form, extra: 'mm-garden__b-drift' });
+      const d = pathOf(sh.pts, true), tf = tfOf(q.x, q.y, rot(q.ang), scl(q.s, q.s * fl), mov(-e.r, 0));
+      emit(back, { d, tf, paint: camellia ? 'coral' : e.form, edge: e.r * 0.05, extra: 'mm-garden__b-drift' });
+      emit(back, { d: fold.d, tf, cls: 'mm-garden__b-rimlight mm-garden__b-drift' });
+      emit(back, { d: fold.line, tf, cls: 'mm-garden__b-fold mm-garden__b-drift', attrs: lineW(e.r * 0.04) });
       emit(back, { d, tf, cls: 'mm-garden__b-detail mm-garden__b-drift', attrs: lineW(e.r * 0.05) });
       continue;
     }
@@ -2021,7 +2273,7 @@ function broadInto(layer, e, x, y, ang, s) {
   const loc = leafPts({ x: 0, y: 0, ang: 0, len: e.len, wid: e.wid, shape: 'broad', skew: e.skew, bend: e.bend }, 1);
   const d = pathOf(loc, true), tf = tfOf(x, y, rot(ang), scl(s, s * (0.45 + 0.55 * s)));
   const bow = (u) => 0.06 * e.len * Math.sin(Math.PI * u) * (e.bend ?? 1);
-  emit(layer, { d, tf, paint: e.tone === 'deep' ? 'deep' : 'sage' });
+  emit(layer, { d, tf, paint: e.tone === 'deep' ? 'deep' : e.light ? 'sagelight' : 'sage', edge: Math.max(0.6, e.len * 0.008) });
   const mid = Array.from({ length: 13 }, (_, k) => { const u = 1 - k / 12; return [u * e.len, bow(u)]; });
   emit(layer, { d: pathOf(loc.slice(0, 17).concat(mid), true), tf, cls: 'mm-garden__b-shade' });
   emit(layer, { d: lineD(mid.slice(1, -1).reverse()), tf, cls: 'mm-garden__b-vein', attrs: lineW(Math.max(0.8, e.len * 0.012)) });
@@ -2062,6 +2314,53 @@ function shardInto(layer, e, x, y, ang, s, em) {
 function warn(el, msg) { const w = el.ownerDocument.defaultView?.mm?.warnings; if (Array.isArray(w) && !w.includes(msg)) w.push(msg); }
 const selectorOf = (el) => { const sc = el.closest('[data-scene]')?.getAttribute('data-scene'), slot = el.getAttribute('data-slot'); return sc && slot ? `[data-scene="${sc}"] [data-slot="${slot}"]` : 'a garden slot'; };
 
+// The typed text at progress q: the slot's text moves into one block (it inherits the slot's
+// measure, alignment and wrapping, so the lines, the shaping and every glyph stay where the plain
+// text sets them, and it gives the clip one box) clipped to the characters whole by q, the one
+// being typed cut at its share of its own width, measured from the laid-out glyph boxes; and a
+// caret in the ink at the typing position. All of it is a function of q.
+function typeInto(el, text, q, share) {
+  const doc = el.ownerDocument;
+  const span = doc.createElement('span');
+  span.className = 'mm-garden__text mm-garden__text--typed';
+  span.textContent = text;
+  el.textContent = '';
+  el.append(span);
+  const node = span.firstChild, range = doc.createRange();
+  const box = el.getBoundingClientRect(), k = el.offsetWidth ? box.width / el.offsetWidth : 1;
+  const chars = [];
+  for (let i = 0; i < text.length;) {
+    const len = text.codePointAt(i) > 0xffff ? 2 : 1;
+    range.setStart(node, i); range.setEnd(node, i + len);
+    const r = range.getBoundingClientRect();
+    chars.push({ x0: (r.left - box.left) / k, x1: (r.right - box.left) / k, y0: (r.top - box.top) / k, y1: (r.bottom - box.top) / k });
+    i += len;
+  }
+  const times = typeReveal(chars.length, share);
+  // the typed prefix, line by line: [x0, y0, x1, y1] in the slot's own pixels
+  const lines = [];
+  let edge = null;
+  chars.forEach((c, j) => {
+    const f = clamp01((q - times[j].at) / (times[j].done - times[j].at));
+    if (f <= 0) return;
+    const x1 = c.x0 + (c.x1 - c.x0) * f, line = lines.find((l) => Math.abs(l[1] - c.y0) < (c.y1 - c.y0) * 0.5);
+    if (line) { line[2] = Math.max(line[2], x1); line[3] = Math.max(line[3], c.y1); } else lines.push([c.x0, c.y0, x1, c.y1]);
+    edge = { x: x1, y0: c.y0, y1: c.y1 };
+  });
+  if (!edge) { const c = chars[0]; edge = { x: c.x0, y0: c.y0, y1: c.y1 }; }
+  // the clip is laid on the block's own box
+  const sb = span.getBoundingClientRect(), ox = (sb.left - box.left) / k, oy = (sb.top - box.top) / k;
+  const d = lines.map(([x0, y0, x1, y1]) => `M${r2(x0 - ox)} ${r2(y0 - oy)}H${r2(x1 - ox)}V${r2(y1 - oy)}H${r2(x0 - ox)}Z`).join('');
+  span.style.clipPath = `path('${d || 'M0 0Z'}')`;
+  if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+  const caret = doc.createElement('span');
+  caret.className = 'mm-garden__caret';
+  caret.setAttribute('aria-hidden', 'true');
+  caret.style.left = `${r2(edge.x)}px`;
+  caret.style.top = `${r2((edge.y0 + edge.y1) / 2)}px`;
+  el.append(caret);
+}
+
 const seen = new WeakMap();
 /** The plan last painted into a slot (for the wither exit and for tests). */
 export const modelOf = (el) => seen.get(el) ?? null;
@@ -2087,6 +2386,8 @@ export default {
       el.append(span);
       span.style.opacity = String(Math.round(out3(q / TEXT_IN) * 1000) / 1000);
     }
+    // typed: the slot's text in one span, clipped to the characters typed so far, and a caret
+    if (set.text === 'type' && q < set.typeShare) typeInto(el, text, q, set.typeShare);
     const model = plan(el, ctx);
     seen.set(el, model);
     const plants = new Set(model.elements.filter((e) => e.pts && !e.bridge).map((e) => e.id)).size;

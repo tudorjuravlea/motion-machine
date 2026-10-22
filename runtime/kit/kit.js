@@ -260,6 +260,7 @@ async function mountInner({ story, style, root, patternsBase }) {
   if (story.kind === 'deck') {
     api.presses = sched.presses;
     window.addEventListener('keydown', onKey);
+    window.addEventListener('click', onClick);
     window.addEventListener('hashchange', () => { const n = hashPress(); if (n != null) goto(n); });
   } else {
     api.duration = sched.duration;
@@ -1126,6 +1127,15 @@ const PREV = new Set(['ArrowLeft', 'PageUp', 'Backspace']);
 function onKey(e) {
   if (e.altKey || e.ctrlKey || e.metaKey) return;
   if (NEXT.has(e.key)) { e.preventDefault(); next(); } else if (PREV.has(e.key)) { e.preventDefault(); prev(); }
+}
+
+// A plain click on the slide is a press forward, as on a clicker. Controls keep their own clicks, and a
+// deck inside a frame (the studio's stage) leaves clicks to the page around it.
+const CONTROLS = 'a, button, input, select, textarea, label, summary, [contenteditable]';
+function onClick(e) {
+  if (e.button !== 0 || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+  if (window.top !== window || e.target?.closest?.(CONTROLS)) return;
+  next();
 }
 
 // ---------------------------------------------------------------------------------------------
