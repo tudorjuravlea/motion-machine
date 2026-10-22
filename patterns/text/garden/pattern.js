@@ -150,6 +150,10 @@ export function pop(x, o = 0.12) {
 // letters
 
 const cells = new Map();
+// The glyph is drawn SS times larger and each analysis pixel is the mean coverage of its SS x SS
+// block: at EM pixels per em the platform's rasteriser (hinting, stem darkening) moved stroke edges
+// by a pixel, enough to change a serif letter's stroke ends between macOS and Linux.
+const SS = 4;
 /**
  * One glyph drawn off screen at EM pixels per em, as the cell glyphs.js reads: { mask, w, h, ox, oy,
  * advance, ascent } (advance and ascent in em). The canvas never joins the page.
@@ -157,21 +161,27 @@ const cells = new Map();
 export function glyphCell(doc, font, char) {
   const c = doc.createElement('canvas');
   let g = c.getContext('2d', { willReadFrequently: true });
-  const spec = `${font.style} ${font.weight} ${EM}px ${font.family}`;
-  g.font = spec;
+  g.font = `${font.style} ${font.weight} ${EM}px ${font.family}`;
   const m = g.measureText(char);
   const asc = Math.ceil(Math.max(m.fontBoundingBoxAscent || EM, m.actualBoundingBoxAscent || 0));
   const desc = Math.ceil(Math.max(m.fontBoundingBoxDescent || EM * 0.3, m.actualBoundingBoxDescent || 0));
   const left = Math.ceil(Math.max(0, m.actualBoundingBoxLeft || 0));
   const right = Math.ceil(Math.max(m.width, m.actualBoundingBoxRight || 0));
   const pad = Math.ceil(EM * 0.15);
-  c.width = left + right + 2 * pad; c.height = asc + desc + 2 * pad;
+  const w = left + right + 2 * pad, h = asc + desc + 2 * pad;
+  c.width = w * SS; c.height = h * SS;
   g = c.getContext('2d', { willReadFrequently: true });
-  g.font = spec;
+  g.font = `${font.style} ${font.weight} ${EM * SS}px ${font.family}`;
   const ox = pad + left, oy = pad + asc;
-  g.fillText(char, ox, oy);
-  const mask = maskOf(g.getImageData(0, 0, c.width, c.height).data, c.width, c.height);
-  return { mask, w: c.width, h: c.height, ox, oy, advance: m.width / EM, ascent: (m.fontBoundingBoxAscent || EM) / EM };
+  g.fillText(char, ox * SS, oy * SS);
+  const px = g.getImageData(0, 0, c.width, c.height).data;
+  const alpha = new Uint8ClampedArray(w * h * 4);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    let s = 0;
+    for (let j = 0; j < SS; j++) for (let i = 0; i < SS; i++) s += px[((y * SS + j) * c.width + x * SS + i) * 4 + 3];
+    alpha[(y * w + x) * 4 + 3] = s / (SS * SS);
+  }
+  return { mask: maskOf(alpha, w, h), w, h, ox, oy, advance: m.width / EM, ascent: (m.fontBoundingBoxAscent || EM) / EM };
 }
 
 function cellOf(doc, font, char) {

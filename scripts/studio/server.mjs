@@ -214,13 +214,41 @@ export async function startStudio({ piece, port = 0, exportFps, codeRoots = CODE
   }
   const timers = new Map();
   const later = (file) => { clearTimeout(timers.get(file)); timers.set(file, setTimeout(() => { timers.delete(file); report(file); }, DEBOUNCE_MS)); };
-  // one recursive watcher on the piece folder, filtered: assets/ is covered even when it is made later
-  const watchers = [];
-  const watchPiece = () => watchers.push(watch(dir, { recursive: true }, (ev, name) => {
-    if (name == null) { for (const f of WATCHED) later(f); return; }
-    const f = String(name).split(sep).join('/');
+  // One watcher per folder (the piece folder, and every folder under assets/ even when it is made
+  // later), never one per file: on Linux, Node's recursive watch follows each file's inode, so after
+  // the first atomic write (a rename over story.json) every later change went unheard. A folder's
+  // watcher names its children whatever replaced them. A folder that is new since the start reports
+  // the files it already holds.
+  const watchers = new Map();   // folder → { w, ino }
+  const watchFolder = (abs, announce) => {
+    let st = null;
+    try { st = statSync(abs); } catch { /* gone */ }
+    if (!st?.isDirectory()) {   // a file, or a folder removed: drop its watchers and those below it (its inode may come back)
+      for (const [k, { w }] of watchers) if (k === abs || k.startsWith(abs + sep)) { w.close(); watchers.delete(k); }
+      return;
+    }
+    const { ino } = st;
+    if (watchers.get(abs)?.ino === ino) return;
+    watchers.get(abs)?.w.close();
+    let w;
+    try { w = watch(abs, (ev, name) => heard(abs, name)); } catch { watchers.delete(abs); return; }
+    w.on('error', () => { w.close(); if (watchers.get(abs)?.w === w) watchers.delete(abs); });
+    watchers.set(abs, { w, ino });
+    let entries = [];
+    try { entries = readdirSync(abs, { withFileTypes: true }); } catch { /* gone again */ }
+    for (const e of entries) {
+      const f = relative(dir, join(abs, e.name)).split(sep).join('/');
+      if (e.isDirectory()) { if (f === 'assets' || f.startsWith('assets/')) watchFolder(join(abs, e.name), announce); }
+      else if (announce && f.startsWith('assets/')) later(f);
+    }
+  };
+  function heard(abs, name) {
+    if (name == null) { if (abs === dir) for (const f of WATCHED) later(f); else watchFolder(abs, true); return; }
+    const f = relative(dir, join(abs, String(name))).split(sep).join('/');
     if (WATCHED.includes(f) || f.startsWith('assets/')) later(f);
-  }));
+    if (f === 'assets' || f.startsWith('assets/')) watchFolder(join(abs, String(name)), true);   // a folder (re)made; a file is a no-op
+  }
+  const watchPiece = () => watchFolder(dir, false);
   const ping = setInterval(() => { for (const c of clients) c.write(': ping\n\n'); }, 25_000);
   ping.unref();
 
@@ -477,7 +505,7 @@ export async function startStudio({ piece, port = 0, exportFps, codeRoots = CODE
 
   async function close() {
     if (exporting) { exporting.cancel(); exporting.held.release(); }
-    for (const w of watchers) w.close();
+    for (const { w } of watchers.values()) w.close();
     for (const t of timers.values()) clearTimeout(t);
     clearInterval(ping);
     for (const c of clients) c.end();

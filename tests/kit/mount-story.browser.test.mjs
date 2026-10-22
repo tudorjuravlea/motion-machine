@@ -3,12 +3,11 @@
 // screen/play for a recording.
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { join } from 'node:path';
 import { ROOT, serveRoot, openPiece, launchBrowser } from '../../scripts/lib/browser.mjs';
+import { PAGE, mediaAssets } from './media-assets.mjs';
 
-const PAGE = join(ROOT, 'tests/kit/media');
 let server, browser;
-before(async () => { server = await serveRoot(ROOT); browser = await launchBrowser(); });
+before(async () => { mediaAssets('rec'); server = await serveRoot(ROOT); browser = await launchBrowser(); });
 after(async () => { await browser?.close(); await server?.close(); });
 
 test('mounting a story with a recording leaves the caller\'s story object unchanged', async () => {

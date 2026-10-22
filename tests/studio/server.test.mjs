@@ -6,7 +6,7 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
 import { createServer, request } from 'node:http';
-import { chmodSync, cpSync, existsSync, mkdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { chmodSync, cpSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { startStudio } from '../../scripts/studio/server.mjs';
@@ -455,6 +455,22 @@ test('a studio write that an outside hand reverts inside the watch debounce is s
     assert.equal(e2.data.by, 'outside');
     await settle();
   } finally { sub.close(); }
+});
+
+test('a story.json replaced by a rename (an atomic write) is heard every time, and so is a plain write after it', async () => {
+  await settle();
+  const sub = subscribe();
+  const good = readFileSync(storyFile(), 'utf8');
+  const replace = (text) => { const tmp = join(w.film, '.story.json.tmp'); writeFileSync(tmp, text); renameSync(tmp, storyFile()); };
+  try {
+    await sub.next((e) => e.event === 'hello');
+    for (const [i, write] of [replace, replace, (t) => writeFileSync(storyFile(), t)].entries()) {
+      write(good.replace(/"duration": [\d.]+/, `"duration": ${(33 + i) / 10}`));
+      const { version } = readStory(w.film);
+      const e = await sub.next((x) => x.event === 'changed' && x.data.version === version);
+      assert.equal(e.data.by, 'outside');
+    }
+  } finally { writeFileSync(storyFile(), good); sub.close(); await settle(); }
 });
 
 test('GET /api/piece names the story-schema problems of a story that parses (null when valid)', async () => {

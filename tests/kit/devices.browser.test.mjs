@@ -4,15 +4,13 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { join } from 'node:path';
-import { existsSync, readFileSync } from 'node:fs';
-import { spawnSync } from 'node:child_process';
-import { pathToFileURL } from 'node:url';
+import { readFileSync } from 'node:fs';
 import { ROOT, serveRoot, openPiece, launchBrowser } from '../../scripts/lib/browser.mjs';
+import { PAGE, mediaAssets } from './media-assets.mjs';
 
-const PAGE = join(ROOT, 'tests/kit/media');
 let server, browser;
 before(async () => {
-  if (!existsSync(join(PAGE, 'assets/site/media.json'))) spawnSync(process.execPath, [join(ROOT, 'scripts/mm.mjs'), 'capture', 'site', '--url', pathToFileURL(join(ROOT, 'fixtures/site/index.html')).href, '--name', 'site', '--piece', PAGE, '--mark', 'Pricing=#pricing', '--mark', 'Signup=.cta']);
+  mediaAssets('site');
   server = await serveRoot(ROOT); browser = await launchBrowser();
 });
 after(async () => { await browser?.close(); await server?.close(); });

@@ -4,7 +4,7 @@
 // rasterised letters. The masks here are drawn at the analysis size (EM pixels per em).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { EM, INSET, analyse, anchors, bridge, distanceField, sdfAt, skeleton, terminals } from '../../runtime/kit/glyphs.js';
+import { EM, INSET, analyse, anchors, bridge, candidates, distanceField, sdfAt, skeleton, terminals } from '../../runtime/kit/glyphs.js';
 
 // A glyph cell: w x h pixels, origin (left edge, baseline) at (ox, oy), shapes filled by predicate.
 function cell(w, h, ox, oy, inside) {
@@ -64,6 +64,18 @@ test('every anchor lies within 0.03 em of the ink edge, inside it, with a unit o
       assert.ok(d <= 0.001 && d >= -0.03, `anchor ${JSON.stringify(p)} is ${d} em from the edge`);
       assert.ok(Math.abs(Math.hypot(p.nx, p.ny) - 1) < 1e-6, 'unit normal');
     }
+  }
+});
+
+test('a hairline thinner than twice INSET keeps its candidates on its own ink, at its deepest', () => {
+  // a stem with a 2 px arm: no point of the arm lies INSET deep, so the inward walk must stop inside it
+  const a = analyse(cell(60, 80, 10, 70, union(rect(12, 16, 22, 70), rect(22, 30, 50, 32))));
+  const arm = candidates(a).filter((c) => c.x * EM + a.ox > 24);
+  assert.ok(arm.length > 0, 'the arm has candidates');
+  for (const c of arm) {
+    const d = sdfAt(a, c.x, c.y);
+    assert.ok(d <= 0, `${c.kind} at (${c.x}, ${c.y}) is ${d.toFixed(4)} em outside the ink`);
+    assert.ok(c.y * EM + a.oy > 29 && c.y * EM + a.oy < 33, `${c.kind} at y ${c.y} left the arm`);
   }
 });
 

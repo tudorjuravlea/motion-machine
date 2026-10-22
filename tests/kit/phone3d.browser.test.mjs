@@ -3,20 +3,13 @@
 // the same t gives the same pixels in any seek order, and a deck rest faces the viewer.
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
-import { pathToFileURL } from 'node:url';
 import { ROOT, serveRoot, openPiece, launchBrowser, framePng } from '../../scripts/lib/browser.mjs';
 import { decodePng } from '../../scripts/check/_pixels.mjs';
+import { PAGE, mediaAssets } from './media-assets.mjs';
 
-const PAGE = join(ROOT, 'tests/kit/media');
-const run = (args) => spawnSync(process.execPath, [join(ROOT, 'scripts/mm.mjs'), ...args], { encoding: 'utf8' });
 let server, browser;
 before(async () => {
-  if (!existsSync(join(ROOT, 'fixtures/media/clip-2s.mp4'))) spawnSync('sh', [join(ROOT, 'fixtures/media/make.sh')]);
-  if (!existsSync(join(PAGE, 'assets/rec/media.json'))) run(['media', 'prep', join(ROOT, 'fixtures/media/clip-2s.mp4'), '--name', 'rec', '--piece', PAGE, '--fit', 'phone']);
-  if (!existsSync(join(PAGE, 'assets/site/media.json'))) run(['capture', 'site', '--url', pathToFileURL(join(ROOT, 'fixtures/site/index.html')).href, '--name', 'site', '--piece', PAGE, '--mark', 'Pricing=#pricing', '--mark', 'Signup=.cta']);
+  mediaAssets('rec', 'site');
   server = await serveRoot(ROOT); browser = await launchBrowser();
 });
 after(async () => { await browser?.close(); await server?.close(); });

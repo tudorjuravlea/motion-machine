@@ -2,12 +2,11 @@
 // screen; the kit says so in window.mm.warnings, once per file, instead of staying silent.
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { join } from 'node:path';
 import { ROOT, serveRoot, openPiece, launchBrowser } from '../../scripts/lib/browser.mjs';
+import { PAGE, mediaAssets } from './media-assets.mjs';
 
-const PAGE = join(ROOT, 'tests/kit/media');
 let server, browser;
-before(async () => { server = await serveRoot(ROOT); browser = await launchBrowser(); });
+before(async () => { mediaAssets('rec'); server = await serveRoot(ROOT); browser = await launchBrowser(); });
 after(async () => { await browser?.close(); await server?.close(); });
 
 test('a frame that fails to decode at seek time is named once in mm.warnings', async () => {

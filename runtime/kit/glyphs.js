@@ -204,8 +204,16 @@ function inset(a, X, Y, dx, dy, outward) {
   let x = X, y = Y;
   if (outward) {   // from inside the stroke toward its end: stop at the last point still INSET deep
     for (let k = 0; k < max * 4 && sample(a, x + dx * 0.25, y + dy * 0.25) <= goal; k++) { x += dx * 0.25; y += dy * 0.25; }
-  } else {         // from the edge inward
-    for (let k = 0; k < max * 4 && sample(a, x, y) > goal; k++) { x -= dx * 0.25; y -= dy * 0.25; }
+  } else {         // from the edge inward; a stroke thinner than 2 INSET ends the walk at its deepest point
+    let best = [x, y], deepest = sample(a, x, y), inside = deepest <= 0;
+    for (let k = 0; k < max * 4; k++) {
+      const v = sample(a, x, y);
+      if (v <= goal) return [x, y];
+      if (v < deepest) { deepest = v; best = [x, y]; }
+      if (v <= 0) inside = true; else if (inside) break;   // out the far side of the stroke
+      x -= dx * 0.25; y -= dy * 0.25;
+    }
+    return best;
   }
   return [x, y];
 }

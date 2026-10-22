@@ -4,21 +4,16 @@
 // same t gives the same pixels in any seek order. Assets are prepared by the media CLIs in before().
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { pathToFileURL } from 'node:url';
 import { ROOT, serveRoot, openPiece, launchBrowser, framePng } from '../../scripts/lib/browser.mjs';
 import { decodePng } from '../../scripts/check/_pixels.mjs';
+import { PAGE, mediaAssets } from './media-assets.mjs';
 
-const PAGE = join(ROOT, 'tests/kit/media');
-const run = (args) => { const r = spawnSync(process.execPath, [join(ROOT, 'scripts/mm.mjs'), ...args], { encoding: 'utf8' }); assert.equal(r.status, 0, r.stdout + r.stderr); };
 let server, browser;
 
 before(async () => {
-  if (!existsSync(join(ROOT, 'fixtures/media/clip-2s.mp4'))) assert.equal(spawnSync('sh', [join(ROOT, 'fixtures/media/make.sh')]).status, 0);
-  if (!existsSync(join(PAGE, 'assets/rec/media.json'))) run(['media', 'prep', join(ROOT, 'fixtures/media/clip-2s.mp4'), '--name', 'rec', '--piece', PAGE, '--fit', 'phone']);
-  if (!existsSync(join(PAGE, 'assets/site/media.json'))) run(['capture', 'site', '--url', pathToFileURL(join(ROOT, 'fixtures/site/index.html')).href, '--name', 'site', '--piece', PAGE, '--mark', 'Pricing=#pricing', '--mark', 'Signup=.cta']);
+  mediaAssets('rec', 'site');
   server = await serveRoot(ROOT); browser = await launchBrowser();
 });
 after(async () => { await browser?.close(); await server?.close(); });
@@ -120,9 +115,7 @@ const screenAt = (page, scene) => page.evaluate((id) => {
 }, scene);
 const siteMeta = () => JSON.parse(readFileSync(join(PAGE, 'assets/site/media.json'), 'utf8'));
 
-before(() => {
-  if (!existsSync(join(PAGE, 'assets/short/media.json'))) run(['capture', 'site', '--url', pathToFileURL(join(ROOT, 'fixtures/site/short.html')).href, '--name', 'short', '--piece', PAGE]);
-});
+before(() => mediaAssets('short'));
 
 test('screen/scroll to a mark lands the mark at the top of the screen', async () => {
   const o = await openActions();

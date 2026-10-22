@@ -61,6 +61,11 @@ jobs:
         shard: [1, 2, 3]
     env:
       MM_TEST_SHARD: ${{ matrix.shard }}/3
+      # Three browser test files share the runner's four CPUs with software WebGL (the 3D devices);
+      # a page that decodes large captured screens at mount took longer than the 30 s ready wait.
+      # The scale stretches only how long a page may take (the ready, slow-frame and studio waits),
+      # never what it must draw.
+      MM_TIMEOUT_SCALE: 3
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
@@ -94,6 +99,12 @@ jobs:
 
       - name: Doctor
         run: node scripts/mm.mjs doctor
+
+      # The network captures (brand capture, capture site from a URL) open Chromium with its sandbox
+      # on. Ubuntu 24.04 blocks the unprivileged user namespaces that sandbox needs, so it would not
+      # start ("No usable sandbox!"); allow them here rather than run the captures unsandboxed.
+      - name: Allow Chromium's sandbox
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 
       - name: Browser tests
         run: npm run test:browser
