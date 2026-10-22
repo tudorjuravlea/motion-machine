@@ -1,0 +1,5 @@
+/* emphasis/act: draws into the stage entrances/character set up (its pattern.css sizes the slot
+   and places the rig); nothing of its own to style. */
+[data-slot][data-emphasis="emphasis/act"] > .mm-rig {
+  pointer-events: none;
+}

@@ -123,6 +123,61 @@
     "headlineScale": 1,
     "density": "airy"
   },
+  "mascot": {
+    "box": [
+      8,
+      10
+    ],
+    "ground": [
+      0,
+      0
+    ],
+    "views": {
+      "front": {
+        "body": "M-4 -2.8 C-4 -7.4 -2.5 -10 0 -10 C2.5 -10 4 -7.4 4 -2.8 C4 -1.8 3 -1.5 0 -1.5 C-3 -1.5 -4 -1.8 -4 -2.8 Z",
+        "face": {
+          "cx": 0,
+          "cy": -5.7,
+          "gap": 2.6,
+          "size": 1
+        },
+        "limbs": [
+          {
+            "kind": "leg",
+            "x": -1.5,
+            "y": -2.2,
+            "width": 1.1
+          },
+          {
+            "kind": "leg",
+            "x": 1.5,
+            "y": -2.2,
+            "width": 1.1
+          },
+          {
+            "kind": "arm",
+            "x": -3.7,
+            "y": -4.3,
+            "length": 2,
+            "width": 0.9
+          },
+          {
+            "kind": "arm",
+            "x": 3.7,
+            "y": -4.3,
+            "length": 2,
+            "width": 0.9
+          }
+        ]
+      }
+    },
+    "parts": {
+      "body": "accent",
+      "eyes": "ink",
+      "mouth": "ink"
+    },
+    "outline": 1
+  },
   "bans": [
     "centered-title-on-gradient",
     "fade-only",

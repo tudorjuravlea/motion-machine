@@ -1,0 +1,20 @@
+{
+  "kind": "sequence",
+  "fps": 30,
+  "frames": 120,
+  "w": 256,
+  "h": 144,
+  "duration": 4,
+  "source": {
+    "file": "shape.mp4",
+    "sha1": "d394ccacf4a2b85e289e423572fdb68bc4fdbee0"
+  },
+  "prepared": "2026-10-22T09:06:02.876Z",
+  "matte": {
+    "dir": "matte/",
+    "frames": 120,
+    "from": "masks",
+    "median": 3,
+    "feather": 2
+  }
+}

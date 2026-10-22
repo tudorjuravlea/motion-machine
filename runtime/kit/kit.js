@@ -7,8 +7,10 @@ import { ease } from './ease.js';
 import { random, hash } from './random.js';
 import { schedule as buildSchedule, resolveStory, forFormat, selectorOf, eachParts, addImplicitPlays, screenIssues } from './schedule.js';
 import { initialState, fold, locate, mountLayer, paint } from './screen.js';
+import { footageCtx, mountFootage, paintFootage } from './footage.js';
 import { seeded, seededImport } from './seeded.js';
 import { boilFrame, BOIL_PERIOD } from './rough.js';
+import { fitHeadline, fitWords, bodyFloor, wantsWordFit } from './fit.js';
 
 export { spring, track } from './springs.js';
 export { ease } from './ease.js';
@@ -160,6 +162,7 @@ async function mountInner({ story, style, root, patternsBase }) {
     camera.innerHTML = layouts[sc.layout];
     el.append(camera);
     if (style.finish) el.append(finishOf(style.finish, style.color));   // above the camera, in every scene
+    if (style.finish?.misregister > 0) el.dataset.misregister = '';   // the plate prints under the camera's shapes
     stage.append(el);
     for (const b of sc.beats) {
       let slot = camera.querySelector(`[data-slot="${b.slot}"]`);
@@ -209,6 +212,7 @@ async function mountInner({ story, style, root, patternsBase }) {
   await Promise.all(waits);
   for (const err of await Promise.all(media)) if (err) warnings.push(err);
   const screens = (await Promise.all(screenSpecs.map((x) => mountScreen(x, warnings)))).filter(Boolean);
+  const footage = await mountFootage(story, { stage, duration: sched.duration, kind: story.kind }, warnings);   // story.footage on every <img data-footage>
   await document.fonts.ready;
 
   // Bind schedule items to elements and snapshot everything a pattern may write to.
@@ -244,7 +248,7 @@ async function mountInner({ story, style, root, patternsBase }) {
   });
 
   for (const x of screens) x.item = items.find((it) => !it.parent && it.scene === x.scene && it.beat?.slot === x.slot) ?? null;
-  Object.assign(S, { story, style, sched, format, spec, stage, scenes, items, keeps, modules, snapshots, warnings, fonts, screens, cur: 0, t: 0, state: new Map(), vis: [] });
+  Object.assign(S, { story, style, sched, format, spec, stage, scenes, items, keeps, modules, snapshots, warnings, fonts, screens, footage, cur: 0, t: 0, state: new Map(), vis: [] });
 
   const api = {
     ready: true, kind: story.kind, format,
@@ -262,6 +266,7 @@ async function mountInner({ story, style, root, patternsBase }) {
   }
   window.mm = api;
   S.ready = true;
+  fitHeadlines();
 
   // Initial instant: ?t= (film), ?press= (deck), the hash (deck), else the start.
   if (story.kind === 'deck') {
@@ -271,6 +276,44 @@ async function mountInner({ story, style, root, patternsBase }) {
     seek(q.has('t') ? Number(q.get('t')) : 0);
   }
   return api;
+}
+
+// Each scene's word-fitted slots (a style that declares --mm-fit: word) and then its mm-fit headline
+// are sized once to the room its layout leaves, with the scene drawn at its rest (fit.js); the sizes
+// (and a word fit's soft hyphens) go into the snapshots, so every seek draws them and no instant
+// depends on another. A word fit never goes under the format's body floor. No later headline is
+// drawn larger than the hook's size over HOOK_STEP, so the hook stays the largest headline of the piece.
+function fitHeadlines() {
+  let max = Infinity;
+  const floor = bodyFloor(S.story.kind, S.format);
+  const keep = (el, decl) => {
+    const snap = S.snapshots.find((x) => x.el === el);
+    if (snap) snap.style = `${snap.style ? snap.style.replace(/;?\s*$/, '; ') : ''}${decl}`;
+    return snap;
+  };
+  S.sched.scenes.forEach((sc, i) => {
+    const words = [...S.scenes[i].el.querySelectorAll('[data-slot]:not([data-empty])')].filter(wantsWordFit);
+    if (!words.length && !S.scenes[i].el.querySelector('.mm-fit[data-slot="headline"]:not([data-empty])')) return;
+    const hold = S.sched.holds?.find((h) => h.scene === sc.id);
+    seek(S.story.kind === 'deck' ? sc.end : hold ? hold.from : Math.max(sc.start, sc.end - 1e-3));
+    for (const w of words) {
+      const r = fitWords(w, floor);
+      if (!r || (r.px === r.authored && !r.el.style.hyphens)) continue;
+      const snap = keep(r.el, `font-size: ${r.px}px;${r.el.style.hyphens ? ' hyphens: manual;' : ''}`);
+      if (snap?.html != null && r.el.style.hyphens) {
+        const t = document.createElement('template');
+        t.innerHTML = snap.html;
+        const walk = document.createTreeWalker(t.content, 4);
+        for (let n = walk.nextNode(); n; n = walk.nextNode()) n.textContent = r.hyphenate(n.textContent);
+        snap.html = t.innerHTML;
+      }
+    }
+    const r = fitHeadline(S.scenes[i].el, { max: i === 0 ? Infinity : max, least: floor });
+    if (!r) return;
+    if (i === 0) max = r.px / HOOK_STEP;
+    if (r.px !== r.authored) keep(r.el, `font-size: ${r.px}px;`);
+    if (r.broken) S.warnings.push(`${selectorOf(sc.id, 'headline')}: the headline breaks a word across lines even at the body floor; shorten its longest word`);
+  });
 }
 
 // A pattern's pattern.html in its slot (SPEC §5): nested data-slot elements are filled from the
@@ -402,8 +445,12 @@ function groundOf(ground, spec, media) {
 // cover text; a vignette toward the darker of ink and canvas that stays at or under 0.08 inside the safe area; an accent glow and a
 // rough surface border, both inside the safe margin. Only palette roles, so G-BRAND's two-colour
 // blends still hold. The grain's seed is set per seek from t (12 Hz), so it flickers like film and is
-// the same at every seek. Chrome, not content.
-const FINISH_LAYERS = [['grain', 'grain'], ['halftone', 'halftone'], ['vignette', 'vignette'], ['edgeFringe', 'edge'], ['paperEdge', 'paper']];
+// the same at every seek. Chrome, not content. The paper is a fibre in ink, also at no more than 0.08,
+// whose noise is seeded once: it belongs to the stock, so it never changes with t. Grain, halftone and
+// fibre all lie over text, so together they stay at or under 0.08: when their strengths add up past 1,
+// each is scaled down in proportion.
+const FINISH_LAYERS = [['grain', 'grain'], ['halftone', 'halftone'], ['vignette', 'vignette'], ['edgeFringe', 'edge'], ['paperEdge', 'paper'], ['paper', 'fibre']];
+const OVER_TEXT = ['grain', 'halftone', 'paper'];
 // the darker of two hex colours by relative luminance: what a vignette darkens toward
 function darkerOf(a, b) {
   const lum = (hex) => { const n = parseInt(String(hex).replace('#', '').slice(0, 6), 16); const c = [n >> 16, (n >> 8) & 255, n & 255].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
@@ -416,12 +463,15 @@ function finishOf(finish, color) {
   f.setAttribute('aria-hidden', 'true');
   f.setAttribute('data-chrome', '');
   f.setAttribute('data-keep', '');
+  const strength = (key) => { const v = Number(finish[key]); return v > 0 ? Math.min(1, v) : 0; };
+  const overText = OVER_TEXT.reduce((a, k) => a + strength(k), 0);
   for (const [key, cls] of FINISH_LAYERS) {
-    const v = Number(finish[key]);
+    let v = strength(key);
     if (!(v > 0)) continue;
+    if (overText > 1 && OVER_TEXT.includes(key)) v = Math.floor((v / overText) * 1e4) / 1e4;
     const l = document.createElement('span');
     l.className = `mm-finish__${cls}`;
-    l.style.setProperty('--mm-finish-v', String(Math.min(1, v)));
+    l.style.setProperty('--mm-finish-v', String(v));
     f.append(l);
   }
   return f;
@@ -435,6 +485,10 @@ function finishDefs() {
     + '<feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="1" stitchTiles="stitch" result="n"/>'
     + '<feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.6 0 0 0 -0.4" result="a"/>'
     + '<feComposite in="SourceGraphic" in2="a" operator="in"/></filter>'
+    + '<filter id="mm-fibre" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">'
+    + '<feTurbulence type="fractalNoise" baseFrequency="0.9 0.3" numOctaves="4" seed="11" stitchTiles="stitch" result="n"/>'
+    + '<feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  2.2 0 0 0 -0.85" result="a"/>'
+    + '<feComposite in="SourceGraphic" in2="a" operator="in"/></filter>'
     + '<filter id="mm-paper" x="-2%" y="-2%" width="104%" height="104%">'
     + '<feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="7" result="n"/>'
     + '<feDisplacementMap in="SourceGraphic" in2="n" scale="14" xChannelSelector="R" yChannelSelector="G"/></filter>';
@@ -443,6 +497,73 @@ function finishDefs() {
 function finishSeed(t) {
   const n = document.querySelector('#mm-finish-defs #mm-grain feTurbulence');
   if (n) n.setAttribute('seed', String(1 + (Math.floor(t * 12 + 1e-9) % 997)));
+}
+
+// brand.finish.misregister: a spot plate printed off register. The scene's shapes print again in
+// accent beneath themselves (a hard drop shadow), so the plate shows only beside them. The offset is
+// fixed per scene (0.4 % of the frame width at strength 1, down and to a side seeded by the scene), and
+// every emphasis kicks it along the same line (plateKick), so the rest is still; a deck keeps the
+// fixed offset. The shadow sits on the camera's layers, never on the camera: a filter flattens the 3D
+// of whatever carries it, so each scene marks the largest boxes that hold no layer of their own (a slot,
+// or anything a move lifts by data-depth), and a camera move that parts the layers in depth keeps them
+// parted. A box whose smallest type is under display size takes a smaller offset, at most 0.05 of that
+// type's size (about half a regular stroke), so a body line reads as one line with a coloured edge,
+// never as two lines.
+const PLATE_TEXT = 0.05;   // the largest offset beside a line of type, in its font sizes
+const KICK = { span: 0.6, period: 0.6, decay: 4 };   // the swing: its length and period in s, its damping per s
+/**
+ * The emphasis kick on the plate at piece time t, as a share of its full swing: out on the first step,
+ * back past register, then to rest, over 0.6 s or the emphasis less one step, whichever is shorter. It
+ * steps every max(2, frameHold)/30 s from t = 0, on the grid a stop-motion piece draws on, and its first
+ * step is the first grid instant at or after the emphasis starts, so the same swing shows wherever the
+ * emphasis falls against the grid. 0 outside the swing.
+ */
+export function plateKick(t, start, d, frameHold = 1) {
+  const q = Math.max(2, Number(frameHold) || 1) / 30;
+  const span = Math.min(KICK.span, d - q);
+  if (!(span > 0)) return 0;
+  const x = (Math.floor(t / q + 1e-6) - Math.ceil(start / q - 1e-6)) * q;
+  if (x < -1e-9 || x >= span - 1e-9) return 0;
+  return Math.exp(-KICK.decay * x) * Math.cos((2 * Math.PI * x) / KICK.period) * (1 - x / span);
+}
+// the boxes in a camera that carry its plate: the largest that hold no layer of their own
+function plateBoxes(camera) {
+  const out = [];
+  const walk = (n) => { for (const c of n.children) { if (c.querySelector('[data-slot], [data-depth]')) walk(c); else out.push(c); } };
+  walk(camera);
+  return out;
+}
+// the smallest font size of the text in a box, in px; Infinity when it holds none
+function typeFloor(el) {
+  let f = Infinity;
+  const walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  for (let n = walk.nextNode(); n; n = walk.nextNode()) if (n.textContent.trim()) f = Math.min(f, parseFloat(getComputedStyle(n.parentElement).fontSize) || Infinity);
+  return f;
+}
+function misregisterAt(t) {
+  const v = Math.min(1, S.style.finish.misregister);
+  const w = S.spec.w;
+  const n = parseInt(String(S.style.color.accent).slice(1, 7), 16);
+  const film = S.story.kind !== 'deck';
+  const r2 = (q) => Math.round(q * 100) / 100;
+  const base = 0.004 * w * v;
+  S.story.scenes.forEach((sc, i) => {
+    const rnd = random(hash(`misregister:${sc.id}`));
+    const a = (20 + 50 * rnd()) * Math.PI / 180, side = rnd() < 0.5 ? -1 : 1;
+    let m = base;
+    if (film) for (const it of S.items) {
+      const e = it.si === i && it.emphasis;
+      if (!e || !(e.d > 0)) continue;
+      m += 0.012 * w * v * plateKick(t, e.start, e.d, S.style.motion?.frameHold);
+    }
+    const cam = S.scenes[i].camera;
+    for (const el of cam.querySelectorAll('[data-plate]')) { el.removeAttribute('data-plate'); el.style.removeProperty('--mm-plate'); }
+    for (const el of plateBoxes(cam)) {
+      const k = Math.min(1, (PLATE_TEXT * typeFloor(el)) / base);
+      el.setAttribute('data-plate', '');
+      el.style.setProperty('--mm-plate', `drop-shadow(${r2(side * m * k * Math.cos(a))}px ${r2(m * k * Math.sin(a))}px 0 rgba(${n >> 16}, ${(n >> 8) & 255}, ${n & 255}, ${r2(0.75 * v)}))`);
+    }
+  });
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -538,6 +659,8 @@ html, body { margin: 0; padding: 0; background: var(--mm-color-canvas); }
   background: var(--mm-color-canvas); color: var(--mm-color-ink);
   font-family: var(--mm-font-text); font-weight: var(--mm-weight-text); letter-spacing: var(--mm-tracking-text); }
 .mm-scene, .mm-camera { position: absolute; inset: 0; }
+/* the camera is a stacking context of its own (z-index, not isolation, so a 3D move's preserve-3d is not flattened): no layout's z-index rises above its scene's finish or a cut's overlay */
+.mm-camera { z-index: 0; }
 .mm-ground { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .mm-ground__blob { position: absolute; display: block; border-radius: 50%; }
 .mm-ground__mark { position: absolute; top: 50%; left: 50%; max-width: none; height: auto; transform: translate(-50%, -50%); display: block; }
@@ -550,6 +673,8 @@ html, body { margin: 0; padding: 0; background: var(--mm-color-canvas); }
   color-mix(in srgb, var(--mm-finish-shade) calc(8% * var(--mm-finish-v)), transparent) 88%,
   color-mix(in srgb, var(--mm-finish-shade) calc(40% * var(--mm-finish-v)), transparent) 100%); }
 .mm-finish__edge { box-shadow: inset 0 0 calc(var(--mm-safe) * 0.7) calc(var(--mm-safe) * 0.08) color-mix(in srgb, var(--mm-color-accent) calc(55% * var(--mm-finish-v)), transparent); }
+.mm-finish__fibre { background: var(--mm-color-ink); filter: url(#mm-fibre); opacity: calc(0.08 * var(--mm-finish-v)); }
+.mm-scene[data-misregister] > .mm-camera [data-plate] { filter: var(--mm-plate, none); }
 .mm-finish__paper { box-sizing: border-box; border: calc(var(--mm-safe) * 0.4 * var(--mm-finish-v)) solid var(--mm-color-surface); filter: url(#mm-paper); }
 .mm-device-frame { position: absolute; inset: 0; z-index: 6; display: block; width: 100%; height: 100%; max-width: none; pointer-events: none; }
 .mm-scene { background: var(--mm-color-canvas); }
@@ -654,11 +779,14 @@ function bagFor(beat, kind) {
 // ctx.unit is the format's base size (SPEC §12): patterns express travel as multiples of it.
 // ctx.boil(n) is the pen's shiver: which of n frames shows now, from the piece's time, the
 // same for every stroke; style motion.boil seconds a frame (0 = still), and a deck always frame 0.
+// ctx.t is the instant being drawn (film: piece seconds; deck: the press position), for a pattern
+// that keeps time with the piece rather than with its own beat (a character's idle on the beat grid).
 function ctxFor(selector, extra = {}) {
   return {
-    style: S.style, format: S.format, deck: S.story?.kind === 'deck', unit: S.spec.base, random: random(hash(selector)), spring: springCtx(S.style),
+    style: S.style, format: S.format, deck: S.story?.kind === 'deck', unit: S.spec.base, t: S.t, random: random(hash(selector)), spring: springCtx(S.style),
     boil: (n = 3) => boilFrame(S.t, { period: S.style.motion?.boil ?? BOIL_PERIOD, n, deck: S.story?.kind === 'deck' }),
-    ease: (name, p) => ease(name, p, S.style), afterSettle, seeded: (fn) => seeded(hash(selector), fn), ...extra,
+    ease: (name, p) => ease(name, p, S.style), afterSettle, seeded: (fn) => seeded(hash(selector), fn),
+    ...(S.footage ? { footage: footageCtx(S.footage, S.t) } : {}), ...extra,
   };
 }
 
@@ -668,16 +796,22 @@ function isType(beat, fx) {
   return (beat.text != null && beat.text !== '') || beat.value != null || /^(text|data)\//.test(fx);
 }
 
-// motion.frameHold 2 animates elements "on twos": an element's local time steps every
-// 2/30 s, while cuts and camera moves stay smooth. The hold is counted in 1/30 s whatever the
-// export frame rate, so at 60 fps a hold of 2 steps every 4 frames. A finished element stays
-// finished (u >= d is never held back), so every rest is the same with or without the hold.
+// motion.frameHold 2 animates elements "on twos" and 3 "on threes": every element is drawn as it
+// was at the last instant of one grid shared by the whole piece (every 2/30 s or 3/30 s from t = 0),
+// so all elements step together, while cuts and camera moves stay smooth. The hold is counted in
+// 1/30 s whatever the export frame rate, so at 60 fps a hold of 2 steps every 4 frames. local(x) is
+// the element's local time at piece time x. A finished element stays finished (u >= d is never held
+// back), and one that would finish inside the current step is drawn finished from it, so every rest is
+// the same with or without the hold and the last change also lands on the grid.
 const HOLD_FPS = 30;
-function held(u, d) {
+function held(u, d, local) {
   const h = S.style.motion?.frameHold;
   if (!(h > 1) || !(u > 0) || u >= d - TOL) return u;
   const q = h / HOLD_FPS;
-  return Math.floor(u / q + 1e-9) * q;
+  const g = Math.floor(S.t * HOLD_FPS / h + 1e-6) * q;
+  const at = local(g), next = local(g + q);
+  if (next >= d - TOL && next >= at) return d;
+  return at < TOL ? 0 : Math.min(d, at);
 }
 
 function entrance(it, u) {
@@ -746,7 +880,9 @@ export function seek(t) {
   late = [];
   if (S.story.kind === 'deck') seekDeck(t); else seekFilm(t);
   if (S.style.finish?.grain > 0) finishSeed(t);
+  if (S.style.finish?.misregister > 0) misregisterAt(S.t);
   runScreens();
+  if (S.footage) paintFootage(S.footage, S.t, trackDecode, decodeWarning);
   if (late.length) settle();   // a live preview gets its renders too; the renderer awaits the same settle
 }
 
@@ -879,19 +1015,19 @@ function seekFilm(t) {
       const T = returnTime(P, t);
       if (!vis[it.si] || T < P.start || (P.exit && t >= P.exit.start + P.exit.d - TOL)) continue;
       const u = T - it.start;
-      if (u < 0) hide(it.el); else { const h = held(u, it.d); runFx(it, entrance(it, h), h); }
+      if (u < 0) hide(it.el); else { const h = held(u, it.d, (x) => returnTime(P, x) - it.start); runFx(it, entrance(it, h), h); }
       continue;
     }
     const u = returnTime(it, t) - it.start;
     const gone = it.exit && t >= it.exit.start + it.exit.d - TOL;
-    const hu = held(u, it.d);   // progress and overshoot describe the step that is drawn
+    const hu = held(u, it.d, (x) => returnTime(it, x) - it.start);   // progress and overshoot describe the step that is drawn
     const progress = progressOf(it, hu);
     S.state.set(it, { progress, overshoot: hu > 0 ? overshootOf(it, hu) : 0, visible: vis[it.si] && u >= 0 && !gone });
     if (!vis[it.si]) continue;
     if (u < 0 || gone) { hide(it.el); continue; }
     if (it.each) it.el.style.visibility = ''; else runFx(it, entrance(it, hu), hu);
-    if (it.emphasis && t >= it.emphasis.start && t < it.emphasis.start + it.emphasis.d - TOL && !(it.ret && t >= it.ret.start)) emphases.push([it, held(t - it.emphasis.start, it.emphasis.d) / it.emphasis.d]);
-    if (it.exit && t >= it.exit.start) runExit(it, it.exit.d > 0 ? ease('exit', held(t - it.exit.start, it.exit.d) / it.exit.d, S.style) : 1);
+    if (it.emphasis && t >= it.emphasis.start && t < it.emphasis.start + it.emphasis.d - TOL && !(it.ret && t >= it.ret.start)) emphases.push([it, held(t - it.emphasis.start, it.emphasis.d, (x) => x - it.emphasis.start) / it.emphasis.d]);
+    if (it.exit && t >= it.exit.start) runExit(it, it.exit.d > 0 ? ease('exit', held(t - it.exit.start, it.exit.d, (x) => x - it.exit.start) / it.exit.d, S.style) : 1);
   }
   for (const [it, q] of emphases) runEmphasis(it, q);   // after every entrance and exit: an emphasis may touch its siblings (emphasis/lens)
   for (const run of later) run();

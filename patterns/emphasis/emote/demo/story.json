@@ -1,0 +1,76 @@
+{
+  "id": "demo-emphasis-emote",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: emphasis/emote",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "like",
+      "layout": "layouts/statement",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Teams love it",
+          "emphasis": "emphasis/emote",
+          "params": {
+            "mark": "heart"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "A small mark pops beside the words, then goes"
+        }
+      ],
+      "say": "A heart pops beside the headline."
+    },
+    {
+      "id": "wow",
+      "layout": "layouts/statement",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Twice as fast",
+          "emphasis": "emphasis/emote",
+          "params": {
+            "mark": "sparkle",
+            "side": "left"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Drawn, never typed: strokes and washes"
+        }
+      ],
+      "say": "A sparkle pops on the other side."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

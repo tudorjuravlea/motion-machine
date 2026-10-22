@@ -1,6 +1,6 @@
 ---
 name: motion-machine
-description: Directs a short motion piece with Motion Machine, a 20 to 60 s film (MP4 in 9x16, 4x5, 1x1 and 16x9) or a 6 to 20 press clicker deck, from one brief through seven gated rounds in which the user directs every taste call and the `mm check` gate measures every cut. Use when the user asks for a reel, promo or explainer film, an animated or clicker deck, a launch video or "the same story as a film and a deck" built with this repository or the `mm` CLI. Do not use for generative AI video, editing existing footage, composing music, static slides with no motion, or UI micro-interactions inside an app.
+description: Directs a short motion piece with Motion Machine, a 20 to 60 s film (MP4 in 9x16, 4x5, 1x1 and 16x9) or a 6 to 20 press clicker deck, from one brief through seven gated rounds in which the user directs every taste call and the `mm check` gate measures every cut. Use when the user asks for a reel, promo or explainer film, an animated or clicker deck, a launch video or "the same story as a film and a deck" built with this repository or the `mm` CLI. Do not use for generative AI video, editing footage beyond cutting a talking-head recording in its pauses, composing music, static slides with no motion, or UI micro-interactions inside an app.
 license: Apache-2.0
 compatibility: "Node 22+, Playwright Chromium, ffmpeg 6+"
 metadata:
@@ -86,7 +86,7 @@ faces and consent; for a deck the audience, running time and language. Probe eve
 (`ffprobe -show_streams <file>`; for a film `mm motion capture --from <video> --out
 pieces/<id>/capture/motion.json` gives the shot list and `motion.capture-notes.md`). Screen
 content, only if a scene shows the product in use (ask for its entry, key action and result): record it (simulator or phone) and `mm media
-prep`, or `mm capture site`; a real device's frame: `mm media frame`. Write the brief summary; the director confirms it.
+prep`, or `mm capture site`; a real device's frame: `mm media frame`. A talking-head recording, a still to take apart, a mascot: the cheatsheet's notes. Write the brief summary; the director confirms it.
 
 **Gate 2 · Treatment.** Offer two or three named directions that differ in impact (hook, rhythm, reveal, production value
 such as 3D devices, finishes, music sync) as well as in look. Each: a short paragraph and a beat sheet
@@ -149,10 +149,10 @@ it before the treatment.
 
 The three agnostic modes (SPEC.md §13), recorded in the log. A style is a
 brand half (colour, type, composition) worn with a motion half (tempo, curves, cuts, entrances).
-- **Apply (preset or compose).** `mm new --kind <k> --style editorial|kinetic|calm-product|nocturne-kinetic --id
-  <id>` for fictional brands; or any brand with any motion: `mm style compose --brand
+- **Apply (preset or compose).** `mm new --kind <k> --style editorial|kinetic|calm-product|nocturne-kinetic|spot-mono|print-plates|blueprint --id
+  <id>` for fictional brands (the cheatsheet's "Looks" note says what each look asks of a story); or any brand with any motion: `mm style compose --brand
   <name|path> --motion <name|path> --out <piece>/style.json`. Shipped halves: brands `linen`,
-  `nocturne`, `paper`, `signal`; motions `calm`, `kinetic`, `premium`.
+  `nocturne`, `paper`, `signal`, `greyfield`, `twoplate`, `draftline`; motions `calm`, `kinetic`, `premium`, `grid`, `stop-motion`, `proof`.
 - **Capture.** `mm brand capture --from <url|index.html|figma-export.json|DESIGN.md|folder of
   stills> --out <piece>/capture/<name>.json [--name <name>] [--color role=#hex]` (a typed hex
   wins; from stills the fonts land in `ask`, and W-ASK warns until they are set) and `mm motion capture --from <video> --out

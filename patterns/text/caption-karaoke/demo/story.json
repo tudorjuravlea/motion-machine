@@ -14,6 +14,9 @@
     "bpm": null,
     "beats": null
   },
+  "footage": {
+    "asset": "assets/talk/"
+  },
   "scenes": [
     {
       "id": "demo",
@@ -34,6 +37,25 @@
         }
       ],
       "say": "A single scene that shows text/caption-karaoke."
+    },
+    {
+      "id": "words",
+      "layout": "layouts/talking-full",
+      "duration": 4.3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "text/caption-karaoke",
+          "params": {
+            "mode": "words",
+            "group": 3
+          }
+        }
+      ],
+      "say": "mode words: the captions follow the words of the footage (synthetic test footage and invented words), group by group."
     }
   ],
   "cta": {

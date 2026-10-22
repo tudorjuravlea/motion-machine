@@ -1,0 +1,13 @@
+{
+  "kind": "sequence",
+  "fps": 10,
+  "frames": 120,
+  "w": 144,
+  "h": 256,
+  "duration": 12,
+  "source": {
+    "file": "talk.mp4",
+    "sha1": "f0eb295a925a0f98d2f67634bfaeae8946e1d757"
+  },
+  "prepared": "2026-10-21T23:24:59.545Z"
+}

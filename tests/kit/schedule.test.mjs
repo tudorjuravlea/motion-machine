@@ -176,3 +176,47 @@ test('a cascade stagger that is not a finite number of seconds >= 0 falls back t
     assert.equal(s.warnings.filter((w) => /stagger/.test(w)).length, 1, `one warning for stagger ${bad}`);
   }
 });
+
+// A cut whose module sizes itself by its params (`durOf(cutParams)`, e.g. a transition's `speed`).
+const paced = { dur: 1.3, durOf: (p = {}) => 1.3 / Math.min(2, Math.max(0.5, Number(p.speed) || 1)) };
+
+test('a cut module with durOf(params) takes its length from the scene\'s cutParams, in a film and a deck', () => {
+  const story = structuredClone(film);
+  story.scenes[1].cutParams = { speed: 2 };
+  const s = schedule(story, editorial, { patterns: { 'transitions/push': paced } });
+  const cut = s.events.filter((e) => e.kind === 'cut')[1];
+  close(cut.d, 0.65, 'speed 2 halves the 1.3 s cut');
+  close(s.scenes[1].start, 3.5, 'the scene still starts on its slot');
+  const plain = schedule(film, editorial, { patterns: { 'transitions/push': paced } });
+  close(plain.events.filter((e) => e.kind === 'cut')[1].d, 1.3, 'no speed: durOf gives the module\'s own length');
+  const d = structuredClone(deck);
+  const k = d.scenes.findIndex((sc, i) => i > 0 && sc.cut === 'transitions/push');
+  assert.ok(k > 0, 'the golden deck has a push cut');
+  d.scenes[k].cutParams = { speed: 0.5 };
+  const sd = schedule(d, editorial, { patterns: { 'transitions/push': paced } });
+  close(sd.scenes[k].cut.d, 2.6, 'speed 0.5 doubles it in a deck');
+});
+
+test('without durOf, cutParams leave every schedule exactly as it was', () => {
+  for (const base of [film, deck]) {
+    const story = structuredClone(base);
+    story.scenes.forEach((sc) => { sc.cutParams = { speed: 2, dur: 'slow' }; });
+    for (const patterns of [{}, { 'transitions/push': { dur: 'quick' } }, { 'transitions/push': { dur: 1.3 } }]) {
+      assert.deepEqual(JSON.parse(JSON.stringify(schedule(story, editorial, { patterns }))), JSON.parse(JSON.stringify(schedule(base, editorial, { patterns }))));
+    }
+  }
+});
+
+test('transitions/flood: speed sets its cut, 1.3 s divided by it, and no speed keeps 1.3 s', async () => {
+  const flood = (await import('../../patterns/transitions/flood/pattern.js')).default;
+  const cutOf = (cutParams) => {
+    const story = structuredClone(film);
+    story.scenes[1].cut = 'transitions/flood';
+    if (cutParams) story.scenes[1].cutParams = cutParams;
+    return schedule(story, editorial, { patterns: { 'transitions/flood': flood } }).events.filter((e) => e.kind === 'cut')[1].d;
+  };
+  close(cutOf(null), 1.3, 'no cutParams');
+  close(cutOf({ to: 'headline' }), 1.3, 'no speed');
+  close(cutOf({ speed: 0.5 }), 2.6, 'speed 0.5');
+  close(cutOf({ speed: 2 }), 0.67, 'speed 2 stops at the phases\' floors');
+});

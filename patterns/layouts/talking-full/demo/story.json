@@ -1,0 +1,51 @@
+{
+  "id": "demo-layouts-talking-full",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: layouts/talking-full",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "footage": {
+    "asset": "assets/talk/"
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/talking-full",
+      "duration": 8.8,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Cuts land in the quiet",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.8,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Every frame comes from the edit."
+        }
+      ],
+      "say": "A demo of the pattern: synthetic test footage, cut by mm footage cut, under a headline and a caption."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

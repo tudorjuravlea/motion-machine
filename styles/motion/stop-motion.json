@@ -1,0 +1,73 @@
+{
+  "name": "stop-motion",
+  "version": 1,
+  "motion": {
+    "durations": {
+      "quick": 200,
+      "standard": 300,
+      "slow": 600,
+      "hold": 1200
+    },
+    "easings": {
+      "enter": "cubic-bezier(0.2, 0.8, 0.3, 1)",
+      "exit": "cubic-bezier(0.5, 0, 0.9, 0.4)",
+      "move": "cubic-bezier(0.6, 0, 0.3, 1)"
+    },
+    "spring": {
+      "ui": {
+        "k": 300,
+        "c": 24,
+        "m": 1
+      },
+      "type": {
+        "k": 200,
+        "c": 28,
+        "m": 1
+      },
+      "heavy": {
+        "k": 180,
+        "c": 24,
+        "m": 2
+      }
+    },
+    "travel": 1.1,
+    "overshootMax": 0.1,
+    "exitRatio": 0.6,
+    "frameHold": 3,
+    "stagger": {
+      "eachS": 0.1,
+      "capS": 0.6
+    }
+  },
+  "sound": {
+    "palette": "percussive",
+    "bpm": 100,
+    "loudnessLufs": -14,
+    "cuesPer10s": [
+      3,
+      8
+    ]
+  },
+  "transitions": {
+    "opening": "transitions/hard-cut",
+    "topic": "transitions/flip",
+    "related": "transitions/push",
+    "climax": "transitions/zoom-through",
+    "outro": "transitions/hard-cut",
+    "policy": "owns-exit"
+  },
+  "entrances": {
+    "headline": "entrances/slam",
+    "body": "entrances/words",
+    "figure": "entrances/count",
+    "plate": "entrances/drop"
+  },
+  "pacing": {
+    "holdMinS": 1,
+    "arrivalsPer10s": [
+      4,
+      9
+    ],
+    "energy": "medium"
+  }
+}

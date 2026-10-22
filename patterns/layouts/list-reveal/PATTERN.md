@@ -35,6 +35,7 @@ A headline and up to six items that arrive one after another.
 - `--mm-frame-w`
 - `--mm-headline-scale`
 - `--mm-safe`
+- `--mm-size-body`
 - `--mm-size-h1`
 - `--mm-size-h2`
 - `--mm-space-1`
@@ -51,7 +52,7 @@ A headline and up to six items that arrive one after another.
 - Every box sits inside `--mm-safe`, inset a further 8 % of the half-width on the left and right as headroom for a camera move of up to 6 %; content is centred in that box and lifted by half a safe margin so it reads centred under the top row and slightly above the middle (H-FILL).
 - Text sizes come only from `--mm-size-*` roles at body size or above, so nothing is below the body floor; data-micro is never used.
 - Empty slots (no beat) are removed from the flow with `[data-empty]`, so a layout with fewer beats stays centred.
-- Items use h2 in every format; each is marked by an accent square drawn in CSS.
+- Items use h2 in every format; each is marked by an accent square drawn in CSS. When the kit cannot clear the headline from the items by its size alone, it marks the headline `data-fit="tight"` and the items step down to the body size (never under the body floor), so a long question over long items still fits the frame, the square format included.
 - In a deck, a slot the kit still hides (a later press has not brought it in, or it has left) takes no room, so the content that is visible is centred at that rest. The room appears when the slot arrives, so the layout re-centres at the start of that press; a film keeps the room and nothing shifts as slots arrive.
 
 ## Provenance

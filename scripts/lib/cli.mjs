@@ -37,16 +37,20 @@ export const USAGE = {
   'pattern lint': ['mm pattern lint [<group>/<name> | <name>] [--json]', 'lint every pattern, or the one named'],
   'pattern stills': ['mm pattern stills <group>/<name> [--style preset|path|all] [--format F] [--patterns dir]', 'photograph a pattern\'s demo in a style (--patterns: a patterns folder other than the repo\'s)'],
   'brand capture': ['mm brand capture --from <url|index.html|figma-export.json|DESIGN.md|folder of stills> [--name <name>] [--color role=#hex]… --out <path>.json', 'capture a brand half; --name defaults to the --out basename; a typed --color always wins'],
+  'brand mascot': ['mm brand mascot <file.svg> --brand <path> [--as <name>] [--out <path>] [--json]', 'import a mascot drawn in any vector tool into a brand half, by its layer names (body, face, eye-left, eye-right, mouth, arm-*, leg-*, shadow; any other name an extra part), normalised into the mascot box with colours mapped to palette roles; --as adds it to the brand\'s cast under that name; --out writes elsewhere than --brand'],
   'motion capture': ['mm motion capture --from <video> --out <path>.json [--name <name>] [--fps 10]', 'capture a motion half from a reference video; --name defaults to the --out basename'],
   'style compose': ['mm style compose --brand <name|path> --motion <name|path> --out <path> [--name <style-name>]', 'merge a brand half and a motion half into a style'],
   'style export-designmd': ['mm style export-designmd --style <style.json> --out DESIGN.md', 'write a style as a DESIGN.md'],
   'skill new': ['mm skill new --brand <name|path-to-brand.json> [--motion <name|path>] --out <dir> [--license <spdx>] [--force]', 'scaffold a thin per-brand skill; --brand takes a shipped name or the path to a captured brand half'],
   'media frame': ['mm media frame <png> --name <n> [--piece <dir>] [--key]', 'a device frame image you own (transparent screen, or a flat screen colour with --key) to <piece>/assets/frames/<n>.png, its screen hole measured into <n>.json'],
   'media prep': ['mm media prep <file> --name <n> [--piece <dir>] [--fps 30] [--fit phone|laptop|<W>x<H>] [--trim <a>-<b>] [--quality 90]', 'a screen recording to a frame sequence in <piece>/assets/<n>/ (frames plus media.json), seekable frame by frame'],
+  'media layers': ['mm media layers <picture> --name <n> [--piece <dir>] [--mask <name>=<png>]… [--poly <json>]… [--key <#rrggbb|auto>] [--min-area <px>] [--plate <png>] [--depth <png>] [--depths <d,d,…>]', 'one still picture to a layer pack in <piece>/assets/<n>/: a plate with its holes filled, parts cropped to their boxes with stacking order and depth, media.json (kind: layers) and a recompose check; masks, polygons or a colour key, offline; a colour key drops pieces under --min-area pixels (a thousandth of the picture by default) and refuses a backdrop that is not flat; byte-identical on one machine'],
+  'footage cut': ['mm footage cut <video> --name <n> [--piece <dir>] [--words <words.json>] [--fillers] [--max-pause 0.5]', 'a talking-head recording, already prepared with mm media prep --name <n>, to an edit in <piece>/assets/<n>/: cuts in measured quiet (edit.json) and the cut voice at the piece\'s loudness (voice.wav); --words maps a supplied word list ([{text,start,end}] or WhisperX output) onto the edit; --fillers (with --words) also cuts the stretches between words longer than --max-pause, whatever sound they hold; a take with no pause gives one clip and a note; byte-identical on one machine (another machine\'s decoder may differ by a few samples in voice.wav)'],
+  'footage matte': ['mm footage matte --name <n> [--piece <dir>] [--masks <dir>] [--quality accurate|balanced] [--feather 3]', 'a person matte for a footage asset already prepared with mm media prep --name <n>: one grey mask per frame (white = person) in <piece>/assets/<n>/matte/, recorded in media.json; by default the macOS Vision framework segments the frames on the device (macOS 12+ with swiftc; the helper is compiled into <piece>/out/ on first use); elsewhere supply masks from any tool with --masks <dir> (the frames\' names, .png or .jpg); every mask then takes a 3-frame temporal median and a --feather px soft edge; the same input on one machine writes the same bytes'],
   'capture site': ['mm capture site --url <url> --name <n> [--piece <dir>] [--device phone|laptop|browser] [--mark "<Label>=<selector>"]… [--hide <selector>]… [--wait <selector>] [--quality 90] [--max-height 24000]', 'capture a web page once, at a device viewport, as tall tiles plus media.json (marks for scroll, tap and callout targets)'],
 };
 /** The groups: `mm <group>` names its subcommands. */
-export const GROUP_USAGE = { pattern: ['list', 'lint', 'stills'], brand: ['capture'], motion: ['capture'], style: ['compose', 'export-designmd'], skill: ['new'], media: ['prep', 'frame'], capture: ['site'] };
+export const GROUP_USAGE = { pattern: ['list', 'lint', 'stills'], brand: ['capture', 'mascot'], motion: ['capture'], style: ['compose', 'export-designmd'], skill: ['new'], media: ['prep', 'frame', 'layers'], footage: ['cut', 'matte'], capture: ['site'] };
 
 /** The usage text for a command key (`new`, `pattern lint`) or a group (`pattern`). */
 export function usageText(key) {
@@ -120,7 +124,7 @@ export function runMain(meta, main) {
 }
 
 /** Script basename -> the command key whose usage a usage mistake prints. */
-const SCRIPT_COMMAND = { doctor: 'doctor', new: 'new', serve: 'serve', stills: 'stills', export: 'export', review: 'review', 'pattern-stills': 'pattern stills', check: 'check', 'release-check': 'release-check' };
+const SCRIPT_COMMAND = { doctor: 'doctor', new: 'new', serve: 'serve', stills: 'stills', export: 'export', review: 'review', 'pattern-stills': 'pattern stills', 'mascot-import': 'brand mascot', check: 'check', 'release-check': 'release-check' };
 
 export const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -150,9 +154,12 @@ export function resolveFontSrc(src, styleFile) {
   return hit;
 }
 
-/** A copy of a style with every font `src` rewritten to a path relative to `pieceDir`. */
+/** A copy of a style with every font `src`, and a ground mark named by its repo path (`styles/…`), rewritten to a
+ *  path relative to `pieceDir`, so a page scaffolded anywhere in the repo still finds them. */
 export function relativiseFonts(style, styleFile, pieceDir) {
   const out = structuredClone(style);
   for (const { file } of fontFiles(out)) file.src = relative(pieceDir, resolveFontSrc(file.src, styleFile)).split(sep).join('/');
+  const mark = out.ground?.mark;
+  if (mark?.src?.startsWith('styles/') && existsSync(join(ROOT, mark.src))) mark.src = relative(pieceDir, join(ROOT, mark.src)).split(sep).join('/');
   return out;
 }

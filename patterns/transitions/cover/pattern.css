@@ -1,0 +1,16 @@
+/* cover: the scrim over the outgoing scene, in the brand's darkest palette role. pattern.js writes
+   --mm-tx-cover-dim and --mm-tx-cover-shade on that section's inline style; the kit restores the
+   style on every seek, so the scrim exists only while the cut is being drawn and no rule matches at
+   a rest. */
+.mm-scene[style*="--mm-tx-cover-dim"] {
+  isolation: isolate;
+}
+.mm-scene[style*="--mm-tx-cover-dim"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+  background: var(--mm-tx-cover-shade, var(--mm-color-ink));
+  opacity: var(--mm-tx-cover-dim);
+}

@@ -1,0 +1,27 @@
+/* entrances/character: the slot is a stage for the brand's mascot. It takes the width its layout
+   gives it and a height of a few display sizes, at most 30 % of the frame, and it yields to the
+   text: its least height is 0 and its asked height is a share of the room its layout gives it, so a
+   grid row or a flex column hands it only what the text leaves (a stacked layout keeps every line
+   inside the safe area) and a block keeps the full stage. The size depends on layout alone, so it
+   is the same at every seek, before the character arrives too. The rig's SVG fills the slot, its
+   ground line on the slot's bottom edge, and clips to it: nothing the rig draws leaves the slot. */
+[data-slot][data-fx="entrances/character"] {
+  --mm-stage: min(calc(var(--mm-size-display) * 2.6), calc(var(--mm-frame-h) * 0.3));
+  position: relative;
+  width: 100%;
+  height: min(var(--mm-stage), 100%);
+  min-height: 0;
+  overflow: hidden;
+}
+/* the stage's asked height, for a layout that sizes the slot by its content */
+[data-slot][data-fx="entrances/character"]::before {
+  content: '';
+  display: block;
+  height: var(--mm-stage);
+}
+[data-slot][data-fx="entrances/character"] > .mm-rig {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}

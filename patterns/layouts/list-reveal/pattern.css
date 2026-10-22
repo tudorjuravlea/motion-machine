@@ -1,5 +1,5 @@
 /* list-reveal: a headline and up to six items that arrive in turn. Items without a beat vanish
-   from the flow, so a short list stays centred. */
+   from the flow, so a short list stays centred. The items yield to a headline the kit marks tight. */
 .list-reveal {
   position: absolute;
   inset: var(--mm-safe) calc(var(--mm-safe) + (var(--mm-frame-w) / 2 - var(--mm-safe)) * 0.08 * var(--mm-density)) calc(var(--mm-safe) * 2);
@@ -45,6 +45,12 @@
   overflow-wrap: break-word;
   text-wrap: pretty;
   color: var(--mm-color-ink);
+}
+/* a headline the kit could not clear from the items by its size alone (data-fit="tight"): the items
+   step down from h2 to the body size, never under the body floor (at most 0.625 of the safe margin in
+   every format), so a long question over long items still fits the frame */
+.list-reveal:has(> .list-reveal__headline[data-fit="tight"]) .list-reveal__item {
+  font-size: max(var(--mm-size-body), calc(var(--mm-safe) * 0.625));
 }
 .list-reveal__item::before {
   content: "";

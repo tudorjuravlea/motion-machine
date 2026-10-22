@@ -1,0 +1,19 @@
+/* emphasis/roulette: the highlight box, an accent frame that fills when it lands, and the answer's
+   mark. The mark is keyed on the slot's data-emphasis, so it holds through the rest of the scene;
+   pattern.js writes --mm-roulette-wait on the slot until the box lands, which keeps it off. */
+.mm-roulette {
+  position: absolute;
+  z-index: -1;
+  box-sizing: border-box;
+  border-radius: var(--mm-radius-2);
+  border: calc(var(--mm-space-1) * 0.75) solid var(--mm-color-accent);
+  background: color-mix(in srgb, var(--mm-color-accent) calc(12% + var(--mm-roulette-flash, 0) * 28%), transparent);
+  pointer-events: none;
+}
+[data-emphasis="emphasis/roulette"]:not([style*="--mm-roulette-wait"]) {
+  color: var(--mm-accent-text);
+  text-decoration-line: underline;
+  text-decoration-color: var(--mm-color-accent);
+  text-decoration-thickness: calc(var(--mm-space-1) * 0.75);
+  text-underline-offset: calc(var(--mm-space-1) * 1.25);
+}

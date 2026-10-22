@@ -1,0 +1,22 @@
+/* emphasis/emote: the mark's strokes and dots in its role (the accent, or ink) at full opacity, each
+   over a halo of the same role (a wider stroke whose width and opacity pattern.js writes), its washes
+   in the accent at the alpha pattern.js writes. It never takes pointer events and never clips. */
+.mm-emote { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.mm-emote__stroke {
+  fill: none;
+  stroke: var(--mm-color-ink);
+  stroke-width: var(--mm-space-1);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.mm-emote__dot { fill: var(--mm-color-ink); stroke: none; }
+.mm-emote__halo {
+  fill: none;
+  stroke: var(--mm-color-ink);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.mm-emote--accent .mm-emote__stroke,
+.mm-emote--accent .mm-emote__halo { stroke: var(--mm-color-accent); }
+.mm-emote--accent .mm-emote__dot { fill: var(--mm-color-accent); }
+.mm-emote__wash { fill: var(--mm-color-accent); stroke: none; }

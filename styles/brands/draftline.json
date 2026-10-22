@@ -1,0 +1,136 @@
+{
+  "name": "draftline",
+  "version": 1,
+  "fictional": true,
+  "color": {
+    "canvas": "#123A6B",
+    "ink": "#EAF1FA",
+    "muted": "#AABED7",
+    "surface": "#1A4A80",
+    "line": "#3D6699",
+    "accent": "#FF8A3D",
+    "accentInk": "#123A6B"
+  },
+  "type": {
+    "display": {
+      "family": "Archivo",
+      "weight": 800,
+      "tracking": -0.03,
+      "files": [
+        {
+          "src": "styles/fonts/archivo/archivo-latin-700-normal.woff2",
+          "weight": 700,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/archivo/archivo-latin-ext-700-normal.woff2",
+          "weight": 700,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        },
+        {
+          "src": "styles/fonts/archivo/archivo-latin-800-normal.woff2",
+          "weight": 800,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/archivo/archivo-latin-ext-800-normal.woff2",
+          "weight": 800,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        }
+      ]
+    },
+    "text": {
+      "family": "IBM Plex Mono",
+      "weight": 400,
+      "tracking": 0,
+      "files": [
+        {
+          "src": "styles/fonts/ibm-plex-mono/ibm-plex-mono-latin-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/ibm-plex-mono/ibm-plex-mono-latin-ext-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        }
+      ]
+    },
+    "mono": {
+      "family": "IBM Plex Mono",
+      "weight": 400,
+      "tracking": 0,
+      "files": [
+        {
+          "src": "styles/fonts/ibm-plex-mono/ibm-plex-mono-latin-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/ibm-plex-mono/ibm-plex-mono-latin-ext-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        }
+      ]
+    }
+  },
+  "scale": {
+    "display": 1,
+    "h1": 0.6,
+    "h2": 0.42,
+    "body": 0.27,
+    "caption": 0.21,
+    "micro": 0.19
+  },
+  "space": [
+    4,
+    8,
+    16,
+    24,
+    40,
+    64,
+    104
+  ],
+  "radius": [
+    0,
+    1,
+    2,
+    4,
+    999
+  ],
+  "composition": {
+    "align": "left",
+    "headlineScale": 1,
+    "density": "compact"
+  },
+  "ground": {
+    "blobs": [
+      {
+        "color": "#123A6B",
+        "x": 0,
+        "y": 0,
+        "w": 0.1,
+        "h": 0.1,
+        "alpha": 0
+      }
+    ],
+    "blur": 0,
+    "mark": {
+      "src": "styles/grounds/draftline-grid.svg",
+      "width": 1.8,
+      "alpha": 0.16
+    }
+  },
+  "finish": {
+    "paper": 0.5
+  },
+  "bans": [
+    "centered-title-on-gradient",
+    "fade-only",
+    "corner-labels",
+    "frame-borders",
+    "glow-on-ui",
+    "particle-burst"
+  ],
+  "allow": []
+}

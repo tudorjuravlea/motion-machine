@@ -25,6 +25,7 @@
     "devices": { "$ref": "urn:motion-machine:contracts:brand#/properties/devices" },
     "ground":  { "$ref": "urn:motion-machine:contracts:brand#/properties/ground" },
     "finish":  { "$ref": "urn:motion-machine:contracts:brand#/properties/finish" },
+    "mascot":  { "$ref": "urn:motion-machine:contracts:brand#/properties/mascot" },
     "ask":     { "$ref": "urn:motion-machine:contracts:brand#/properties/ask" },
     "bans":   { "$ref": "urn:motion-machine:contracts:brand#/properties/bans" },
     "allow":  { "$ref": "urn:motion-machine:contracts:brand#/properties/allow" },

@@ -1,0 +1,72 @@
+{
+  "name": "proof",
+  "version": 1,
+  "motion": {
+    "durations": {
+      "quick": 120,
+      "standard": 300,
+      "slow": 600,
+      "hold": 1600
+    },
+    "easings": {
+      "enter": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "exit": "cubic-bezier(0.7, 0, 0.84, 0)",
+      "move": "cubic-bezier(0.45, 0, 0.2, 1)"
+    },
+    "spring": {
+      "ui": {
+        "k": 520,
+        "c": 46,
+        "m": 1
+      },
+      "type": {
+        "k": 260,
+        "c": 33,
+        "m": 1
+      },
+      "heavy": {
+        "k": 200,
+        "c": 41,
+        "m": 2
+      }
+    },
+    "travel": 0.8,
+    "overshootMax": 0,
+    "exitRatio": 0.6,
+    "stagger": {
+      "eachS": 0.05,
+      "capS": 0.4
+    }
+  },
+  "sound": {
+    "palette": "soft-ui",
+    "bpm": 120,
+    "loudnessLufs": -14,
+    "cuesPer10s": [
+      2,
+      6
+    ]
+  },
+  "transitions": {
+    "opening": "transitions/hard-cut",
+    "topic": "transitions/hard-cut",
+    "related": "transitions/hard-cut",
+    "climax": "transitions/hard-cut",
+    "outro": "transitions/hard-cut",
+    "policy": "owns-exit"
+  },
+  "entrances": {
+    "headline": "entrances/mask-reveal",
+    "body": "entrances/words",
+    "figure": "entrances/count",
+    "plate": "entrances/rise"
+  },
+  "pacing": {
+    "holdMinS": 1.2,
+    "arrivalsPer10s": [
+      3,
+      9
+    ],
+    "energy": "medium"
+  }
+}

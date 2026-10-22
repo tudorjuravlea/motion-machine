@@ -1,0 +1,108 @@
+/* talking-cutout: the speaker cut out of their recording and set into the brand. From back to front:
+   the scene's own canvas and ground (the kit draws them), the backdrop (one or two huge display words
+   in the accent), the speaker (an <img data-footage data-footage-matte data-media>: the kit points it at
+   the frame the edit maps t to and masks it with that frame's person matte), then the headline and the
+   caption on canvas plates.
+   The speaker box stands on the frame's foot, --cutout-w wide and --cutout-h tall, and the recording
+   covers it, so the body leaves through the bottom edge as it leaves the recording's. The head's top
+   is taken to sit --cutout-headroom of the box under its top (a speaker framed with a little headroom):
+   that row is --cutout-head. The backdrop's last line stands across it, its lower part behind the head
+   and the rest of its letters above. Its words are sized by the kit (a word fit, --mm-fit: word) so the
+   longest fills the safe width, never above the size at which its lines (the beat's `lines`, 1 or 2)
+   fit between the safe top and the head. */
+.talking-cutout {
+  --cutout-w: var(--mm-frame-w);
+  --cutout-h: calc(var(--mm-frame-h) * 0.62);
+  --cutout-headroom: 0.06;
+  --cutout-head: calc(var(--mm-frame-h) - var(--cutout-h) * (1 - var(--cutout-headroom)));
+  position: absolute;
+  inset: 0;
+}
+.talking-cutout__backdrop {
+  --cutout-lines: attr(data-p-lines type(<number>), 1);
+  position: absolute;
+  z-index: 0;
+  left: var(--mm-safe);
+  right: var(--mm-safe);
+  /* the last line's box ends 0.3 em under the head's top: about the lower third of its letters is behind the head */
+  bottom: calc(var(--mm-frame-h) - var(--cutout-head) - 0.3em);
+  box-sizing: border-box;
+  margin: 0;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  /* the lines at line-height 0.88, less the 0.3 em behind the head, plus the glyph boxes' overhang, fit
+     between the safe top and the head */
+  font-size: min(calc(var(--mm-size-display) * 4), calc((var(--cutout-head) - var(--mm-safe)) / (0.88 * var(--cutout-lines) - 0.1)));
+  line-height: 0.88;
+  text-align: center;
+  overflow-wrap: normal;
+  color: var(--mm-color-accent);
+  --mm-fit: word;
+}
+.talking-cutout__speaker {
+  position: absolute;
+  z-index: 1;
+  left: calc((var(--mm-frame-w) - var(--cutout-w)) / 2);
+  bottom: 0;
+  display: block;
+  width: var(--cutout-w);
+  height: var(--cutout-h);
+  /* a box no wider than 16:9 is covered by a wide recording with no crop at its top or foot, so the
+     centred fit keeps the head in and moves/punch's centred anchor holds */
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+.talking-cutout__speaker:not([src]) { visibility: hidden; }
+.talking-cutout__front {
+  position: absolute;
+  z-index: 2;
+  inset: var(--mm-safe) var(--mm-safe) calc(var(--mm-safe) * 1.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  text-align: center;
+  gap: var(--mm-space-3);
+}
+.talking-cutout__headline,
+.talking-cutout__caption {
+  box-sizing: border-box;
+  margin: 0;
+  max-width: 100%;
+  padding: var(--mm-space-3) var(--mm-space-4);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-canvas);
+  color: var(--mm-color-ink);
+  /* its own layer from the first frame, as on talking-full: a plate fading over changing footage
+     otherwise rasterises its text a shade differently from one seek to the next */
+  will-change: opacity;
+}
+.talking-cutout__headline {
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: calc(var(--mm-size-h2) * var(--mm-headline-scale));
+  line-height: 1.08;
+  text-wrap: balance;
+}
+.talking-cutout__caption {
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  /* a step over body: a caption is read on a phone, over moving footage */
+  font-size: calc(var(--mm-size-body) * 1.25);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.talking-cutout__backdrop[data-empty],
+.talking-cutout__headline[data-empty],
+.talking-cutout__caption[data-empty] { display: none; }
+[data-format="1x1"] .talking-cutout { --cutout-h: calc(var(--mm-frame-h) * 0.72); }
+[data-format="4x5"] .talking-cutout { --cutout-h: calc(var(--mm-frame-h) * 0.66); }
+/* a wide frame: the whole recording at two thirds of the frame's width, on the foot, the words above;
+   the plates in the lower left, beside the face */
+[data-format="16x9"] .talking-cutout { --cutout-w: calc(var(--mm-frame-w) * 0.66); --cutout-h: calc(var(--mm-frame-w) * 0.66 * 0.5625); }
+[data-format="16x9"] .talking-cutout__front { align-items: flex-start; text-align: left; }
+[data-format="16x9"] .talking-cutout__headline,
+[data-format="16x9"] .talking-cutout__caption { max-width: 36%; }

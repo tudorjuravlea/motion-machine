@@ -1,9 +1,11 @@
 /* endcard: the last frame. A sign-off aligned as the brand composes: an optional closing
    line above the wordmark (the line to remember, H-LAST), the headline (a lead, as in statement),
-   then one unbroken line (a URL). */
+   then one line (a URL), which may reach past the box to the safe margin and breaks only where it
+   would cross it. */
 .endcard {
+  --endcard-inset: calc((var(--mm-frame-w) / 2 - var(--mm-safe)) * 0.08 * var(--mm-density));
   position: absolute;
-  inset: var(--mm-safe) calc(var(--mm-safe) + (var(--mm-frame-w) / 2 - var(--mm-safe)) * 0.08 * var(--mm-density)) calc(var(--mm-safe) * 2);
+  inset: var(--mm-safe) calc(var(--mm-safe) + var(--endcard-inset)) calc(var(--mm-safe) * 2);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -42,8 +44,12 @@
 }
 .endcard__body {
   margin: 0;
-  max-width: none;
-  white-space: nowrap;
+  /* its own width, up to the box plus the box's inset on one side (start) or both (centred),
+     which is still inside the safe area */
+  width: max-content;
+  max-width: calc(100% + var(--endcard-inset) * var(--endcard-reach, 1));
+  overflow-wrap: anywhere;
+  text-wrap: balance;
   font-family: var(--mm-font-text);
   font-weight: var(--mm-weight-text);
   letter-spacing: var(--mm-tracking-text);
@@ -54,14 +60,17 @@
 .endcard [data-empty] { display: none; }
 [data-format="1x1"] .endcard__headline { font-size: calc(var(--mm-size-display) * var(--mm-headline-scale) * 0.64); }
 [data-format="16x9"] .endcard__line { max-width: 70%; }
+@container style(--mm-align: center) { .endcard { --endcard-reach: 2; } }
 /* align: the brand's composition (--mm-align) by default; `left` or `center` with a beat param on any slot (data-p-align) or data-align on the layout root. */
 .endcard[data-align="center"],
 .endcard:has([data-p-align="center"]) {
+  --endcard-reach: 2;
   align-items: center;
   text-align: center;
 }
 .endcard[data-align="left"],
 .endcard:has([data-p-align="left"]) {
+  --endcard-reach: 1;
   align-items: start;
   text-align: left;
 }

@@ -1,0 +1,171 @@
+{
+  "id": "demo-pile-up",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: layouts/pile-up",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/pile-up",
+      "duration": 7.3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 1,
+          "slot": "card-1",
+          "fx": "entrances/pop",
+          "text": "Signed up",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 1.2667,
+          "slot": "card-2",
+          "fx": "entrances/pop",
+          "text": "Loving it so far",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 1.5,
+          "slot": "card-3",
+          "fx": "entrances/pop",
+          "text": "Invited my team",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 1.7,
+          "slot": "card-4",
+          "fx": "entrances/pop",
+          "text": "Second order today",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 1.8667,
+          "slot": "card-5",
+          "fx": "entrances/pop",
+          "text": "Set up in minutes",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 2.0333,
+          "slot": "card-6",
+          "fx": "entrances/pop",
+          "text": "Just switched over",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 2.4333,
+          "slot": "card-7",
+          "fx": "entrances/pop",
+          "text": "Told a friend",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 2.6333,
+          "slot": "card-8",
+          "fx": "entrances/pop",
+          "text": "Back for more",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 2.8,
+          "slot": "card-9",
+          "fx": "entrances/pop",
+          "text": "Worth every minute",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 2.9333,
+          "slot": "card-10",
+          "fx": "entrances/pop",
+          "text": "Our whole office uses it",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 3.0667,
+          "slot": "card-11",
+          "fx": "entrances/pop",
+          "text": "Easy to start",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 3.1667,
+          "slot": "card-12",
+          "fx": "entrances/pop",
+          "text": "Renewed for a year",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 3.2667,
+          "slot": "card-13",
+          "fx": "entrances/pop",
+          "text": "Finally sorted",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 3.3667,
+          "slot": "card-14",
+          "fx": "entrances/pop",
+          "text": "Signed up again",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 3.9,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "No sign of slowing"
+        },
+        {
+          "at": 4.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Sign-ups this week, one card each"
+        }
+      ],
+      "say": "Cards pile up on a ticked clock; a panel names what they are."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

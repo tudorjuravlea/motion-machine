@@ -8,8 +8,8 @@ receives, where a story's params end up, and every function the kit modules expo
 - [Mount and seek](#mount-and-seek) · [Composition](#composition) · [Story shorthands](#story-shorthands-the-kit-resolves) · [Markup grammar](#markup-grammar-spec-6)
 - [What each pattern kind receives](#what-each-pattern-kind-receives) · [Units of travel](#units-of-travel) · [Param routing](#param-routing) · [Cascades](#cascades-data-each--paramseach)
 - [Fragments](#fragments-patternhtml-for-text-data-and-devices) · [Assets](#assets) · [Overlays](#overlays) · [Sound cues](#sound-cues) · [Schedule output](#schedule-output) · [Warnings](#warnings)
-- [Screen actions](#screen-actions) · [3D devices](#3d-devices)
-- [Module reference](#module-reference): `kit.js` · `schedule.js` · `springs.js` · `ease.js` · `random.js` · `seeded.js` · `fit.js` · `count.js` · `room.js` · `rough.js` · `screen.js` · `device3d.js` · `synth.js`
+- [Screen actions](#screen-actions) · [3D devices](#3d-devices) · [Footage](#footage)
+- [Module reference](#module-reference): `kit.js` · `schedule.js` · `springs.js` · `ease.js` · `random.js` · `seeded.js` · `fit.js` · `count.js` · `room.js` · `glyphs.js` · `rough.js` · `points.js` · `screen.js` · `footage.js` · `device3d.js` · `synth.js` · `rig.js`
 
 ## Mount and seek
 
@@ -80,6 +80,7 @@ bento-3, stat-hero, list-reveal, quote) set theirs at h1.
 | `data-mm-overlay` | pattern | a node a transition added outside its scenes; the kit removes it on every seek |
 | `data-mm-own` | kit | a layer the kit draws itself (a device screen layer); a seek leaves its pictures in place |
 | `data-hook` | kit | on the first scene's `<section>`: the hook, whose headline is one step larger |
+| `data-footage` | layout | an `<img>` the kit points at the story's footage frame for `t` (see [Footage](#footage)); the layout also declares it `data-media` |
 
 `data-fx` written directly in layout markup is still not read: every arrival comes from a beat.
 
@@ -126,6 +127,12 @@ Common fields, on every call:
 - `ctx.boil(n = 3)`: which of n shiver frames shows now, from the piece's time, the same for
   every stroke: style `motion.boil` seconds a frame (0.4 by default, 0 = still); a deck is always 0.
   Draw pen strokes with `rough.js` (`stroke(shape, { seed, roughness, boil, frame: ctx.boil(), pen })`).
+- `ctx.t`: the instant being drawn: piece seconds in a film, the press position in a deck. For a pattern that
+  keeps time with the piece rather than with its own beat (a character's idle on the track's beat grid);
+  `ctx.u` stays the time since the item started.
+- `ctx.footage` (only when the story has footage, in a film): `{ t, fps, duration, clip, clipAt, words }`:
+  the film second, the edit's frame rate and length, the index of the picture clip showing now,
+  `clipAt(t)` for any instant, and the supplied words on the output clock (`[{ text, at, end }]`).
 - `ctx.spring(t, role)`: the style's spring `role` (`ui`, `type`, `heavy`, …, or `{k, c, m}`) at
   `t` **seconds**. Seconds first, role second, matching the kit's exported `spring(t, params)`. To
   drive it from your own progress, map it onto the settle time: `ctx.spring(x * ctx.spring.settle('type'), 'type')`.
@@ -233,12 +240,38 @@ text keeps its text in a `[data-text]` child: the kit writes a beat's `text` the
 the slot (a bento tile's label). `moves/push-in`, `ken-burns` and `pan` with `moveParams:
 { "target": "media" }` move the pictures inside their frames instead of the camera.
 
+`moves/depth-parallax` moves a picture whose asset is the `source.png` of a layer pack (`mm media
+layers`): it reads `media.json` beside it and draws the plate and parts in a canvas declared media
+over the picture. `entrances/photo-wake` draws a picture as a print in ink and canvas and brings its
+colours back behind an accent front. `entrances/photo-wake` draws nothing at rest, nor does `moves/depth-parallax` with `aperture: 0`,
+so a rest shows the plain picture; with its default lens the depth parallax rest is the settled picture, nearest layer
+sharp.
+They load their files once per page; a seek that comes before they are ready draws through
+`ctx.afterSettle`, so a frame stays a function of `t`. `moves/depth-parallax` is a dolly that settles:
+layers start displaced by their depth relative to the focus (the nearest layer by default) and
+slide home, and a lens blurs each layer by its depth gap from the focus; a depth map is cut into quantile bands by the
+depth behind the parts.
+
 ## Overlays
 
 A transition that needs a node outside its two sections marks it `data-mm-overlay`; the kit removes
 every such node at the start of every seek, and the transition draws it again if the new instant is
 inside the cut. Custom properties a transition writes on a section (`--mm-tx-*`) go with the
 section's inline style, which every seek restores. No overlay or veil can outlive its frame.
+
+`.mm-camera` is a stacking context (`z-index: 0`): a layout's z-index orders elements inside its
+camera only, never above the scene's finish or a transition's overlay.
+
+**Finish.** A brand's `finish` (SPEC §3) is a layer above the camera in every scene. `grain`,
+`halftone`, `vignette`, `edgeFringe` and `paperEdge` each draw one child of it; `paper` adds a fibre
+layer (ink noise seeded once, never re-seeded). Grain, halftone and paper together stay at or under
+0.08 opacity: when their strengths add up past 1 each is scaled down in proportion. `misregister` sets
+`data-misregister` on each `<section>` and, every seek, marks `[data-plate]` on the largest boxes in the
+camera that hold no layer of their own (`[data-slot]`, `[data-depth]`) and writes each its own
+`--mm-plate` (a hard accent `drop-shadow`), which `.mm-scene[data-misregister] > .mm-camera [data-plate]`
+reads as its `filter`. The camera itself never carries a filter, so 3D camera moves keep their depth.
+Beside type under display size the offset is at most 0.05 of its font size. Every emphasis kicks the
+plate (`plateKick`); the offset steps every max(2, `frameHold`)/30 s.
 
 ## Sound cues
 
@@ -275,9 +308,10 @@ Rules that live here and nowhere else in code:
 - **Times are whole milliseconds**: every `t`, `d`, `start`, `end`, rest, hold, `at` and
   press length is rounded to 0.001 s, a spring's settle time included, so a film's `duration` is
   exactly the sum of its scene durations.
-- **Frame hold** (`motion.frameHold` 2) steps an element's local time every 2/30 s whatever the
-  export frame rate; `report().progress` is the progress of the step that is drawn. Cuts and camera
-  moves stay smooth.
+- **Frame hold** (`motion.frameHold` 2 or 3): every element is drawn as it was at the last instant of
+  one grid shared by the piece (every 2/30 s or 3/30 s whatever the export frame rate), and finishes at
+  the start of the step it would have finished in, so rests are unchanged; `report().progress` is the
+  progress of the step that is drawn. Cuts and camera moves stay smooth.
 
 ## Warnings
 
@@ -286,8 +320,18 @@ Rules that live here and nowhere else in code:
 - `pattern <ref> did not load: …`: an unknown or broken pattern (G-PATTERN-REF reads this text).
 - `unknown slot: layout <ref> has no slot "<name>"; appended one`: the story names a slot the
   layout does not provide.
-- `screen: <file> did not decode`: a picture a seek asked for failed to decode (once per file).
+- `screen: <file> did not decode`: a picture a seek asked for failed to decode (once per file; a
+  footage frame too, and only when the picture still asks for that frame after a quick scrub).
+- `footage: …`: the story's footage is missing or inconsistent, the piece is a deck, the film runs
+  past the edit, footage is set but no layout shows it, or a layout shows footage the story does not name.
 - `<selector>: params.stagger … is not a number of seconds >= 0`: a cascade fell back to the style's spacing.
+- `<group>/<name>: …`: a note a pattern writes once when a seek draws its beat: a slot name in
+  `cutParams` that matches no slot (`transitions/flood`, `transitions/iris`), a garden that grows a
+  single plant or nothing (`text/garden`), a `land` value, which a point cloud does not read, or a picture it refuses because it has no transparent ground, no depth map and no flat border (`3d/point-cloud`),
+  a reaction with no free place (`emphasis/emote`), a stamp or dimension beat with an entrance
+  (`emphasis/stamp`, `emphasis/dimension`), a figure of zero or below (`data/unit-stack`), an SVG feature
+  a one-line drawing cannot read (`entrances/one-line`). `mm export` prints these; `mm check` reads the
+  list right after mount, before any seek, so it does not report them.
 
 ## Screen actions
 
@@ -345,6 +389,25 @@ follows:
 - **Readouts for tests and the gate:** `mark(c, ry, extra)` writes the turn, which face shows and the
   cutout built as `data-*` on the canvas.
 
+## Footage
+
+`story.footage: { asset: "assets/<n>/" }` (film only) names a folder holding a frame sequence (`mm
+media prep`) and its edit (`mm footage cut`). The edit's output clock is the film's clock: at `t`
+every `<img data-footage>` a layout carries (`layouts/talking-full`) shows the source frame the
+edit's picture clips map `t` to, held at either end, and the decode is awaited inside `settle()`.
+The footage runs on across scene cuts and transitions. The picture sits in the layout root, not in
+a slot, so a seek's restore never touches it; only scenes that are visible are painted. The cut
+voice goes in `audio.track` (`assets/<n>/voice.wav`). `moves/punch` scales the footage alone on
+every other clip of a scene, and `text/caption-karaoke` with `mode: words` times its groups to the
+edit's words; both read `ctx.footage`. `ctx.footage` carries the recording's size (`w`, `h`), so
+`moves/punch` maps its anchor through the footage's cover fit and the anchor holds in every format.
+
+A footage picture that also carries `data-footage-matte` (`layouts/talking-cutout`) shows only the person:
+at mount the kit lays an SVG `<mask>` (luminance, the picture's layout size, `preserveAspectRatio` from its
+object-fit and object-position) beside it, and each seek points the mask's image at the matte frame of the
+same source frame (`mm footage matte`), its decode awaited inside `settle()`. A folder with no matte for
+every frame shows the whole picture, with a `footage: ` warning.
+
 ## Module reference
 
 Every export of every module in `runtime/kit/`. Pattern files import from these paths directly
@@ -369,6 +432,7 @@ Every export of every module in `runtime/kit/`. Pattern files import from these 
 | `FORMATS` | `{ '9x16': { w, h, base, safe }, … }` | object | SPEC §12: viewport, base size (`ctx.unit`), safe margin in px, per film format |
 | `formatSpec` | `formatSpec(kind, format)` | `{ w, h, base, safe }` | `FORMATS[format]`, except a 16x9 deck (base 128); throws on an unknown format |
 | `HOOK_STEP` | `1.25` | number | the factor by which the first scene's headline is larger |
+| `plateKick` | `plateKick(t, start, d, frameHold = 1)` | number | the misregistered plate's emphasis kick at piece time t, as a share of its full swing (1 on its first step, a damped swing past register, 0 outside it); steps every max(2, frameHold)/30 s, first step at or after the emphasis start |
 | `spring`, `track`, `ease`, `random`, `fit`, `count` | | | re-exports of the modules below |
 
 ### `schedule.js`: the timeline algebra and `schedule()`
@@ -390,7 +454,7 @@ Pure; imports in Node and in the page. A node is `{ d, f(u) }`: a duration and a
 | `resolveStory` | `resolveStory(story, style)` | story | resolves `style:<role>` and `position`; a new story, refs that are patterns pass through |
 | `entranceTiming` | `entranceTiming(beat, style, meta = {}, instant = false)` | `{ d, spring, role }` | a beat's `params.spring` / `params.dur`, else the pattern's, else role `standard`; `instant` is 0 s |
 | `eachParts` | `eachParts(text, sep = '\|')` | `string[]` | the parts a cascade's text splits into |
-| `cutSeconds` | `cutSeconds(ref, style, meta = {})` | seconds | a cut's length; 0 for a hard cut |
+| `cutSeconds` | `cutSeconds(ref, style, meta = {}, params = {})` | seconds | a cut's length; 0 for a hard cut; a module whose default export carries `durOf(params)` is sized by the scene's `cutParams` (`transitions/flood`'s `speed`) |
 | `addImplicitPlays` | `addImplicitPlays(story, metaOf)` | the same story, changed | writes a `screen/play` for a beat whose asset is a frame sequence and that has none, and fills a play's missing length; **mutates** (the kit calls it on its own copy) |
 | `screenIssues` | `screenIssues(story, metaOf, style = null, patterns = {})` | `{ fail, warn }` | the static screen checks the kit and the gate share |
 
@@ -431,11 +495,16 @@ The one place in the kit that replaces `Math.random`, and only while a vendored 
 | `seeded` | `seeded(seed, fn)` | what `fn` returns | runs `fn` with a seeded random; the real one is restored when the last window closes |
 | `seededImport` | `async seededImport(href)` | the module | imports a module (and what it imports) inside a window; overlapping imports share the latest generator |
 
-### `fit.js`: fit a headline to a width
+### `fit.js`: fit a headline to a width or to its room, and a word to its slot
 
 | Name | Signature | Returns | Note |
 |---|---|---|---|
 | `fit` | `fit(el, targetPx = el.clientWidth, { max, min, line })` | font size in px | sets `font-size` so the widest explicit line is `targetPx` wide, clamped to `[min, max]`; `line` sets a unitless line-height. Call after `document.fonts.ready` |
+| `fitHeadline` | `fitHeadline(scene, { max, least })` | `{ el, authored, px, broken }` or `null` | the kit calls it once per scene at mount, at the scene's rest: sizes the scene's `.mm-fit` headline from its authored size down in 4 % steps (floor 0.6) until every text box of the scene is inside the safe area and off the headline and no word of the headline is split between letters, never above `max` px; marks it `data-fit="tight"` when no size clears the other slots and the mark helps. A word still split, or wider than the safe area, at the floor keeps it shrinking down to `least` px (the kit passes the body floor); `broken` is true when even that does not hold the word. `null` without a headline or a laid-out DOM |
+| `shrinkToRoom` | `shrinkToRoom(excessAt, authored, { max })` | px | the pure search behind `fitHeadline`: the first size, from `min(authored, max)` down in 4 % steps to 0.6 × authored, where `excessAt(px)` is 0; else the largest size within 0.5 px of the least excess, so an excess the headline does not cause never shrinks it |
+| `fitWords` | `fitWords(el, floor)` | `{ el, authored, px, hyphenate }` or `null` | the kit calls it once per scene at mount, at the scene's rest, on each slot whose style declares `--mm-fit: word` (a stamp): sets its font size so its longest word fits the slot's room (its max-width, at most the safe area), never above the authored size and never under `floor` px; a word that would need to is broken at soft hyphens (`hyphens: manual`) into the fewest balanced parts that fit at the floor first. `hyphenate` maps a text to the same text with those soft hyphens. `null` without text or a laid-out box |
+| `bodyFloor` | `bodyFloor(kind, format)` | px | the format's body floor (SPEC §12), the size G-LEGIBLE holds every rest to |
+| `wantsWordFit` | `wantsWordFit(el)` | boolean | whether the element's style declares `--mm-fit: word` |
 
 ### `count.js`: counted figures
 
@@ -458,23 +527,69 @@ function returns `null` without a laid-out DOM; the caller then applies no bound
 | `maxScale` | `maxScale(el, origin = 'center')` | number ≥ 1, `Infinity` or `null` | the largest scale about the pivot that keeps the text inside the safe area (punch and slam cap their start scale with it) |
 | `roomAbove` | `roomAbove(el)` | px ≥ 0 or `null` | free room above the element, down from the lowest thing above it or the safe margin (drop caps its fall with it) |
 
+### `glyphs.js`: where ornament roots on a letter
+
+Pure functions of a glyph's binary mask (one cell per letter, drawn at `EM` pixels per em, origin on the
+baseline at `(ox, oy)`); no DOM. A pattern rasterises the letter itself (it declares `canvasText: true`)
+and reads it here. Anchors are in em from the glyph origin, so a reflow roots them at the same places.
+Imported by `text/garden` and `transitions/flood`.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `EM` | 64 | px per em | the analysis size |
+| `INSET` | 0.02 | em | how far inside the ink an anchor sits |
+| `maskOf` | `maskOf(rgba, w, h, threshold = 128)` | `Uint8Array` | 1 where alpha reaches the threshold |
+| `distanceField` | `distanceField(mask, w, h)` | `Float32Array` | signed px to the ink edge, negative inside (chamfer 3-4) |
+| `skeleton` | `skeleton(mask, w, h)` | `Uint8Array` | Zhang–Suen thinning |
+| `terminals` | `terminals(skel, w, h, reach = 6)` | `[{ x, y, dx, dy }]` | stroke ends with their outward direction |
+| `analyse` | `analyse({ mask, w, h, ox, oy })` | `{ sdf, skel, terminals, outline, area, box, … }` | the field, the skeleton with spurs pruned, outline normals, ink area in em² |
+| `sdfAt` | `sdfAt(a, x, y)` | em | the signed distance at a point in glyph em |
+| `candidates` | `candidates(a)` | `[{ x, y, nx, ny, kind, weight }]` | every anchor before the draw: `terminal`, `up`, `down` |
+| `anchors` | `anchors(a, { seed, density, index, char })` | the same shape | a seeded weighted draw, 0.25 em / density apart, 1 to 5 by ink area, a stroke end first |
+| `bridge` | `bridge(a, b, advance, { seed, index })` | `{ from, to, length } \| null` | the nearest facing edges of two neighbouring letters |
+| `dotOf` | `dotOf({ mask, w, h, ox, oy, alpha? }, { char, em })` | `{ x, y, r, rx, ry, round } \| null` | the round mark of a letter: the tittle of an i or j (the blob wholly above the stem), or a full stop or bullet; centre, area radius and upright semi-axes in em from coverage; `round` false for a square or slanted dot. Imported by `transitions/flood` |
+
 ### `rough.js`: the pen stroke
 
-Pure: no DOM, no clock; the same arguments give the same path in Node and in the page.
+Pure: no DOM, no clock; the same arguments give the same path in Node and in the page. The stroke has
+a plain voice (seeded jitter per sample, the second pass 1.4× wilder) and opt-in voices: a coherent drift
+along the length (periodic round a closed outline, so no seam), a ghost second pass with its own wander,
+and an overshoot past an open stroke's ends; `PENS` bundles them as pencil, marker and charcoal. `wash`
+and `hatch` fill a closed shape with drawn colour or lines in one palette role; `polyOf` makes any
+polyline a shape. `roughness` 0 lies exactly on the shape in every voice.
 
 | Name | Signature | Returns | Note |
 |---|---|---|---|
 | `shapeOf` | `shapeOf(kind, { x, y, w, h }, r = 0)` | shape | `kind`: `box`, `pill`, `circle` (the inscribed ellipse) or `line` (along the bottom) |
+| `polyOf` | `polyOf(points, closed = false)` | shape | any polyline, open or closed, sampled run by run (corners stay corners); takes every stroke, voice, wash and hatch |
 | `lerpBox` | `lerpBox(a, b, t)` | `{ x, y, w, h, r }` | linear between two boxes; exactly `a` at `t <= 0`, `b` at `t >= 1` |
 | `planOf` | `planOf(shape, step = STEP)` | number[] | how many samples each run of the outline gets; keep the first box's plan through a morph |
 | `sample` | `sample(shape, plan = planOf(shape))` | `[x, y][]` | the shape's points under a plan |
 | `jitter` | `jitter(points, next, amp)` | `[x, y][]` | each point moved by up to `amp` px on each axis, two draws per point from `next` |
 | `pathOf` | `pathOf(points, closed)` | SVG path `d` | smoothed through the midpoints |
-| `stroke` | `stroke(shape, { seed, roughness, boil, frame, pen, plan })` | SVG path `d` | two passes, the second wilder; `boil` is the shiver in pen half-widths and `frame` which of its frames; `roughness` 0 lies exactly on the shape |
+| `stroke` | `stroke(shape, { seed, roughness, boil, frame, pen, plan })` | SVG path `d` | two passes, the second wilder; `boil` is the shiver in pen half-widths and `frame` which of its frames; `roughness` 0 lies exactly on the shape; takes `passes()`'s voices too |
+| `passes` | `passes(shape, opts)` | `[d, d]` | the stroke's two passes on their own, so a pattern can draw the second as a ghost; `stroke()` is the two joined. Opt-in voices: `coherent` (the wander drifts along the length; a closed outline has no seam), `wavelength` (pen half-widths per drift cell, 20), `ghost` (the second pass's wander against the first's, 1.4), `overshoot` (an open stroke runs past each end by this many pen half-widths). Without them the stroke is exactly the plain one; `roughness` 0 still lies on the shape |
+| `wash` | `wash(shape, { seed, pen, layers = 4, bleed = 6, alpha = 0.09, offset = 0, angle, plan })` | `[{ d, alpha }]` | a watercolour wash of a closed shape: layers pushed outward by a ragged share of `bleed` (pen half-widths), fainter outward; `offset` shifts every layer off the outline like a second print plate. Fill each with one palette role |
+| `hatch` | `hatch(shape, { seed, pen, angle = π/4, gap = 5, jitter = 0.4, plan })` | `{ clip, d }` | near-parallel drawn lines `gap` pen half-widths apart and the exact outline to clip them with |
+| `PENS` | `{ pencil, marker, charcoal }` | presets | stroke voices: `width` (against the pattern's pen), `roughness`, `coherent`, `wavelength`, `ghost`, `ghostAlpha`, `ghostWidth`, `overshoot` |
 | `boilFrame` | `boilFrame(t, { period = BOIL_PERIOD, n = 3, deck = false })` | frame index | which shiver frame shows at `t`; always 0 in a deck or when `period` is 0 |
 | `STEP` | 8 | px | sample spacing at a pen of 2 px |
 | `BOIL_PERIOD` | 0.4 | seconds | how long a boil frame holds |
 | `INK` | `{ straight, handover, lift }` | fractions | the inking contract between `entrances/sketch` and `transitions/sketch-to-ink`: the part of the cut each stage owns |
+
+### `points.js`: a picture as a free-floating object of points, and its reveal
+
+Imported by `3d/point-cloud`. Pure: Node runs it as the browser does.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `samplePicture` | `samplePicture(pic, { count, seed, relief, depth, depthMap, depthMin, alphaMin, jitter })` | `{ count, width, height, area, pos, rgb, face }` | seeded points on a picture's opaque pixels, each with its pixel's colour; `relief`: `flat`, `luma`, `map` (`depthMap`, white near; below `depthMin` is ground and takes no point), `extrude` (front, back, walls) or `pillow` (the cut-out inflated by its distance field: a front and a back surface round at the rim, and points inside the shell); `jitter` moves each point up to ± jitter × depth / 2; `pos` in picture px, origin at the centre, y up; the order is a seeded shuffle |
+| `distanceField` | `distanceField(pic, alphaMin)` | `{ dist, max, width, height }` | each opaque pixel's exact distance to the outline, in px |
+| `keyBackground` | `keyBackground(pic, { tolerance, flat })` | `{ pic, cut, flat, removed, ground }` | a cut-out comes back as it is; a flat border colour is keyed away from the border; a border that is not one flat colour is refused (`pic: null`) |
+| `paletteRamp` | `paletteRamp({ canvas, muted, ink, accent }, { lo, hi })` | `(r, g, b) → [r, g, b]` | brightness onto canvas → muted → ink, ink on the side away from the canvas, the picture's range `lo..hi` stretched over it; vivid pixels blend canvas and accent; a one-tone picture is ink; always a blend of two roles |
+| `flowOf` | `flowOf(x, y, z, t, out)` | `out` | a divergence-free swirl (the Arnold–Beltrami–Childress flow, phases drifting with `t`), \|v\| < 3 |
+| `FLIGHT` | `{ B0, B1, SPAWN, F0, F1 }` | shares of progress | the reveal's timeline: burst B0–B1 (points spawn over SPAWN), front F0–F1, home from F1 |
+| `flightOf` | `flightOf(q, hx, hy, hz, dx, dy, dz, s, j, o, out)` | `[x, y, z, landed, spawned]` | a point's place at progress `q`: the seed at `o.origin`, a swirling burst along its direction out to `o.reach × s`, a front from the origin that sends it home (nearer first, ragged by `j`); exactly home from `FLIGHT.F1` |
 
 ### `screen.js`: the screen fold
 
@@ -490,6 +605,22 @@ The pure half runs in Node; the DOM half draws one layer the kit owns. See [Scre
 | `locate` | `locate(state, target, box)` | `{ x, y }` | where a mark label or `"x%,y%"` sits on the screen, as fractions, under the state's scroll and zoom |
 | `mountLayer` | `mountLayer(screenEl, initial, swaps, actions)` | the layer element | builds the layer (`data-mm-own`) inside the screen: the content, one per swap target, one overlay per action |
 | `paint` | `paint(layer, state, { track, box, swaps, warn })` | nothing | draws the content, scrolled, at its frame and zoomed; `track` registers decodes, `warn(src)` names one that failed |
+
+### `footage.js`: a cut recording on the film's clock
+
+The pure half runs in Node; the DOM half points the layout's footage pictures at a frame. See [Footage](#footage).
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `outputFrame` | `outputFrame(edit, t)` | 0-based frame | the edit's output frame at film second `t`, held at its first and last |
+| `clipAt` | `clipAt(edit, t)` | index | the picture clip that holds `t` |
+| `sourceFrame` | `sourceFrame(edit, t)` | 0-based frame | the recording's frame shown at `t` |
+| `frameFile` | `frameFile(base, i)` | path | the file `mm media prep` writes for source frame `i` (`f` and `i + 1` in five digits, `.jpg`) |
+| `matteFile` | `matteFile(base, i)` | path | a source frame's matte, `matte/f{i+1}.png` (`mm footage matte`) |
+| `matteAspect` | `matteAspect(fit, position)` | string | the SVG `preserveAspectRatio` that lays a matte over a picture drawn with that object-fit and object-position |
+| `footageCtx` | `footageCtx(f, t)` | `{ t, fps, duration, clip, clipAt, words }` | what a pattern reads as `ctx.footage` |
+| `mountFootage` | `async mountFootage(story, { stage, duration, kind }, warnings)` | `{ base, meta, edit, els } \| null` | reads `media.json` and `edit.json` of `story.footage.asset` and finds every `img[data-footage]` (and masks each `data-footage-matte` one with its matte); `null`, with a `footage: ` warning, when something is wrong |
+| `paintFootage` | `paintFootage(f, t, track, warn)` | nothing | points every footage picture in a visible scene at the frame for `t`; `track` registers each decode for `settle()`, `warn(src)` names one that failed |
 
 ### `device3d.js`: what the 3D devices share
 
@@ -531,3 +662,34 @@ every time.
 | `burst` | `burst(ctx, { kind, q, f0, f1, at, dur, peak, atk, swell, soft, seed })` | nothing | seeded noise through a filter sweeping `f0` to `f1`, with a gain envelope |
 
 `swell` rises to the peak at the end; `soft` decays to 6 % of the peak and then fades linearly.
+
+### `rig.js`: a brand's mascot as a puppet
+
+Draws `style.mascot` (SPEC §3) as SVG groups filled from `--mm-color-*` only, and moves it in closed forms of
+time. Used by `entrances/character` and `emphasis/act`.
+
+- `ROLES`, `MOODS`, `EYES`, `MOUTHS`, `VIEWS`: the names the brand schema's `mascot` block accepts.
+- `ACT`: the acted change's timing in seconds (`key` 0.16 into a window of `dur` 1; eyes shut for `hold` 0.05
+  either side of the key, closing over `squintIn`, opening over `squintOut`; pose blend over `blend` 0.4).
+- `squash(s)` → `{ sx, sy }` with `sy = 1 − s`, `sx = 1 / sy`: the area is kept exactly; `backOut(x)` (about
+  10 % overshoot).
+- `accent(bp, every)`: 1 on every `every`-th beat at beat position `bp`, a short rise into it and a fall to 0
+  before the next. `idle(mood, t, { bpm, offset, amp })`: a mood's idle pose at piece time `t`; every squash
+  accent peaks on a grid beat.
+- `hop(q, { from, d, width })`: the entrance at linear progress `q` (crouch, flight, landing; exactly the rest
+  pose at 1). `act(from, to, a, amt)`: the mood change at `a` seconds from its key (face, squint, blend `w`,
+  take). `blink(t, seed)`.
+- `DEFAULT_MASCOT` (drawn for a style with no mascot), `colorOf(part, fallback)`, `resolveMascot(style, who)`
+  (defaults filled; shade toward the brand's darkest role, light and cheeks toward its lightest; it refuses
+  a view whose drawing reaches more than 20 % of the box past the box, the front then taking
+  `DEFAULT_MASCOT`'s figure, and lists why in `issues`; `top` and `head` are the body's reach above the
+  ground and the headroom every pose is kept under; `who` picks a cast member (an unknown name draws the main
+  character and is listed in `issues`); the result also carries `extras` (extra parts with their CSS colour, anchor
+  and reach) and `float`; `top` counts parts and float),
+  `viewOf(m, name)` (a view not drawn is made from the front), `moodOf(m, name)` (a mood or shape the brand does
+  not allow falls back to its first).
+- `characterPose(o)`: the whole pose at one instant (`o.dur` is the entrance's length in seconds and `o.q` may run
+  past 1, time since the landing in entrance lengths; a character with extra parts gets `swing`, degrees per part);
+  `markup(m, pose, { id, sheet, aspect })`: the SVG (one face group at most; `data-mood`, `data-sq`, `data-squint`,
+  `data-eyes` report the pose; extra parts are `g.mm-rig__part` with `data-part` and `data-swing`; a screen face's
+  plate is `rect.mm-rig__plate`); `draw(el, m, pose, opts)` replaces the rig the element shows.

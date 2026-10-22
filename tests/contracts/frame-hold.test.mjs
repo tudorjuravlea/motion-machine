@@ -1,5 +1,5 @@
-// motion.frameHold: an optional motion field, 1 (every frame) or 2 ("on
-// twos"). The motion and style schemas accept it, refuse other values, and compose carries it.
+// motion.frameHold: an optional motion field, 1 (every frame), 2 ("on
+// twos") or 3 (on threes). The motion and style schemas accept it, refuse other values, and compose carries it.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -16,6 +16,6 @@ test('a motion half may hold frames on twos, and frameHold stays optional', () =
   assert.ok(v.motion(calm), 'frameHold stays optional');
 });
 
-test('frameHold refuses 0, 3 and fractions', () => {
-  for (const h of [0, 3, 1.5]) assert.equal(v.motion(withHold(h)), false, `frameHold ${h}`);
+test('frameHold refuses 0, 4 and fractions', () => {
+  for (const h of [0, 4, 1.5]) assert.equal(v.motion(withHold(h)), false, `frameHold ${h}`);
 });

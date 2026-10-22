@@ -12,7 +12,7 @@
   mask: none !important;
   color: color-mix(in srgb, var(--mm-color-ink) calc(var(--mm-sketch-text) * 100%), transparent) !important;
 }
-[data-slot][data-fx="entrances/sketch"] :not(.mm-sketch, .mm-sketch *) {
+[data-slot][data-fx="entrances/sketch"] :not(.mm-sketch, .mm-sketch *, .mm-sketch-fill, .mm-sketch-fill *) {
   background: none !important;
   border-color: transparent !important;
   box-shadow: none !important;
@@ -23,7 +23,27 @@
 .mm-sketch__pen {
   fill: none;
   stroke: var(--mm-color-ink);
-  stroke-width: calc(var(--mm-space-1) * 0.75);
+  stroke-width: calc(var(--mm-space-1) * 0.75 * var(--mm-sketch-pen, 1));
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+/* a pen preset's second pass: the same ink, thinner and fainter (pattern.js writes the preset's numbers) */
+.mm-sketch__ghost {
+  fill: none;
+  stroke: var(--mm-color-ink);
+  stroke-width: calc(var(--mm-space-1) * 0.75 * var(--mm-sketch-pen, 1) * var(--mm-sketch-ghost-width, 0.7));
+  stroke-opacity: var(--mm-sketch-ghost-alpha, 0.45);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* the fill: its own layer under the slot's words (the slot is isolated, so it stays above the scene);
+   every layer is one palette role at an alpha over the ground */
+.mm-sketch-fill { position: absolute; left: 0; top: 0; z-index: -1; overflow: visible; pointer-events: none; }
+.mm-sketch-fill__wash { stroke: none; }
+.mm-sketch-fill__wash--rim { stroke-width: calc(var(--mm-space-1) * 0.3); stroke-opacity: 0.3; stroke-linejoin: round; }
+.mm-sketch-fill__hatch {
+  fill: none;
+  stroke-width: calc(var(--mm-space-1) * 0.375);
+  stroke-opacity: 0.6;
+  stroke-linecap: round;
 }

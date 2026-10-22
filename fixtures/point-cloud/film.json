@@ -1,0 +1,184 @@
+{
+  "id": "point-cloud-film",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "Point cloud tests",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "shot",
+      "layout": "layouts/caption-bar",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "3d/point-cloud",
+          "asset": "assets/bottle.png",
+          "params": {
+            "dur": 3,
+            "colors": "source"
+          }
+        }
+      ],
+      "say": "A test scene."
+    },
+    {
+      "id": "pal",
+      "layout": "layouts/caption-bar",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "3d/point-cloud",
+          "asset": "assets/bottle.png",
+          "params": {
+            "dur": 3,
+            "colors": "palette"
+          }
+        }
+      ],
+      "say": "A test scene."
+    },
+    {
+      "id": "mark",
+      "layout": "layouts/caption-bar",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "3d/point-cloud",
+          "asset": "assets/mark.svg",
+          "params": {
+            "dur": 3,
+            "colors": "palette"
+          }
+        }
+      ],
+      "say": "A test scene."
+    },
+    {
+      "id": "word",
+      "layout": "layouts/statement",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "headline",
+          "fx": "3d/point-cloud",
+          "text": "Made to be seen",
+          "params": {
+            "dur": 3
+          }
+        }
+      ],
+      "say": "A test scene."
+    },
+    {
+      "id": "keyed",
+      "layout": "layouts/caption-bar",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "3d/point-cloud",
+          "asset": "assets/bottle-flat.png",
+          "params": {
+            "dur": 3,
+            "colors": "source"
+          }
+        }
+      ],
+      "say": "A test scene."
+    },
+    {
+      "id": "refused",
+      "layout": "layouts/caption-bar",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "3d/point-cloud",
+          "asset": "assets/bottle-gradient.png",
+          "params": {
+            "dur": 3,
+            "colors": "source"
+          }
+        }
+      ],
+      "say": "A test scene."
+    },
+    {
+      "id": "depth",
+      "layout": "layouts/caption-bar",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "3d/point-cloud",
+          "asset": "assets/bottle-flat.png",
+          "params": {
+            "dur": 3,
+            "colors": "source",
+            "depthMap": "assets/bottle-depth.png"
+          }
+        }
+      ],
+      "say": "A test scene."
+    },
+    {
+      "id": "legacy",
+      "layout": "layouts/caption-bar",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "3d/point-cloud",
+          "asset": "assets/bottle.png",
+          "params": {
+            "dur": 3,
+            "colors": "source",
+            "land": "image"
+          }
+        }
+      ],
+      "say": "A test scene."
+    }
+  ],
+  "cta": {
+    "text": "point cloud",
+    "url": "example.com"
+  }
+}

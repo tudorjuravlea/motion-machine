@@ -136,8 +136,9 @@ Fix the warning in the half, before composing: in `tour/capture/harbour-pine.jso
 `muted` colour `#6A7478` to `#566064`.
 
 Now choose how it moves. A style is a brand half (the look) worn with a motion half (tempo,
-curves, transitions, entrances). Shipped motion halves are `calm`, `kinetic` and `premium`; you
-can also capture one from a reference film (`mm motion capture --from fixtures/capture/reference/cuts.mp4
+curves, transitions, entrances). Shipped motion halves are `calm`, `kinetic`, `premium`, `grid`
+(precise drafting on the beat), `stop-motion` (printed on threes) and `proof` (short-form evidence,
+every cut hard); you can also capture one from a reference film (`mm motion capture --from fixtures/capture/reference/cuts.mp4
 --out tour/capture/tempo.json` measures its shots, cuts and arrivals). Compose the brand with
 `kinetic`, and scaffold a piece in the result:
 

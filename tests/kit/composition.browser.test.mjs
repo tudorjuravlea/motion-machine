@@ -5,6 +5,7 @@
 // Fixture: fixtures/kit-smoke/composition (layouts.json); the golden stories via golden-smoke.
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
+import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT, serveRoot, openPiece, launchBrowser } from '../../scripts/lib/browser.mjs';
 
@@ -91,7 +92,8 @@ test('every layout headline scales with --mm-headline-scale; density tightens th
 });
 
 // in the golden stories, the hook's headline is the largest headline of the piece in every
-// format, by a clear step, and every text box at every rest sits inside the safe area.
+// format, by a clear step, and every text box at every rest sits inside the safe area: on every
+// shipped preset (styles/presets) and in every format, 4x5 included.
 async function goldenSizes(kind, preset, format) {
   const o = await openPiece(GOLDEN, { server, browser, format, query: { story: kind, preset } });
   try {
@@ -122,9 +124,10 @@ async function goldenSizes(kind, preset, format) {
   } finally { await o.close(); }
 }
 
-for (const preset of PRESETS) {
+const SHIPPED = readdirSync(join(ROOT, 'styles/presets')).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5)).sort();
+for (const preset of SHIPPED) {
   test(`golden film and deck · ${preset}: the hook is the largest headline in every format; every rest inside the safe area`, async () => {
-    for (const [kind, format] of [['film', '9x16'], ['film', '1x1'], ['film', '16x9'], ['deck', '16x9']]) {
+    for (const [kind, format] of [['film', '9x16'], ['film', '1x1'], ['film', '4x5'], ['film', '16x9'], ['deck', '16x9']]) {
       const { sizes, outside, first } = await goldenSizes(kind, preset, format);
       const hook = sizes[first];
       const others = Object.entries(sizes).filter(([id]) => id !== first);

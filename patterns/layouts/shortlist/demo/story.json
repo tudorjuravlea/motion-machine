@@ -1,0 +1,103 @@
+{
+  "id": "demo-shortlist",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: layouts/shortlist",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "ask",
+      "layout": "layouts/statement",
+      "duration": 2.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Where do we meet?",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "The question."
+    },
+    {
+      "id": "demo",
+      "layout": "layouts/shortlist",
+      "duration": 8.0,
+      "cut": "transitions/crossfade",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.5,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Six venues"
+        },
+        {
+          "at": 1.1,
+          "slot": "item-1",
+          "fx": "entrances/pop",
+          "text": "Harbor Hall"
+        },
+        {
+          "at": 1.3,
+          "slot": "item-2",
+          "fx": "entrances/pop",
+          "text": "North Loft"
+        },
+        {
+          "at": 1.5,
+          "slot": "item-3",
+          "fx": "entrances/pop",
+          "text": "Glasshouse",
+          "params": {
+            "pick": true
+          }
+        },
+        {
+          "at": 1.7,
+          "slot": "item-4",
+          "fx": "entrances/pop",
+          "text": "The Yard"
+        },
+        {
+          "at": 1.9,
+          "slot": "item-5",
+          "fx": "entrances/pop",
+          "text": "Riverside"
+        },
+        {
+          "at": 2.1,
+          "slot": "item-6",
+          "fx": "entrances/pop",
+          "text": "Old Mill"
+        },
+        {
+          "at": 3.4,
+          "slot": "result",
+          "fx": "entrances/drop",
+          "text": "Seats two hundred"
+        }
+      ],
+      "say": "Six candidates arrive; the field collapses to one."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

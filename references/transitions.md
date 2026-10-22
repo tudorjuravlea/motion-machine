@@ -14,7 +14,7 @@ The catalogue of cuts the grammar knows. Durations are seconds at calm, medium a
 | wipe | 0.5-0.6 | 0.5 | 0.3 | topic change | directed attention, a vintage touch |
 | zoom-through | 0.6 | 0.4-0.5 | 0.2-0.3 | climax | a plunge through the frame |
 | zoom-out | 0.6 | 0.4-0.5 | 0.3 | topic change, climax | pulling back to show the whole |
-| iris | 0.6-0.8 | 0.5 | 0.3 | topic change | a spotlight closing on the next scene |
+| iris | 0.6-0.8 | 0.5 | 0.3 | topic change | a spotlight closing on the next scene; `target` opens it on a slot of the new scene |
 | clock-wipe | 0.8-1.0 | 0.5 | 0.3 | topic change | a dial sweeping round, old-fashioned |
 | split | 0.6 | 0.3-0.5 | 0.25 | topic change | precise, machine-like |
 | blinds | 0.6 | 0.3-0.5 | 0.25 | topic change | a slatted, mechanical rhythm |
@@ -23,6 +23,10 @@ The catalogue of cuts the grammar knows. Durations are seconds at calm, medium a
 | light-leak | 0.6-0.8 | 0.5 | 0.3 | opening, climax, wind-down | glowing and filmic |
 | whip-pan | not offered | 0.3-0.4 | 0.2 | related, topic change | a fast swing |
 | shared-element | 0.6 | 0.5 | 0.4 | related | one object carried across |
+| flood | 1.3 | 1.3 | 1.3 | topic change, climax | a brand colour pours out of one element and drains into the next, or comes to rest on the dot of an i or a round element; the frame is fully covered at the swap |
+| cover | 0.5 | 0.4 | 0.3 | related, topic change | the next page laid over a still one, which sinks under a scrim |
+| re-ink | 1.0 | 0.6-0.9 | 0.6 | topic change, related | the same poster pulled in new inks, then in its own |
+| brush-wipe | 1.0 | 0.6-0.9 | 0.6 | topic change, chapter break | painted over by hand; the cut happens under the bands |
 
 ## Notes on the catalogue
 
@@ -32,6 +36,7 @@ The catalogue of cuts the grammar knows. Durations are seconds at calm, medium a
 - Default policy: the transition owns the exit. Elements do not fade out before a cut; an explicit exit is for something leaving mid-scene, the last scene, or a motion style that declares velocity-matched cuts [SPEC §15]
 - Velocity-matched pairs (the outgoing move hands its speed to the incoming one) are a policy of the motion style, not a catalogue entry
 - The final rest holds rather than fading, unless the style names a fade as its outro [SPEC §15]
+- flood lasts 1.3 s in every style, divided by its `speed` (0.5 to 2, never under 0.67 s): a 0.5 s grow, a short full cover, a 0.54 s collapse and a 0.1 s hand-over, the cover giving way first; flood, brush-wipe and re-ink time their phases on the cut's linear clock
 - Default per-position choices in a style file: opening hard-cut, topic change wipe, climax zoom-through, outro fade [SPEC §3]
 
 ## Not in the catalogue
@@ -64,8 +69,8 @@ The catalogue of cuts the grammar knows. Durations are seconds at calm, medium a
 | position | use | avoid | why |
 |---|---|---|---|
 | opening | blur-crossfade, light-leak, hard-cut | slow wipes that delay the hook | the first image has to land within two seconds |
-| related | crossfade, push, shared-element, whip-pan | flashy cuts that imply a new topic | the viewer should feel the thought continue |
-| topic change | wipe, iris, clock-wipe, split, blinds, flip, color-dip, zoom-out | crossfade (it says "continues") | the cut is the paragraph break |
-| climax | hard-cut, zoom-through, zoom-out, light-leak | anything slow | weight and disruption mark the peak |
+| related | crossfade, push, shared-element, whip-pan, cover | flashy cuts that imply a new topic | the viewer should feel the thought continue |
+| topic change | wipe, iris, clock-wipe, split, blinds, flip, color-dip, zoom-out, flood, re-ink, brush-wipe | crossfade (it says "continues") | the cut is the paragraph break |
+| climax | hard-cut, zoom-through, zoom-out, light-leak, flood | anything slow | weight and disruption mark the peak |
 | wind-down | crossfade, blur-crossfade, light-leak | hard cuts | energy falls before the end |
 | outro | color-dip, crossfade, or a held final rest | a fade-out by habit | the last frame is the line to remember [SPEC §15] |

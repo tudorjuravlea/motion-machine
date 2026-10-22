@@ -1,0 +1,72 @@
+{
+  "name": "grid",
+  "version": 1,
+  "motion": {
+    "durations": {
+      "quick": 125,
+      "standard": 250,
+      "slow": 500,
+      "hold": 2000
+    },
+    "easings": {
+      "enter": "cubic-bezier(0.7, 0, 0.2, 1)",
+      "exit": "cubic-bezier(0.7, 0, 0.2, 1)",
+      "move": "cubic-bezier(0.7, 0, 0.2, 1)"
+    },
+    "spring": {
+      "ui": {
+        "k": 400,
+        "c": 40,
+        "m": 1
+      },
+      "type": {
+        "k": 256,
+        "c": 32,
+        "m": 1
+      },
+      "heavy": {
+        "k": 200,
+        "c": 40,
+        "m": 2
+      }
+    },
+    "travel": 1,
+    "overshootMax": 0,
+    "exitRatio": 0.5,
+    "stagger": {
+      "eachS": 0.0625,
+      "capS": 0.5
+    }
+  },
+  "sound": {
+    "palette": "percussive",
+    "bpm": 120,
+    "loudnessLufs": -14,
+    "cuesPer10s": [
+      2,
+      6
+    ]
+  },
+  "transitions": {
+    "opening": "transitions/hard-cut",
+    "topic": "transitions/wipe",
+    "related": "transitions/hard-cut",
+    "climax": "transitions/split",
+    "outro": "transitions/hard-cut",
+    "policy": "owns-exit"
+  },
+  "entrances": {
+    "headline": "entrances/mask-reveal",
+    "body": "entrances/rise",
+    "figure": "entrances/count",
+    "plate": "entrances/mask-reveal"
+  },
+  "pacing": {
+    "holdMinS": 1,
+    "arrivalsPer10s": [
+      3,
+      7
+    ],
+    "energy": "medium"
+  }
+}

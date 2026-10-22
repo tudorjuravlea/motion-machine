@@ -50,7 +50,7 @@ export function compose({ brand, motion, name, from }) {
     version: b.version,
     fictional: b.fictional,
     from: recorded,
-    color: b.color, type: b.type, scale: b.scale, space: b.space, radius: b.radius, composition: b.composition, ...(b.devices ? { devices: b.devices } : {}), ...(b.ground ? { ground: b.ground } : {}), ...(b.finish ? { finish: b.finish } : {}), ...(b.ask?.length ? { ask: b.ask } : {}), bans: b.bans, allow: b.allow,
+    color: b.color, type: b.type, scale: b.scale, space: b.space, radius: b.radius, composition: b.composition, ...(b.devices ? { devices: b.devices } : {}), ...(b.ground ? { ground: b.ground } : {}), ...(b.finish ? { finish: b.finish } : {}), ...(b.mascot ? { mascot: b.mascot } : {}), ...(b.ask?.length ? { ask: b.ask } : {}), bans: b.bans, allow: b.allow,
     motion: m.motion, sound: m.sound, transitions: m.transitions, entrances: m.entrances, pacing: m.pacing, ...(m.gate ? { gate: m.gate } : {}),
   };
   if (!v.style(style)) throw fail(`the composition of ${brand} x ${motion} is invalid: ${explain(v.style)}`, 1);

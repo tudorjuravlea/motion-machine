@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>layers piece</title>
+</head>
+<body>
+  <!-- A picture taken apart by mm media layers, in layouts/media. ?story=<name> picks <name>.json from this
+       folder (story.json when absent); ?preset=<name> picks a shipped preset (style.json when absent).
+       The tests write assets/scene/ with mm media layers before they open the page. -->
+  <script type="module">
+    import { mount } from '../../../runtime/kit/kit.js';
+    const q = new URLSearchParams(location.search);
+    const load = (f) => fetch(new URL(f, import.meta.url)).then((r) => r.json());
+    const preset = q.get('preset');
+    const [story, style] = await Promise.all([load(`${q.get('story') || 'story'}.json`), load(preset ? `../../../styles/presets/${preset}.json` : 'style.json')]);
+    if (preset) for (const face of Object.values(style.type)) for (const f of face.files) f.src = `../../../${f.src}`;
+    await mount({ story, style, patternsBase: new URL('../../../patterns/', import.meta.url) });
+  </script>
+</body>
+</html>

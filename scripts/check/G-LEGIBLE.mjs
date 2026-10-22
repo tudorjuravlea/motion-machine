@@ -1,7 +1,8 @@
 // G-LEGIBLE (SPEC §7, §12, AXIOM 10): at every rest each visible text element's rendered
 // size (computed font-size times the scale its transforms give it on screen) is at least the
 // format's body floor, or the micro floor when it carries data-micro, which may not carry a fact or the
-// call to action. Read at rests and at the last instant of a film scene with no rest (text still arriving
+// call to action. Decoration (data-decor: a layout's backdrop words) keeps the body floor and may not
+// carry a fact or the call to action either: it is drawn to be looked at, not read for what the piece says. Read at rests and at the last instant of a film scene with no rest (text still arriving
 // there is not measured for size). ::before/::after text counts.
 // Measured at full scale; the phone sheet is for eyes, not for this rule.
 //
@@ -60,11 +61,12 @@ export default async function (ctx) {
     .map(([what, text]) => [what, norm(text)]).filter(([, text]) => text.length >= 3);
   for (const t of auditInstants(ctx.schedule)) {
     const s = await ctx.sample(t);
-    for (const el of texts(s)) {   // data-micro lowers the floor, so it may not carry what the piece is for
-      if (!el.micro) continue;
-      const fact = el.microItem ? ctx.schedule.items.find((it) => it.selector === el.item)?.beat?.fact : null;
+    for (const el of texts(s)) {   // data-micro lowers the floor and data-decor is decoration, so neither may carry what the piece is for
+      if (!el.micro && !el.decor) continue;
+      const mark = el.micro ? 'data-micro' : 'data-decor';
+      const fact = (el.micro ? el.microItem : el.decorItem) ? ctx.schedule.items.find((it) => it.selector === el.item)?.beat?.fact : null;
       const what = fact ? `fact ${fact}` : shown.find(([, text]) => norm(el.text).includes(text))?.[0];
-      if (what) carrying.push({ instant: round(t), selector: el.selector, measured: `data-micro text carries ${what}`, text: el.text.slice(0, 80) });
+      if (what) carrying.push({ instant: round(t), selector: el.selector, mark, measured: `${mark} text carries ${what}`, text: el.text.slice(0, 80) });
     }
     for (const el of settledTexts(s)) {
       const floor = el.micro ? micro : body;
@@ -83,7 +85,12 @@ export default async function (ctx) {
     const c = calls[0];
     return rule('G-LEGIBLE', 'FAIL', { file: c.file, line: c.line, measured: c.name, reason: `the page called ${[...new Set(calls.map((x) => x.name))].join(', ')}: text the gate cannot measure${c.file ? ` (${c.file}:${c.line})` : ''}`, calls: calls.slice(0, 10) });
   }
-  if (carrying.length) return rule('G-LEGIBLE', 'FAIL', { ...carrying[0], reason: `${carrying[0].measured}: data-micro text may not carry a fact or the call to action, so it cannot be held to the micro floor`, all: carrying.slice(0, 20) });
+  if (carrying.length) {
+    const c = carrying[0];
+    const why = c.mark === 'data-micro' ? 'data-micro text may not carry a fact or the call to action, so it cannot be held to the micro floor'
+      : 'data-decor text is decoration and may not carry a fact or the call to action; say it in a slot that is read';
+    return rule('G-LEGIBLE', 'FAIL', { ...c, reason: `${c.measured}: ${why}`, all: carrying.slice(0, 20) });
+  }
   const shadows = await shadowRoots(ctx);
   if (shadows.length) return rule('G-LEGIBLE', 'FAIL', { measured: `${shadows[0].type} shadow root on <${shadows[0].host}>`, reason: 'a shadow root in the stage hides its text from the gate', all: shadows.slice(0, 10) });
   if (small.length) {

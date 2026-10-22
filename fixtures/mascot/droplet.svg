@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- A floating droplet, drawn as a flat vector export: ids as layer names, fill attributes. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="260" viewBox="0 0 200 260" fill="none">
+  <ellipse id="shadow" cx="100" cy="246" rx="46" ry="7" fill="#1B2430" fill-opacity="0.18"/>
+  <path id="body" d="M100 24C126 66 158 106 158 146C158 184 132 210 100 210C68 210 42 184 42 146C42 106 74 66 100 24Z" fill="#2E7ED2"/>
+  <g id="face">
+    <ellipse id="eye-left" cx="82" cy="150" rx="7" ry="10" fill="#1B2430"/>
+    <ellipse id="eye-right" cx="118" cy="150" rx="7" ry="10" fill="#1B2430"/>
+  </g>
+  <path id="shine" d="M64 136C64 116 74 98 84 84" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>
+  <path id="Vector 3" d="M120 196C126 194 132 190 136 186" stroke="#FFFFFF" stroke-width="0" />
+</svg>

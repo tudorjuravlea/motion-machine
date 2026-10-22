@@ -1,0 +1,45 @@
+{
+  "id": "demo-text-lit-sweep",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "text/lit-sweep demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/statement",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "text/lit-sweep",
+          "text": "We read as the light moves, line by line"
+        },
+        {
+          "at": 2.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Readable from the first frame"
+        }
+      ],
+      "say": "A single scene that shows text/lit-sweep."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

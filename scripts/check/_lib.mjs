@@ -437,7 +437,8 @@ function probeInPage(itemSelectors) {
     const itemIndex = items.findIndex((i) => i && (i === el || i.contains(el)));
     const shared = {
       scene: el.closest('[data-scene]')?.dataset.scene ?? null,
-      micro: !!el.closest('[data-micro]'), microItem: (() => { const m = el.closest('[data-micro]'); return !!m && itemIndex >= 0 && (m === items[itemIndex] || m.contains(items[itemIndex])); })(), bleed: !!el.closest('[data-bleed]'), chrome: !!el.closest('[data-chrome]'), over: !!el.closest('[data-over]'), keep: !!el.closest('[data-keep]'),
+      micro: !!el.closest('[data-micro]'), microItem: (() => { const m = el.closest('[data-micro]'); return !!m && itemIndex >= 0 && (m === items[itemIndex] || m.contains(items[itemIndex])); })(),
+      decor: !!el.closest('[data-decor]'), decorItem: (() => { const m = el.closest('[data-decor]'); return !!m && itemIndex >= 0 && (m === items[itemIndex] || m.contains(items[itemIndex])); })(), bleed: !!el.closest('[data-bleed]'), chrome: !!el.closest('[data-chrome]'), over: !!el.closest('[data-over]'), keep: !!el.closest('[data-keep]'),
       caption: !!el.closest('[data-caption]'), item: itemIndex >= 0 ? itemSelectors[itemIndex] : null,
     };
     for (const pseudo of ['before', 'after']) {

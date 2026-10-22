@@ -153,8 +153,10 @@ function cascade(beat, style, d, given, warn) {
   return { n, step: n > 1 ? offsets[n - 1] / (n - 1) : each, offsets, d, total: ms(offsets[n - 1] + d) };
 }
 
-export function cutSeconds(ref, style, meta = {}) {
+// A cut module may size itself by its params: `durOf(cutParams)` (seconds) wins over its `dur`.
+export function cutSeconds(ref, style, meta = {}, params = {}) {
   if (ref === HARD_CUT || meta.dur === 0) return 0;
+  if (typeof meta.durOf === 'function') return ms(meta.durOf(params ?? {}));
   return roleSeconds(meta.dur ?? 'standard', style);
 }
 
@@ -201,7 +203,7 @@ const sceneEntry = (sc, start, end, cutD) => ({ id: sc.id, start, end, cut: { pa
 
 function filmSchedule(story, style, meta, eachOpts) {
   const scenes = story.scenes;
-  const cutD = scenes.map((sc) => cutSeconds(sc.cut, style, meta(sc.cut)));
+  const cutD = scenes.map((sc) => cutSeconds(sc.cut, style, meta(sc.cut), sc.cutParams));
   const items = [], events = [], rests = [], holds = [], warnings = [];
 
   // Measure: each scene is a par of delayed entrances, clipped to its own duration plus the tail
@@ -307,7 +309,7 @@ function deckSchedule(story, style, meta, eachOpts) {
   const firstPress = [];
   let presses = 0;
   for (const sc of scenes) { firstPress.push(presses); presses += sc.presses; }
-  const cutD = scenes.map((sc, i) => (i === 0 ? 0 : cutSeconds(sc.cut, style, meta(sc.cut))));
+  const cutD = scenes.map((sc, i) => (i === 0 ? 0 : cutSeconds(sc.cut, style, meta(sc.cut), sc.cutParams)));
   const items = [], warnings = [];
   const L = new Array(presses + 1).fill(0);
 

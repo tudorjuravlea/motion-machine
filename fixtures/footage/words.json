@@ -1,0 +1,94 @@
+{
+  "words": [
+    {
+      "text": "every",
+      "start": 0.4,
+      "end": 0.76
+    },
+    {
+      "text": "frame",
+      "start": 0.8,
+      "end": 1.16
+    },
+    {
+      "text": "comes",
+      "start": 1.2,
+      "end": 1.56
+    },
+    {
+      "text": "from",
+      "start": 1.6,
+      "end": 1.96
+    },
+    {
+      "text": "time",
+      "start": 2,
+      "end": 2.36
+    },
+    {
+      "text": "pauses",
+      "start": 3.6,
+      "end": 3.96
+    },
+    {
+      "text": "fall",
+      "start": 4,
+      "end": 4.36
+    },
+    {
+      "text": "away",
+      "start": 4.4,
+      "end": 4.76
+    },
+    {
+      "text": "between",
+      "start": 4.8,
+      "end": 5.16
+    },
+    {
+      "text": "lines",
+      "start": 5.2,
+      "end": 5.56
+    },
+    {
+      "text": "cuts",
+      "start": 5.9,
+      "end": 6.36
+    },
+    {
+      "text": "land",
+      "start": 6.4,
+      "end": 6.86
+    },
+    {
+      "text": "quietly",
+      "start": 6.9,
+      "end": 7.36
+    },
+    {
+      "text": "the",
+      "start": 9.4,
+      "end": 9.76
+    },
+    {
+      "text": "voice",
+      "start": 9.8,
+      "end": 10.16
+    },
+    {
+      "text": "carries",
+      "start": 10.2,
+      "end": 10.56
+    },
+    {
+      "text": "straight",
+      "start": 10.6,
+      "end": 10.96
+    },
+    {
+      "text": "through",
+      "start": 11,
+      "end": 11.36
+    }
+  ]
+}

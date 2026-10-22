@@ -1,0 +1,55 @@
+{
+  "id": "demo-moves-punch",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: moves/punch",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "footage": {
+    "asset": "assets/talk/"
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/talking-full",
+      "duration": 8.8,
+      "cut": "transitions/hard-cut",
+      "move": "moves/punch",
+      "moveParams": {
+        "x": 50,
+        "y": 35
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Every other clip moves closer",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.8,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "The marked point never moves."
+        }
+      ],
+      "say": "A demo of the pattern: synthetic test footage in three clips; the middle clip is punched in about the red marker."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

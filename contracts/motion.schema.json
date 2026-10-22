@@ -45,7 +45,7 @@
         "travel":       { "type": "number", "minimum": 0.25, "maximum": 3 },
         "overshootMax": { "type": "number", "minimum": 0, "maximum": 0.3, "description": "SPEC §15: bounded by the motion style" },
         "exitRatio":    { "type": "number", "minimum": 0.4, "maximum": 1 },
-        "frameHold":    { "type": "integer", "enum": [1, 2], "description": "2 animates elements on twos (each element's local time steps every 2/30 s, counted in 1/30 s whatever the export frame rate); cuts and camera moves stay smooth. Optional, 1 by default" },
+        "frameHold":    { "type": "integer", "enum": [1, 2, 3], "description": "2 animates elements on twos and 3 on threes (a 10 fps stop-motion grid): elements change only on the shared grid of 2/30 s or 3/30 s, counted in 1/30 s whatever the export frame rate, and an element that would finish inside its last step is drawn finished from that step, so rests are the same with or without the hold; cuts and camera moves stay smooth. Optional, 1 by default" },
         "boil":         { "type": "number", "minimum": 0, "maximum": 2, "description": "seconds each frame of a pen stroke's shiver holds (entrances/sketch); 0 keeps strokes still. Optional, 0.4 by default; a deck never shivers" },
         "stagger": {
           "type": "object", "additionalProperties": false,

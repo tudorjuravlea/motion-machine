@@ -1,0 +1,3 @@
+/* entrances/diagonal-join: the slot's content as one half, and the copy that carries the other laid over it. */
+.mm-diagonal-join__half { display: block; }
+.mm-diagonal-join__copy { position: absolute; }

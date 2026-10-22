@@ -1,0 +1,11 @@
+/* entrances/one-line: the line is ink, drawn as one filled shape whose width follows the pen's pace
+   (pattern.js builds it); the weight is the stroke width below, from --mm-space-1, which pattern.js
+   reads but never strokes with. The drawing stays inside its slot. */
+.mm-one-line { position: absolute; left: 0; top: 0; overflow: hidden; pointer-events: none; }
+.mm-one-line__ink {
+  fill: var(--mm-color-ink);
+  fill-rule: nonzero;
+  stroke: none;
+  stroke-width: calc(var(--mm-space-1) * 1.25);
+}
+.mm-one-line__ink--bridge { fill: var(--mm-color-accent); }

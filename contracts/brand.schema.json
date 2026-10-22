@@ -110,7 +110,74 @@
         "halftone":   { "type": "number", "minimum": 0, "maximum": 1, "description": "a fine dot screen in ink" },
         "vignette":   { "type": "number", "minimum": 0, "maximum": 1, "description": "the corners darken toward ink; inside the safe area it stays at or under 0.08" },
         "edgeFringe": { "type": "number", "minimum": 0, "maximum": 1, "description": "a soft accent glow along the frame's edge, outside the safe area" },
-        "paperEdge":  { "type": "number", "minimum": 0, "maximum": 1, "description": "a rough surface-coloured border inside the frame's edge, within the safe margin; it is a frame border, so W-BAN warns unless the brand lists `frame-borders` in `allow`" }
+        "paperEdge":  { "type": "number", "minimum": 0, "maximum": 1, "description": "a rough surface-coloured border inside the frame's edge, within the safe margin; it is a frame border, so W-BAN warns unless the brand lists `frame-borders` in `allow`" },
+        "misregister": { "type": "number", "minimum": 0, "maximum": 1, "description": "a print plate off register: the scene's shapes printed again in accent under themselves, offset down and to one side (at 1, 0.4 % of the frame width, the side seeded per scene); every emphasis kicks the plate and it settles before the rest. Stepped every 2/30 s; never over text" },
+        "paper":      { "type": "number", "minimum": 0, "maximum": 1, "description": "a paper fibre in ink, static (it belongs to the stock, not the film), at no more than 0.08 opacity" }
+      }
+    },
+    "mascot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["box", "ground", "views"],
+      "description": "the brand's character, drawn and acted by runtime/kit/rig.js. Every length is in the character's own unit (u), in SVG axes (y grows downward); the rig scales u to the slot. Parts are filled from palette roles only, so G-BRAND holds by construction",
+      "properties": {
+        "box":    { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number", "exclusiveMinimum": 0, "maximum": 100 }, "description": "width and height of the whole character, legs included, in u" },
+        "ground": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number", "minimum": -100, "maximum": 100 }, "description": "the point between the feet, in the views' coordinates: squash, lean and hops pivot here and the shadow sits under it" },
+        "views": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["front"],
+          "description": "drawn key views, each facing right (facing: left mirrors them). A missing 3/4 or side view is made from the front by moving the face toward the heading and narrowing it; a missing back is the front with no face",
+          "properties": {
+            "front":        { "$ref": "#/$defs/mascotView" },
+            "threeQuarter": { "$ref": "#/$defs/mascotView" },
+            "side":         { "$ref": "#/$defs/mascotView" },
+            "back":         { "$ref": "#/$defs/mascotView" }
+          }
+        },
+        "parts": {
+          "type": "object",
+          "maxProperties": 32,
+          "propertyNames": { "pattern": "^[a-z][a-zA-Z0-9-]{0,31}$" },
+          "additionalProperties": { "$ref": "#/$defs/extraPart" },
+          "description": "the colour of each named part: a role, or a blend of two roles. Defaults: body accent; shade the body's role with 28 % of the darkest role; light the body's role with 35 % of the lightest role; outline, eyes and mouth ink (on a screen face's plate: the lightest role); glint surface; blush the body's role with 45 % of the lightest role; limbs the body's colour; shadow the darkest role; plate the darkest role. Any other name is an extra part (ears, a tail, an antenna, a hat, wings, a held prop): path data with an anchor, a layer, a swing and a colour",
+          "properties": {
+            "body":    { "$ref": "#/$defs/partColor" },
+            "shade":   { "$ref": "#/$defs/partColor" },
+            "light":   { "$ref": "#/$defs/partColor" },
+            "outline": { "$ref": "#/$defs/partColor" },
+            "eyes":    { "$ref": "#/$defs/partColor" },
+            "glint":   { "$ref": "#/$defs/partColor" },
+            "mouth":   { "$ref": "#/$defs/partColor" },
+            "blush":   { "$ref": "#/$defs/partColor" },
+            "limbs":   { "$ref": "#/$defs/partColor" },
+            "shadow":  { "$ref": "#/$defs/partColor" },
+            "plate":   { "$ref": "#/$defs/partColor" }
+          }
+        },
+        "float": { "type": "number", "minimum": 0, "maximum": 20, "description": "how far the character hovers above its ground point at rest, in u: a floating character (no legs) is drawn standing on the ground in its views and lifted by this much, bobbing gently; its shadow stays on the ground. Default 0" },
+        "cast": {
+          "type": "object",
+          "maxProperties": 8,
+          "propertyNames": { "pattern": "^[a-z][a-z0-9-]{0,31}$" },
+          "additionalProperties": { "$ref": "#/$defs/castMember" },
+          "description": "further characters of the brand, by name, each a whole character with the same keys as the mascot (no cast of its own); a beat names one with the character patterns' `who` param"
+        },
+        "outline": { "type": "number", "minimum": 0, "maximum": 3, "description": "outline weight factor; 0 draws no outline. Default 1" },
+        "moods": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "description": "the moods the brand lets its character show; a mood outside the list is drawn as the first one. Default: all eight",
+          "items": { "enum": ["calm", "happy", "excited", "sad", "surprised", "worried", "sleepy", "proud"] }
+        },
+        "faces": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "the eye shapes and mouths the brand allows; a mood whose shape is not allowed wears the first allowed one. Default: all",
+          "properties": {
+            "eyes":   { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["dot", "wide", "arc", "droop", "half", "slant", "line"] } },
+            "mouths": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["none", "smile", "grin", "open", "flat", "frown", "wobble"] } }
+          }
+        }
       }
     },
     "ask": {
@@ -124,6 +191,98 @@
   },
   "$defs": {
     "hex": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+    "role": { "enum": ["canvas", "ink", "muted", "surface", "line", "accent", "accentInk"] },
+    "partColor": {
+      "oneOf": [
+        { "$ref": "#/$defs/role" },
+        {
+          "type": "object", "additionalProperties": false, "required": ["role", "mix", "share"],
+          "description": "an sRGB blend of two roles: `share` of `mix` into `role`",
+          "properties": { "role": { "$ref": "#/$defs/role" }, "mix": { "$ref": "#/$defs/role" }, "share": { "type": "number", "minimum": 0, "maximum": 1 } }
+        }
+      ]
+    },
+    "path": { "type": "string", "minLength": 1, "maxLength": 4000, "pattern": "^(?:[MmLlHhVvCcSsQqTtAaZz,\\s]|[+-]?(?:\\d{1,3}(?!\\d)(?:\\.\\d*(?!\\d)|(?!\\.))|\\.\\d+(?!\\d)))+$", "description": "SVG path data in u, nothing else: every number under 1000 and without an exponent. The rig also refuses a view whose drawing reaches more than 20 % of the box past the box about the ground point (the front then takes the rig's default figure, another view is made from the front), and clips what it draws to its slot" },
+    "mascotView": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["body"],
+      "properties": {
+        "body":  { "$ref": "#/$defs/path", "description": "the silhouette, filled in the body colour and outlined last" },
+        "strip": { "$ref": "#/$defs/path", "description": "a side face drawn in the shade colour over the body (a block seen at 3/4)" },
+        "seam":  { "$ref": "#/$defs/path", "description": "a line in the outline colour (the edge between front and side)" },
+        "face": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["cx", "cy", "gap", "size"],
+          "description": "the face frame; null for a view with no face (the back)",
+          "properties": {
+            "cx":    { "type": "number", "minimum": -100, "maximum": 100, "description": "centre of the eye line" },
+            "cy":    { "type": "number", "minimum": -100, "maximum": 100 },
+            "gap":   { "type": "number", "minimum": 0, "maximum": 50, "description": "distance between the eye centres" },
+            "size":  { "type": "number", "exclusiveMinimum": 0, "maximum": 20, "description": "eye height" },
+            "fw":    { "type": "number", "exclusiveMinimum": 0, "maximum": 1, "description": "foreshortening of the face across: 1 front, about 0.75 at 3/4, 0.55 side. Default 1" },
+            "mouth": { "type": "number", "minimum": -20, "maximum": 20, "description": "the mouth's distance below the eye line. Default 1.3 eye heights" },
+            "sides": { "enum": ["both", "near"], "description": "both eyes, or only the near one (a side view). Default both" },
+            "plate": {
+              "type": "object", "additionalProperties": false, "required": ["w", "h"],
+              "description": "a screen face: a rounded plate behind the eyes and the mouth, filled in the plate colour; the eyes and the mouth then default to the lightest role",
+              "properties": {
+                "w": { "type": "number", "exclusiveMinimum": 0, "maximum": 50 },
+                "h": { "type": "number", "exclusiveMinimum": 0, "maximum": 50 },
+                "r": { "type": "number", "minimum": 0, "maximum": 25, "description": "corner radius. Default a fifth of the smaller side" },
+                "y": { "type": "number", "minimum": -20, "maximum": 20, "description": "the plate centre's distance below the eye line. Default half the mouth's" }
+              }
+            }
+          }
+        },
+        "limbs": {
+          "type": "array", "maxItems": 8,
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["kind", "x", "y", "width"],
+            "properties": {
+              "kind":   { "enum": ["arm", "leg"] },
+              "x":      { "type": "number", "minimum": -100, "maximum": 100, "description": "the anchor: an arm's shoulder, a leg's hip" },
+              "y":      { "type": "number", "minimum": -100, "maximum": 100 },
+              "length": { "type": "number", "exclusiveMinimum": 0, "maximum": 50, "description": "an arm's length; a leg always reaches the ground" },
+              "width":  { "type": "number", "exclusiveMinimum": 0, "maximum": 20 },
+              "side":   { "enum": ["left", "right"], "description": "which way an arm points and which pose angle drives it; legs on the same side step together. Default by the sign of x" },
+              "layer":  { "enum": ["back", "front"], "description": "drawn behind the body or in front of it. Default back" },
+              "far":    { "type": "boolean", "description": "a far limb is drawn in the shade colour" }
+            }
+          }
+        }
+      }
+    },
+    "extraPart": {
+      "type": "object", "additionalProperties": false, "required": ["d", "anchor"],
+      "description": "an extra part of the character, in the views' coordinates (u): drawn in every view (narrowed with a view made from the front) unless `views` names some",
+      "properties": {
+        "d":      { "$ref": "#/$defs/path", "description": "its shape, filled in its colour and outlined (or stroked, with `stroke`)" },
+        "anchor": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number", "minimum": -100, "maximum": 100 }, "description": "where it joins the body: it swings about this point" },
+        "tip":    { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number", "minimum": -100, "maximum": 100 }, "description": "the point whose lag sets the swing; parts that share an anchor and a tip turn as one. Default the centre of its drawing" },
+        "layer":  { "enum": ["back", "front"], "description": "drawn behind the body or in front of it (under the face). Default front" },
+        "swing":  { "type": "number", "minimum": 0, "maximum": 2, "description": "follow-through: how much it lags and swings about its anchor as the body hops, lands and takes. 0 holds it rigid. Default 0.5" },
+        "color":  { "$ref": "#/$defs/partColor", "description": "default the body's colour" },
+        "stroke": { "type": "number", "exclusiveMinimum": 0, "maximum": 5, "description": "draw it as a line of this width (an antenna's stalk, whiskers) instead of a filled shape" },
+        "views":  { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["front", "threeQuarter", "side", "back"] }, "description": "the views that show it. Default all" }
+      }
+    },
+    "castMember": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["box", "ground", "views"],
+      "properties": {
+        "box":     { "$ref": "#/properties/mascot/properties/box" },
+        "ground":  { "$ref": "#/properties/mascot/properties/ground" },
+        "views":   { "$ref": "#/properties/mascot/properties/views" },
+        "parts":   { "$ref": "#/properties/mascot/properties/parts" },
+        "float":   { "$ref": "#/properties/mascot/properties/float" },
+        "outline": { "$ref": "#/properties/mascot/properties/outline" },
+        "moods":   { "$ref": "#/properties/mascot/properties/moods" },
+        "faces":   { "$ref": "#/properties/mascot/properties/faces" }
+      }
+    },
     "ban": {
       "type": "string",
       "enum": ["centered-title-on-gradient", "fade-only", "corner-labels", "frame-borders", "glow-on-ui", "particle-burst", "gradient-text", "accent-stripe", "pure-black-white", "identical-card-grid"]

@@ -1,0 +1,50 @@
+{
+  "id": "demo-shake",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: moves/shake",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/statement",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": "moves/shake",
+      "moveParams": {
+        "hits": "0.75",
+        "amp": 16,
+        "decay": 0.5
+      },
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "entrances/slam",
+          "text": "It lands. Then stillness."
+        },
+        {
+          "at": 1.6,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "One impact, then a still frame to read."
+        }
+      ],
+      "say": "A slam lands and the camera jolts once, then calms."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

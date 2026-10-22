@@ -114,6 +114,26 @@ test('no scaffold test leaves anything in pieces/', () => {
   assert.deepEqual(readdirSync(join(ROOT, 'pieces')).filter((n) => n.startsWith('zz-')), []);
 });
 
+test('a ground mark named by its repo path travels with the piece like a font file, and G-LOCAL passes (blueprint)', async () => {
+  const dir = join(work, 'drafting');
+  const r = mm(['new', '--kind', 'film', '--style', 'blueprint', '--dir', dir]);
+  assert.equal(r.status, 0, r.out);
+  const style = readJson(join(dir, 'style.json'));
+  assert.equal(readJson(join(ROOT, 'styles/presets/blueprint.json')).ground.mark.src, 'styles/grounds/draftline-grid.svg', 'the preset names the mark by its repo path');
+  assert.equal(style.ground.mark.src, 'assets/ground/draftline-grid.svg');
+  assert.deepEqual(readFileSync(join(dir, style.ground.mark.src)), readFileSync(join(ROOT, 'styles/grounds/draftline-grid.svg')), 'the mark is copied byte for byte');
+  assert.ok(!readFileSync(join(dir, 'style.json'), 'utf8').includes('styles/grounds'), 'no path back into the repo');
+  const { launchBrowser, serveRoot } = await import('../../scripts/lib/browser.mjs');
+  const { runCheck } = await import('../../scripts/check.mjs');
+  const browser = await launchBrowser();
+  const server = await serveRoot(ROOT);
+  try {
+    const res = await runCheck(dir, { format: '16x9', only: ['G-LOCAL'], browser, server });
+    const local = res.rules.find((x) => x.id === 'G-LOCAL');
+    assert.equal(local?.status, 'PASS', JSON.stringify(local?.evidence));
+  } finally { await browser.close(); await server.close(); }
+});
+
 test('mm new with a style whose two roles share one font file (calm-product) scaffolds without error', async () => {
   const { execFileSync } = await import('node:child_process');
   const { rmSync, existsSync, readFileSync } = await import('node:fs');

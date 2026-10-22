@@ -62,7 +62,7 @@ pattern names using the style, so one story can be worn by many styles.
 
 ### Style
 
-Folder: `styles/` (`brands/`, `motion/`, `presets/`, bundled `fonts/`), `contracts/brand.schema.json`,
+Folder: `styles/` (`brands/`, `motion/`, `presets/`, `grounds/`, bundled `fonts/`), `contracts/brand.schema.json`,
 `contracts/motion.schema.json`, `contracts/style.schema.json`. Contract:
 [SPEC §3](../SPEC.md#3-style-contract-contractsstyleschemajson). Tests: `tests/contracts/`,
 `tests/cli/compose.test.mjs`, `tests/capture/`.
@@ -71,7 +71,7 @@ A brand half and a motion half merge into the composed `style.json` (`scripts/co
 half comes from a preset, by hand, or from capture: `scripts/capture-brand.mjs` reads a web page,
 a Figma export, a `DESIGN.md` or a folder of stills, and `scripts/capture-motion.mjs` measures a
 reference film. Capture writes its evidence beside the half so a person can overrule it. `mm new`
-copies the style, fonts included, into the piece.
+copies the style into the piece, with its fonts and any ground mark from `styles/grounds/`.
 
 ### Patterns
 
@@ -98,7 +98,8 @@ and in Node, so the gate can reason about timing without opening a page.
 ### Kit: `seek(t)`
 
 Folder: `runtime/kit/` (`kit.js`, `springs.js`, `ease.js`, `random.js`, `seeded.js`, `fit.js`,
-`room.js`, `count.js`, `rough.js`, `screen.js`, `device3d.js`, `render.css`). Contract:
+`room.js`, `count.js`, `rough.js`, `screen.js`, `device3d.js`, `glyphs.js`, `points.js`, `rig.js`,
+`footage.js`, `render.css`). Contract:
 [SPEC §2](../SPEC.md#2-render-contract) and [runtime/kit/README.md](../runtime/kit/README.md).
 Tests: `tests/kit/`.
 
@@ -106,6 +107,8 @@ Tests: `tests/kit/`.
 fonts and exposes `window.mm`. `seek(t)` restores, then paints frame `t` completely from `t` alone:
 no state survives between calls, and nothing is animated by CSS, timers or the clock. Springs are
 closed-form, randomness is seeded, and `window.mm.report()` describes what is on screen for the gate.
+At mount, `fit.js` sizes each `mm-fit` headline once to its room at the scene's rest, so the size
+depends on layout and copy alone.
 Rendering the same instant twice gives the same pixels, which is the property the rest relies on.
 
 ### Page driver
@@ -148,14 +151,21 @@ loudness. `review` builds a single page from the direction log and the stills.
 ### Capture and embed
 
 Folder: `scripts/capture-brand.mjs`, `scripts/capture-motion.mjs`, `scripts/capture-site.mjs`,
-`scripts/media-prep.mjs`, `scripts/skill-new.mjs`, `skill/templates/brand-skill/`. Contract:
+`scripts/media-prep.mjs`, `scripts/media-layers.mjs`, `scripts/footage-cut.mjs`, `scripts/footage-matte.mjs`,
+`scripts/mascot-import.mjs`, `scripts/skill-new.mjs`, `skill/templates/brand-skill/`. Contract:
 [SPEC §13](../SPEC.md#13-capture-and-embed-the-three-modes). Tests: `tests/capture/`,
-`tests/cli/capture-site.test.mjs`, `tests/cli/media-prep.test.mjs`, `tests/cli/skill-new.test.mjs`.
+`tests/cli/capture-site.test.mjs`, `tests/cli/media-prep.test.mjs`, `tests/cli/media-layers.test.mjs`,
+`tests/cli/footage-cut.test.mjs`, `tests/cli/footage-matte.test.mjs`, `tests/cli/mascot-import.test.mjs`,
+`tests/cli/skill-new.test.mjs`.
 
 Brand and motion capture read a source and write a style half with its evidence. `capture site`
 and `media prep` turn a web page or a screen recording into assets a device screen can show,
-seekable frame by frame. `skill new` scaffolds a thin skill for one brand that loads this
-engine's skill and pins that brand's look.
+seekable frame by frame. `media layers` takes one still picture apart into a plate and parts with
+depths, which `moves/depth-parallax` moves; `footage cut` cuts a prepared talking-head recording in
+its measured pauses and writes an edit the kit plays on the film's clock, and `footage matte` writes
+a person mask per frame so a layout can stand the speaker in the brand. `brand mascot` imports a
+character drawn in any vector tool into a brand half by its layer names. `skill new` scaffolds a
+thin skill for one brand that loads this engine's skill and pins that brand's look.
 
 ### Studio
 

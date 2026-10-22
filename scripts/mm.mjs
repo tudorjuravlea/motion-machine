@@ -21,11 +21,12 @@ const VERBS = {
 };
 const GROUPS = {
   pattern: { lint: 'pattern-lint.mjs', stills: 'pattern-stills.mjs' },   // `list` is built in
-  brand: { capture: 'capture-brand.mjs' },
+  brand: { capture: 'capture-brand.mjs', mascot: 'mascot-import.mjs' },
   motion: { capture: 'capture-motion.mjs' },
   style: { compose: 'compose.mjs', 'export-designmd': 'export-designmd.mjs' },
   skill: { new: 'skill-new.mjs' },
-  media: { prep: 'media-prep.mjs', frame: 'media-frame.mjs' },
+  media: { prep: 'media-prep.mjs', frame: 'media-frame.mjs', layers: 'media-layers.mjs' },
+  footage: { cut: 'footage-cut.mjs', matte: 'footage-matte.mjs' },
   capture: { site: 'capture-site.mjs' },
 };
 

@@ -42,6 +42,19 @@
       "enum": ["reels", "tiktok", "shorts"],
       "description": "the app a 9x16 film is made for; G-EDGE keeps text out of the UI it draws (bottom 500 px, right 120 px)"
     },
+    "footage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["asset"],
+      "properties": {
+        "asset": {
+          "type": "string",
+          "pattern": "^(?!https?:)assets/[^\\s]+/$",
+          "description": "a folder under assets/ holding a frame sequence (mm media prep) and its edit (mm footage cut: edit.json, voice.wav)"
+        }
+      },
+      "description": "film only: talking-head footage whose edit sets the film's clock; every <img data-footage> a layout carries (layouts/talking-full) shows the frame the edit maps t to. Put the cut voice in audio.track"
+    },
     "formats": {
       "type": "array",
       "minItems": 1,

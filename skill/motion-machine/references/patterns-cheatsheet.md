@@ -12,7 +12,7 @@ rows list key params as `name=default` (the first five; `+N` counts the rest, wh
 lists). A story passes params as `params` on a beat (entrance), `params.exit` /
 `params.emphasis` (sub-bags), `cutParams` (transition) and `moveParams` (move).
 
-## layouts (15)
+## layouts (20)
 
 | id | what it does | slots | params |
 |---|---|---|---|
@@ -31,8 +31,13 @@ lists). A story passes params as `params` on a beat (entrance), `params.exit` /
 | `layouts/grid-break` | A headline over identical tiles, then one tile that breaks the pattern: accent fill, larger, lifted. | headline, tile-1, tile-2, tile-3, tile-4, tile-5, odd | `align=left` |
 | `layouts/paper-cards` | A headline over up to three torn-edge paper cards at staggered heights, like notes on a board. | headline, card-1, card-2, card-3 | `align=left` |
 | `layouts/fan-stack` | A headline over a stack of up to four cards, each in front of and below the last, every label readable: a pile of notifications. | headline, card-1, card-2, card-3, card-4 | `align=left` |
+| `layouts/talking-full` | The story's footage (a talking-head recording cut by `mm footage cut`) fills the frame, with an optional headline in the top band and a caption low in the frame. | headline, caption (the footage is not a slot) | none |
+| `layouts/talking-cutout` | The speaker, cut out by the person matte (`mm footage matte`), stands in the brand's background in front of one or two huge backdrop words, with a headline and a caption on plates in front. One backdrop beat per scene; the backdrop is decoration (`data-decor`): never a fact or the call to action. | backdrop, headline, caption (the footage is not a slot) | `lines=1` (backdrop beat) |
+| `layouts/shortlist` | Up to six candidates arrive, then the field collapses to the one picked when the `result` beat arrives, with the result card under it. Exactly one item beat carries `pick: true`; with none nothing collapses and the result sits under the grid, with two the first wins. | headline, item-1 … item-6, result | `pick=false` (item beat) `align=center` |
+| `layouts/pile-up` | Up to 14 cards land one at a time, overlapping, newest on top, until the pile is the message; an opaque panel over it carries the line to read. The first four cards sit clear of the panel; deal them `instant: true` on whole frames, quickening, with a pause before the panel. | card-1 … card-14, headline, sub | `align=center` |
+| `layouts/label-column` | An object (a picture, or its layers) with up to six labels in a column beside it, each joined by a leader to its point on the object, like a teardown. Labels shrink toward the body floor to fit; keep names to a few words, labels in point order, and fade them in. | headline, object (asset), measure, label-1 … label-6 | `x=0.5` `y=0.5` `spec=` (label beats) |
 
-## entrances (18)
+## entrances (24)
 
 | id | what it does | key params |
 |---|---|---|
@@ -48,14 +53,20 @@ lists). A story passes params as `params` on a beat (entrance), `params.exit` /
 | `entrances/punch` | Lands a short line from slightly large with one fast ease-out, like a stamp. | `from=1.15` `origin=auto` |
 | `entrances/rise` | Slides an element in a short distance along one side while it fades up. | `d=40` `side=up` |
 | `entrances/scatter-settle` | Starts the letters or words of a line at seeded random positions and angles and settles them into place together. | `d=90` `turn=14` `unit=char` |
-| `entrances/sketch` | Draws the slot as a wireframe: a pen goes round its box and over itself, the label arrives as it closes, and at rest the line shivers. | `shape=box` `roughness=1` |
+| `entrances/sketch` | Draws the slot as a wireframe: a pen goes round its box and over itself, the label arrives as it closes, and at rest the line shivers. | `shape=box` `roughness=1` `pen=plain` `fill=none` `tint=accent` |
 | `entrances/slam` | Brings a line down hard: large and high at first, landing hard on the type spring, so the line stops at rest and never passes it. | `from=1.4` `d=0.3` `origin=auto` |
 | `entrances/typewriter` | Types a line out one character at a time with a caret at the typing position. | `caret=true` `blinks=0` |
 | `entrances/words` | Brings a line in word by word, each word rising and fading in turn. | `d=28` |
 | `entrances/slats` | The element shows through slats that open one after another until they meet. | `slats=6` `axis=vertical` |
 | `entrances/assemble` | Seeded dots travel on spiral arcs into the letterforms, then the real text fades in as they land. | `dots=420` `color=ink` |
+| `entrances/photo-wake` | A photo arrives as a two-colour print in the brand's ink and canvas, and an accent front sweeps across it, leaving its real colours behind. | `origin=left` `band=0.12` `warp=0.35` |
+| `entrances/character` | The brand's mascot (any character: extra parts that swing, floating or legless, armless, eyes-only or screen faces; a cast member picked with `who`) hops into its slot (crouch, arc, squashed landing) and keeps an idle on the beat grid at rest, while the kit reports it finished. | `mood=calm` `to=none` `view=front` `facing=right` `look=center` `+6` |
+| `entrances/diagonal-join` | A title arrives as two halves, cut along a diagonal, that slide toward each other along the cut and join; each half's slide is capped by its own room. | `angle=30` `gap=1.2` |
+| `entrances/card-flip` | A blank card turns over about its vertical axis to show the slot's content, ending at 180° with no mirrored face; `steps: 6` gives a stepped cadence. | `steps=0` |
+| `entrances/light-reveal` | A soft light front crosses the block at an angle and turns it on, with a faint accent glint riding the front: a keynote reveal on a dark ground. | `angle=120` `soft=0.35` `base=0.07` `glint=0.4` |
+| `entrances/one-line` | Draws a mark from the beat's SVG `asset` (a logo outline, a silhouette, a signature) as one continuous line: the pen never lifts, slows on curves and draws wider where slow. Give the beat `params.dur` of 4 s or more. | `curves=1.5` `weight=1` `fit=0.86` `follow=0` `boil=false` `+1` |
 
-## exits (4)
+## exits (6)
 
 | id | what it does | key params |
 |---|---|---|
@@ -63,8 +74,10 @@ lists). A story passes params as `params` on a beat (entrance), `params.exit` /
 | `exits/drop-out` | Lets an element fall away downward while it fades. | `d=96` |
 | `exits/fade-out` | Takes an element out by opacity, over exitRatio of its entrance. | none |
 | `exits/push-out` | Slides an element out toward one side while it fades, making room for what follows. | `d=120` `side=left` |
+| `exits/wither` | A garden grown by `text/garden` (any kind, the botanical bed too) recedes in reverse growth order to the bare type, which then fades or stays whole until the slot leaves; it reads the piece time, so floating petals fly home without a jump. | `type=fade` |
+| `exits/knife-cut` | A blade slices through each line of the text, parting the letters, then the element folds shut onto the middle and is gone: "what we removed". Give the beat an entrance, not `instant`, so the exit has a length. | `rule=ink` |
 
-## emphasis (8)
+## emphasis (14)
 
 | id | what it does | key params |
 |---|---|---|
@@ -76,8 +89,14 @@ lists). A story passes params as `params` on a beat (entrance), `params.exit` /
 | `emphasis/stretch-pill` | A pill slides in behind the words with its leading edge ahead, holds, then leaves with its trailing edge catching up. | `strength=0.28` |
 | `emphasis/brackets` | Four corner brackets snap in around the words, the element lifts a little, then everything settles. | `lift=0.04` |
 | `emphasis/lens` | The other items soften and dim while this one grows a little under a thin lens rim, then everything clears. | `blur=0.06` `zoom=0.06` |
+| `emphasis/act` | Acts a mood change on the brand's mascot (or the cast member named by `who`): eyes squeeze shut into the key, the face swaps while they are shut, a take pops it up, and it settles into the new mood's idle. | `mood=calm` `to=none` `amount=1` `view=front` `facing=right` `+4` |
+| `emphasis/roulette` | A highlight runs along the element's sibling slots (the options), slows and lands on the element carrying the emphasis (the answer), which stays marked for the rest of the scene: "which plan, which day". Give the answer beat `instant: true`. | `passes=1` |
+| `emphasis/wash-bloom` | Colours in a sketched slot: once its pen closes, a watercolour wash blooms behind the ink and stays, slot after slot in pen order, cycling the brand's roles. On an `entrances/sketch` slot only. | `bloom=cycle` `offset=2` |
+| `emphasis/emote` | Pops a small drawn reaction (exclaim, question, heart, sparkle, dots, zzz, note, drops) beside the words, clear of every line in the scene, and lets it go; with no free place it draws nothing and warns. | `mark=exclaim` `side=right` `size=0.75` `color=accent` |
+| `emphasis/stamp` | A verdict word slams down as a pitted rubber stamp in one palette role and stays, level type on a tilted plate. Beat `instant: true`; the word is sized to its room; the slam starts at min(2.6, room), about 1.2 to 1.5× for a one-word h1 verdict. Pair with `moves/shake` and `sound/hit`. | `personality=slam` `tone=accent` `tilt=left` `size=h1` `flash=0.35` `+1` |
+| `emphasis/dimension` | A measure drawn across exactly what it measures, glyph ink to glyph ink: the slot's own text, or `for: <slot>` (the headline above, `object` on label-column), the value centred on it. Beat `instant: true`. | `for=` `axis=x` `tone=accent` |
 
-## transitions (18)
+## transitions (22)
 
 | id | what it does | key params |
 |---|---|---|
@@ -89,7 +108,7 @@ lists). A story passes params as `params` on a beat (entrance), `params.exit` /
 | `transitions/flip` | Turns the frame on its axis: the outgoing scene swings edge-on and the incoming one swings out to rest. | `perspective=2` `axis=y` |
 | `transitions/grid-dissolve` | Brings the incoming scene in cell by cell on a grid, each cell on its own seeded schedule. | `cols=8` `spread=0.6` |
 | `transitions/hard-cut` | Replaces the outgoing scene with the incoming one in a single frame. | none |
-| `transitions/iris` | Opens the incoming scene from the centre of the frame through a growing circle or diamond. | `shape=circle` |
+| `transitions/iris` | Opens the incoming scene through a growing circle or diamond, from the centre of the frame or from a slot of the new scene. | `shape=circle` `target=` (a slot of the incoming scene to open from) |
 | `transitions/light-leak` | Washes a warm accent glow across the frame that peaks as the scenes swap. | none |
 | `transitions/push` | Slides the incoming scene in while it pushes the outgoing one out of the frame; both scenes travel. | `direction=left` |
 | `transitions/shared-element` | Carries an element that appears in both scenes from its box in the outgoing scene to its box in the incoming one. | `fit=width` |
@@ -99,8 +118,12 @@ lists). A story passes params as `params` on a beat (entrance), `params.exit` /
 | `transitions/wipe` | Sweeps a plate across the frame and cuts the outgoing scene away behind it. | `plate=accent` `direction=right` |
 | `transitions/zoom-out` | Pulls the camera back: the outgoing scene recedes and the incoming one settles from larger than the frame. | `depth=0.6` |
 | `transitions/zoom-through` | Dives the camera through the outgoing scene into the incoming one. | `depth=0.8` |
+| `transitions/flood` | A disc of a palette role grows from a slot of the outgoing scene past the corners, holds, and shrinks into a slot of the incoming scene, or comes to rest on the dot of an i or a round element (`land`): topic or climax. 1.3 s in every style, divided by `speed`. | `from=` `to=` `color=accent` `land=point\|dot\|circle` `speed=1 (0.5–2)` `+2` |
+| `transitions/cover` | The incoming scene slides in from one edge over the outgoing scene, which holds still and sinks under a scrim of the darkest role: related or topic. | `side=bottom` `dim=0.2` |
+| `transitions/re-ink` | A print look: the incoming scene is pulled in a second role set behind a ragged front, then pulled again in the brand's own inks; into a canvas, footage or device screen it wipes with a role plate. | `inks=invert` `side=left` |
+| `transitions/brush-wipe` | Tilted ragged painted bands in brand colours cover the frame, the cut happens under cover, and they drag off: a topic or chapter break. | `pair=accent` `bands=5` `tilt=-6` `side=left` |
 
-## moves (12)
+## moves (15)
 
 | id | what it does | key params |
 |---|---|---|
@@ -116,12 +139,15 @@ lists). A story passes params as `params` on a beat (entrance), `params.exit` /
 | `moves/rack-focus` | Focus pulls from one depth plane to another; layers away from the plane blur. | `from=0` `to=1` `rest=sharp` `blur=8` `end=scene` |
 | `moves/reframe` | The camera re-centres on a data-focus element while pushing in a little. | `focus=empty` `to=1.12` `amount=1` `end=scene` |
 | `moves/explode-layers` | Mid-scene the camera tips back while the layers part in depth toward one vanishing point, then folds flat again. | `tilt=22` `gap=260` |
+| `moves/depth-parallax` | A still picture becomes a dolly shot through a lens that settles: the layers of its pack start off their places by how far their depth lies from the focus (the nearest layer) and slide home, the far layers discreetly soft; the rest is the settled picture (`aperture=0`: the plain picture). | `path=dolly-right` `amount=0.12` `focus=auto` `aperture=0.35` `bands=10` `end=settle` |
+| `moves/punch` | Hides jump cuts in talking-head footage: every other clip of the scene is framed closer, scaled about the speaker's eye line. | `scale=1.15` `x=50` `y=35` |
+| `moves/shake` | An impact jolt on the camera (a landing, a slam, a stamp) that decays to a still rest; `hits` in seconds from the scene's start; never in a deck. | `hits=0.5` `amp=14` `decay=0.45` `seed=0` |
 
-## text (10)
+## text (12)
 
 | id | what it does | key params |
 |---|---|---|
-| `text/caption-karaoke` | Cuts a line into groups of 2 to 6 words and lights the words of one group in turn. | `group=4` |
+| `text/caption-karaoke` | Cuts a line into groups of 2 to 6 words and lights the words of one group in turn; `mode: words` times the groups to the footage's spoken words. | `group=4` `mode=even` `lead=0.05` |
 | `text/fit-headline` | Sizes a headline to the measure its layout gives it, then brings it in with a short rise. | `grow=false` `minRatio=0.5` `d=32` |
 | `text/handwrite` | The line is written: each line's outline is traced in turn, then the fill comes in. | `stroke=ink` |
 | `text/highlight` | Sweeps a marker behind a line of text from left to right while the words fade in. | `strength=0.35` |
@@ -131,8 +157,10 @@ lists). A story passes params as `params` on a beat (entrance), `params.exit` /
 | `text/masked-fill` | The words stand as a faint outline and a fill rises inside the letterforms, led by a thin accent edge, until they are solid. | `fill=ink` `edge=true` |
 | `text/elastic` | The line arrives stretched: a width wave starts at the middle letter and travels outward on a locked baseline. | `amp=0.22` |
 | `text/date-flip` | A before-and-after change: the old value is struck through, then flips away while the new value flips in. | `from=` |
+| `text/garden` | Vines, flowers, ivy leaves, ferns, blossoming branches, roots, coral, seaweed, moss, grass (or a mix), illustrated botanical blooms, circuit traces or crystal shards grow out of the headline's own letters, or, as a botanical bed, rise from below the headline across the frame, and finish as a still garden in the brand's colours. | `kind=vines` `stem=auto` `leaf=auto` `bloom=auto` `bed=false` `density=1` `+10` |
+| `text/lit-sweep` | A whole block reads at a floor tone from the first frame, then a reading cursor lifts it to full ink word by word: manifesto and promise slides. | `floor=30` `soft=0.12` `edge=none` |
 
-## data (10)
+## data (11)
 
 | id | what it does | key params |
 |---|---|---|
@@ -146,6 +174,7 @@ lists). A story passes params as `params` on a beat (entrance), `params.exit` /
 | `data/stat-tile` | Shows one figure on a surface card with a label and a delta chip, the figure counting and the label and delta settling in after it. | `label=(empty)` `delta=(empty)` `from=0` `fix=0` `pad=0` +3 |
 | `data/bar-to-line` | Bars grow in turn, then each becomes a dot on its top while a line is drawn through them: amounts, then the trend. | `values=(empty)` `labels=(empty)` `max=0` `focus=0` `fix=0` +2 |
 | `data/flow` | One node fans out to several and gathers into one on curves; pulses travel along them and each node rings as one lands. | `nodes=(empty)` |
+| `data/unit-stack` | A figure built from countable plates of a stated unit; the number counts the landed plates. `fix` unset keeps the value's own decimals; five or more digits are grouped; a value of zero or below draws nothing and warns. Cite the fact. | `unit=1` `per=10` `ruler=10` `rule=(empty)` `fix=(unset)` `+3` |
 
 ## devices (5)
 
@@ -171,7 +200,7 @@ lists). A story passes params as `params` on a beat (entrance), `params.exit` /
 | `sound/swipe` | Marks a transition between scenes; the sound pipeline places it on the cut, synthesised in three feels with no samples. | `gain=0.35` `seed=37` | end |
 | `sound/tick` | Marks a small arrival: a chip, a word, a bar landing, synthesised in three feels with no samples. | `gain=0.35` `seed=11` | start |
 
-## 3d (3)
+## 3d (4)
 
 Real 3D through the vendored Three.js, rendered in software, frame-identical between renders.
 
@@ -180,6 +209,7 @@ Real 3D through the vendored Three.js, rendered in software, frame-identical bet
 | `3d/laptop` | A notebook in real 3D turns in as its lid opens, turns slowly or makes a showcase half-turn; its screen plays a recording or a captured page. | `move=hero` `model=notch` `metal=aluminium` `status=auto` |
 | `3d/phone` | A phone in real 3D rises and turns, with the built-in phone's rim, glass, keys and cutouts; hero, turntable, still, a showcase half-turn from its back, or a cross from left to right with one full turn. | `move=hero` `model=island` `metal=aluminium` `status=auto` |
 | `3d/particles-to-shape` | Seeded particles fly in through real depth and land on the words, then the real text fades in. | `particles=900` `depth=1` |
+| `3d/point-cloud` | A product cut-out, mark or headline rebuilt as a free-floating 3D object of sparse, glittering points: a seed bursts into a swirling cloud of pale streaks, a front sends each point home in its own colour, and the object rests turned three-quarters, twinkling and swaying. | `points=16000` `density=0.22` `colors=palette` `relief=auto` `depth=0.4` `depthMap=` `yaw=20` `sway=6` `drift=0.6` `streak=10` `origin=center` |
 
 ## screen (8)
 
@@ -220,3 +250,58 @@ folder made by `mm media prep` (a recording) or `mm capture site` (a page); mark
 - **Overlap.** `layouts/stat-hero`'s figure box does not overlap its headline in any bundled
   face (its line-height and gap see to it; its card says why). If G-OVERLAP still names two slots, render
   options and change the size role or the layout; never the threshold.
+- **Growing type.** `text/garden` (`kind` vines, flowers, leaves, ferns, branches, roots, coral, seaweed,
+  moss, grass, mix, circuits or crystals; any of `stem`, `leaf`, `bloom` set on its own mixes parts, e.g.
+  `kind: flowers, bloom: rose`; `stemScale` 0.5 to 2 for how long stems grow) is a showpiece headline of
+  one to four words. Render four to six `seed`s as stills and record the chosen seed in the story;
+  circuits suit technology, crystals finance or precision, coral and seaweed water, ferns, moss and grass
+  natural lines; `kind: botanical` gives an illustrated, editorial look (camellias, peonies, lilies, sweet
+  peas), and `bed: true` with a headline set high grows a bed of flowers under the type, petals drifting
+  (`drift: settle` for a still rest). Give it a hold of 2 s or more, and leave it with `exits/wither`.
+- **Point cloud.** `3d/point-cloud` takes the beat's `asset`: a cut-out with a transparent ground
+  (inflated into a pillow), a picture on a flat ground (keyed), a picture with a `depthMap` (displaced,
+  black is ground) or an SVG mark (extruded). Without an asset it takes the slot's words (extruded; they
+  rest as the slot's text, turning with the object). A picture on a busy ground with no depth map is
+  refused and named in `mm.warnings`. It fills about 60 % of the frame's height and its canvas covers
+  the frame, so give it a quiet scene; expect W-EMPTY in the first half second (one seed).
+  `colors: palette` (the default) paints only brand roles and nothing is masked; `colors: source` keeps
+  the picture's own colours on a canvas declared media.
+- **One picture, made deep.** Take it apart once with `mm media layers` (masks from any editor,
+  polygons, or `--key auto` for a flat background), make the beat's asset the pack's `source.png`, and
+  give the scene `move: moves/depth-parallax`; the rest is the picture with its far layers discreetly
+  soft (`aperture: 0` keeps the picture itself). Give `--plate` a clean plate when one exists: the drift
+  shows what lies behind the parts. Decide the layers
+  before the shot: only a part with its own mask can travel. Rigid things (faces, products, letterforms) move
+  whole, never warped. To make a photo look native to the palette before it shows its own colours,
+  enter it with `entrances/photo-wake` at `at: 0`.
+- **Mascot.** `entrances/character` and `emphasis/act` draw the brand's `mascot` block (a brand
+  without one gets the rig's plain default character). A mascot reacts to the headline; it never
+  carries text. Write each mood change as a beat on the mascot's slot with
+  `emphasis: emphasis/act` and `to` among the beat's own params; one act per beat; time the beat's
+  `at` so the key (0.16 s after the landing) falls on the hit. Bring a client's mascot in with
+  `mm brand mascot drawing.svg --brand brand.json` after naming its layers `body`, `face`, `eye-left`,
+  `eye-right`, `mouth`, `arm-…`, `leg-…`, `shadow` (any other layer name is an extra part such as `tail`
+  or `ear-left`); read the printed warnings (a colour no role explains) and notes (what was skipped). A
+  second character goes in with `--as <name>` and is used with `who: <name>`. The rig keeps a drawn eye's
+  place, size and colour but draws its own eye shapes; limbs are straight strokes.
+- **Footage.** `mm media prep <video> --name <n>`, then `mm footage cut <video> --name <n>`, cut a
+  talking-head recording in its measured pauses. Set `story.footage: { asset: "assets/<n>/" }` and
+  `audio.track` to `assets/<n>/voice.wav`, and lay it out with `layouts/talking-full`, `moves/punch`
+  and `text/caption-karaoke` (`mode: words`, with a word list given to `--words`: a plain list or
+  WhisperX output; `--fillers` also cuts the hesitations a transcript leaves out). To stand the speaker in
+  the brand, run `mm footage matte --name <n>` (Vision on macOS, or `--masks <dir>` from any tool) and use
+  `layouts/talking-cutout`: one phrase per scene, one big word from it on the `backdrop` slot. There is no
+  transcription and no split audio and picture cut: the words come from a supplied list.
+- **Transitions from an element.** To make a scene out of the last one, flood from an element
+  (`transitions/flood` with `cutParams: { from, to }`) or open an iris on the new scene's subject
+  (`transitions/iris` with `cutParams: { target }`). A misspelled slot is named in `mm.warnings` and the
+  cut falls back to the frame centre.
+- **Pen voices.** `entrances/sketch` takes `pen` (pencil, marker, charcoal) and `fill` (wash or hatch,
+  in the `tint` role); a hatch keeps clear of the label. Give a sketched slot `emphasis/wash-bloom` to
+  colour it in after the pen closes.
+- **Looks.** `spot-mono`: one accent subject per scene; let the payoff figure or the one keyword take the
+  accent (stat-hero or split figures); everything else stays grey. `print-plates`: a key plate and a spot
+  plate off register on warm stock, printed on threes; every emphasis kicks the plate, so place
+  emphasis on the beats that should jolt. `blueprint`: a drafting grid in the ink role, mono lettering; mark figures with
+  `emphasis/dimension` and let plates enter with `entrances/draw`. The `proof` motion half is
+  short-form evidence: kinetic's quick entrances, calm's still camera, nothing bounces, every cut hard.

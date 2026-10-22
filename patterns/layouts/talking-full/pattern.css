@@ -1,0 +1,60 @@
+/* talking-full: the story's footage fills the frame (an <img data-footage data-media>: the kit points
+   it at the frame the edit maps t to, and the gate masks it); a headline on a canvas plate in the top
+   band and a caption on a canvas plate low in the frame sit over it, so their contrast is the brand's
+   ink on canvas whatever the footage shows. */
+.talking-full {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  padding: var(--mm-safe) var(--mm-safe) calc(var(--mm-safe) * 1.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--mm-space-4);
+}
+.talking-full__footage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.talking-full__footage:not([src]) { visibility: hidden; }
+.talking-full__headline,
+.talking-full__caption {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  margin: 0;
+  max-width: 100%;
+  padding: var(--mm-space-3) var(--mm-space-4);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-canvas);
+  color: var(--mm-color-ink);
+  /* its own layer from the first frame: a plate that faded over the changing footage otherwise
+     keeps a layer the next seek does not, and its text rasterises a shade differently */
+  will-change: opacity;
+}
+.talking-full__headline {
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: calc(var(--mm-size-h2) * var(--mm-headline-scale));
+  line-height: 1.08;
+  text-wrap: balance;
+}
+.talking-full__caption {
+  margin-top: auto;
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.talking-full__headline[data-empty],
+.talking-full__caption[data-empty] { display: none; }
+[data-format="16x9"] .talking-full__caption { max-width: 70%; }

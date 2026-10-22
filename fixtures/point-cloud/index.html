@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>point cloud</title>
+</head>
+<body>
+  <!-- 3d/point-cloud. A story from this folder (?story=film) over a shipped preset (?preset=editorial|kinetic|…)
+       and the real pattern library; assets/ holds an invented bottle drawn by make.mjs (a cut-out, the same
+       bottle on a flat ground, its depth map and the bottle on a graded ground) and an invented mark (mark.svg). -->
+  <script type="module">
+    import { mount } from '../../runtime/kit/kit.js';
+    const q = new URLSearchParams(location.search);
+    const load = (f) => fetch(new URL(f, import.meta.url)).then((r) => r.json());
+    const [story, style] = await Promise.all([load(`${q.get('story') || 'film'}.json`), load(`../../styles/presets/${q.get('preset') || 'editorial'}.json`)]);
+    for (const face of Object.values(style.type)) for (const f of face.files) f.src = `../../${f.src}`;
+    await mount({ story, style, patternsBase: new URL('../../patterns/', import.meta.url) });
+  </script>
+</body>
+</html>

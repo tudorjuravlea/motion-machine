@@ -1,0 +1,51 @@
+/* text/garden: two ornament layers around the slot's own text. The back layer sits under the
+   letters, the front layer over them; the slot isolates its stacking so the back layer stays above
+   the scene's canvas. Every colour is a palette role or a blend of two roles. */
+.mm-garden { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.mm-garden--back { z-index: -1; }
+.mm-garden--front { z-index: 1; }
+.mm-garden__stem { fill: var(--mm-color-muted); }
+.mm-garden__leaf { fill: var(--mm-color-muted); }
+.mm-garden__vein { fill: none; stroke: var(--mm-color-canvas); stroke-linecap: round; stroke-linejoin: round; }
+.mm-garden__trace,
+.mm-garden__line { fill: none; stroke: var(--mm-color-muted); stroke-linecap: round; stroke-linejoin: round; }
+.mm-garden__petal { fill: var(--mm-color-accent); }
+.mm-garden__petal--inner { stroke: var(--mm-color-accentInk); }
+.mm-garden__crease { fill: none; stroke: var(--mm-color-accentInk); stroke-linecap: round; }
+.mm-garden__heart { fill: var(--mm-color-accentInk); }
+.mm-garden__via { fill: var(--mm-color-canvas); stroke: var(--mm-color-accent); }
+.mm-garden__pad { fill: var(--mm-color-accent); }
+.mm-garden__facet { fill: var(--mm-color-accent); }
+/* the two side faces: the accent under an alpha of the canvas or of the ink, so one reads lit and one shaded */
+.mm-garden__shade--a { fill: color-mix(in srgb, var(--mm-color-canvas) 42%, transparent); }
+.mm-garden__shade--b { fill: color-mix(in srgb, var(--mm-color-ink) 34%, transparent); }
+.mm-garden__edge { fill: none; stroke: var(--mm-color-accentInk); stroke-linejoin: round; }
+.mm-garden__dot { fill: var(--mm-color-muted); }
+.mm-garden__berry { fill: var(--mm-color-accent); }
+/* a berry's shine: the canvas at an alpha, read as a highlight */
+.mm-garden__shine { fill: color-mix(in srgb, var(--mm-color-canvas) 55%, transparent); }
+/* botanical: a filled part is its flat role (the classes below), under a gradient of alphas of one
+   other role set by the pattern; the details are roles or alphas of one role */
+.mm-garden__b-on-accent { fill: var(--mm-color-accent); }
+.mm-garden__b-on-surface { fill: var(--mm-color-surface); }
+.mm-garden__b-on-accentInk { fill: var(--mm-color-accentInk); }
+.mm-garden__b-on-line { fill: var(--mm-color-line); }
+.mm-garden__b-on-muted { fill: var(--mm-color-muted); }
+.mm-garden__b-detail { fill: none; stroke: color-mix(in srgb, var(--mm-color-ink) 24%, transparent); stroke-linejoin: round; stroke-linecap: round; }
+.mm-garden__b-fine { fill: none; stroke: color-mix(in srgb, var(--mm-color-ink) 13%, transparent); stroke-linecap: round; }
+/* a camellia's deep heart: the ink at an alpha over its petals */
+.mm-garden__b-core { fill: color-mix(in srgb, var(--mm-color-ink) 34%, transparent); }
+.mm-garden__b-gold { fill: var(--mm-color-accentInk); }
+.mm-garden__b-gold-deep { fill: color-mix(in srgb, var(--mm-color-accent) 45%, transparent); }
+.mm-garden__b-midrib { fill: none; stroke: color-mix(in srgb, var(--mm-color-accent) 45%, transparent); stroke-linecap: round; }
+.mm-garden__b-spot { fill: color-mix(in srgb, var(--mm-color-ink) 42%, transparent); }
+.mm-garden__b-throat { fill: color-mix(in srgb, var(--mm-color-accent) 40%, transparent); }
+.mm-garden__b-filament { fill: none; stroke: var(--mm-color-muted); stroke-linecap: round; }
+.mm-garden__b-anther { fill: color-mix(in srgb, var(--mm-color-ink) 62%, transparent); }
+.mm-garden__b-stigma { fill: var(--mm-color-muted); }
+.mm-garden__b-stem { fill: var(--mm-color-muted); }
+.mm-garden__b-tendril { fill: none; stroke: var(--mm-color-muted); stroke-linecap: round; stroke-linejoin: round; }
+/* a broad leaf: one half in shade, light veins over it */
+.mm-garden__b-shade { fill: color-mix(in srgb, var(--mm-color-ink) 16%, transparent); }
+.mm-garden__b-vein { fill: none; stroke: color-mix(in srgb, var(--mm-color-canvas) 40%, transparent); stroke-linecap: round; }
+.mm-garden__b-vein-fine { fill: none; stroke: color-mix(in srgb, var(--mm-color-canvas) 24%, transparent); stroke-linecap: round; }

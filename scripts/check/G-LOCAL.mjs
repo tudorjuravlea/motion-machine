@@ -8,6 +8,7 @@
 // piece loads: a glyph the style's files lack falls back to a platform font, which fails (read with CDP CSS.getPlatformFontsForNode).
 import { existsSync, readFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
+import { layerFiles } from '../lib/layers.mjs';
 import { rule } from '../lib/report.mjs';
 import { ROOT, auditInstants, isWithin, refsOf, resolvesPattern, round, sources, texts } from './_lib.mjs';
 
@@ -22,12 +23,18 @@ export function allowedRoots(dir) {
 }
 
 /** Every file a prepared folder asset names: each frame of a sequence, each tile of a
- *  page. A missing one would paint a blank screen at the instants nobody samples. */
+ *  page, each layer of a layer pack. A missing one would paint a blank screen at the instants
+ *  nobody samples. A layer pack is found through a beat asset named source.png with a media.json
+ *  beside it; a source.png with none is an ordinary picture. */
 export function preparedMissing(dir, story) {
   const missing = [];
   const folders = new Set();
   for (const sc of story?.scenes ?? []) for (const b of sc.beats) {
     if (b.asset?.endsWith('/')) folders.add(b.asset);
+    if (b.asset && /(^|\/)source\.png$/.test(b.asset)) {
+      const folder = b.asset.replace(/source\.png$/, '');
+      if (existsSync(join(dir, folder, 'media.json'))) folders.add(folder);
+    }
     for (const a of b.screen ?? []) if ((a.do === 'screen/swap' || a.do === 'screen/compare') && a.params?.to?.endsWith('/')) folders.add(a.params.to);
   }
   for (const f of folders) {
@@ -35,10 +42,30 @@ export function preparedMissing(dir, story) {
     if (!existsSync(manifest)) { missing.push(relative(ROOT, manifest)); continue; }
     let m;
     try { m = JSON.parse(readFileSync(manifest, 'utf8')); } catch { missing.push(`${relative(ROOT, manifest)} (unreadable)`); continue; }
-    const files = m.kind === 'sequence' ? Array.from({ length: m.frames }, (_, i) => `f${String(i + 1).padStart(5, '0')}.jpg`) : [...(m.tiles ?? []), ...(m.overlays ?? [])].map((t) => t.file);   // overlays too
+    const files = m.kind === 'sequence' ? Array.from({ length: m.frames }, (_, i) => `f${String(i + 1).padStart(5, '0')}.jpg`)
+      : m.kind === 'layers' ? layerFiles(m)
+      : [...(m.tiles ?? []), ...(m.overlays ?? [])].map((t) => t.file);   // overlays too
     for (const name of files) if (!existsSync(join(dir, f, name))) missing.push(relative(ROOT, join(dir, f, name)));
   }
+  missing.push(...footageMissing(dir, story));
   return missing;
+}
+
+/** A story's footage folder: its media.json and edit.json, and every source frame the edit's picture
+ *  clips show (held at the sequence's last frame, as the kit shows it). A frame the edit never shows
+ *  need not travel; a missing one would flash an empty frame at its instant. */
+function footageMissing(dir, story) {
+  const base = story?.footage?.asset;
+  if (!base) return [];
+  const at = (name) => relative(ROOT, join(dir, base, name));
+  const read = (name) => { try { return JSON.parse(readFileSync(join(dir, base, name), 'utf8')); } catch { return null; } };
+  const lost = ['media.json', 'edit.json'].filter((n) => !existsSync(join(dir, base, n))).map(at);
+  if (lost.length) return lost;
+  const meta = read('media.json'), edit = read('edit.json');
+  if (!meta || !edit) return [!meta ? `${at('media.json')} (unreadable)` : `${at('edit.json')} (unreadable)`];
+  const shown = new Set();
+  for (const c of edit.picture ?? []) for (let i = 0; i < c.length; i++) shown.add(Math.min(meta.frames - 1, c.from + i));
+  return [...shown].sort((a, b) => a - b).map((i) => `f${String(i + 1).padStart(5, '0')}.jpg`).filter((n) => !existsSync(join(dir, base, n))).map(at);
 }
 
 export default async function (ctx) {
@@ -46,7 +73,7 @@ export default async function (ctx) {
   const roots = allowedRoots(ctx.dir);
   const inside = (file) => roots.some((r) => isWithin(file, r));
   const lost = preparedMissing(ctx.dir, ctx.story);
-  if (lost.length) return rule('G-LOCAL', 'FAIL', { file: lost[0], reason: `${lost.length} file${lost.length > 1 ? 's' : ''} of a prepared asset missing (mm media prep, mm capture site)`, missing: lost.slice(0, 20) });
+  if (lost.length) return rule('G-LOCAL', 'FAIL', { file: lost[0], reason: `${lost.length} file${lost.length > 1 ? 's' : ''} of a prepared asset missing (mm media prep, mm capture site, mm media layers, mm footage cut)`, missing: lost.slice(0, 20) });
 
   for (const s of sources(ctx)) {
     if (s.ext === '.json') continue; // data, not shipped markup or code; style.json font files are checked below

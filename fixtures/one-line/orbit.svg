@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 200" width="240" height="200">
+  <!-- An invented mark for the one-line tests: a planet, a tilted orbit drawn with relative arcs, and a
+       moon. Three parts. Drawn for this fixture; no source. -->
+  <g fill="none" stroke="currentColor" stroke-width="4">
+    <circle cx="120" cy="100" r="44"/>
+    <path d="M 20 100a100 34 -15 1 0 200 0a100 34 -15 1 0 -200 0z"/>
+    <circle cx="206" cy="58" r="10"/>
+  </g>
+</svg>

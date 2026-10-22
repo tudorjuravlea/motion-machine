@@ -1,7 +1,8 @@
 // mm new --kind film|deck --style <preset|path> (--id <id> | --dir <folder>): scaffolds
 // pieces/<id>/ (or <folder>, which must sit under the repo root so the kit can be served to it)
 // from runtime/skeletons/<kind>/, copies the style in as style.json and its font files into
-// assets/fonts/<family>/ with every `src` rewritten to a relative path (SPEC §8).
+// assets/fonts/<family>/ with every `src` rewritten to a relative path, and a ground mark named by
+// its repo path into assets/ground/ the same way (SPEC §8).
 // piece.js imports the kit by a path computed here from where the piece lives.
 import { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, isAbsolute, join, relative, resolve, sep } from 'node:path';
@@ -23,7 +24,7 @@ export function newPiece({ kind, style: styleArg, id, dir: dirArg, root = ROOT }
   if (!['film', 'deck'].includes(kind)) throw new UsageError('--kind must be film or deck');
   if (!id && dirArg) id = basename(resolve(dirArg)).toLowerCase();
   if (!id || !/^[a-z0-9][a-z0-9-]*$/.test(id)) throw new UsageError(dirArg ? `--id is required when the folder name is not lowercase letters, digits and hyphens: ${basename(resolve(dirArg))}` : '--id is required: lowercase letters, digits and hyphens');
-  if (!styleArg) throw new UsageError('--style is required: a preset name (editorial, kinetic, calm-product) or a path to a style.json');
+  if (!styleArg) throw new UsageError('--style is required: a preset name from styles/presets/ (editorial, blueprint, …) or a path to a style.json');
   const skeleton = join(root, 'runtime/skeletons', kind);
   if (!existsSync(skeleton)) throw new UsageError(`no skeleton at ${skeleton}`);
   const dir = dirArg ? (isAbsolute(dirArg) ? dirArg : resolve(process.cwd(), dirArg)) : join(root, 'pieces', id);
@@ -51,6 +52,14 @@ export function newPiece({ kind, style: styleArg, id, dir: dirArg, root = ROOT }
     const lic = join(abs, '..', 'LICENSE.txt');
     const target = join(dir, rel, '..', 'LICENSE.txt');
     if (existsSync(lic) && !existsSync(target)) { mkdirSync(join(target, '..'), { recursive: true }); copyFileSync(lic, target); }
+  }
+  // A ground mark the style names by its repo path travels with the piece, like its font files.
+  const mark = style.ground?.mark;
+  if (mark?.src?.startsWith('styles/') && existsSync(join(root, mark.src))) {
+    const rel = `assets/ground/${basename(mark.src)}`;
+    mkdirSync(join(dir, 'assets/ground'), { recursive: true });
+    copyFileSync(join(root, mark.src), join(dir, rel));
+    mark.src = rel;
   }
   writeFileSync(join(dir, 'style.json'), JSON.stringify(style, null, 2) + '\n');
   const pieceJs = join(dir, 'piece.js');

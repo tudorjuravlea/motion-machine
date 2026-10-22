@@ -1,0 +1,50 @@
+{
+  "id": "layers-parallax-push",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16"
+  ],
+  "title": "Layers fixture",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "one",
+      "layout": "layouts/media",
+      "duration": 4.0,
+      "cut": "transitions/hard-cut",
+      "move": "moves/depth-parallax",
+      "beats": [
+        {
+          "at": 0.0,
+          "slot": "image",
+          "fx": "entrances/fade",
+          "asset": "assets/scene/source.png",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "A field at noon."
+        }
+      ],
+      "say": "A picture in layers.",
+      "moveParams": {
+        "path": "push"
+      }
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "example.com"
+  }
+}

@@ -1,0 +1,184 @@
+{
+  "id": "demo-label-column",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: layouts/label-column",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo spec for label-column: Cover glass 0.6 mm",
+      "source": "demo fixture, an invented figure that carries no claim"
+    },
+    {
+      "id": "f2",
+      "text": "Demo spec for label-column: Display 6.1 in",
+      "source": "demo fixture, an invented figure that carries no claim"
+    },
+    {
+      "id": "f3",
+      "text": "Demo spec for label-column: Camera 12 MP",
+      "source": "demo fixture, an invented figure that carries no claim"
+    },
+    {
+      "id": "f4",
+      "text": "Demo spec for label-column: Logic board 8 layers",
+      "source": "demo fixture, an invented figure that carries no claim"
+    },
+    {
+      "id": "f5",
+      "text": "Demo spec for label-column: Battery 3200 mAh",
+      "source": "demo fixture, an invented figure that carries no claim"
+    },
+    {
+      "id": "f6",
+      "text": "Demo spec for label-column: Frame Recycled",
+      "source": "demo fixture, an invented figure that carries no claim"
+    },
+    {
+      "id": "f7",
+      "text": "Demo width for label-column",
+      "source": "demo fixture, an invented figure that carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "open",
+      "layout": "layouts/statement",
+      "duration": 2.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Open it up",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "The opening line."
+    },
+    {
+      "id": "demo",
+      "layout": "layouts/label-column",
+      "duration": 8.0,
+      "cut": "transitions/crossfade",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Inside"
+        },
+        {
+          "at": 0.7,
+          "slot": "object",
+          "fx": "entrances/mask-reveal",
+          "asset": "assets/layers.svg"
+        },
+        {
+          "at": 1.4,
+          "slot": "label-1",
+          "fx": "entrances/fade",
+          "text": "Cover glass",
+          "fact": "f1",
+          "params": {
+            "x": 0.5,
+            "y": 0.15,
+            "spec": "0.6 mm"
+          }
+        },
+        {
+          "at": 1.8,
+          "slot": "label-2",
+          "fx": "entrances/fade",
+          "text": "Display",
+          "fact": "f2",
+          "params": {
+            "x": 0.5,
+            "y": 0.33,
+            "spec": "6.1 in"
+          }
+        },
+        {
+          "at": 2.2,
+          "slot": "label-3",
+          "fx": "entrances/fade",
+          "text": "Camera",
+          "fact": "f3",
+          "params": {
+            "x": 0.65,
+            "y": 0.48,
+            "spec": "12 MP"
+          }
+        },
+        {
+          "at": 2.6,
+          "slot": "label-4",
+          "fx": "entrances/fade",
+          "text": "Logic board",
+          "fact": "f4",
+          "params": {
+            "x": 0.38,
+            "y": 0.55,
+            "spec": "8 layers"
+          }
+        },
+        {
+          "at": 3.0,
+          "slot": "label-5",
+          "fx": "entrances/fade",
+          "text": "Battery",
+          "fact": "f5",
+          "params": {
+            "x": 0.5,
+            "y": 0.73,
+            "spec": "3200 mAh"
+          }
+        },
+        {
+          "at": 3.4,
+          "slot": "label-6",
+          "fx": "entrances/fade",
+          "text": "Frame",
+          "fact": "f6",
+          "params": {
+            "x": 0.5,
+            "y": 0.88,
+            "spec": "Recycled"
+          }
+        },
+        {
+          "at": 4.2,
+          "slot": "measure",
+          "fx": "entrances/pop",
+          "text": "71.5 mm",
+          "fact": "f7",
+          "params": {
+            "instant": true,
+            "for": "object"
+          },
+          "emphasis": "emphasis/dimension"
+        }
+      ],
+      "say": "A device in layers, every part named in a column, a leader to each."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

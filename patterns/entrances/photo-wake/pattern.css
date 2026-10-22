@@ -1,0 +1,2 @@
+/* entrances/photo-wake: the print canvas sits exactly over the picture it wakes, inside the picture's frame. */
+.mm-photo-wake { position: absolute; display: block; pointer-events: none; }

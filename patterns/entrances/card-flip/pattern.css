@@ -1,0 +1,12 @@
+/* entrances/card-flip: the card's cover, a card back in the accent role with a quiet ruled pattern
+   in the accent's own ink, so it stands off the canvas on light and dark brands alike. */
+.mm-card-flip__cover {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  border-radius: var(--mm-radius-2);
+  border: calc(var(--mm-space-1) * 0.5) solid color-mix(in srgb, var(--mm-color-accentInk) 35%, transparent);
+  background-color: var(--mm-color-accent);
+  background-image: repeating-linear-gradient(135deg, transparent 0 calc(var(--mm-space-1) * 1.5), color-mix(in srgb, var(--mm-color-accentInk) 22%, transparent) 0 calc(var(--mm-space-1) * 1.8));
+  pointer-events: none;
+}

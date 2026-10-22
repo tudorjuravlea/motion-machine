@@ -35,6 +35,9 @@
   font-variant-numeric: tabular-nums;
   color: var(--mm-accent-text);
 }
+/* a headline the kit could not clear from the figure by size alone (data-fit="tight"): the figure
+   steps down by its display face's overhang above the line box */
+.split__headline[data-fit="tight"] + .split__figure { margin-block-start: 0.12em; }
 .split__body,
 .split__caption {
   margin: 0;
