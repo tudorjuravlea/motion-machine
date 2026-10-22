@@ -4,7 +4,7 @@
 // assets/fonts/<family>/ with every `src` rewritten to a relative path, and a ground mark named by
 // its repo path or relative to the style file into assets/ground/ the same way (SPEC §8).
 // piece.js imports the kit by a path computed here from where the piece lives.
-import { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { parseArgs } from 'node:util';
 import { ROOT } from './lib/browser.mjs';
@@ -18,6 +18,49 @@ const SKELETON_NOTE = /The import path assumes the piece lives at pieces\/<id>\/
 export function kitSpecifier(dir, root = ROOT) {
   const rel = relative(dir, join(root, 'runtime/kit/kit.js')).split(sep).join('/');
   return rel.startsWith('.') ? rel : `./${rel}`;
+}
+
+/**
+ * Reads a style and finds every file it names, writing nothing: { style, sources, markFrom }.
+ * Throws when a font file is missing.
+ */
+export function planStyle(styleFile, root = ROOT) {
+  const style = JSON.parse(readFileSync(styleFile, 'utf8'));
+  const sources = fontFiles(style).map(({ family, file }) => ({ file, abs: resolveFontSrc(file.src, styleFile), family }));
+  const mark = style.ground?.mark;
+  return { style, sources, markFrom: mark?.src ? findMarkSrc(mark.src, styleFile, root) : null };
+}
+
+/**
+ * Puts a planned style into a piece folder: its font files into assets/fonts/<family>/ with every `src` rewritten
+ * to a relative path, each family's licence beside its files, a ground mark into assets/ground/ the same way, and
+ * style.json. The piece's own assets/fonts and assets/ground are replaced, so running it again refreshes them.
+ */
+export function installStyle(dir, { style, sources, markFrom }) {
+  rmSync(join(dir, 'assets/fonts'), { recursive: true, force: true });
+  rmSync(join(dir, 'assets/ground'), { recursive: true, force: true });
+  for (const entry of sources) {
+    const { file, abs, family } = entry;
+    const rel = `assets/fonts/${family.toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${basename(abs)}`;
+    mkdirSync(join(dir, rel, '..'), { recursive: true });
+    copyFileSync(abs, join(dir, rel));
+    file.src = rel;
+    entry.rel = rel;   // each role records its own copy; two roles may share one file (linen uses Manrope for display and text)
+  }
+  // Each family's licence travels with its files.
+  for (const { abs, rel } of sources) {
+    const lic = join(abs, '..', 'LICENSE.txt');
+    const target = join(dir, rel, '..', 'LICENSE.txt');
+    if (existsSync(lic) && !existsSync(target)) { mkdirSync(join(target, '..'), { recursive: true }); copyFileSync(lic, target); }
+  }
+  // A ground mark the style names by its repo path, or relative to the style file, travels with the piece, like its font files.
+  if (markFrom) {
+    const rel = `assets/ground/${basename(markFrom)}`;
+    mkdirSync(join(dir, 'assets/ground'), { recursive: true });
+    copyFileSync(markFrom, join(dir, rel));
+    style.ground.mark.src = rel;
+  }
+  writeFileSync(join(dir, 'style.json'), JSON.stringify(style, null, 2) + '\n');
 }
 
 export function newPiece({ kind, style: styleArg, id, dir: dirArg, root = ROOT }) {
@@ -34,35 +77,9 @@ export function newPiece({ kind, style: styleArg, id, dir: dirArg, root = ROOT }
   }
   if (existsSync(dir)) throw new UsageError(dirArg ? `${dirArg} already exists; pick another --dir` : `pieces/${id} already exists; pick another --id`);
 
-  const styleFile = resolveStyle(styleArg);
-  const style = JSON.parse(readFileSync(styleFile, 'utf8'));
-  const sources = fontFiles(style).map(({ family, file }) => ({ file, abs: resolveFontSrc(file.src, styleFile), family }));   // fails before anything is written
-
+  const plan = planStyle(resolveStyle(styleArg), root);   // fails before anything is written
   cpSync(skeleton, dir, { recursive: true });
-  for (const entry of sources) {
-    const { file, abs, family } = entry;
-    const rel = `assets/fonts/${family.toLowerCase().replace(/[^a-z0-9]+/g, '-')}/${basename(abs)}`;
-    mkdirSync(join(dir, rel, '..'), { recursive: true });
-    copyFileSync(abs, join(dir, rel));
-    file.src = rel;
-    entry.rel = rel;   // each role records its own copy; two roles may share one file (linen uses Manrope for display and text)
-  }
-  // Each family's licence travels with its files.
-  for (const { abs, rel } of sources) {
-    const lic = join(abs, '..', 'LICENSE.txt');
-    const target = join(dir, rel, '..', 'LICENSE.txt');
-    if (existsSync(lic) && !existsSync(target)) { mkdirSync(join(target, '..'), { recursive: true }); copyFileSync(lic, target); }
-  }
-  // A ground mark the style names by its repo path, or relative to the style file, travels with the piece, like its font files.
-  const mark = style.ground?.mark;
-  const markFrom = mark?.src ? findMarkSrc(mark.src, styleFile, root) : null;
-  if (markFrom) {
-    const rel = `assets/ground/${basename(markFrom)}`;
-    mkdirSync(join(dir, 'assets/ground'), { recursive: true });
-    copyFileSync(markFrom, join(dir, rel));
-    mark.src = rel;
-  }
-  writeFileSync(join(dir, 'style.json'), JSON.stringify(style, null, 2) + '\n');
+  installStyle(dir, plan);
   const pieceJs = join(dir, 'piece.js');
   const js = readFileSync(pieceJs, 'utf8');
   if (!SKELETON_KIT_IMPORT.test(js)) throw new UsageError(`${pieceJs} (from the skeleton) has no kit import to point at runtime/kit/kit.js`);

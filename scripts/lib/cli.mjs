@@ -5,6 +5,9 @@ import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'nod
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { ROOT } from './browser.mjs';
 
+/** The git-ignored folder for real-brand material and runtime work, relative to the repository root. */
+export const PRIVATE_DIR = join('docs', 'private');
+
 /** Setup or usage problem: printed without a stack, exit code 2. */
 export class UsageError extends Error {
   constructor(message, code = 2) { super(message); this.name = 'UsageError'; this.exitCode = code; }
@@ -36,12 +39,16 @@ export const USAGE = {
   'pattern list': ['mm pattern list', 'the complete patterns, as pattern-lint judges them'],
   'pattern lint': ['mm pattern lint [<group>/<name> | <name>] [--json]', 'lint every pattern, or the one named'],
   'pattern stills': ['mm pattern stills <group>/<name> [--style preset|path|all] [--format F] [--patterns dir]', 'photograph a pattern\'s demo in a style (--patterns: a patterns folder other than the repo\'s)'],
+  'brand init': ['mm brand init <folder> [--from <shipped-brand-name|path-to-brand.json>] [--name <name>]', 'make a brand\'s own folder at any path (new or empty): brand.json, the fonts it names with their licences in fonts/, its ground mark in ground/, logo/, sources/, notes.md, facts.md and projects/; --from takes a shipped brand name, a captured half in the git-ignored private brands folder, or a path (default paper, renamed and marked not fictional); --name defaults to the folder name'],
   'brand capture': ['mm brand capture --from <url|index.html|figma-export.json|DESIGN.md|folder of stills> [--name <name>] [--color role=#hex]… [--out <path>.json]', 'capture a brand half; --out defaults to brands/<name>.json in the git-ignored private folder of the repo; --name defaults to the --out basename; a typed --color always wins'],
   'brand mascot': ['mm brand mascot <file.svg> --brand <path> [--as <name>] [--out <path>] [--json]', 'import a mascot drawn in any vector tool into a brand half, by its layer names (body, face, eye-left, eye-right, mouth, arm-*, leg-*, shadow; any other name an extra part), normalised into the mascot box with colours mapped to palette roles; --as adds it to the brand\'s cast under that name; --out writes elsewhere than --brand'],
   'motion capture': ['mm motion capture --from <video> --out <path>.json [--name <name>] [--fps 10]', 'capture a motion half from a reference video; --name defaults to the --out basename'],
   'style compose': ['mm style compose --brand <name|path> --motion <name|path> --out <path> [--name <style-name>]', 'merge a brand half and a motion half into a style'],
   'style export-designmd': ['mm style export-designmd --style <style.json> --out DESIGN.md', 'write a style as a DESIGN.md'],
   'skill new': ['mm skill new --brand <name|path-to-brand.json> [--motion <name|path>] --out <dir> [--license <spdx>] [--force]', 'scaffold a thin per-brand skill; --brand takes a shipped name or the path to a captured brand half'],
+  'project new': ['mm project new <folder> --brand <brand-folder> --kind film|deck [--motion <name|path>] [--formats a,b]', 'a film or deck project at any path (a bare name goes under <brand-folder>/projects/; the folder must be new or empty): project.json, the skeleton story.json, assets/, inputs/sources.md and out/; --motion defaults to calm; a deck keeps one format; needs no browser'],
+  'project make': ['mm project make <folder> [--to <dir>] [--check-only]', 'compose the brand folder with the motion half, refresh the project\'s hidden work piece inside the engine, run mm check (a FAIL stops here), then mm export, and copy the results into <folder>/out/ (film: <id>-<format>.mp4, poster.png, any .gif; deck: slides/, handout.pdf, walkthrough.mp4; always check.json); --to also copies the deliverables to <dir> as <id>-<format>.mp4, <id>-slides/, <id>-handout.pdf and <id>-walkthrough.mp4; --check-only stops after the check'],
+  'project path': ['mm project path <folder>', 'print the work folder behind a project, which mm studio and mm serve can open'],
   'media frame': ['mm media frame <png> --name <n> [--piece <dir>] [--key]', 'a device frame image you own (transparent screen, or a flat screen colour with --key) to <piece>/assets/frames/<n>.png, its screen hole measured into <n>.json'],
   'media prep': ['mm media prep <file> --name <n> [--piece <dir>] [--fps 30] [--fit phone|laptop|<W>x<H>] [--trim <a>-<b>] [--quality 90]', 'a screen recording to a frame sequence in <piece>/assets/<n>/ (frames plus media.json), seekable frame by frame'],
   'media layers': ['mm media layers <picture> --name <n> [--piece <dir>] [--mask <name>=<png>]… [--poly <json>]… [--key <#rrggbb|auto>] [--min-area <px>] [--plate <png>] [--depth <png>] [--depths <d,d,…>]', 'one still picture to a layer pack in <piece>/assets/<n>/: a plate with its holes filled, parts cropped to their boxes with stacking order and depth, media.json (kind: layers) and a recompose check; masks, polygons or a colour key, offline; a colour key drops pieces under --min-area pixels (a thousandth of the picture by default) and refuses a backdrop that is not flat; byte-identical on one machine'],
@@ -50,7 +57,7 @@ export const USAGE = {
   'capture site': ['mm capture site --url <url> --name <n> [--piece <dir>] [--device phone|laptop|browser] [--mark "<Label>=<selector>"]… [--hide <selector>]… [--wait <selector>] [--quality 90] [--max-height 24000]', 'capture a web page once, at a device viewport, as tall tiles plus media.json (marks for scroll, tap and callout targets)'],
 };
 /** The groups: `mm <group>` names its subcommands. */
-export const GROUP_USAGE = { pattern: ['list', 'lint', 'stills'], brand: ['capture', 'mascot'], motion: ['capture'], style: ['compose', 'export-designmd'], skill: ['new'], media: ['prep', 'frame', 'layers'], footage: ['cut', 'matte'], capture: ['site'] };
+export const GROUP_USAGE = { pattern: ['list', 'lint', 'stills'], brand: ['init', 'capture', 'mascot'], motion: ['capture'], style: ['compose', 'export-designmd'], skill: ['new'], media: ['prep', 'frame', 'layers'], footage: ['cut', 'matte'], capture: ['site'], project: ['new', 'make', 'path'] };
 
 /** The usage text for a command key (`new`, `pattern lint`) or a group (`pattern`). */
 export function usageText(key) {
@@ -124,7 +131,7 @@ export function runMain(meta, main) {
 }
 
 /** Script basename -> the command key whose usage a usage mistake prints. */
-const SCRIPT_COMMAND = { doctor: 'doctor', new: 'new', serve: 'serve', stills: 'stills', export: 'export', review: 'review', 'pattern-stills': 'pattern stills', 'mascot-import': 'brand mascot', check: 'check', 'release-check': 'release-check' };
+const SCRIPT_COMMAND = { doctor: 'doctor', new: 'new', serve: 'serve', stills: 'stills', export: 'export', review: 'review', 'pattern-stills': 'pattern stills', 'mascot-import': 'brand mascot', 'brand-init': 'brand init', check: 'check', 'release-check': 'release-check' };
 
 export const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 

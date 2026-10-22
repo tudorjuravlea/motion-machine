@@ -205,6 +205,8 @@ The files go into `pieces/hello/out/`. The export refuses a piece with a failing
 | Cut the speaker out of the recording | `node scripts/mm.mjs footage matte --name talk --piece pieces/<id>` (Vision on macOS, or `--masks <dir>` from any tool), then `layouts/talking-cutout` |
 | Bring a mascot in from a drawing | `node scripts/mm.mjs brand mascot <drawing.svg> --brand <brand>.json` (`--as <name>` adds a cast member) |
 | Put a web page on a device | `node scripts/mm.mjs capture site --url <url> --name site --piece pieces/<id>` |
+| A brand's own folder, outside the engine | `node scripts/mm.mjs brand init <folder> [--from <brand>]` |
+| A film or deck for that brand, rendered into its own `out/` | `node scripts/mm.mjs project new <name> --brand <folder> --kind film\|deck`, then `node scripts/mm.mjs project make <project-folder>` |
 | Capture a brand, or a motion style | `node scripts/mm.mjs brand capture --from <page> --out <brand>.json`, `node scripts/mm.mjs motion capture --from <video> --out <motion>.json` |
 | Wear a brand in a motion style | `node scripts/mm.mjs style compose --brand <brand> --motion <motion> --out <style>.json` |
 | A thin skill for one brand | `node scripts/mm.mjs skill new --brand <brand> --out <folder>` |

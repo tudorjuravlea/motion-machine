@@ -27,7 +27,7 @@ concurrency:
 jobs:
   unit:
     name: unit tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
@@ -40,10 +40,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install ffmpeg
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
+      - name: ffmpeg
+        uses: ./.github/actions/ffmpeg
 
       - name: Every test file belongs to exactly one group
         run: npm run test:groups
@@ -53,7 +51,7 @@ jobs:
 
   browser:
     name: browser tests (shard ${{ matrix.shard }}/3)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     strategy:
       fail-fast: false
@@ -86,22 +84,19 @@ jobs:
 
       - name: Install Chromium
         if: steps.chromium-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
 
-      - name: Install Chromium system libraries
-        if: steps.chromium-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps chromium
+      - name: Chromium system libraries
+        uses: ./.github/actions/chromium-deps
 
-      - name: Install ffmpeg
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
+      - name: ffmpeg
+        uses: ./.github/actions/ffmpeg
 
       - name: Doctor
         run: node scripts/mm.mjs doctor
 
       # The network captures (brand capture, capture site from a URL) open Chromium with its sandbox
-      # on. Ubuntu 24.04 blocks the unprivileged user namespaces that sandbox needs, so it would not
+      # on. Ubuntu 24.04 (the runner image is pinned to it) blocks the unprivileged user namespaces that sandbox needs, so it would not
       # start ("No usable sandbox!"); allow them here rather than run the captures unsandboxed.
       - name: Allow Chromium's sandbox
         run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
@@ -111,7 +106,7 @@ jobs:
 
   golden:
     name: golden pieces (shard ${{ matrix.shard }}/3)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     strategy:
       fail-fast: false
@@ -139,23 +134,20 @@ jobs:
 
       - name: Install Chromium
         if: steps.chromium-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
 
-      - name: Install Chromium system libraries
-        if: steps.chromium-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps chromium
+      - name: Chromium system libraries
+        uses: ./.github/actions/chromium-deps
 
-      - name: Install ffmpeg
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
+      - name: ffmpeg
+        uses: ./.github/actions/ffmpeg
 
       - name: Golden tests
         run: npm run test:golden
 
   release:
     name: gate and release check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
@@ -177,16 +169,13 @@ jobs:
 
       - name: Install Chromium
         if: steps.chromium-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
 
-      - name: Install Chromium system libraries
-        if: steps.chromium-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps chromium
+      - name: Chromium system libraries
+        uses: ./.github/actions/chromium-deps
 
-      - name: Install ffmpeg
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
+      - name: ffmpeg
+        uses: ./.github/actions/ffmpeg
 
       # release-check's R-GOLDEN sweep wants out/check.json beside every golden piece; out/ is not
       # tracked, so the gate runs on each here.

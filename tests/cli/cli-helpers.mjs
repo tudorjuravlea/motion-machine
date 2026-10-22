@@ -28,8 +28,8 @@ export function stampChecked(pieceDir, status = 'PASS', formats = null) {
   writeFileSync(join(pieceDir, 'out', 'check.json'), JSON.stringify({ spec: '0.11', version: versionOf(text), formats: formats ?? JSON.parse(text).formats, complete: true, rules: [{ id: 'G-TEST', status, evidence: {} }] }));
 }
 
-export function mm(args, { env, timeout = 170_000 } = {}) {
-  const r = spawnSync(process.execPath, [MM, ...args], { encoding: 'utf8', env: { ...process.env, ...env }, timeout, maxBuffer: 32 << 20 });
+export function mm(args, { env, timeout = 170_000, cwd } = {}) {
+  const r = spawnSync(process.execPath, [MM, ...args], { encoding: 'utf8', env: { ...process.env, ...env }, timeout, maxBuffer: 32 << 20, cwd });
   return { status: r.status, stdout: r.stdout ?? '', stderr: r.stderr ?? '', out: `${r.stdout ?? ''}${r.stderr ?? ''}` };
 }
 

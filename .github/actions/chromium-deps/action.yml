@@ -1,0 +1,18 @@
+name: chromium-deps
+description: >-
+  Chromium's system libraries from apt, with apt's own retries, a five-minute limit per attempt and
+  up to three attempts, so a slow mirror costs a retry instead of the job.
+runs:
+  using: composite
+  steps:
+    - name: Install Chromium system libraries
+      shell: bash
+      run: |
+        printf 'Acquire::Retries "5";\nAcquire::http::Timeout "30";\nAcquire::https::Timeout "30";\n' | sudo tee /etc/apt/apt.conf.d/80-mm-retries > /dev/null
+        for attempt in 1 2 3; do
+          if timeout 300 npx playwright install-deps chromium; then exit 0; fi
+          echo "::warning::Chromium system libraries: attempt $attempt did not finish in 5 minutes"
+          sudo dpkg --configure -a || true
+          sleep 10
+        done
+        exit 1

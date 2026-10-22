@@ -153,21 +153,21 @@ brand half (colour, type, composition) worn with a motion half (tempo, curves, c
   <id>` for fictional brands (the cheatsheet's "Looks" note says what each look asks of a story); or any brand with any motion: `mm style compose --brand
   <name|path> --motion <name|path> --out <piece>/style.json`. Shipped halves: brands `linen`,
   `nocturne`, `paper`, `signal`, `greyfield`, `twoplate`, `draftline`; motions `calm`, `kinetic`, `premium`, `grid`, `stop-motion`, `proof`.
-- **Capture.** `mm brand capture --from <url|index.html|figma-export.json|DESIGN.md|folder of
-  stills> --out <piece>/capture/<name>.json [--name <name>] [--color role=#hex]` (a typed hex
-  wins; from stills the fonts land in `ask`, and W-ASK warns until they are set) and `mm motion capture --from <video> --out
-  <piece>/capture/<name>.json [--name <name>] [--fps N]`; `--name` defaults to the `--out`
-  basename (2 to 41 lowercase letters, digits, hyphens), and the notes land beside it as
-  `<out-name>.capture-notes.md` (no `--out`: `brands/<name>.json` in the git-ignored `docs/private`). Read every guess in the notes with the director, and fix a
-  warning (a muted colour under 4.5:1 on the canvas) in the half before composing. Capture takes a
-  reference's grammar, never its content (H-REF); a captured brand is not fictional and stays out
-  of shipped presets and `styles/`.
-- **Embed.** `mm skill new --brand <name|path-to-brand.json> [--motion <name|path>] --out <dir>
-  [--license <spdx>] [--force]` scaffolds a thin per-brand skill, named `<brand>-motion` whatever the
-  motion (default `calm`): `SKILL.md` (loads this engine's skill first), `style/` (`brand.json`, `motion.json`,
-  composed `style.json`), `fonts/` with licences, `facts.md` (empty; the only source of that brand's numbers)
-  and the bans it lifts. Use it: `mm new --kind film --style <dir>/style/style.json --id <id>`. The studio
-  pins its own soft thresholds in the `gate` block of `style/motion.json` (`references/gates.md`).
+- **Capture.** `mm brand capture --from <url|index.html|figma-export.json|DESIGN.md|folder of stills> --out
+  <piece>/capture/<name>.json [--name <name>] [--color role=#hex]` (a typed hex wins; from stills the fonts land in `ask`, and W-ASK
+  warns until they are set) and `mm motion capture --from <video> --out <piece>/capture/<name>.json [--name <name>] [--fps N]`;
+  `--name` defaults to the `--out` basename (2 to 41 lowercase letters, digits, hyphens), notes beside it as
+  `<out-name>.capture-notes.md` (no `--out`: `brands/<name>.json` in the git-ignored `docs/private`). Read every guess with the
+  director; fix a warning (a muted colour under 4.5:1) in the half before composing. Capture takes a reference's grammar, never its
+  content (H-REF); a captured brand is not fictional and stays out of shipped presets and `styles/`.
+- **A real brand's own folder.** `mm brand init <folder> [--from <brand>]` makes it outside the engine (half, fonts,
+  logo, sources, facts, projects); `mm project new <name> --brand <folder> --kind film|deck`, then `mm project make
+  <project-folder>`, checks, exports and fills the project's `out/`. Real brands live there, never in `styles/`.
+- **Embed.** `mm skill new --brand <name|path-to-brand.json> [--motion <name|path>] --out <dir> [--license <spdx>] [--force]`
+  scaffolds a thin per-brand skill, named `<brand>-motion` whatever the motion (default `calm`): `SKILL.md` (loads this engine's
+  skill first), `style/` (`brand.json`, `motion.json`, composed `style.json`), `fonts/` with licences, `facts.md` (empty; the only
+  source of that brand's numbers) and the bans it lifts. Use it: `mm new --kind film --style <dir>/style/style.json --id <id>`. The
+  studio pins its own soft thresholds in the `gate` block of `style/motion.json` (`references/gates.md`).
 
 ## Stills review questions (gate 4, and again at every cut)
 

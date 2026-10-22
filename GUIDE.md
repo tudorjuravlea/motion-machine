@@ -269,6 +269,50 @@ from it with `mm new --kind film --style tour/harbour-skill/style/style.json --i
 the dead-air window, the reading speed, the looks W-BAN lifts) with a `gate` block in its motion
 half, and never the hard rules (SPEC.md §3).
 
+## A brand's own folder
+
+A real brand does not belong in this repository. Give it a folder of its own, anywhere:
+
+```
+node scripts/mm.mjs brand init ~/Brands/MyBrand --from paper
+```
+
+```
+MyBrand/
+  brand.json    the brand half: colour roles, type, scale, ground, bans
+  fonts/        every font brand.json names, a folder per family with its LICENSE.txt
+  ground/       the ground mark, when the brand has one
+  logo/         an SVG logo goes here
+  sources/      what the brand was read from: site URLs, DESIGN.md, a Figma export, stills
+  notes.md      what the folder is and the commands that use it
+  facts.md      every number and claim a piece may show, with its source
+  projects/     the films and decks made for this brand
+```
+
+`--from` takes a shipped brand name, a captured half in the private brands folder, or the path to a
+`brand.json`; the copy is marked not fictional and named after the folder (or `--name`). Edit
+`brand.json` there. Then make a project in it and render it:
+
+```
+node scripts/mm.mjs project new launch --brand ~/Brands/MyBrand --kind film
+node scripts/mm.mjs project make ~/Brands/MyBrand/projects/launch
+```
+
+A bare project name goes under `<brand>/projects/`; any other path works too. The project holds
+`project.json`, `story.json` (edit this one), `assets/` (pictures, recordings and audio the story
+uses), `inputs/sources.md` (where each line came from) and `out/`. `project make` composes the
+brand with a motion half (`calm` unless `--motion` says otherwise), checks the story, exports it
+and puts the results in `out/`: a film's `<id>-<format>.mp4` and `poster.png`, a deck's `slides/`,
+`handout.pdf` and `walkthrough.mp4`, and always `check.json`. A failing check stops there and says
+where its report is. `--to <dir>` also copies the deliverables to another folder, and
+`--check-only` stops after the check. The engine renders through a hidden work piece in its own
+git-ignored folder, so the brand and project folders hold only your files and the results;
+`project path <folder>` prints that work folder when you want to open it with `studio` or `serve`.
+Delete it and the next `make` rebuilds it.
+
+Real brands live in folders like this one, outside the engine. The brands shipped in
+`styles/brands/` stay fictional.
+
 ## Clean up and go on
 
 ```

@@ -28,26 +28,48 @@ export function resolveHalf(kind, ref) {
   return abs;
 }
 
-/** Repo-relative, forward-slashed; a half outside the repo cannot be recorded without an absolute path. */
-function repoRelative(abs, kind) {
+const slashed = (p) => p.split(sep).join('/');
+
+/**
+ * What `from` records for a half: its repo-relative path when it lives in the repo, else its path relative to the
+ * composed file (`out`), so the style and its halves can move together. A half outside the repo needs an `out`.
+ */
+function recordedPath(abs, kind, out) {
   const rel = relative(ROOT, abs);
-  if (rel.startsWith('..') || isAbsolute(rel)) throw fail(`the ${kind} half must live inside the repo so \`from\` can record a relative path: ${abs}`, 2);
-  return rel.split(sep).join('/');
+  if (!(rel.startsWith('..') || isAbsolute(rel))) return slashed(rel);
+  if (!out) throw fail(`the ${kind} half is outside the repo, so \`from\` can only record it relative to the composed file; give compose an --out: ${abs}`, 2);
+  return slashed(relative(dirname(resolve(out)), abs));
+}
+
+/** Rewrites each font and ground mark `src` that resolves beside the half to a path relative to the composed file; any other `src` (a repo path) stays as written. */
+function rebaseSrcs(b, halfFile, out) {
+  const base = dirname(resolve(out));
+  const rebase = (holder) => {
+    const abs = typeof holder.src === 'string' ? resolve(dirname(halfFile), holder.src) : null;
+    if (abs && existsSync(abs)) holder.src = slashed(relative(base, abs));
+  };
+  for (const face of Object.values(b.type)) for (const file of face.files ?? []) rebase(file);
+  if (b.ground?.mark) rebase(b.ground.mark);
 }
 
 /**
  * Composes two halves. `from` overrides the recorded paths (skill-new records paths inside the
- * skill folder); by default they are the repo-relative paths of the files read.
+ * skill folder); by default they are the repo-relative paths of the files read. `out` is where
+ * the style will be written: it makes a half outside the repo recordable (relative to `out`) and
+ * rebases the half's own font and mark paths to it.
  */
-export function compose({ brand, motion, name, from }) {
-  const b = JSON.parse(readFileSync(resolveHalf('brand', brand), 'utf8'));
-  const m = JSON.parse(readFileSync(resolveHalf('motion', motion), 'utf8'));
+export function compose({ brand, motion, name, from, out }) {
+  const brandFile = resolveHalf('brand', brand);
+  const motionFile = resolveHalf('motion', motion);
+  const b = JSON.parse(readFileSync(brandFile, 'utf8'));
+  const m = JSON.parse(readFileSync(motionFile, 'utf8'));
   const v = validators();
   if (!v.brand(b)) throw fail(`brand half ${brand} is invalid: ${explain(v.brand)}`, 1);
   const unsafe = unsafeStyleValues(b);
   if (unsafe.length) throw fail(`brand half ${brand} has values that cannot go into a style: ${unsafe.join('; ')}`, 1);
   if (!v.motion(m)) throw fail(`motion half ${motion} is invalid: ${explain(v.motion)}`, 1);
-  const recorded = from ?? { brand: repoRelative(resolveHalf('brand', brand), 'brand'), motion: repoRelative(resolveHalf('motion', motion), 'motion') };
+  const recorded = from ?? { brand: recordedPath(brandFile, 'brand', out), motion: recordedPath(motionFile, 'motion', out) };
+  if (out) rebaseSrcs(b, brandFile, out);
   const style = {
     name: name ?? `${b.name}-${m.name}`,
     version: b.version,
@@ -60,8 +82,8 @@ export function compose({ brand, motion, name, from }) {
   return style;
 }
 
-export function composeToFile({ brand, motion, out, name }) {
-  const style = compose({ brand, motion, name });
+export function composeToFile({ brand, motion, out, name, from }) {
+  const style = compose({ brand, motion, name, out, from });
   mkdirSync(dirname(resolve(out)), { recursive: true });
   writeFileSync(resolve(out), `${JSON.stringify(style, null, 2)}\n`);
   return style;

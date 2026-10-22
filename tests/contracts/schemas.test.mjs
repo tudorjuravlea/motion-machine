@@ -67,6 +67,16 @@ test('invalid: presses 0 in a deck scene', () => { const s = read('fixtures/gold
 test('invalid: negative duration in a film scene', () => { const s = filmStory(); s.scenes[0].duration = -1; failsAt(story, s, '/scenes/0/duration'); });
 test('invalid: unknown format', () => { const s = filmStory(); s.formats = ['4x3']; failsAt(story, s, '/formats/0'); });
 test('invalid: a URL as a font file', () => { const b = paper(); b.type.text.files[0].src = 'https://fonts.example/x.woff2'; failsAt(brand, b, '/type/text/files/0/src'); });
+test('a font or ground mark path may hold spaces (a brand folder is named by its owner) but not a quote, a backslash, an angle bracket or a line break', () => {
+  const b = paper();
+  b.type.text.files[0].src = '../Brand Folder/fonts/manrope/manrope latin 400.woff2';
+  assert.ok(brand(b), explain(brand));
+  b.ground = { blobs: [{ color: '#B5451B', x: 0, y: 0, w: 0.5, h: 0.5, alpha: 0.1 }], blur: 0.1, mark: { src: 'My Brand/ground/mark.svg', width: 1, alpha: 0.1 } };
+  assert.ok(brand(b), explain(brand));
+  for (const bad of ['a"b/x.woff2', 'a\\b/x.woff2', 'a<b/x.woff2', 'a\nb/x.woff2', '</style>/x.woff2']) {
+    const c = paper(); c.type.text.files[0].src = bad; failsAt(brand, c, '/type/text/files/0/src');
+  }
+});
 test('invalid: a composed style without from', () => { const s = editorial(); delete s.from; failsAt(style, s, 'from'); });
 test('invalid: a spring with negative stiffness', () => { const m = calm(); m.motion.spring.ui.k = -5; failsAt(motion, m, '/motion/spring/ui'); });
 test('a story may carry one share caption of up to 280 characters', () => {

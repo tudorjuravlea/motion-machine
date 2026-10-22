@@ -12,7 +12,7 @@
     "from": {
       "type": "object", "additionalProperties": false, "required": ["brand", "motion"],
       "properties": {
-        "brand":  { "type": "string", "minLength": 1, "description": "repo-relative path of the brand half this was composed from" },
+        "brand":  { "type": "string", "minLength": 1, "description": "path of the brand half this was composed from: repo-relative, or relative to the style file when the half lives outside the repo" },
         "motion": { "type": "string", "minLength": 1 }
       }
     },

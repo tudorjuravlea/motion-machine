@@ -24,13 +24,13 @@ import { parseArgs } from 'node:util';
 import { validators } from './lib/validate.mjs';
 import { ROLES, parseDesignMd } from './export-designmd.mjs';
 import { ROOT } from './lib/browser.mjs';
-import { isArgsError, usageText } from './lib/cli.mjs';
+import { PRIVATE_DIR, isArgsError, usageText } from './lib/cli.mjs';
 import { bin } from './lib/ffmpeg.mjs';
 import { familyLabel, unsafeStyleValues } from './lib/style-values.mjs';
 
 export { ROOT };
 /** Where a capture lands without --out: a git-ignored folder inside the repository, so `mm style compose` can still read it. */
-const DEFAULT_OUT_DIR = join('docs', 'private', 'brands');
+const DEFAULT_OUT_DIR = join(PRIVATE_DIR, 'brands');
 const fail = (message, exitCode = 2) => Object.assign(new Error(message), { exitCode });
 const explain = (v) => (v.errors ?? []).map((e) => `${e.instancePath || '/'} ${e.message}`).join('; ');
 

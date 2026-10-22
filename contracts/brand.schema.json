@@ -94,7 +94,7 @@
         "mark": {
           "type": "object", "additionalProperties": false, "required": ["src", "width", "alpha"],
           "properties": {
-            "src":   { "type": "string", "pattern": "^(?!https?:)(?!//)[^\\s]+\\.(svg|png|webp)$", "description": "relative path from the piece page; never a URL (SPEC §2.6)" },
+            "src":   { "type": "string", "pattern": "^(?!https?:)(?!//)[^\\u0000-\\u001f\"\\\\<>]+\\.(svg|png|webp)$", "description": "relative path from the piece page; never a URL (SPEC §2.6)" },
             "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 4, "description": "width, share of the frame width; above 1 the mark is clipped by the frame" },
             "alpha": { "type": "number", "minimum": 0, "maximum": 1 }
           }
@@ -298,7 +298,7 @@
           "items": {
             "type": "object", "additionalProperties": false, "required": ["src", "weight", "unicodeRange"],
             "properties": {
-              "src":          { "type": "string", "pattern": "^(?!https?:)(?!//)[^\\s]+\\.(woff2|woff|ttf|otf)$", "description": "relative path inside the repo or the piece; never a URL (SPEC §2.6)" },
+              "src":          { "type": "string", "pattern": "^(?!https?:)(?!//)[^\\u0000-\\u001f\"\\\\<>]+\\.(woff2|woff|ttf|otf)$", "description": "relative path inside the repo or the piece, or from a style file to a font in a brand folder (a folder name may hold spaces); never a URL (SPEC §2.6)" },
               "weight":       { "type": "integer", "minimum": 100, "maximum": 900 },
               "unicodeRange": { "type": "string", "minLength": 1 }
             }
