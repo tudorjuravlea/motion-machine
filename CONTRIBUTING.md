@@ -7,6 +7,17 @@ ten-minute tour of the parts. [REGENERATE.md](REGENERATE.md) says how each unit 
 spec and the tests. Everyone taking part follows the [code of conduct](CODE_OF_CONDUCT.md); security
 problems go through [SECURITY.md](SECURITY.md), not a public issue.
 
+## How a change gets in
+
+1. Fork the repository and make a branch from `main` for one change.
+2. Make the change with its tests (set up and test as below).
+3. Before you open a pull request, run `npm run test:unit`, `node scripts/mm.mjs pattern lint` and
+   `node scripts/mm.mjs release-check`, plus the browser tests for what you touched. There is no
+   separate lint, typecheck or build step: the pattern lint and the release sweep are the checks.
+4. Open a pull request against `main`. CI runs the whole suite. A pull request lands as one squashed
+   commit whose message is the pull request's title and description, so write those for the history,
+   and the branch is deleted after it merges. `main` cannot be force-pushed or deleted.
+
 ## Set up
 
 ```
