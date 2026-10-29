@@ -21,7 +21,7 @@ const VERBS = {
 };
 const GROUPS = {
   pattern: { lint: 'pattern-lint.mjs', stills: 'pattern-stills.mjs' },   // `list` is built in
-  brand: { init: 'brand-init.mjs', capture: 'capture-brand.mjs', mascot: 'mascot-import.mjs' },
+  brand: { init: 'brand-init.mjs', onboard: 'brand-onboard.mjs', sheet: 'brand-sheet.mjs', set: 'brand-onboard.mjs', font: 'brand-onboard.mjs', logo: 'brand-onboard.mjs', capture: 'capture-brand.mjs', mascot: 'mascot-import.mjs' },   // onboard, set, font and logo are one script
   motion: { capture: 'capture-motion.mjs' },
   style: { compose: 'compose.mjs', 'export-designmd': 'export-designmd.mjs' },
   skill: { new: 'skill-new.mjs' },
@@ -92,7 +92,7 @@ export function plan(argv) {
     let out = args;
     if (verb === 'pattern') out = qualify(args[0], args);
     if (verb === 'motion' && sub === 'capture') out = withDefaultName(args);
-    if (verb === 'project') out = [sub, ...args];
+    if (verb === 'project' || (verb === 'brand' && ['onboard', 'set', 'font', 'logo'].includes(sub))) out = [sub, ...args];
     return { script, args: out, label: `${verb} ${sub}` };
   }
   if (VERBS[verb]) {

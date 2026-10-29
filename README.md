@@ -206,6 +206,10 @@ The files go into `pieces/hello/out/`. The export refuses a piece with a failing
 | Bring a mascot in from a drawing | `node scripts/mm.mjs brand mascot <drawing.svg> --brand <brand>.json` (`--as <name>` adds a cast member) |
 | Put a web page on a device | `node scripts/mm.mjs capture site --url <url> --name site --piece pieces/<id>` |
 | A brand's own folder, outside the engine | `node scripts/mm.mjs brand init <folder> [--from <brand>]` |
+| Bring a brand into that folder from a page, a `DESIGN.md`, a Figma export or stills | `node scripts/mm.mjs brand onboard <folder> --from <source> [--from <source>…]` |
+| A one-page review of a brand folder (palette, contrast, type, look, tempo, open questions) | `node scripts/mm.mjs brand sheet <folder> [--motion <name>]`, then open `<folder>/sheets/review.html` |
+| Answer a question the review raised, or retype a colour role | `node scripts/mm.mjs brand set <folder> accent=#E9573F` |
+| Add the brand's own font (with its licence) or logo | `node scripts/mm.mjs brand font <folder> <file> --family "<Name>" --role text --license <file>`, `node scripts/mm.mjs brand logo <folder> <logo.svg>` |
 | A film or deck for that brand, rendered into its own `out/` | `node scripts/mm.mjs project new <name> --brand <folder> --kind film\|deck`, then `node scripts/mm.mjs project make <project-folder>` |
 | Capture a brand, or a motion style | `node scripts/mm.mjs brand capture --from <page> --out <brand>.json`, `node scripts/mm.mjs motion capture --from <video> --out <motion>.json` |
 | Wear a brand in a motion style | `node scripts/mm.mjs style compose --brand <brand> --motion <motion> --out <style>.json` |

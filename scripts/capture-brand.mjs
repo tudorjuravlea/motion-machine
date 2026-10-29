@@ -517,9 +517,9 @@ function templateHalf() {
   return JSON.parse(readFileSync(join(dir, f), 'utf8'));
 }
 
-function finish({ name, source, out, mapped, via, extra = {} }) {
-  const tpl = templateHalf(); const notes = []; const color = {}; const type = {};
-  for (const r of ROLES) color[r] = mapped.roles[r].hex;
+/** The three faces of a mapping, each mapped to the nearest bundled family: { type, typeLines, hit } (hit: captured families on the banned list). */
+export function mapFaces(mapped) {
+  const type = {};
   const banned = bannedFonts(); const hit = new Set();
   const fallback = { display: 'text', text: 'display', mono: null };
   const typeLines = [];
@@ -534,6 +534,13 @@ function finish({ name, source, out, mapped, via, extra = {} }) {
     typeLines.push(`- **type.${role}** ${s.family} -> ${n.face.family} (${n.how}${bundled ? '' : '; the captured family is not bundled'}), weight ${n.face.weight}${n.snappedFrom ? ` (measured ${n.snappedFrom}, nearest bundled weight)` : ''}, tracking ${n.face.tracking}em. Evidence: ${carried ?? s.evidence}`);
   }
   for (const f of mapped.seen) if (banned.some((b) => normName(b) === normName(f))) hit.add(f);
+  return { type, typeLines, hit };
+}
+
+function finish({ name, source, out, mapped, via, extra = {} }) {
+  const tpl = templateHalf(); const notes = []; const color = {};
+  for (const r of ROLES) color[r] = mapped.roles[r].hex;
+  const { type, typeLines, hit } = mapFaces(mapped);
 
   const scale = tpl.scale; let space = tpl.space; let radius = tpl.radius; const copied = ['scale (ratios of the format base size)', 'composition (alignment, headline scale, density)', 'bans'];
   const sp = extra.space?.length >= 5 && extra.space.length <= 9 ? extra.space : null; const rd = extra.radius?.length >= 3 && extra.radius.length <= 7 ? extra.radius : null;
@@ -573,7 +580,13 @@ function finish({ name, source, out, mapped, via, extra = {} }) {
 
 const slug = (s) => s.toLowerCase().replace(/^www\./, '').replace(/\.[a-z]{2,}$/, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').replace(/^[^a-z]+/, 'b-').slice(0, 40) || 'captured';
 
-export async function captureBrand({ from, name, out, color: typedColors }) {
+/**
+ * What a source is and what it says, without writing anything: { kind, target, mapped, via, extra, tokens }.
+ * kind is site (a URL, an .html file or a folder with an index.html), figma (an export .json), designmd or
+ * stills (a folder of pictures); mapped is { roles, faces, seen }; extra is what the half takes beyond the colours
+ * (ask, space, radius); tokens is the colours and text styles a token file named, when it was one.
+ */
+export async function mapSource(from) {
   if (!from) throw fail(usageText('brand capture'));
   const isUrl = /^https?:\/\//i.test(from);
   let target = from; let kind;
@@ -585,29 +598,34 @@ export async function captureBrand({ from, name, out, color: typedColors }) {
     kind = target === from && statSync(from).isDirectory() ? 'stills' : ext === '.json' ? 'figma' : ext === '.md' ? 'designmd' : ['.html', '.htm'].includes(ext) ? 'site' : null;
     if (!kind || !existsSync(target)) throw fail(`cannot tell what ${from} is: expected a URL, an .html file, a Figma export .json or a DESIGN.md`);
   }
+  if (kind === 'stills') {
+    const { files, px } = readStills(target);
+    const { mapped, ask } = mapStills(clusters(px), files);
+    return { kind, target, mapped, via: `palette clustered across ${files.length} stills`, extra: { ask } };
+  }
+  if (kind === 'site') { const { raw } = await readSite(target); return { kind, target, mapped: mapSite(raw), via: 'computed styles in headless Chromium', extra: {} }; }
+  if (kind === 'figma') {
+    const json = JSON.parse(readFileSync(target, 'utf8')); const tokens = extractTokens(json);
+    return { kind, target, mapped: mapTokens(tokens, 'the Figma export'), via: 'Figma export, colours and text styles mapped by name', extra: {}, tokens };
+  }
+  const { tokens: raw, via } = parseDesignMd(readFileSync(target, 'utf8'));
+  if (!raw) throw fail(`no tokens found in ${from}: expected a YAML front block, a fenced yaml block with colors:, or a table of name | value rows`);
+  const tokens = extractTokens({ colors: raw.colors ?? {}, typography: raw.typography ?? {} });
+  const steps = (o) => (o && typeof o === 'object' ? Object.values(o).map(pxOf).filter((x) => x !== null) : []);
+  return { kind, target, mapped: mapTokens(tokens, 'the DESIGN.md tokens'), via: `DESIGN.md ${via}, tokens mapped by key name`, extra: { space: steps(raw.spacing), radius: steps(raw.rounded) }, tokens };
+}
+
+export async function captureBrand({ from, name, out, color: typedColors }) {
+  const { kind, target, mapped, via, extra } = await mapSource(from);
+  const isUrl = /^https?:\/\//i.test(from);
   const host = isUrl ? new URL(from).host : null;
   const rel = isUrl ? null : relative(ROOT, resolve(target));
   const source = host ?? (rel.startsWith('..') ? basename(target) : rel.split(sep).join('/'));
   name ??= out ? slug(basename(out).replace(/\.json$/i, '')) : slug(host ?? basename(dirname(resolve(target))));   // --out harbour-pine.json names the brand harbour-pine
   if (!/^[a-z][a-z0-9-]{1,40}$/.test(name)) throw fail(`--name must match ^[a-z][a-z0-9-]{1,40}$: ${name}`);
   out ??= join(ROOT, DEFAULT_OUT_DIR, `${name}.json`);
-
-  if (kind === 'stills') {
-    const { files, px } = readStills(target);
-    const { mapped, ask } = mapStills(clusters(px), files);
-    typed(mapped, ask, typedColors);
-    return finish({ name, source, out, mapped, via: `palette clustered across ${files.length} stills`, extra: { ask } });
-  }
-  if (kind === 'site') { const { raw } = await readSite(target); return finish({ name, source, out, mapped: mapSite(raw), via: 'computed styles in headless Chromium' }); }
-  if (kind === 'figma') {
-    const json = JSON.parse(readFileSync(target, 'utf8')); const t = extractTokens(json);
-    return finish({ name, source, out, mapped: mapTokens(t, 'the Figma export'), via: 'Figma export, colours and text styles mapped by name' });
-  }
-  const { tokens, via } = parseDesignMd(readFileSync(target, 'utf8'));
-  if (!tokens) throw fail(`no tokens found in ${from}: expected a YAML front block, a fenced yaml block with colors:, or a table of name | value rows`);
-  const t = extractTokens({ colors: tokens.colors ?? {}, typography: tokens.typography ?? {} });
-  const steps = (o) => (o && typeof o === 'object' ? Object.values(o).map(pxOf).filter((x) => x !== null) : []);
-  return finish({ name, source, out, mapped: mapTokens(t, 'the DESIGN.md tokens'), via: `DESIGN.md ${via}, tokens mapped by key name`, extra: { space: steps(tokens.spacing), radius: steps(tokens.rounded) } });
+  if (kind === 'stills') typed(mapped, extra.ask, typedColors);
+  return finish({ name, source, out, mapped, via, extra });
 }
 
 export async function main(argv) {

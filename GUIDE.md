@@ -289,6 +289,11 @@ MyBrand/
   projects/     the films and decks made for this brand
 ```
 
+`mm brand sheet <folder>` renders the folder's review sheet (`sheets/review.html` and `review.png`): the
+palette with its evidence, every text pair's contrast, the type, the look in three patterns and the logo,
+the motion's tempo, and the questions left for a person, each with the command that answers it. Open it
+before the brand's first piece.
+
 `--from` takes a shipped brand name, a captured half in the private brands folder, or the path to a
 `brand.json`; the copy is marked not fictional and named after the folder (or `--name`). Edit
 `brand.json` there. Then make a project in it and render it:
@@ -309,6 +314,52 @@ where its report is. `--to <dir>` also copies the deliverables to another folder
 git-ignored folder, so the brand and project folders hold only your files and the results;
 `project path <folder>` prints that work folder when you want to open it with `studio` or `serve`.
 Delete it and the next `make` rebuilds it.
+
+### Bring a brand in
+
+`brand onboard` fills the folder from what the brand already has, in one pass. Name every source;
+the folder is made first when it is missing or empty:
+
+```
+node scripts/mm.mjs brand onboard ~/Brands/MyBrand --from https://example.com --from DESIGN.md --from ./stills
+```
+
+A source is a page (a URL, an `.html` file, or a folder with an `index.html`), a Figma export
+`.json`, a `DESIGN.md`, or a folder of stills. Sources are merged by trust: tokens and `DESIGN.md`
+name their roles, so they win; a page is measured; stills are only sampled. Each role keeps its
+value, how sure the engine is (`exact`, `measured`, `rule`, `guess` or `set`) and the evidence. The
+role rules then run over the palette. A muted colour too faint to read, or text on the accent that
+does not read, is fixed and the fix is written down. A colour the brand named is never changed; a
+rule that would change it becomes a question. `--color accent=#E9573F` types a role yourself and
+wins over every source.
+
+The result goes to three places: `brand.json` (what the engine reads), `sources/onboard.json`
+(every role with its confidence, the contrast of each text pair, the warnings, the questions and
+the fonts) and `notes.md` (the same in words, with a dated section for each run). Each question
+comes with its options, and every option is a command:
+
+```
+node scripts/mm.mjs brand sheet ~/Brands/MyBrand                  # the review sheet: look, then decide
+node scripts/mm.mjs brand set ~/Brands/MyBrand accent=#E9573F     # answer a question, or retype any role
+```
+
+`brand set` takes `role=#hex` for the seven roles and `surfaceInk`, then runs the rules again, so a
+new canvas shows at once what it breaks. A value that is not a hex colour, or a role that does not
+exist, exits 2 and changes nothing.
+
+Without a brand font, the nearest bundled family stands in, and `onboard.json` says so. To use the
+brand's own, add the file with its licence; the licence decides what may be done with the font later:
+
+```
+node scripts/mm.mjs brand font ~/Brands/MyBrand Sans-Regular.woff2 --family "Brand Sans" --role text --license OFL.txt
+node scripts/mm.mjs brand logo ~/Brands/MyBrand logo.svg
+```
+
+A font is `.woff2`, `.woff`, `.ttf` or `.otf` and is checked by its first bytes. SIL OFL and Apache
+licences are recognised; a font with any other licence, or none, is recorded as `private-use`. `brand
+logo` keeps a cleaned copy of an SVG (no script, no foreign content, no event handlers, nothing
+that reaches outside the file, a `viewBox` in place of a fixed size) as `logo/logo.svg`, a one-colour
+copy as `logo/logo-mono.svg`, and records which palette role each of its colours is closest to.
 
 Real brands live in folders like this one, outside the engine. The brands shipped in
 `styles/brands/` stay fictional.
