@@ -1,0 +1,14 @@
+[
+  {"text":"so","start":0.5,"end":0.8},
+  {"text":"um","start":1,"end":1.4},
+  {"text":"we","start":1.6,"end":1.85},
+  {"text":"start","start":1.95,"end":2.35},
+  {"text":"with","start":2.5,"end":2.8},
+  {"text":"the","start":2.9,"end":3.1},
+  {"text":"basics.","start":3.2,"end":3.7},
+  {"text":"ăă","start":5,"end":5.5},
+  {"text":"apoi","start":5.7,"end":6.1},
+  {"text":"trecem","start":6.2,"end":6.7},
+  {"text":"mai","start":6.8,"end":7.1},
+  {"text":"departe.","start":7.2,"end":7.7}
+]

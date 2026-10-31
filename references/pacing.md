@@ -45,6 +45,33 @@ How long things stay, how often something new arrives, and where a film breathes
 - When a scene feels too busy, halve distance, turn and bounce before adding anything
 - Motion that carries no information is removed, not softened
 
+## Short-form bands (provisional)
+
+Counts taken from short films seen in feeds. They are data, not rules: no gate reads them, and they
+may move as more pieces are measured. Check a draft against them, then trust your eye.
+
+- Shorts of 15 to 20 s: 6 to 8 scenes of about 2.4 s each, which is 18 to 25 changes a minute
+- A 30 s promo: 7 to 8 beats of 2 to 6 s each
+- A spoken reel: shots of 1.1 to 1.4 s, none over about 2.8 s; the speaker is never off screen for more than 3.5 s
+- After 7 to 8 s of dense motion, give 1 s of rest: nothing arrives, nothing leaves
+- Hold the outro 4 to 6 s, so the last line can be read and the resource looked at
+- These shots are shorter than the calm defaults above. W-HOLD (default floor 1.2 s) and W-READ
+  (0.3 s a word) still apply: a 1.2 s shot carries two or three words. Pick a motion style whose
+  hold floor allows it, or write the shot as a beat inside a longer scene; do not loosen a threshold
+
+## Word reveals
+
+- When a line arrives word by word, the first word travels far and each later word travels less: for
+  example 360, 120, 60, 25 and 12 px on a 1080 px frame. The eye lands on word one, and the tail
+  settles instead of marching
+- `entrances/words` moves every word the same distance. A tapering travel is a named gap (closest:
+  `entrances/words`, `text/kinetic-words`)
+- On a punchline the picture leads the sound by 0.2 s: the word or figure is seen first, the hit
+  follows. A cue sounds at its beat's `at` and W-CUE holds it near a beat, so there is no offset to
+  set; the lead comes from how soon the entrance shows the word (a fast one such as
+  `entrances/slam`) against where the cue sits. Judge it in the animatic, ask the director whether
+  it feels late, and log the answer
+
 ## Music-aware scenes
 
 - If music is planned or possible, make every scene last a round count of beats from the first draft

@@ -38,6 +38,47 @@
     { "pattern": "entrances/count", "figure": { "value": 87, "fact": "f1", "params": { "suffix": "%" } }, "how": "Counts up to its number; every digit keeps its width.",
       "knob": { "line": "from: 50. A shorter climb.", "figure": { "params": { "from": 50 } } } },
     { "pattern": "entrances/draw", "figure": {}, "how": "A line grows from one edge and draws itself.",
-      "knob": { "line": "origin: center. It grows from the middle.", "figure": { "params": { "origin": "center" } } } }
+      "knob": { "line": "origin: center. It grows from the middle.", "figure": { "params": { "origin": "center" } } } },
+    { "pattern": "entrances/card-flip", "figure": { "text": "Turned" }, "how": "A blank card turns over to show what it carries.",
+      "knob": { "line": "steps: 6. A hand-animated, held cadence.", "figure": { "params": { "steps": 6 } } } },
+    { "pattern": "entrances/diagonal-join", "figure": { "text": "Joined" }, "how": "Two halves, cut on a diagonal, slide together.",
+      "knob": { "line": "angle: 60. A steeper cut.", "figure": { "params": { "angle": 60 } } } },
+    { "pattern": "entrances/light-reveal", "figure": { "text": "Lit" }, "how": "A soft front of light turns the block on.",
+      "knob": { "line": "soft: 0.6, angle: 60. A wider front.", "figure": { "params": { "soft": 0.6, "angle": 60 } } } },
+    { "pattern": "entrances/power-on", "figure": { "text": "Signal" }, "how": "A line opens like a screen; the colour split settles.",
+      "knob": { "line": "flicker: 6, split: 14. A rougher start.", "figure": { "params": { "flicker": 6, "split": 14 } } } },
+    { "pattern": "entrances/swing", "figure": { "text": "Open" }, "how": "Hangs from a pivot, swings, then hangs still.",
+      "knob": { "line": "pivot: top, angle: 30. A heavier swing.", "figure": { "params": { "pivot": "top", "angle": 30 } } } },
+    { "pattern": "entrances/character", "figure": { "params": { "mood": "happy" } }, "how": "The mascot hops in, then keeps the beat.", "figAt": 1, "minA": 4.8, "minB": 4.6,
+      "knob": { "line": "mood: excited, from: left. It hops in from the side.", "figure": { "params": { "mood": "excited", "from": "left" } } } },
+    { "pattern": "entrances/one-line", "template": "scenes", "scenes": [
+      { "layout": "layouts/caption-bar", "min": 7.3, "beats": [
+        { "at": 0.2, "slot": "stage", "fx": "entrances/one-line", "asset": "assets/mark.svg", "params": { "dur": 3.2 } },
+        { "at": 3.5, "slot": "caption", "fx": "entrances/fade", "text": "one-line: a mark drawn in one stroke, the pen never lifting." } ] },
+      { "layout": "layouts/caption-bar", "min": 7.3, "beats": [
+        { "at": 0.2, "slot": "stage", "fx": "entrances/one-line", "asset": "assets/mark.svg", "params": { "dur": 3.2, "weight": 2.2, "curves": 2.5 } },
+        { "at": 3.5, "slot": "caption", "fx": "entrances/fade", "text": "weight: 2.2, curves: 2.5. A heavier pen that slows more." } ] } ],
+      "assets": [{ "from": "patterns/entrances/one-line/demo/assets/mark.svg", "to": "assets/mark.svg" }, { "from": "patterns/entrances/one-line/demo/assets/mark.licence.json", "to": "assets/mark.licence.json" }] },
+    { "pattern": "entrances/photo-wake", "template": "scenes", "scenes": [
+      { "layout": "layouts/media", "min": 4.4, "beats": [
+        { "at": 0, "slot": "image", "fx": "entrances/photo-wake", "asset": "assets/field.png", "params": { "frame": "bleed" } },
+        { "at": 0.4, "slot": "headline", "fx": "entrances/rise", "text": "photo-wake" },
+        { "at": 1.2, "slot": "caption", "fx": "entrances/fade", "text": "A two-ink print, then an accent front brings the colour." } ] },
+      { "layout": "layouts/media", "min": 4, "beats": [
+        { "at": 0, "slot": "image", "fx": "entrances/photo-wake", "asset": "assets/field.png", "params": { "frame": "bleed", "origin": "bottom-right", "band": 0.2, "warp": 0.7 } },
+        { "at": 0.4, "slot": "headline", "fx": "entrances/rise", "text": "photo-wake" },
+        { "at": 1.2, "slot": "caption", "fx": "entrances/fade", "text": "origin: bottom-right, band: 0.2. From the corner." } ] } ],
+      "assets": [{ "from": "patterns/entrances/photo-wake/demo/assets/field.png", "to": "assets/field.png" }, { "from": "patterns/entrances/photo-wake/demo/assets/field.licence.json", "to": "assets/field.licence.json" }] },
+    { "pattern": "entrances/sketch", "template": "scenes", "scenes": [
+      { "layout": "layouts/bento-3", "min": 4.4, "beats": [
+        { "at": 0, "slot": "headline", "fx": "style:headline", "text": "sketch: a pen draws each box, then the label.", "params": { "instant": true } },
+        { "at": 0.5, "slot": "tile-1", "fx": "entrances/sketch", "text": "Plan" },
+        { "at": 1, "slot": "tile-2", "fx": "entrances/sketch", "text": "Track" },
+        { "at": 1.5, "slot": "tile-3", "fx": "entrances/sketch", "text": "Ship" } ] },
+      { "layout": "layouts/bento-3", "min": 4, "beats": [
+        { "at": 0, "slot": "headline", "fx": "style:headline", "text": "pen: marker, fill: wash, shape: pill.", "params": { "instant": true } },
+        { "at": 0.5, "slot": "tile-1", "fx": "entrances/sketch", "text": "Plan", "params": { "pen": "marker", "fill": "wash", "shape": "pill" } },
+        { "at": 1, "slot": "tile-2", "fx": "entrances/sketch", "text": "Track", "params": { "pen": "marker", "fill": "wash", "shape": "pill" } },
+        { "at": 1.5, "slot": "tile-3", "fx": "entrances/sketch", "text": "Ship", "params": { "pen": "marker", "fill": "wash", "shape": "pill" } } ] } ] }
   ]
 }

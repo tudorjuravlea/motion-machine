@@ -1,0 +1,14 @@
+{
+  "name": "loading",
+  "meaning": "work is under way and will take a moment: a request in flight, a render started, a long wait that is not stuck",
+  "durationS": 1,
+  "layers": [
+    { "kind": "tone", "f": 440, "attackS": 0.35, "t60": 0.6, "peak": 1 },
+    { "kind": "tone", "f": 659.25, "attackS": 0.35, "t60": 0.6, "peak": 0.6 },
+    { "kind": "noise", "attackS": 0.3, "t60": 0.6, "peak": 0.12, "glideTo": 2200, "glideS": 0.5, "filter": { "type": "bandpass", "f": 1400, "q": 0.8 }, "from": 1 },
+    { "kind": "tone", "f": 1046.5, "attackS": 0.35, "t60": 0.55, "peak": 0.25, "from": 2 }
+  ],
+  "room": { "send": -22, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "masterGain": 0.0341,
+  "emphasis": { "subtle": 0, "normal": 1, "strong": 2 }
+}

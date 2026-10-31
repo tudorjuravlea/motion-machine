@@ -88,3 +88,33 @@ Fonts, SIL Open Font License 1.1 (the licence travels in each font folder as LIC
   Fraunces       Copyright 2020 The Fraunces Project Authors (https://github.com/undercasetype/Fraunces)
   Manrope        Copyright 2019 The Manrope Project Authors (https://github.com/sharanda/manrope)
   IBM Plex Mono  Copyright © 2017 IBM Corp. with Reserved Font Name "Plex"
+
+------------------------------------------------------------------------------------------------
+Hairline (https://github.com/lucasmarkes/hairline), MIT License.
+runtime/kit/hairline.js adapts its drawing maths (the sampled rounded ring with outward normals, the
+monotone-chain hull that makes a solid's silhouette from two rings, the facing run that makes its one
+crease), rewritten in our own ES module with a caller's projector, so the style can follow a
+perspective camera. The roles of its strokes (one bright highlight, a silhouette, a dim crease,
+dashed guides behind opaque plates) are restated in patterns/3d/phone's drawn move.
+
+MIT License
+
+Copyright (c) 2026 Lucas Marques
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

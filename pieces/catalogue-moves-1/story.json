@@ -5,7 +5,7 @@
   "formats": [
     "16x9"
   ],
-  "title": "Camera moves, part 1 of 2",
+  "title": "Camera moves, part 1 of 4",
   "language": "en",
   "facts": [],
   "audio": {
@@ -33,7 +33,7 @@
           "at": 0.4,
           "slot": "sub",
           "fx": "entrances/fade",
-          "text": "The camera, not the content, moves. Part 1 of 2."
+          "text": "The camera, not the content, moves. Part 1 of 4."
         }
       ],
       "say": "The camera, not the content, moves.",
@@ -519,100 +519,9 @@
       ],
       "say": "to: 1.2, toward the figure.",
       "duration": 3.8
-    },
-    {
-      "id": "pull-back-a",
-      "layout": "layouts/split",
-      "cut": "transitions/hard-cut",
-      "move": "moves/pull-back",
-      "beats": [
-        {
-          "at": 0,
-          "slot": "headline",
-          "fx": "style:headline",
-          "text": "pull-back",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0.3,
-          "slot": "figure",
-          "fx": "entrances/pop",
-          "text": "Frame",
-          "params": {}
-        },
-        {
-          "at": 0,
-          "slot": "body",
-          "fx": "style:body",
-          "text": "Starts close, then settles back to the full frame.",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0,
-          "slot": "caption",
-          "fx": "style:body",
-          "text": "moves/pull-back",
-          "params": {
-            "instant": true
-          }
-        }
-      ],
-      "say": "Starts close, then settles back to the full frame.",
-      "duration": 4.2
-    },
-    {
-      "id": "pull-back-b",
-      "layout": "layouts/split",
-      "cut": "transitions/hard-cut",
-      "move": "moves/pull-back",
-      "moveParams": {
-        "from": 1.3
-      },
-      "beats": [
-        {
-          "at": 0,
-          "slot": "headline",
-          "fx": "style:headline",
-          "text": "pull-back",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0.3,
-          "slot": "figure",
-          "fx": "entrances/pop",
-          "text": "Frame",
-          "params": {}
-        },
-        {
-          "at": 0,
-          "slot": "body",
-          "fx": "style:body",
-          "text": "from: 1.3. It starts closer.",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0,
-          "slot": "caption",
-          "fx": "style:body",
-          "text": "moves/pull-back",
-          "params": {
-            "instant": true
-          }
-        }
-      ],
-      "say": "from: 1.3. It starts closer.",
-      "duration": 3.8
     }
   ],
-  "share": "Camera moves (1/2): hold, idle-breathe, ken-burns, pan, push-in, pull-back. Each one shown, explained, then replayed with a knob turned.",
+  "share": "Camera moves (1/4): hold, idle-breathe, ken-burns, pan, push-in. Each one shown, explained, then replayed with a knob turned.",
   "cta": {
     "text": "Motion Machine",
     "url": "github.com/tudorjuravlea/motion-machine"

@@ -1,0 +1,11 @@
+/* data/venn: the shared diagram look (runtime/kit/diagram.css), a stage sized to the format, and
+   the circles: each a tint of one palette role over the canvas, so an overlap reads darker. */
+@import url('../../../runtime/kit/diagram.css');
+.mm-venn .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.56); }
+[data-format="9x16"] .mm-venn .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.4); }
+[data-format="16x9"] .mm-venn .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.72); }
+/* two classes, so the shared .mm-dg__edge (re-imported by every diagram's css) never wins */
+.mm-venn .mm-venn__disc--0 { fill: color-mix(in srgb, var(--dg-accent) 20%, transparent); stroke: var(--dg-accent); }
+.mm-venn .mm-venn__disc--1 { fill: color-mix(in srgb, var(--mm-color-ink) 11%, transparent); stroke: var(--mm-color-ink); }
+.mm-venn .mm-venn__disc--2 { fill: color-mix(in srgb, var(--mm-color-muted) 16%, transparent); stroke: var(--mm-color-muted); }
+.mm-venn .mm-venn__lens { fill: color-mix(in srgb, var(--dg-accent) 30%, transparent); stroke: none; }

@@ -1,0 +1,15 @@
+{
+  "name": "close",
+  "meaning": "something closes: a panel, a menu, a sheet, a drawer",
+  "durationS": 0.2,
+  "layers": [
+    { "kind": "noise", "attackS": 0.015, "t60": 0.12, "peak": 0.5, "glideTo": 700, "glideS": 0.12, "filter": { "type": "bandpass", "f": 1900, "q": 0.9 } },
+    { "kind": "tone", "f": 587.33, "glideTo": 392, "glideS": 0.12, "attackS": 0.02, "t60": 0.12, "peak": 0.12, "from": 1 },
+    { "kind": "tone", "f": 220, "attackS": 0.001, "t60": 0.07, "peak": 0.6, "offsetS": 0.1 },
+    { "kind": "tone", "f": 880, "glideTo": 587.33, "glideS": 0.1, "attackS": 0.02, "t60": 0.12, "peak": 0.15, "from": 2 }
+  ],
+  "room": { "send": -22, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "masterGain": 0.2404,
+  "vary": { "pitch": 0.02, "force": 0.1 },
+  "emphasis": { "subtle": 0, "normal": 1, "strong": 2 }
+}

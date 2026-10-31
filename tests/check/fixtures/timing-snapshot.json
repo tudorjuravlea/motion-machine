@@ -13,7 +13,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 37.45,
+     "measured": 51.45,
      "threshold": "20–60s"
     }
    },
@@ -21,8 +21,8 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 33.45,
-     "measured": 4,
+     "instant": 48.45,
+     "measured": 3,
      "threshold": 2
     }
    },
@@ -64,9 +64,15 @@
       },
       {
        "from": 30,
-       "to": 37.45,
-       "count": 2,
-       "per10s": 2.68
+       "to": 40,
+       "count": 3,
+       "per10s": 3
+      },
+      {
+       "from": 40,
+       "to": 50,
+       "count": 3,
+       "per10s": 3
       }
      ]
     }
@@ -110,7 +116,7 @@
     "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
-     "measured": 3.9,
+     "measured": 4,
      "threshold": 4
     }
    },
@@ -118,7 +124,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 44.55,
+     "measured": 52.75,
      "threshold": "20–60s"
     }
    },
@@ -126,8 +132,8 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 41.35,
-     "measured": 3.2,
+     "instant": 48.95,
+     "measured": 3.8,
      "threshold": 2
     }
    },
@@ -172,6 +178,12 @@
        "to": 40,
        "count": 4,
        "per10s": 4
+      },
+      {
+       "from": 40,
+       "to": 50,
+       "count": 6,
+       "per10s": 6
       }
      ]
     }
@@ -195,7 +207,7 @@
     "id": "W-FADE-ONLY",
     "status": "PASS",
     "evidence": {
-     "measured": 0.083,
+     "measured": 0.071,
      "threshold": 0.7
     }
    },
@@ -223,7 +235,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 45.95,
+     "measured": 45.25,
      "threshold": "20–60s"
     }
    },
@@ -231,7 +243,7 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 42.75,
+     "instant": 42.05,
      "measured": 3.2,
      "threshold": 2
     }
@@ -280,9 +292,9 @@
       },
       {
        "from": 40,
-       "to": 45.95,
+       "to": 45.25,
        "count": 2,
-       "per10s": 3.36
+       "per10s": 3.81
       }
      ]
     }
@@ -307,6 +319,339 @@
     "status": "PASS",
     "evidence": {
      "measured": 0.083,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-data-3": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.9,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 48.45,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 45.25,
+     "measured": 3.2,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 10,
+     "measured": 3,
+     "threshold": "5–10 per 10 s",
+     "reason": "3 arrivals between 10s and 20s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 5,
+       "per10s": 5
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 3,
+       "per10s": 3
+      },
+      {
+       "from": 20,
+       "to": 30,
+       "count": 6,
+       "per10s": 6
+      },
+      {
+       "from": 30,
+       "to": 40,
+       "count": 4,
+       "per10s": 4
+      },
+      {
+       "from": 40,
+       "to": 48.45,
+       "count": 2,
+       "per10s": 2.37
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 0.8,
+     "measured": 2.47
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.3,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-data-4": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.9,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 53.75,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 50.55,
+     "measured": 3.2,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 10,
+     "measured": 3,
+     "threshold": "5–10 per 10 s",
+     "reason": "3 arrivals between 10s and 20s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 5,
+       "per10s": 5
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 3,
+       "per10s": 3
+      },
+      {
+       "from": 20,
+       "to": 30,
+       "count": 4,
+       "per10s": 4
+      },
+      {
+       "from": 30,
+       "to": 40,
+       "count": 3,
+       "per10s": 3
+      },
+      {
+       "from": 40,
+       "to": 50,
+       "count": 3,
+       "per10s": 3
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 0.8,
+     "measured": 1.2
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.4,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-data-5": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.6,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 53.45,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 49.85,
+     "measured": 3.6,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 10,
+     "measured": 4,
+     "threshold": "5–10 per 10 s",
+     "reason": "4 arrivals between 10s and 20s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 5,
+       "per10s": 5
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 4,
+       "per10s": 4
+      },
+      {
+       "from": 20,
+       "to": 30,
+       "count": 3,
+       "per10s": 3
+      },
+      {
+       "from": 30,
+       "to": 40,
+       "count": 4,
+       "per10s": 4
+      },
+      {
+       "from": 40,
+       "to": 50,
+       "count": 4,
+       "per10s": 4
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 0.8,
+     "measured": 2.47
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.5,
      "threshold": 0.7
     }
    },
@@ -445,7 +790,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 37.85,
+     "measured": 52.85,
      "threshold": "20–60s"
     }
    },
@@ -453,8 +798,8 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 34.8,
-     "measured": 3.05,
+     "instant": 49.9,
+     "measured": 2.95,
      "threshold": 2
     }
    },
@@ -469,9 +814,12 @@
    },
    {
     "id": "W-PACE",
-    "status": "PASS",
+    "status": "WARN",
     "evidence": {
+     "instant": 30,
+     "measured": 11,
      "threshold": "5–10 per 10 s",
+     "reason": "11 arrivals between 30s and 40s",
      "windows": [
       {
        "from": 0,
@@ -493,9 +841,15 @@
       },
       {
        "from": 30,
-       "to": 37.85,
-       "count": 7,
-       "per10s": 8.92
+       "to": 40,
+       "count": 11,
+       "per10s": 11
+      },
+      {
+       "from": 40,
+       "to": 50,
+       "count": 10,
+       "per10s": 10
       }
      ]
     }
@@ -505,7 +859,7 @@
     "status": "PASS",
     "evidence": {
      "threshold": 0.8,
-     "measured": 2.07
+     "measured": 1.67
     }
    },
    {
@@ -519,7 +873,7 @@
     "id": "W-FADE-ONLY",
     "status": "PASS",
     "evidence": {
-     "measured": 0.063,
+     "measured": 0.043,
      "threshold": 0.7
     }
    },
@@ -547,7 +901,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 37.65,
+     "measured": 48.85,
      "threshold": "20–60s"
     }
    },
@@ -555,8 +909,119 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 34.45,
-     "measured": 3.2,
+     "instant": 46.15,
+     "measured": 2.7,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 10,
+     "measured": 11,
+     "threshold": "5–10 per 10 s",
+     "reason": "11 arrivals between 10s and 20s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 8,
+       "per10s": 8
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 11,
+       "per10s": 11
+      },
+      {
+       "from": 20,
+       "to": 30,
+       "count": 7,
+       "per10s": 7
+      },
+      {
+       "from": 30,
+       "to": 40,
+       "count": 7,
+       "per10s": 7
+      },
+      {
+       "from": 40,
+       "to": 48.85,
+       "count": 4,
+       "per10s": 4.52
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 0.8,
+     "measured": 2.07
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.162,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-emphasis-3": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.9,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 51.3,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 47.95,
+     "measured": 3.35,
      "threshold": 2
     }
    },
@@ -584,20 +1049,26 @@
       {
        "from": 10,
        "to": 20,
-       "count": 10,
-       "per10s": 10
+       "count": 9,
+       "per10s": 9
       },
       {
        "from": 20,
        "to": 30,
-       "count": 10,
-       "per10s": 10
+       "count": 8,
+       "per10s": 8
       },
       {
        "from": 30,
-       "to": 37.65,
-       "count": 5,
-       "per10s": 6.54
+       "to": 40,
+       "count": 8,
+       "per10s": 8
+      },
+      {
+       "from": 40,
+       "to": 50,
+       "count": 8,
+       "per10s": 8
       }
      ]
     }
@@ -607,7 +1078,7 @@
     "status": "PASS",
     "evidence": {
      "threshold": 0.8,
-     "measured": 1.67
+     "measured": 2.07
     }
    },
    {
@@ -621,7 +1092,7 @@
     "id": "W-FADE-ONLY",
     "status": "PASS",
     "evidence": {
-     "measured": 0.121,
+     "measured": 0.195,
      "threshold": 0.7
     }
    },
@@ -649,7 +1120,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 52.65,
+     "measured": 45.15,
      "threshold": "20–60s"
     }
    },
@@ -657,8 +1128,8 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 49.7,
-     "measured": 2.95,
+     "instant": 41.8,
+     "measured": 3.35,
      "threshold": 2
     }
    },
@@ -703,9 +1174,9 @@
       },
       {
        "from": 40,
-       "to": 50,
-       "count": 10,
-       "per10s": 10
+       "to": 45.15,
+       "count": 3,
+       "per10s": 5.83
       }
      ]
     }
@@ -729,7 +1200,7 @@
     "id": "W-FADE-ONLY",
     "status": "PASS",
     "evidence": {
-     "measured": 0.087,
+     "measured": 0.103,
      "threshold": 0.7
     }
    },
@@ -757,7 +1228,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 44.95,
+     "measured": 52.45,
      "threshold": "20–60s"
     }
    },
@@ -765,109 +1236,7 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 42,
-     "measured": 2.95,
-     "threshold": 2
-    }
-   },
-   {
-    "id": "W-READ",
-    "status": "PASS",
-    "evidence": {
-     "perWord": 0.3,
-     "label": 0.8,
-     "sentence": 1.2
-    }
-   },
-   {
-    "id": "W-PACE",
-    "status": "PASS",
-    "evidence": {
-     "threshold": "5–10 per 10 s",
-     "windows": [
-      {
-       "from": 0,
-       "to": 10,
-       "count": 8,
-       "per10s": 8
-      },
-      {
-       "from": 10,
-       "to": 20,
-       "count": 10,
-       "per10s": 10
-      },
-      {
-       "from": 20,
-       "to": 30,
-       "count": 10,
-       "per10s": 10
-      },
-      {
-       "from": 30,
-       "to": 40,
-       "count": 8,
-       "per10s": 8
-      }
-     ]
-    }
-   },
-   {
-    "id": "W-HOLD",
-    "status": "PASS",
-    "evidence": {
-     "threshold": 0.8,
-     "measured": 2.35
-    }
-   },
-   {
-    "id": "W-CUE",
-    "status": "SKIP",
-    "evidence": {
-     "reason": "the schedule has no cues"
-    }
-   },
-   {
-    "id": "W-FADE-ONLY",
-    "status": "PASS",
-    "evidence": {
-     "measured": 0.051,
-     "threshold": 0.7
-    }
-   },
-   {
-    "id": "W-ASK",
-    "status": "PASS",
-    "evidence": {
-     "measured": [],
-     "threshold": []
-    }
-   }
-  ]
- },
- "pieces/catalogue-entrances-3": {
-  "16x9": [
-   {
-    "id": "W-DEAD",
-    "status": "PASS",
-    "evidence": {
-     "measured": 3.95,
-     "threshold": 4
-    }
-   },
-   {
-    "id": "W-LENGTH",
-    "status": "PASS",
-    "evidence": {
-     "measured": 52.55,
-     "threshold": "20–60s"
-    }
-   },
-   {
-    "id": "W-QUIET",
-    "status": "PASS",
-    "evidence": {
-     "instant": 49.6,
+     "instant": 49.5,
      "measured": 2.95,
      "threshold": 2
     }
@@ -940,6 +1309,336 @@
     "status": "PASS",
     "evidence": {
      "measured": 0.043,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-entrances-3": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.95,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 45.05,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 42.1,
+     "measured": 2.95,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "PASS",
+    "evidence": {
+     "threshold": "5–10 per 10 s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 8,
+       "per10s": 8
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 10,
+       "per10s": 10
+      },
+      {
+       "from": 20,
+       "to": 30,
+       "count": 10,
+       "per10s": 10
+      },
+      {
+       "from": 30,
+       "to": 40,
+       "count": 8,
+       "per10s": 8
+      },
+      {
+       "from": 40,
+       "to": 45.05,
+       "count": 3,
+       "per10s": 5.94
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 0.8,
+     "measured": 2.35
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.051,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-entrances-4": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.95,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 52.25,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 49.3,
+     "measured": 2.95,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 20,
+     "measured": 11,
+     "threshold": "5–10 per 10 s",
+     "reason": "11 arrivals between 20s and 30s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 8,
+       "per10s": 8
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 10,
+       "per10s": 10
+      },
+      {
+       "from": 20,
+       "to": 30,
+       "count": 11,
+       "per10s": 11
+      },
+      {
+       "from": 30,
+       "to": 40,
+       "count": 7,
+       "per10s": 7
+      },
+      {
+       "from": 40,
+       "to": 50,
+       "count": 10,
+       "per10s": 10
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 0.8,
+     "measured": 1.35
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.043,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-entrances-5": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.8,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 48.6,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 45.85,
+     "measured": 2.75,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 20,
+     "measured": 2,
+     "threshold": "5–10 per 10 s",
+     "reason": "2 arrivals between 20s and 30s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 8,
+       "per10s": 8
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 5,
+       "per10s": 5
+      },
+      {
+       "from": 20,
+       "to": 30,
+       "count": 2,
+       "per10s": 2
+      },
+      {
+       "from": 30,
+       "to": 40,
+       "count": 8,
+       "per10s": 8
+      },
+      {
+       "from": 40,
+       "to": 48.6,
+       "count": 6,
+       "per10s": 6.98
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 0.8,
+     "measured": 2.15
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.207,
      "threshold": 0.7
     }
    },
@@ -1058,13 +1757,13 @@
    }
   ]
  },
- "pieces/catalogue-layouts-1": {
+ "pieces/catalogue-exits-2": {
   "16x9": [
    {
     "id": "W-DEAD",
     "status": "PASS",
     "evidence": {
-     "measured": 3.9,
+     "measured": 3.2,
      "threshold": 4
     }
    },
@@ -1072,7 +1771,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 39.15,
+     "measured": 31.3,
      "threshold": "20–60s"
     }
    },
@@ -1080,8 +1779,8 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 35.85,
-     "measured": 3.3,
+     "instant": 27.6,
+     "measured": 3.7,
      "threshold": 2
     }
    },
@@ -1096,9 +1795,111 @@
    },
    {
     "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 0,
+     "measured": 8,
+     "threshold": "2–5 per 10 s",
+     "reason": "8 arrivals between 0s and 10s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 8,
+       "per10s": 8
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 10,
+       "per10s": 10
+      },
+      {
+       "from": 20,
+       "to": 30,
+       "count": 6,
+       "per10s": 6
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
     "status": "PASS",
     "evidence": {
+     "threshold": 1.6,
+     "measured": 2.23
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.417,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-layouts-1": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.95,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 51.45,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 48.25,
+     "measured": 3.2,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 30,
+     "measured": 13,
      "threshold": "5–10 per 10 s",
+     "reason": "13 arrivals between 30s and 40s",
      "windows": [
       {
        "from": 0,
@@ -1120,9 +1921,15 @@
       },
       {
        "from": 30,
-       "to": 39.15,
-       "count": 7,
-       "per10s": 7.65
+       "to": 40,
+       "count": 13,
+       "per10s": 13
+      },
+      {
+       "from": 40,
+       "to": 50,
+       "count": 10,
+       "per10s": 10
       }
      ]
     }
@@ -1132,7 +1939,753 @@
     "status": "PASS",
     "evidence": {
      "threshold": 0.8,
-     "measured": 2.82
+     "measured": 2.78
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.182,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-layouts-2": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.9,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 51.55,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 47.9,
+     "measured": 3.65,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 20,
+     "measured": 13,
+     "threshold": "5–10 per 10 s",
+     "reason": "13 arrivals between 20s and 30s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 7,
+       "per10s": 7
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 6,
+       "per10s": 6
+      },
+      {
+       "from": 20,
+       "to": 30,
+       "count": 13,
+       "per10s": 13
+      },
+      {
+       "from": 30,
+       "to": 40,
+       "count": 9,
+       "per10s": 9
+      },
+      {
+       "from": 40,
+       "to": 50,
+       "count": 13,
+       "per10s": 13
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 0.8,
+     "measured": 2.47
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.396,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-layouts-3": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 2.9,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "WARN",
+    "evidence": {
+     "measured": 12,
+     "threshold": "20–60s",
+     "reason": "film is 12s, outside 20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 9.1,
+     "measured": 2.9,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "PASS",
+    "evidence": {
+     "threshold": "5–10 per 10 s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 8,
+       "per10s": 8
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 0.8,
+     "measured": 1.92
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.625,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-layouts-4": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 2.3,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "WARN",
+    "evidence": {
+     "measured": 5.2,
+     "threshold": "20–60s",
+     "reason": "film is 5.2s, outside 20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 3,
+     "measured": 2.2,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "PASS",
+    "evidence": {
+     "threshold": "5–10 per 10 s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 5.2,
+       "count": 4,
+       "per10s": 7.69
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 0.8,
+     "measured": 1.92
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-looks-1": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.95,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 25.6,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 21.7,
+     "measured": 3.9,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 20,
+     "measured": 7.14,
+     "threshold": "3–6 per 10 s",
+     "reason": "4 arrivals between 20s and 25.6s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 6,
+       "per10s": 6
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 6,
+       "per10s": 6
+      },
+      {
+       "from": 20,
+       "to": 25.6,
+       "count": 4,
+       "per10s": 7.14
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 1.2,
+     "measured": 2.85
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.25,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-looks-2": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.95,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 21.05,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 17.15,
+     "measured": 3.9,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "PASS",
+    "evidence": {
+     "threshold": "3–6 per 10 s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 6,
+       "per10s": 6
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 6,
+       "per10s": 6
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 1.2,
+     "measured": 2.7
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.333,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-looks-3": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.95,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 21.05,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 17.15,
+     "measured": 3.9,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "PASS",
+    "evidence": {
+     "threshold": "3–6 per 10 s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 6,
+       "per10s": 6
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 6,
+       "per10s": 6
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 1.2,
+     "measured": 2.7
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.333,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-looks-4": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.95,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 21.7,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 17.75,
+     "measured": 3.95,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 0,
+     "measured": 7,
+     "threshold": "3–6 per 10 s",
+     "reason": "7 arrivals between 0s and 10s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 7,
+       "per10s": 7
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 8,
+       "per10s": 8
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 1.2,
+     "measured": 2.7
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.133,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-looks-5": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.95,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 21.05,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 17.35,
+     "measured": 3.7,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 10,
+     "measured": 8,
+     "threshold": "3–6 per 10 s",
+     "reason": "8 arrivals between 10s and 20s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 6,
+       "per10s": 6
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 8,
+       "per10s": 8
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 1.2,
+     "measured": 2.7
     }
    },
    {
@@ -1160,111 +2713,6 @@
    }
   ]
  },
- "pieces/catalogue-layouts-2": {
-  "16x9": [
-   {
-    "id": "W-DEAD",
-    "status": "PASS",
-    "evidence": {
-     "measured": 3.95,
-     "threshold": 4
-    }
-   },
-   {
-    "id": "W-LENGTH",
-    "status": "PASS",
-    "evidence": {
-     "measured": 35.8,
-     "threshold": "20–60s"
-    }
-   },
-   {
-    "id": "W-QUIET",
-    "status": "PASS",
-    "evidence": {
-     "instant": 32.6,
-     "measured": 3.2,
-     "threshold": 2
-    }
-   },
-   {
-    "id": "W-READ",
-    "status": "PASS",
-    "evidence": {
-     "perWord": 0.3,
-     "label": 0.8,
-     "sentence": 1.2
-    }
-   },
-   {
-    "id": "W-PACE",
-    "status": "WARN",
-    "evidence": {
-     "instant": 0,
-     "measured": 11,
-     "threshold": "5–10 per 10 s",
-     "reason": "11 arrivals between 0s and 10s",
-     "windows": [
-      {
-       "from": 0,
-       "to": 10,
-       "count": 11,
-       "per10s": 11
-      },
-      {
-       "from": 10,
-       "to": 20,
-       "count": 9,
-       "per10s": 9
-      },
-      {
-       "from": 20,
-       "to": 30,
-       "count": 8,
-       "per10s": 8
-      },
-      {
-       "from": 30,
-       "to": 35.8,
-       "count": 3,
-       "per10s": 5.17
-      }
-     ]
-    }
-   },
-   {
-    "id": "W-HOLD",
-    "status": "PASS",
-    "evidence": {
-     "threshold": 0.8,
-     "measured": 2.72
-    }
-   },
-   {
-    "id": "W-CUE",
-    "status": "SKIP",
-    "evidence": {
-     "reason": "the schedule has no cues"
-    }
-   },
-   {
-    "id": "W-FADE-ONLY",
-    "status": "PASS",
-    "evidence": {
-     "measured": 0.258,
-     "threshold": 0.7
-    }
-   },
-   {
-    "id": "W-ASK",
-    "status": "PASS",
-    "evidence": {
-     "measured": [],
-     "threshold": []
-    }
-   }
-  ]
- },
  "pieces/catalogue-moves-1": {
   "16x9": [
    {
@@ -1279,7 +2727,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 55.1,
+     "measured": 47.1,
      "threshold": "20–60s"
     }
    },
@@ -1287,7 +2735,7 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 51.6,
+     "instant": 43.6,
      "measured": 3.5,
      "threshold": 2
     }
@@ -1336,15 +2784,9 @@
       },
       {
        "from": 40,
-       "to": 50,
-       "count": 8,
-       "per10s": 8
-      },
-      {
-       "from": 50,
-       "to": 55.1,
+       "to": 47.1,
        "count": 4,
-       "per10s": 7.84
+       "per10s": 5.63
       }
      ]
     }
@@ -1396,7 +2838,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 55.95,
+     "measured": 47.1,
      "threshold": "20–60s"
     }
    },
@@ -1404,8 +2846,8 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 52.45,
-     "measured": 3.5,
+     "instant": 43.9,
+     "measured": 3.2,
      "threshold": 2
     }
    },
@@ -1453,15 +2895,9 @@
       },
       {
        "from": 40,
-       "to": 50,
-       "count": 7,
-       "per10s": 7
-      },
-      {
-       "from": 50,
-       "to": 55.95,
-       "count": 3,
-       "per10s": 5.04
+       "to": 47.1,
+       "count": 4,
+       "per10s": 5.63
       }
      ]
     }
@@ -1485,7 +2921,202 @@
     "id": "W-FADE-ONLY",
     "status": "PASS",
     "evidence": {
-     "measured": 0.24,
+     "measured": 0.227,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-moves-3": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 4,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 41.95,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 38.75,
+     "measured": 3.2,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 0,
+     "measured": 8,
+     "threshold": "3–6 per 10 s",
+     "reason": "8 arrivals between 0s and 10s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 8,
+       "per10s": 8
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 9,
+       "per10s": 9
+      },
+      {
+       "from": 20,
+       "to": 30,
+       "count": 9,
+       "per10s": 9
+      },
+      {
+       "from": 30,
+       "to": 40,
+       "count": 6,
+       "per10s": 6
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 1.2,
+     "measured": 2.33
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.5,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-moves-4": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "WARN",
+    "evidence": {
+     "instant": 0.8,
+     "measured": 8,
+     "threshold": 4,
+     "reason": "nothing arrives, leaves, cuts or moves from 0.8s to 8.8s"
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "WARN",
+    "evidence": {
+     "measured": 8.8,
+     "threshold": "20–60s",
+     "reason": "film is 8.8s, outside 20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 0.8,
+     "measured": 8,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 0,
+     "measured": 2.27,
+     "threshold": "3–6 per 10 s",
+     "reason": "2 arrivals between 0s and 8.8s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 8.8,
+       "count": 2,
+       "per10s": 2.27
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 1.2,
+     "measured": 7.58
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0,
      "threshold": 0.7
     }
    },
@@ -1718,7 +3349,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 40.9,
+     "measured": 52.1,
      "threshold": "20–60s"
     }
    },
@@ -1726,8 +3357,8 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 36,
-     "measured": 4.9,
+     "instant": 46.9,
+     "measured": 5.2,
      "threshold": 2
     }
    },
@@ -1772,6 +3403,12 @@
        "to": 40,
        "count": 6,
        "per10s": 6
+      },
+      {
+       "from": 40,
+       "to": 50,
+       "count": 6,
+       "per10s": 6
       }
      ]
     }
@@ -1800,6 +3437,16 @@
        "scene": "play-b",
        "from": 40.3,
        "length": 0.6000000000000014
+      },
+      {
+       "scene": "compare-a",
+       "from": 45.3,
+       "length": 1.2000000000000028
+      },
+      {
+       "scene": "compare-b",
+       "from": 50.9,
+       "length": 1.2000000000000028
       }
      ]
     }
@@ -1843,7 +3490,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 46.65,
+     "measured": 47.4,
      "threshold": "20–60s"
     }
    },
@@ -1851,7 +3498,7 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 43.05,
+     "instant": 43.8,
      "measured": 3.6,
      "threshold": 2
     }
@@ -1867,12 +3514,9 @@
    },
    {
     "id": "W-PACE",
-    "status": "WARN",
+    "status": "PASS",
     "evidence": {
-     "instant": 10,
-     "measured": 11,
      "threshold": "5–10 per 10 s",
-     "reason": "11 arrivals between 10s and 20s",
      "windows": [
       {
        "from": 0,
@@ -1883,14 +3527,14 @@
       {
        "from": 10,
        "to": 20,
-       "count": 11,
-       "per10s": 11
+       "count": 8,
+       "per10s": 8
       },
       {
        "from": 20,
        "to": 30,
-       "count": 7,
-       "per10s": 7
+       "count": 10,
+       "per10s": 10
       },
       {
        "from": 30,
@@ -1900,9 +3544,9 @@
       },
       {
        "from": 40,
-       "to": 46.65,
+       "to": 47.4,
        "count": 4,
-       "per10s": 6.02
+       "per10s": 5.41
       }
      ]
     }
@@ -1912,7 +3556,7 @@
     "status": "PASS",
     "evidence": {
      "threshold": 0.8,
-     "measured": 2.92
+     "measured": 3.07
     }
    },
    {
@@ -1940,6 +3584,117 @@
    }
   ]
  },
+ "pieces/catalogue-sound-2": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.95,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 50,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 46.4,
+     "measured": 3.6,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 20,
+     "measured": 12,
+     "threshold": "5–10 per 10 s",
+     "reason": "12 arrivals between 20s and 30s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 8,
+       "per10s": 8
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 8,
+       "per10s": 8
+      },
+      {
+       "from": 20,
+       "to": 30,
+       "count": 12,
+       "per10s": 12
+      },
+      {
+       "from": 30,
+       "to": 40,
+       "count": 8,
+       "per10s": 8
+      },
+      {
+       "from": 40,
+       "to": 50,
+       "count": 8,
+       "per10s": 8
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 0.8,
+     "measured": 3
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "no beat grid (audio.beats is null): cues are not snapped"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.091,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
  "pieces/catalogue-text-1": {
   "16x9": [
    {
@@ -1954,7 +3709,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 44.85,
+     "measured": 52.65,
      "threshold": "20–60s"
     }
    },
@@ -1962,7 +3717,7 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 41.9,
+     "instant": 49.7,
      "measured": 2.95,
      "threshold": 2
     }
@@ -2008,6 +3763,12 @@
        "to": 40,
        "count": 8,
        "per10s": 8
+      },
+      {
+       "from": 40,
+       "to": 50,
+       "count": 10,
+       "per10s": 10
       }
      ]
     }
@@ -2031,7 +3792,7 @@
     "id": "W-FADE-ONLY",
     "status": "PASS",
     "evidence": {
-     "measured": 0.436,
+     "measured": 0.435,
      "threshold": 0.7
     }
    },
@@ -2059,7 +3820,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 45.15,
+     "measured": 45.9,
      "threshold": "20–60s"
     }
    },
@@ -2067,8 +3828,8 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 42.2,
-     "measured": 2.95,
+     "instant": 42.5,
+     "measured": 3.4,
      "threshold": 2
     }
    },
@@ -2105,20 +3866,20 @@
       {
        "from": 20,
        "to": 30,
-       "count": 7,
-       "per10s": 7
+       "count": 10,
+       "per10s": 10
       },
       {
        "from": 30,
        "to": 40,
-       "count": 11,
-       "per10s": 11
+       "count": 7,
+       "per10s": 7
       },
       {
        "from": 40,
-       "to": 45.15,
+       "to": 45.9,
        "count": 3,
-       "per10s": 5.83
+       "per10s": 5.08
       }
      ]
     }
@@ -2142,7 +3903,118 @@
     "id": "W-FADE-ONLY",
     "status": "PASS",
     "evidence": {
-     "measured": 0.436,
+     "measured": 0.421,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-text-3": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.95,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 50.35,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 46.75,
+     "measured": 3.6,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 0,
+     "measured": 8,
+     "threshold": "3–6 per 10 s",
+     "reason": "8 arrivals between 0s and 10s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 8,
+       "per10s": 8
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 7,
+       "per10s": 7
+      },
+      {
+       "from": 20,
+       "to": 30,
+       "count": 10,
+       "per10s": 10
+      },
+      {
+       "from": 30,
+       "to": 40,
+       "count": 6,
+       "per10s": 6
+      },
+      {
+       "from": 40,
+       "to": 50,
+       "count": 7,
+       "per10s": 7
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 1.2,
+     "measured": 1.6
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.421,
      "threshold": 0.7
     }
    },
@@ -2170,7 +4042,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 39.39,
+     "measured": 50.61,
      "threshold": "20–60s"
     }
    },
@@ -2178,8 +4050,8 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 36.93,
-     "measured": 2.46,
+     "instant": 47.56,
+     "measured": 3.05,
      "threshold": 2
     }
    },
@@ -2218,111 +4090,6 @@
        "to": 30,
        "count": 10,
        "per10s": 10
-      },
-      {
-       "from": 30,
-       "to": 39.39,
-       "count": 6,
-       "per10s": 6.39
-      }
-     ]
-    }
-   },
-   {
-    "id": "W-HOLD",
-    "status": "PASS",
-    "evidence": {
-     "threshold": 1.6,
-     "measured": 1.94
-    }
-   },
-   {
-    "id": "W-CUE",
-    "status": "SKIP",
-    "evidence": {
-     "reason": "the schedule has no cues"
-    }
-   },
-   {
-    "id": "W-FADE-ONLY",
-    "status": "PASS",
-    "evidence": {
-     "measured": 0.588,
-     "threshold": 0.7
-    }
-   },
-   {
-    "id": "W-ASK",
-    "status": "PASS",
-    "evidence": {
-     "measured": [],
-     "threshold": []
-    }
-   }
-  ]
- },
- "pieces/catalogue-transitions-2": {
-  "16x9": [
-   {
-    "id": "W-DEAD",
-    "status": "PASS",
-    "evidence": {
-     "measured": 3.95,
-     "threshold": 4
-    }
-   },
-   {
-    "id": "W-LENGTH",
-    "status": "PASS",
-    "evidence": {
-     "measured": 52.31,
-     "threshold": "20–60s"
-    }
-   },
-   {
-    "id": "W-QUIET",
-    "status": "PASS",
-    "evidence": {
-     "instant": 49.85,
-     "measured": 2.46,
-     "threshold": 2
-    }
-   },
-   {
-    "id": "W-READ",
-    "status": "PASS",
-    "evidence": {
-     "perWord": 0.3,
-     "label": 0.8,
-     "sentence": 1.2
-    }
-   },
-   {
-    "id": "W-PACE",
-    "status": "WARN",
-    "evidence": {
-     "instant": 0,
-     "measured": 8,
-     "threshold": "2–5 per 10 s",
-     "reason": "8 arrivals between 0s and 10s",
-     "windows": [
-      {
-       "from": 0,
-       "to": 10,
-       "count": 8,
-       "per10s": 8
-      },
-      {
-       "from": 10,
-       "to": 20,
-       "count": 10,
-       "per10s": 10
-      },
-      {
-       "from": 20,
-       "to": 30,
-       "count": 6,
-       "per10s": 6
       },
       {
        "from": 30,
@@ -2333,8 +4100,8 @@
       {
        "from": 40,
        "to": 50,
-       "count": 10,
-       "per10s": 10
+       "count": 6,
+       "per10s": 6
       }
      ]
     }
@@ -2372,7 +4139,7 @@
    }
   ]
  },
- "pieces/catalogue-transitions-3": {
+ "pieces/catalogue-transitions-2": {
   "16x9": [
    {
     "id": "W-DEAD",
@@ -2386,7 +4153,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 38.68,
+     "measured": 41.09,
      "threshold": "20–60s"
     }
    },
@@ -2394,7 +4161,7 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 36.22,
+     "instant": 38.63,
      "measured": 2.46,
      "threshold": 2
     }
@@ -2432,14 +4199,14 @@
       {
        "from": 20,
        "to": 30,
-       "count": 10,
-       "per10s": 10
+       "count": 6,
+       "per10s": 6
       },
       {
        "from": 30,
-       "to": 38.68,
-       "count": 6,
-       "per10s": 6.91
+       "to": 40,
+       "count": 10,
+       "per10s": 10
       }
      ]
     }
@@ -2477,7 +4244,7 @@
    }
   ]
  },
- "pieces/catalogue-transitions-4": {
+ "pieces/catalogue-transitions-3": {
   "16x9": [
    {
     "id": "W-DEAD",
@@ -2491,7 +4258,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 51.11,
+     "measured": 49.01,
      "threshold": "20–60s"
     }
    },
@@ -2499,8 +4266,8 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 48.36,
-     "measured": 2.75,
+     "instant": 46.55,
+     "measured": 2.46,
      "threshold": 2
     }
    },
@@ -2548,9 +4315,120 @@
       },
       {
        "from": 40,
-       "to": 50,
+       "to": 49.01,
+       "count": 6,
+       "per10s": 6.66
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 1.6,
+     "measured": 1.94
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.591,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-transitions-4": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.95,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 51.11,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 48.65,
+     "measured": 2.46,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 0,
+     "measured": 8,
+     "threshold": "2–5 per 10 s",
+     "reason": "8 arrivals between 0s and 10s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 8,
+       "per10s": 8
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 10,
+       "per10s": 10
+      },
+      {
+       "from": 20,
+       "to": 30,
+       "count": 10,
+       "per10s": 10
+      },
+      {
+       "from": 30,
+       "to": 40,
        "count": 6,
        "per10s": 6
+      },
+      {
+       "from": 40,
+       "to": 50,
+       "count": 10,
+       "per10s": 10
       }
      ]
     }
@@ -2602,7 +4480,7 @@
     "id": "W-LENGTH",
     "status": "PASS",
     "evidence": {
-     "measured": 39.51,
+     "measured": 52,
      "threshold": "20–60s"
     }
    },
@@ -2610,7 +4488,7 @@
     "id": "W-QUIET",
     "status": "PASS",
     "evidence": {
-     "instant": 36.76,
+     "instant": 49.25,
      "measured": 2.75,
      "threshold": 2
     }
@@ -2654,20 +4532,26 @@
       {
        "from": 10,
        "to": 20,
-       "count": 10,
-       "per10s": 10
-      },
-      {
-       "from": 20,
-       "to": 30,
        "count": 9,
        "per10s": 9
       },
       {
+       "from": 20,
+       "to": 30,
+       "count": 8,
+       "per10s": 8
+      },
+      {
        "from": 30,
-       "to": 39.51,
-       "count": 4,
-       "per10s": 4.21
+       "to": 40,
+       "count": 6,
+       "per10s": 6
+      },
+      {
+       "from": 40,
+       "to": 50,
+       "count": 10,
+       "per10s": 10
       }
      ]
     }
@@ -2691,7 +4575,223 @@
     "id": "W-FADE-ONLY",
     "status": "PASS",
     "evidence": {
-     "measured": 0.581,
+     "measured": 0.585,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-transitions-6": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 3.95,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 41.34,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 38.59,
+     "measured": 2.75,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 0,
+     "measured": 8,
+     "threshold": "2–5 per 10 s",
+     "reason": "8 arrivals between 0s and 10s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 8,
+       "per10s": 8
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 10,
+       "per10s": 10
+      },
+      {
+       "from": 20,
+       "to": 30,
+       "count": 10,
+       "per10s": 10
+      },
+      {
+       "from": 30,
+       "to": 40,
+       "count": 6,
+       "per10s": 6
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 1.6,
+     "measured": 1.94
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.588,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/catalogue-transitions-7": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "PASS",
+    "evidence": {
+     "measured": 4,
+     "threshold": 4
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "PASS",
+    "evidence": {
+     "measured": 50.59,
+     "threshold": "20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 46.59,
+     "measured": 4,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "WARN",
+    "evidence": {
+     "instant": 0,
+     "measured": 8,
+     "threshold": "2–5 per 10 s",
+     "reason": "8 arrivals between 0s and 10s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 8,
+       "per10s": 8
+      },
+      {
+       "from": 10,
+       "to": 20,
+       "count": 6,
+       "per10s": 6
+      },
+      {
+       "from": 20,
+       "to": 30,
+       "count": 10,
+       "per10s": 10
+      },
+      {
+       "from": 30,
+       "to": 40,
+       "count": 10,
+       "per10s": 10
+      },
+      {
+       "from": 40,
+       "to": 50,
+       "count": 8,
+       "per10s": 8
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 1.6,
+     "measured": 1.9
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0.548,
      "threshold": 0.7
     }
    },
@@ -2992,6 +5092,93 @@
     "status": "PASS",
     "evidence": {
      "measured": 0.029,
+     "threshold": 0.7
+    }
+   },
+   {
+    "id": "W-ASK",
+    "status": "PASS",
+    "evidence": {
+     "measured": [],
+     "threshold": []
+    }
+   }
+  ]
+ },
+ "pieces/demo-hairline-phone": {
+  "16x9": [
+   {
+    "id": "W-DEAD",
+    "status": "WARN",
+    "evidence": {
+     "instant": 0.1,
+     "measured": 6.9,
+     "threshold": 4,
+     "reason": "nothing arrives, leaves, cuts or moves from 0.1s to 7s"
+    }
+   },
+   {
+    "id": "W-LENGTH",
+    "status": "WARN",
+    "evidence": {
+     "measured": 12.5,
+     "threshold": "20–60s",
+     "reason": "film is 12.5s, outside 20–60s"
+    }
+   },
+   {
+    "id": "W-QUIET",
+    "status": "PASS",
+    "evidence": {
+     "instant": 0.1,
+     "measured": 12.4,
+     "threshold": 2
+    }
+   },
+   {
+    "id": "W-READ",
+    "status": "PASS",
+    "evidence": {
+     "perWord": 0.3,
+     "label": 0.8,
+     "sentence": 1.2
+    }
+   },
+   {
+    "id": "W-PACE",
+    "status": "PASS",
+    "evidence": {
+     "threshold": "3–6 per 10 s",
+     "windows": [
+      {
+       "from": 0,
+       "to": 10,
+       "count": 4,
+       "per10s": 4
+      }
+     ]
+    }
+   },
+   {
+    "id": "W-HOLD",
+    "status": "PASS",
+    "evidence": {
+     "threshold": 1.2,
+     "measured": 3.08
+    }
+   },
+   {
+    "id": "W-CUE",
+    "status": "SKIP",
+    "evidence": {
+     "reason": "the schedule has no cues"
+    }
+   },
+   {
+    "id": "W-FADE-ONLY",
+    "status": "PASS",
+    "evidence": {
+     "measured": 0,
      "threshold": 0.7
     }
    },

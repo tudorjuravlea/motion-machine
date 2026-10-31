@@ -405,6 +405,466 @@
      ]
     }
    ]
+  },
+  {
+   "pattern": "sound/ready",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "ready",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/fade",
+       "text": "Ready",
+       "cue": "ready"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "Something is present and ready.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/ready",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/attention",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "attention",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/pop",
+       "text": "New",
+       "cue": "attention"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A nudge: look here.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/attention",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/warning",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "warning",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/rise",
+       "text": "Check",
+       "cue": "warning"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "Caution: take a second look.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/warning",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/error",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "error",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/drop",
+       "text": "Failed",
+       "cue": "error"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A failure; the contour falls.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/error",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/loading",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "loading",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/typewriter",
+       "text": "Loading",
+       "cue": "loading"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "Work is under way.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/loading",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/tap",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "tap",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/pop",
+       "text": "Tap",
+       "cue": "tap"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A touch on a control.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/tap",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/toggle-on",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "toggle-on",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/pop",
+       "text": "On",
+       "cue": "toggle-on"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A switch turned on.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/toggle-on",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/toggle-off",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "toggle-off",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/fade",
+       "text": "Off",
+       "cue": "toggle-off"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A switch turned off.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/toggle-off",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/open",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "open",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/mask-reveal",
+       "text": "Open",
+       "cue": "open"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "Something opens.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/open",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/close",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "close",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/rise",
+       "text": "Close",
+       "cue": "close"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "Something closes.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/close",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
   }
  ]
 }

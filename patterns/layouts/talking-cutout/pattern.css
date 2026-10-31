@@ -54,10 +54,38 @@
   object-position: 50% 50%;
 }
 .talking-cutout__speaker:not([src]) { visibility: hidden; }
+/* a speaker frame other than hero (SPEC §4): the box the kit gives the speaker is not the stand the
+   backdrop words are sized for, so the words step aside; the panel fills the rest of the frame */
+[data-frame]:not([data-frame="hero"]) .talking-cutout__backdrop { display: none; }
+.talking-cutout__panel {
+  position: absolute;
+  z-index: 2;
+  box-sizing: border-box;
+  left: var(--mm-panel-x, var(--mm-safe));
+  top: var(--mm-panel-y, var(--mm-safe));
+  width: var(--mm-panel-w, calc(var(--mm-frame-w) - var(--mm-safe) * 2));
+  height: var(--mm-panel-h, calc(var(--mm-frame-h) - var(--mm-safe) * 2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  color: var(--mm-color-ink);
+}
+.talking-cutout__tile {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  pointer-events: auto;
+}
+.talking-cutout__tile[data-empty] { display: none; }
 .talking-cutout__front {
   position: absolute;
   z-index: 2;
-  inset: var(--mm-safe) var(--mm-safe) calc(var(--mm-safe) * 1.5);
+  inset: var(--mm-safe) calc(var(--mm-frame-w) - var(--mm-panel-x, var(--mm-safe)) - var(--mm-panel-w, calc(var(--mm-frame-w) - var(--mm-safe) * 2))) calc(var(--mm-safe) * 1.5) var(--mm-panel-x, var(--mm-safe));
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -67,6 +95,7 @@
 }
 .talking-cutout__headline,
 .talking-cutout__caption {
+  position: relative;   /* the kit nudges a plate clear of the face by left and top */
   box-sizing: border-box;
   margin: 0;
   max-width: 100%;

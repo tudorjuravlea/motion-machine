@@ -198,6 +198,66 @@
      ]
     }
    ]
+  },
+  {
+   "pattern": "3d/point-cloud",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 7,
+     "beats": [
+      {
+       "at": 0.2,
+       "slot": "stage",
+       "fx": "3d/point-cloud",
+       "asset": "assets/bottle.png",
+       "params": {
+        "dur": 3.6
+       }
+      },
+      {
+       "at": 4,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "point-cloud: a cut-out rebuilt as glittering points."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/caption-bar",
+     "duration": 7,
+     "beats": [
+      {
+       "at": 0.2,
+       "slot": "stage",
+       "fx": "3d/point-cloud",
+       "asset": "assets/bottle.png",
+       "params": {
+        "dur": 3.6,
+        "colors": "source",
+        "yaw": -25
+       }
+      },
+      {
+       "at": 4,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "colors: source, yaw -25. Its own colours."
+      }
+     ]
+    }
+   ],
+   "assets": [
+    {
+     "from": "patterns/3d/point-cloud/demo/assets/bottle.png",
+     "to": "assets/bottle.png"
+    },
+    {
+     "from": "patterns/3d/point-cloud/demo/assets/bottle.licence.json",
+     "to": "assets/bottle.licence.json"
+    }
+   ]
   }
  ]
 }

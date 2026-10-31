@@ -5,7 +5,7 @@
   "formats": [
     "16x9"
   ],
-  "title": "Transitions, part 4 of 5",
+  "title": "Transitions, part 4 of 7",
   "language": "en",
   "facts": [],
   "audio": {
@@ -33,7 +33,7 @@
           "at": 0.4,
           "slot": "sub",
           "fx": "entrances/fade",
-          "text": "How one scene hands over. Part 4 of 5."
+          "text": "How one scene hands over. Part 4 of 7."
         }
       ],
       "say": "How one scene hands over.",
@@ -63,111 +63,6 @@
       ],
       "say": "Watch twice.",
       "duration": 4.25
-    },
-    {
-      "id": "split-a",
-      "layout": "layouts/split",
-      "move": null,
-      "beats": [
-        {
-          "at": 0,
-          "slot": "headline",
-          "fx": "style:headline",
-          "text": "split",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0,
-          "slot": "figure",
-          "fx": "style:figure",
-          "text": "A",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0,
-          "slot": "body",
-          "fx": "style:body",
-          "text": "Opens from a seam through the middle, like doors.",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0,
-          "slot": "caption",
-          "fx": "style:body",
-          "text": "transitions/split",
-          "params": {
-            "instant": true
-          }
-        }
-      ],
-      "say": "Opens from a seam through the middle, like doors.",
-      "cut": "transitions/hard-cut",
-      "duration": 3.65
-    },
-    {
-      "id": "split-b",
-      "layout": "layouts/split",
-      "move": null,
-      "beats": [
-        {
-          "at": 0.64,
-          "slot": "headline",
-          "fx": "entrances/rise",
-          "text": "split"
-        },
-        {
-          "at": 0.76,
-          "slot": "figure",
-          "fx": "entrances/fade",
-          "text": "B"
-        },
-        {
-          "at": 0.88,
-          "slot": "body",
-          "fx": "entrances/fade",
-          "text": "At its defaults."
-        }
-      ],
-      "say": "At its defaults.",
-      "cut": "transitions/split",
-      "duration": 3.34
-    },
-    {
-      "id": "split-c",
-      "layout": "layouts/split",
-      "move": null,
-      "beats": [
-        {
-          "at": 0.64,
-          "slot": "headline",
-          "fx": "entrances/rise",
-          "text": "split"
-        },
-        {
-          "at": 0.76,
-          "slot": "figure",
-          "fx": "entrances/fade",
-          "text": "C"
-        },
-        {
-          "at": 0.88,
-          "slot": "body",
-          "fx": "entrances/fade",
-          "text": "shape: vertical. A straight seam."
-        }
-      ],
-      "say": "shape: vertical. A straight seam.",
-      "cut": "transitions/split",
-      "cutParams": {
-        "shape": "vertical"
-      },
-      "duration": 3.34
     },
     {
       "id": "blinds-a",
@@ -486,9 +381,114 @@
         "perspective": 1
       },
       "duration": 4.11
+    },
+    {
+      "id": "zoom-out-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "zoom-out",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "The camera pulls back; the next settles from larger.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/zoom-out",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "The camera pulls back; the next settles from larger.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.65
+    },
+    {
+      "id": "zoom-out-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "zoom-out"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/zoom-out",
+      "duration": 3.34
+    },
+    {
+      "id": "zoom-out-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "zoom-out"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "depth: 1.2. A deeper pull."
+        }
+      ],
+      "say": "depth: 1.2. A deeper pull.",
+      "cut": "transitions/zoom-out",
+      "cutParams": {
+        "depth": 1.2
+      },
+      "duration": 3.34
     }
   ],
-  "share": "Transitions (4/5): split, blinds, grid-dissolve, flip. Each one shown, explained, then replayed with a knob turned.",
+  "share": "Transitions (4/7): blinds, grid-dissolve, flip, zoom-out. Each one shown, explained, then replayed with a knob turned.",
   "cta": {
     "text": "Motion Machine",
     "url": "github.com/tudorjuravlea/motion-machine"

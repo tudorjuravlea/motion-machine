@@ -1,0 +1,178 @@
+{
+  "id": "catalogue-looks-4",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Lens finish",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Lens finish",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Chroma and bloom, both on here."
+        }
+      ],
+      "say": "Chroma and bloom, both on here.",
+      "duration": 3.6
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Look at the frame.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Each film changes the style once, and says so."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 4.25
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "lens",
+      "layout": "layouts/comparison",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "finish: chroma. Colour fringes grow toward the rim.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "left",
+          "fx": "entrances/pop",
+          "text": "Rim"
+        },
+        {
+          "at": 0.5,
+          "slot": "right",
+          "fx": "entrances/pop",
+          "text": "Rim"
+        }
+      ],
+      "id": "lens-a",
+      "duration": 4.4
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "lens",
+      "layout": "layouts/bento-3",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "finish: bloom. A glow around what is lighter.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "tile-1",
+          "fx": "entrances/pop",
+          "text": "Light"
+        },
+        {
+          "at": 0.55,
+          "slot": "tile-2",
+          "fx": "entrances/pop",
+          "text": "Glow"
+        },
+        {
+          "at": 0.7,
+          "slot": "tile-3",
+          "fx": "entrances/pop",
+          "text": "Soft"
+        }
+      ],
+      "id": "lens-b",
+      "duration": 4.6
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "lens",
+      "layout": "layouts/list-reveal",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "In palette roles only",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "item-1",
+          "fx": "entrances/rise",
+          "text": "Never white"
+        },
+        {
+          "at": 0.6,
+          "slot": "item-2",
+          "fx": "entrances/rise",
+          "text": "Never a new colour"
+        },
+        {
+          "at": 0.9,
+          "slot": "item-3",
+          "fx": "entrances/rise",
+          "text": "Cuts carry it"
+        }
+      ],
+      "id": "lens-c",
+      "duration": 4.85
+    }
+  ],
+  "share": "Lens finish: lens. Finish options: chroma and bloom.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

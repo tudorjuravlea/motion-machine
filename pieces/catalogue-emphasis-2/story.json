@@ -5,9 +5,15 @@
   "formats": [
     "16x9"
   ],
-  "title": "Emphasis, part 2 of 2",
+  "title": "Emphasis, part 2 of 3",
   "language": "en",
-  "facts": [],
+  "facts": [
+    {
+      "id": "f1",
+      "text": "71.5 mm",
+      "source": "catalogue demo number, not a claim"
+    }
+  ],
   "audio": {
     "track": null,
     "bpm": null,
@@ -33,7 +39,7 @@
           "at": 0.4,
           "slot": "sub",
           "fx": "entrances/fade",
-          "text": "Pointing the eye at what is there. Part 2 of 2."
+          "text": "Pointing the eye at what is there. Part 2 of 3."
         }
       ],
       "say": "Pointing the eye at what is there.",
@@ -63,174 +69,6 @@
       ],
       "say": "Watch twice.",
       "duration": 3.05
-    },
-    {
-      "id": "shine-a",
-      "layout": "layouts/split",
-      "cut": "transitions/hard-cut",
-      "move": null,
-      "beats": [
-        {
-          "at": 0,
-          "slot": "headline",
-          "fx": "style:headline",
-          "text": "shine",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0.45,
-          "slot": "figure",
-          "fx": "entrances/rise",
-          "text": "Shine",
-          "emphasis": "emphasis/shine"
-        },
-        {
-          "at": 0,
-          "slot": "body",
-          "fx": "style:body",
-          "text": "One band of light crosses the text and leaves.",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0,
-          "slot": "caption",
-          "fx": "style:body",
-          "text": "emphasis/shine",
-          "params": {
-            "instant": true
-          }
-        }
-      ],
-      "say": "shine: One band of light crosses the text and leaves.",
-      "duration": 4.1
-    },
-    {
-      "id": "shine-b",
-      "layout": "layouts/split",
-      "cut": "transitions/hard-cut",
-      "move": null,
-      "beats": [
-        {
-          "at": 0,
-          "slot": "headline",
-          "fx": "style:headline",
-          "text": "shine",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0.45,
-          "slot": "figure",
-          "fx": "entrances/rise",
-          "text": "Shine",
-          "emphasis": "emphasis/shine",
-          "params": {
-            "emphasis": {
-              "width": 40
-            }
-          }
-        },
-        {
-          "at": 0,
-          "slot": "body",
-          "fx": "style:body",
-          "text": "width: 40. A broader band.",
-          "params": {
-            "instant": true
-          }
-        }
-      ],
-      "say": "width: 40. A broader band.",
-      "duration": 3.4
-    },
-    {
-      "id": "spotlight-a",
-      "layout": "layouts/split",
-      "cut": "transitions/hard-cut",
-      "move": null,
-      "beats": [
-        {
-          "at": 0,
-          "slot": "headline",
-          "fx": "style:headline",
-          "text": "spotlight",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0.45,
-          "slot": "figure",
-          "fx": "entrances/rise",
-          "text": "Me",
-          "emphasis": "emphasis/spotlight"
-        },
-        {
-          "at": 0,
-          "slot": "body",
-          "fx": "style:body",
-          "text": "Everything else dims, then the light lets go.",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0,
-          "slot": "caption",
-          "fx": "style:body",
-          "text": "emphasis/spotlight",
-          "params": {
-            "instant": true
-          }
-        }
-      ],
-      "say": "spotlight: Everything else dims, then the light lets go.",
-      "duration": 4.1
-    },
-    {
-      "id": "spotlight-b",
-      "layout": "layouts/split",
-      "cut": "transitions/hard-cut",
-      "move": null,
-      "beats": [
-        {
-          "at": 0,
-          "slot": "headline",
-          "fx": "style:headline",
-          "text": "spotlight",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0.45,
-          "slot": "figure",
-          "fx": "entrances/rise",
-          "text": "Me",
-          "emphasis": "emphasis/spotlight",
-          "params": {
-            "emphasis": {
-              "dim": 0.5
-            }
-          }
-        },
-        {
-          "at": 0,
-          "slot": "body",
-          "fx": "style:body",
-          "text": "dim: 0.5. A gentler dim.",
-          "params": {
-            "instant": true
-          }
-        }
-      ],
-      "say": "dim: 0.5. A gentler dim.",
-      "duration": 3.4
     },
     {
       "id": "stretch-pill-a",
@@ -409,9 +247,250 @@
       ],
       "id": "lens-b",
       "duration": 3.6
+    },
+    {
+      "id": "act-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "act",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 1,
+          "slot": "figure",
+          "fx": "entrances/character",
+          "params": {
+            "mood": "calm",
+            "to": "surprised"
+          },
+          "emphasis": "emphasis/act"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "The mascot's mood changes: eyes shut, face swaps, a take.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "emphasis/act",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "act: The mascot's mood changes: eyes shut, face swaps, a take.",
+      "duration": 4.8
+    },
+    {
+      "id": "act-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "act",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 1,
+          "slot": "figure",
+          "fx": "entrances/character",
+          "params": {
+            "mood": "calm",
+            "to": "surprised",
+            "emphasis": {
+              "amount": 1.5
+            }
+          },
+          "emphasis": "emphasis/act"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "amount: 1.5. A bigger take.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "amount: 1.5. A bigger take.",
+      "duration": 4.8
+    },
+    {
+      "id": "countdown-clock-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "countdown-clock",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Ends tonight",
+          "emphasis": "emphasis/countdown-clock"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A clock hand sweeps a turn over the line.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "emphasis/countdown-clock",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "countdown-clock: A clock hand sweeps a turn over the line.",
+      "duration": 4.4
+    },
+    {
+      "id": "countdown-clock-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "countdown-clock",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Ends tonight",
+          "emphasis": "emphasis/countdown-clock",
+          "params": {
+            "emphasis": {
+              "turns": 2,
+              "place": "below",
+              "stripes": false
+            }
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "turns: 2, place: below, stripes: false.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "turns: 2, place: below, stripes: false.",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "dimension",
+      "layout": "layouts/statement",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "dimension: a measure across what it measures.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 1.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "71.5 mm",
+          "fact": "f1",
+          "params": {
+            "instant": true,
+            "emphasis": {
+              "for": "headline"
+            }
+          },
+          "emphasis": "emphasis/dimension"
+        }
+      ],
+      "id": "dimension-a",
+      "duration": 4
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "dimension",
+      "layout": "layouts/statement",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "tone: ink. The line in ink.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 1.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "71.5 mm",
+          "fact": "f1",
+          "params": {
+            "instant": true,
+            "emphasis": {
+              "for": "headline",
+              "tone": "ink"
+            }
+          },
+          "emphasis": "emphasis/dimension"
+        }
+      ],
+      "id": "dimension-b",
+      "duration": 4
     }
   ],
-  "share": "Emphasis (2/2): shine, spotlight, stretch-pill, lens. Each one shown, explained, then replayed with a knob turned.",
+  "share": "Emphasis (2/3): stretch-pill, lens, act, countdown-clock, dimension. Each one shown, explained, then replayed with a knob turned.",
   "cta": {
     "text": "Motion Machine",
     "url": "github.com/tudorjuravlea/motion-machine"

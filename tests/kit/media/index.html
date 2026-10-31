@@ -18,10 +18,16 @@
     if (q.get('finish')) style.devices = { finish: q.get('finish') };   // devices.browser.test: brand devices.finish
     if (q.get('surfaceInk')) style.color.surfaceInk = q.get('surfaceInk');   // brand-text.browser.test
     if (q.get('look')) style.finish = { grain: 0.6, halftone: 0.3, vignette: 0.8, edgeFringe: 0.5, paperEdge: 1 };   // finish.browser.test
+    if (q.get('cut')) story.scenes[1].cut = q.get('cut');   // a story's second scene arrives by this cut
+    if (q.get('cutParamsJson')) for (const sc of story.scenes.slice(1)) sc.cutParams = JSON.parse(q.get('cutParamsJson'));   // the transitions' browser tests: a cut's params
+    if (q.get('finishJson')) style.finish = JSON.parse(q.get('finishJson'));   // finish-fx.browser.test: any finish
     if (q.get('frameHold')) style.motion.frameHold = Number(q.get('frameHold'));   // frame-hold.browser.test
     if (q.has('boil')) style.motion.boil = Number(q.get('boil'));   // sketch.browser.test
     if (q.get('accentText')) style.composition = { ...style.composition, accentText: q.get('accentText') === '1' };
     if (q.get('ground')) style.ground = { blobs: [{ color: '#2a9d8f', x: -0.17, y: -0.16, w: 0.7, h: 0.52, alpha: 0.85 }, { color: '#e9c46a', x: 0.6, y: 0.1, w: 0.83, h: 0.6, alpha: 0.55 }], blur: 0.11, mark: { src: 'assets/mark.svg', width: 1.9, alpha: 0.08 } };   // ground.browser.test
+    if (q.get('groundJson')) style.ground = JSON.parse(q.get('groundJson'));   // ground-kinds.browser.test: a ground of any kind
+    if (q.get('surfaceJson')) style.surface = JSON.parse(q.get('surfaceJson'));   // surface.browser.test: the brand's glass look
+    if (q.get('patternsJson')) style.patterns = { ...style.patterns, ...JSON.parse(q.get('patternsJson')) };   // the brand's pattern defaults (surface: glass)
     await mount({ story, style, patternsBase: new URL('../../../patterns/', import.meta.url) });
   </script>
 </body>

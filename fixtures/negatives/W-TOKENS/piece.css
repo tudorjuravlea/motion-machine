@@ -1,0 +1,10 @@
+[data-scene="open"] [data-slot="headline"] { font-size: calc(var(--mm-size-display) * var(--mm-headline-scale) * 0.80); }
+[data-scene="open"] [data-slot="sub"] { border: calc(var(--mm-space-1) * 0.2) solid var(--mm-color-canvas); border-radius: calc(var(--mm-radius-1) * 1); }
+[data-scene="style"] [data-slot="headline"] { font-size: calc(var(--mm-size-display) * var(--mm-headline-scale) * 0.73); }
+[data-scene="style"] [data-slot="sub"] { border: calc(var(--mm-space-1) * 0.4) solid var(--mm-color-canvas); border-radius: calc(var(--mm-radius-1) * 2); }
+[data-scene="rests"] [data-slot="headline"] { font-size: calc(var(--mm-size-display) * var(--mm-headline-scale) * 0.66); }
+[data-scene="rests"] [data-slot="sub"] { border: calc(var(--mm-space-1) * 0.6) solid var(--mm-color-canvas); border-radius: calc(var(--mm-radius-1) * 3); }
+[data-scene="sizes"] [data-slot="headline"] { font-size: calc(var(--mm-size-display) * var(--mm-headline-scale) * 0.59); }
+[data-scene="sizes"] [data-slot="sub"] { border: calc(var(--mm-space-1) * 0.8) solid var(--mm-color-canvas); border-radius: calc(var(--mm-radius-1) * 4); }
+[data-scene="close"] [data-slot="headline"] { font-size: calc(var(--mm-size-display) * var(--mm-headline-scale) * 0.52); }
+[data-scene="close"] [data-slot="sub"] { border: calc(var(--mm-space-1) * 1.0) solid var(--mm-color-canvas); border-radius: calc(var(--mm-radius-1) * 1); }

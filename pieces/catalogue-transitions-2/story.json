@@ -5,7 +5,7 @@
   "formats": [
     "16x9"
   ],
-  "title": "Transitions, part 2 of 5",
+  "title": "Transitions, part 2 of 7",
   "language": "en",
   "facts": [],
   "audio": {
@@ -33,7 +33,7 @@
           "at": 0.4,
           "slot": "sub",
           "fx": "entrances/fade",
-          "text": "How one scene hands over. Part 2 of 5."
+          "text": "How one scene hands over. Part 2 of 7."
         }
       ],
       "say": "How one scene hands over.",
@@ -63,112 +63,6 @@
       ],
       "say": "Watch twice.",
       "duration": 4.25
-    },
-    {
-      "id": "color-dip-a",
-      "layout": "layouts/split",
-      "move": null,
-      "beats": [
-        {
-          "at": 0,
-          "slot": "headline",
-          "fx": "style:headline",
-          "text": "color-dip",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0,
-          "slot": "figure",
-          "fx": "style:figure",
-          "text": "A",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0,
-          "slot": "body",
-          "fx": "style:body",
-          "text": "Dips into a flat colour, then rises out of it.",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0,
-          "slot": "caption",
-          "fx": "style:body",
-          "text": "transitions/color-dip",
-          "params": {
-            "instant": true
-          }
-        }
-      ],
-      "say": "Dips into a flat colour, then rises out of it.",
-      "cut": "transitions/hard-cut",
-      "duration": 3.95
-    },
-    {
-      "id": "color-dip-b",
-      "layout": "layouts/split",
-      "move": null,
-      "beats": [
-        {
-          "at": 0.64,
-          "slot": "headline",
-          "fx": "entrances/rise",
-          "text": "color-dip"
-        },
-        {
-          "at": 0.76,
-          "slot": "figure",
-          "fx": "entrances/fade",
-          "text": "B"
-        },
-        {
-          "at": 0.88,
-          "slot": "body",
-          "fx": "entrances/fade",
-          "text": "At its defaults."
-        }
-      ],
-      "say": "At its defaults.",
-      "cut": "transitions/color-dip",
-      "duration": 3.34
-    },
-    {
-      "id": "color-dip-c",
-      "layout": "layouts/split",
-      "move": null,
-      "beats": [
-        {
-          "at": 0.64,
-          "slot": "headline",
-          "fx": "entrances/rise",
-          "text": "color-dip"
-        },
-        {
-          "at": 0.76,
-          "slot": "figure",
-          "fx": "entrances/fade",
-          "text": "C"
-        },
-        {
-          "at": 0.88,
-          "slot": "body",
-          "fx": "entrances/fade",
-          "text": "veil: ink, hold: 0.6. A longer dark beat."
-        }
-      ],
-      "say": "veil: ink, hold: 0.6. A longer dark beat.",
-      "cut": "transitions/color-dip",
-      "cutParams": {
-        "veil": "ink",
-        "hold": 0.6
-      },
-      "duration": 3.93
     },
     {
       "id": "light-leak-a",
@@ -485,7 +379,7 @@
       "duration": 3.34
     }
   ],
-  "share": "Transitions (2/5): color-dip, light-leak, wipe, push. Each one shown, explained, then replayed with a knob turned.",
+  "share": "Transitions (2/7): light-leak, wipe, push. Each one shown, explained, then replayed with a knob turned.",
   "cta": {
     "text": "Motion Machine",
     "url": "github.com/tudorjuravlea/motion-machine"

@@ -1,0 +1,46 @@
+/* text/cross-out: the figure pattern.js builds in the slot: a column of items (the struck claims,
+   then the survivor), each text in its own span so its strike can be measured line by line. The
+   claims are set in the h2 size and the survivor in h1; the survivor takes the accent as text, or
+   the ink when the strokes are not accent. A struck claim is dimmed to muted by pattern.js. */
+.mm-cross-out {
+  display: flex;
+  flex-direction: column;
+  align-items: var(--mm-align);
+  text-align: var(--mm-align);
+  gap: var(--mm-space-3);
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  line-height: 1.1;
+  text-wrap: balance;
+  --mm-xo-ink: var(--mm-color-accent);
+  --mm-xo-lead: var(--mm-accent-text);
+}
+.mm-cross-out--ink { --mm-xo-ink: var(--mm-color-ink); --mm-xo-lead: var(--mm-color-ink); }
+.mm-cross-out--muted { --mm-xo-ink: var(--mm-color-muted); --mm-xo-lead: var(--mm-color-ink); }
+.mm-cross-out__item {
+  position: relative;
+  display: block;
+  max-width: 100%;
+  font-size: var(--mm-size-h2);
+  color: var(--mm-color-ink);
+}
+.mm-cross-out__item--last {
+  font-size: var(--mm-size-h1);
+  color: var(--mm-xo-lead);
+}
+.mm-cross-out__text { display: inline; }
+.mm-cross-out__stroke {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+.mm-cross-out__stroke path {
+  fill: none;
+  stroke: var(--mm-xo-ink);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

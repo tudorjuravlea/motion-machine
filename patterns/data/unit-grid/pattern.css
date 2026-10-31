@@ -1,0 +1,78 @@
+/* unit-grid: the figure and a grid of units. An unlit unit is the line role; a lit one lays the
+   tone role over it by --mm-ug-x (its pop, 0 to 1) and shows only --mm-ug-part of its height when
+   it is the last, part unit. Everything is a role; the grid scales with the figure's size role. */
+.mm-ug {
+  display: flex;
+  flex-direction: column;
+  align-items: var(--mm-align);
+  gap: var(--mm-space-3);
+  width: fit-content;
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  color: var(--mm-color-ink);
+}
+.mm-ug__figure {
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.mm-ug__grid { display: grid; }
+.mm-ug__unit { position: relative; display: block; }
+.mm-ug__unit::after { content: none; }
+.mm-ug[data-tone="accent"] { --mm-ug-lit: var(--mm-color-accent); }
+.mm-ug[data-tone="ink"] { --mm-ug-lit: var(--mm-color-ink); }
+.mm-ug[data-tone="muted"] { --mm-ug-lit: var(--mm-color-muted); }
+
+/* waffle and pictobar: a unit is a rounded box */
+.mm-ug[data-variant="waffle"] .mm-ug__grid {
+  grid-template-columns: repeat(var(--mm-ug-cols), 1fr);
+  gap: calc(var(--mm-space-1) * 0.75);
+  width: min(8em, calc(var(--mm-frame-h) * 0.5));
+}
+.mm-ug[data-variant="waffle"] .mm-ug__unit { aspect-ratio: 1; }
+.mm-ug[data-variant="waffle"] .mm-ug__unit,
+.mm-ug[data-variant="pictobar"] .mm-ug__unit {
+  background: var(--mm-color-line);
+  border-radius: var(--mm-radius-1);
+}
+.mm-ug[data-variant="waffle"] .mm-ug__unit[data-lit]::after,
+.mm-ug[data-variant="pictobar"] .mm-ug__unit[data-lit]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--mm-ug-lit);
+  opacity: var(--mm-ug-x, 1);
+  transform: scale(calc(0.5 + 0.5 * var(--mm-ug-x, 1)));
+  clip-path: inset(calc((1 - var(--mm-ug-part, 1)) * 100%) 0 0 0);
+}
+.mm-ug[data-variant="pictobar"] {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--mm-space-5);
+}
+.mm-ug[data-variant="pictobar"] .mm-ug__grid {
+  grid-template-columns: 1fr;
+  gap: var(--mm-space-1);
+  width: min(3em, calc(var(--mm-frame-h) * 0.075));
+  height: min(6em, calc(var(--mm-frame-h) * 0.15));
+  grid-auto-rows: 1fr;
+}
+
+/* isotype: a person glyph is two stacked drawings, the line role and the lit role over it */
+.mm-ug[data-variant="isotype"] .mm-ug__grid {
+  grid-template-columns: repeat(var(--mm-ug-cols), 1fr);
+  gap: var(--mm-space-2);
+  width: min(9em, calc(var(--mm-frame-h) * 0.45));
+}
+.mm-ug[data-variant="isotype"] .mm-ug__unit { aspect-ratio: 24 / 44; }
+.mm-ug[data-variant="isotype"] .mm-ug__unit svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: var(--mm-color-line); }
+.mm-ug[data-variant="isotype"] .mm-ug__unit svg:last-child { display: none; }
+.mm-ug[data-variant="isotype"] .mm-ug__unit[data-lit] svg:last-child {
+  display: block;
+  fill: var(--mm-ug-lit);
+  opacity: var(--mm-ug-x, 1);
+  transform: scale(calc(0.5 + 0.5 * var(--mm-ug-x, 1)));
+  clip-path: inset(calc((1 - var(--mm-ug-part, 1)) * 100%) 0 0 0);
+}

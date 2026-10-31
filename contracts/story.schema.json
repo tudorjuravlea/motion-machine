@@ -139,6 +139,13 @@
             "null"
           ],
           "pattern": "^(?!https?:)[^\\s]+\\.json$"
+        },
+        "samples": {
+          "type": "object",
+          "maxProperties": 40,
+          "propertyNames": { "pattern": "^[a-z][a-z0-9-]{0,30}$" },
+          "additionalProperties": { "type": "string", "pattern": "^(?!https?:)[^\\s]+\\.(wav|mp3|m4a|flac|ogg)$" },
+          "description": "cue name -> a sound file in the piece (assets/sounds/x.wav) that `mm sound` mixes in place of the cue's synthesis, trimmed and gain-matched to the style's sound profile; wins over the style's `sound.samples`. Every file needs a record beside it (assets/sounds/x.json: source, licence, author): W-SAMPLE-LICENSE"
         }
       }
     },
@@ -223,6 +230,9 @@
             "$ref": "#/$defs/paramBag",
             "description": "params for the cut's transition pattern, over its defaults"
           },
+          "frame": {
+            "$ref": "#/$defs/speakerFrame"
+          },
           "variants": {
             "type": "object",
             "description": "this scene as drawn in one format, keyed by format; duration, cut and id are shared",
@@ -235,6 +245,7 @@
                 "layout": { "$ref": "#/$defs/layoutRef" },
                 "move": { "$ref": "#/properties/scenes/items/properties/move" },
                 "moveParams": { "$ref": "#/$defs/paramBag" },
+                "frame": { "$ref": "#/$defs/speakerFrame" },
                 "beats": { "$ref": "#/properties/scenes/items/properties/beats" },
                 "say": { "type": "string" }
               }
@@ -340,6 +351,10 @@
                     "emphasis": {
                       "$ref": "#/$defs/paramBag"
                     },
+                    "cue": {
+                      "$ref": "#/$defs/paramBag",
+                      "description": "the cue's own params: gain, seed and, for a recipe cue, emphasis (subtle, normal or strong: which layers play)"
+                    },
                     "instant": {
                       "type": "boolean",
                       "description": "the kit's: true = the entrance takes 0 s, so the beat is finished from its at (a film's first frame shows the hook)"
@@ -349,19 +364,16 @@
                     "$ref": "#/$defs/paramValue"
                   }
                 },
+                "anchor": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120,
+                  "description": "film only: the spoken word or phrase this beat illustrates; W-ANCHOR checks the beat arrives from 1.8 s before to 0.2 s after its first word, against the words of the footage edit or of the voice (a <track>.words.json beside audio.track)"
+                },
                 "cue": {
                   "type": "string",
-                  "enum": [
-                    "tick",
-                    "press",
-                    "swipe",
-                    "step",
-                    "hit",
-                    "riser",
-                    "success",
-                    "complete",
-                    "bed"
-                  ]
+                  "pattern": "^[a-z][a-z0-9-]{0,30}$",
+                  "description": "a sound cue, by the folder of patterns/sound/<cue>/ (a code cue with pattern.js or a recipe with recipe.json); G-PATTERN-REF fails a cue no folder holds"
                 },
                 "emphasis": {
                   "$ref": "#/$defs/emphasisRef"
@@ -373,6 +385,36 @@
             "type": "string",
             "maxLength": 1200
           }
+        }
+      }
+    },
+    "loops": {
+      "type": "array",
+      "maxItems": 12,
+      "description": "open loops: a question the film poses and later answers. W-LOOP warns when more than two are open at once (one main, one secondary), when one never closes, and when one closes after the scene that shows the call to action",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "opens", "question"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,40}$" },
+          "opens": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,40}$", "description": "the scene that poses the question" },
+          "closes": { "type": ["string", "null"], "pattern": "^[a-z][a-z0-9-]{0,40}$", "description": "the scene that answers it; absent or null, the loop never closes" },
+          "question": { "type": "string", "minLength": 1, "maxLength": 200 }
+        }
+      }
+    },
+    "licences": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "the asset licence ledger's decisions for this piece (SPEC §8): W-ASSET-LICENSE warns for a used asset with no assets/<name>.licence.json, or with a licence outside own, generated, CC0, CC-BY and public domain, unless it is listed here",
+      "properties": {
+        "accepted": {
+          "type": "array",
+          "maxItems": 60,
+          "uniqueItems": true,
+          "description": "assets (by their assets/ reference) or licences (by name, any case) the person accepted for this piece",
+          "items": { "type": "string", "minLength": 1, "maxLength": 200 }
         }
       }
     },
@@ -473,6 +515,22 @@
       "additionalProperties": {
         "$ref": "#/$defs/paramValue"
       }
+    },
+    "speakerFrame": {
+      "description": "film only, on a scene whose layout shows the story's footage (layouts/talking-full, layouts/talking-cutout): where the speaker stands in the frame, a mode or an object that also gives the column's side, the card's corner or the mode's size",
+      "oneOf": [
+        { "type": "string", "enum": ["hero", "side", "inset", "bottom", "hidden"] },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "mode": { "type": "string", "enum": ["hero", "side", "inset", "bottom", "hidden"] },
+            "side": { "type": "string", "enum": ["left", "right"] },
+            "corner": { "type": "string", "enum": ["tl", "tr", "bl", "br"] },
+            "size": { "type": "number", "minimum": 0.15, "maximum": 0.9 }
+          }
+        }
+      ]
     },
     "layoutRef": {
       "type": "string",

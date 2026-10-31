@@ -10,7 +10,8 @@
 //   - with --masks <dir>, any tool's masks, one per frame, named as the frames (f00001.png or .jpg …).
 // On a machine without the Vision engine (not macOS, or no swiftc) and no --masks, it stops and says so.
 // Every mask then goes through scripts/lib/footage-matte.mjs: a 3-frame temporal median and a feather
-// of --feather px, so the edge neither flickers nor looks cut with scissors. The same input on the same
+// of --feather px, so the edge neither flickers nor looks cut with scissors. It also writes face.json,
+// the head's box in every frame (scripts/lib/footage-face.mjs), which the kit's face-safe zone reads. The same input on the same
 // machine writes the same bytes. Exit 0 written, 1 a tool failed on the frames, 2 usage or setup.
 import { createHash } from 'node:crypto';
 import { spawn, spawnSync } from 'node:child_process';
@@ -20,6 +21,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
 import { isArgsError, usageText } from './lib/cli.mjs';
 import { grayPng, matteSmoother } from './lib/footage-matte.mjs';
+import { headBox } from './lib/footage-face.mjs';
 import { bin } from './lib/ffmpeg.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -61,13 +63,13 @@ function run(cmd, args) {
 }
 
 /** Decodes the masks in frame order at w x h grey (ffmpeg) and writes each smoothed one as PNG into dest. */
-function smoothInto(src, ext, frames, { w, h, fps }, feather, dest) {
+function smoothInto(src, ext, frames, { w, h, fps }, feather, dest, boxes) {
   return new Promise((ok, no) => {
     const p = spawn(bin('ffmpeg'), ['-v', 'error', '-nostdin', '-framerate', String(fps), '-start_number', '1', '-i', join(src, `f%05d.${ext}`), '-frames:v', String(frames),
       '-vf', `scale=${w}:${h}:flags=bilinear,format=gray`, '-f', 'rawvideo', '-pix_fmt', 'gray', '-'], { stdio: ['ignore', 'pipe', 'pipe'] });
     const size = w * h;
     let pending = Buffer.alloc(0), written = 0, err = '';
-    const s = matteSmoother(w, h, feather, (i, mask) => { writeFileSync(join(dest, `${frameName(i)}.png`), grayPng(mask, w, h)); written++; });
+    const s = matteSmoother(w, h, feather, (i, mask) => { writeFileSync(join(dest, `${frameName(i)}.png`), grayPng(mask, w, h)); boxes[i] = headBox(mask, w, h); written++; });
     p.stdout.on('data', (c) => {
       pending = pending.length ? Buffer.concat([pending, c]) : c;
       while (pending.length >= size) { s.push(new Uint8Array(pending.subarray(0, size))); pending = pending.subarray(size); }
@@ -106,11 +108,13 @@ export async function matte({ name, piece = '.', masks = null, quality = 'accura
   const tmp = join(dir, 'matte.tmp'), dest = join(dir, 'matte');
   rmSync(tmp, { recursive: true, force: true });
   mkdirSync(tmp, { recursive: true });
-  try { await smoothInto(src, ext, meta.frames, meta, feather, tmp); } catch (e) { rmSync(tmp, { recursive: true, force: true }); throw e; }
+  const boxes = new Array(meta.frames).fill(null);
+  try { await smoothInto(src, ext, meta.frames, meta, feather, tmp, boxes); } catch (e) { rmSync(tmp, { recursive: true, force: true }); throw e; }
+  writeFileSync(join(dir, 'face.json'), `${JSON.stringify({ frames: meta.frames, boxes })}\n`);   // the head of every frame, shares of the recording: the face box graphics keep clear of
   rmSync(dest, { recursive: true, force: true });
   renameSync(tmp, dest);
   if (raw) rmSync(raw, { recursive: true, force: true });
-  meta.matte = { dir: 'matte/', frames: meta.frames, from: masks ? 'masks' : 'vision', ...(masks ? {} : { quality }), median: 3, feather };
+  meta.matte = { dir: 'matte/', frames: meta.frames, from: masks ? 'masks' : 'vision', ...(masks ? {} : { quality }), median: 3, feather, face: 'face.json' };
   writeFileSync(metaFile, `${JSON.stringify(meta, null, 2)}\n`);
   return { dest, meta };
 }

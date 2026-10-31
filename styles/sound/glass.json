@@ -1,0 +1,14 @@
+{
+  "name": "glass",
+  "description": "Glass bars for presence and mallets for outcomes; air and filtered noise for motion, wood knocks for input. Sines only, nothing centred above 5 kHz, one small seeded room, nearly centred.",
+  "register": { "maxCentreHz": 5000, "minHz": 40, "tones": "sine" },
+  "key": ["C", "D", "E", "F", "G", "A"],
+  "envelope": {
+    "attackS": [0.001, 0.003],
+    "t60": { "input": [0.005, 0.05], "surface": [0.06, 0.3], "outcome": [0.1, 0.5] }
+  },
+  "modes": "bar",
+  "loudness": { "cueLufs100ms": -30, "tolDb": 1.5, "peakDbfs": -13 },
+  "room": { "send": -22, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "stereo": { "sideMidDb": -22 }
+}

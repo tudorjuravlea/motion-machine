@@ -5,11 +5,11 @@ a style; `schedule.js` is the timeline algebra, shared with the gate and importa
 page is for whoever writes stories and patterns against it: what the kit reads, what each pattern
 receives, where a story's params end up, and every function the kit modules export.
 
-- [Mount and seek](#mount-and-seek) · [Composition](#composition) · [Story shorthands](#story-shorthands-the-kit-resolves) · [Markup grammar](#markup-grammar-spec-6)
+- [Mount and seek](#mount-and-seek) · [Composition](#composition) · [Ground and glass](#ground-and-glass) · [Story shorthands](#story-shorthands-the-kit-resolves) · [Markup grammar](#markup-grammar-spec-6)
 - [What each pattern kind receives](#what-each-pattern-kind-receives) · [Units of travel](#units-of-travel) · [Param routing](#param-routing) · [Cascades](#cascades-data-each--paramseach)
 - [Fragments](#fragments-patternhtml-for-text-data-and-devices) · [Assets](#assets) · [Overlays](#overlays) · [Sound cues](#sound-cues) · [Schedule output](#schedule-output) · [Warnings](#warnings)
 - [Screen actions](#screen-actions) · [3D devices](#3d-devices) · [Footage](#footage)
-- [Module reference](#module-reference): `kit.js` · `schedule.js` · `springs.js` · `ease.js` · `random.js` · `seeded.js` · `fit.js` · `count.js` · `room.js` · `glyphs.js` · `rough.js` · `points.js` · `screen.js` · `footage.js` · `device3d.js` · `synth.js` · `rig.js`
+- [Module reference](#module-reference): `kit.js` · `params.js` · `schedule.js` · `springs.js` · `ease.js` · `random.js` · `seeded.js` · `fit.js` · `count.js` · `room.js` · `glyphs.js` · `rough.js` · `points.js` · `screen.js` · `footage.js` · `captions.js` · `speaker.js` · `speaker-layer.js` · `device3d.js` · `hairline.js` · `drawn.js` · `synth.js` · `rig.js` · `diagram.js` · `ground.js` · `surface.js` · `finish.js` · `lens.js`
 
 ## Mount and seek
 
@@ -55,6 +55,43 @@ exported). Statement, title-stack and endcard set their headline as a lead (the 
 0.8; 0.64 in 1x1), so a hook in statement or title-stack is the display role itself (0.8 of it in
 1x1): the largest headline of the piece in every format. Content layouts (split, comparison,
 bento-3, stat-hero, list-reveal, quote) set theirs at h1.
+
+## Ground and glass
+
+**The ground** is what the brand draws behind every scene: the first child of each `<section data-scene>`
+(`.mm-ground`, `data-kind`, `data-chrome`, `data-keep`, `aria-hidden`), so a cut carries it. The brand's
+`ground.kind` picks what it draws (`ground.js`):
+
+| `kind` | Draws | Moves |
+|---|---|---|
+| `blobs` (default) | blurred blobs in the brand's own colours, and a faint mark | never |
+| `bloom` | a radial light rising from the bottom centre (`bloom`: `role`, `width`, `height` as shares of the frame, `strength`), with an optional faint dot grid (`dots`) | on each scene it scales 0.9 to 1 with the style's enter ease over the scene's first beat (at least one `standard` duration); a deck draws it full size |
+| `graph-paper` | a fine and a heavy grid (`grid`: `role`, `spacing`, `every`, `weight`, `strength`) and an optional scan band (`grid.scan`) | the grid drifts out and back and the band sweeps once per `grid.cycle` seconds, exactly: the frame at `t` is the frame at `t + cycle`; a style animating on twos or threes steps it on that grid; a deck draws it still |
+| `dots` | the dot grid alone (`dots`: `role`, `spacing`, `size`, `strength`) | never |
+
+Every colour of the three newer kinds is `var(--mm-color-<role>)` (a tint is `color-mix` with transparent, never
+two roles), every size a share of the frame, every speed a param, so a brand makes the ground its own by choosing
+kind, role, density and strength. G-BRAND holds by construction (every pixel is a blend of the role and the
+canvas). The ground is a function of the instant, the scene's start and the style: any seek order draws the same pixels.
+
+**The glass surface** is one look for every card-like pattern. The brand's `surface` block becomes `--mm-surface-*`
+custom properties on `<html>` (`surface.js`: `-fill` a four-stop diagonal tint of the surface role, `-blur`,
+`-saturate`, `-shadow` the hairline in the line role, the top highlight and the drop shadow, `-shine` the bar), and
+the kit's base CSS paints every element marked `data-glass` inside a `data-surface="glass"` scope with them; the
+card's own fill gives way to the tint, the backdrop is blurred behind it, and `data-glass="accent"` keeps its accent
+fill and takes the edge and the shine only. One shine bar crosses a card as it arrives (the last 70 % of the beat's
+entrance, at the brand's `angle`) and is off it at every rest: the kit writes `--mm-shine-x` on the card per draw.
+
+A pattern opts in with the param `surface: flat|glass` (`flat` is the default; a brand sets its own default in
+`style.patterns["group/name"]`):
+
+- a **layout** marks its cards `data-glass` in `pattern.html`; the kit sets `data-surface="glass"` on the layout's
+  root when any beat of the scene has `params.surface: "glass"` (a beat's `"flat"` wins over the brand's default);
+- a **pattern with a script** calls `glass(el, ctx.params.surface)` from `surface.js` on the element it draws.
+
+Text on a glass card has no fill of its own, so W-CONTRAST measures it on the rendered pixels under it; keep a
+bloom's strength modest where text sits. `layouts/comparison` is not wired: its ink top bar sits inside the
+text box, and on a short box (1x1) the rendered sample reads it as low contrast; `layouts/paper-cards` is not wired either (its torn edge is a mask).
 
 ## Story shorthands the kit resolves
 
@@ -184,6 +221,7 @@ the safe margin.
   `indicate` gets `{ d: 56 }` (no `params.emphasis`, so the shared scalar params).
 - `wipe` gets `{ direction: "up" }` and `ctx.policy`; `pan` gets `{ dir: "right" }`.
 - Sub-bags (`params.exit`, `params.emphasis`) are never written as `data-p-*`.
+- A brand's defaults for a **layout** (`style.patterns["layouts/<name>"]`, a layout has no module to read them) land as `data-p-*` on the layout's root element, for the layout's CSS to read, unless a beat of the scene sets that same param itself (then the beat's `data-p-*` on its slot is the only one, so the two never disagree).
 - Values are strings, numbers or booleans (story schema); a series travels as a string
   (`"values": "3,5,8"`).
 
@@ -273,10 +311,18 @@ reads as its `filter`. The camera itself never carries a filter, so 3D camera mo
 Beside type under display size the offset is at most 0.05 of its font size. Every emphasis kicks the
 plate (`plateKick`); the offset steps every max(2, `frameHold`)/30 s.
 
+`scanlines` draws one more child of the finish (an ink line screen) and joins grain, halftone and paper in
+the 0.08 they share (`overTextShares`); `grainRate` sets how many times a second the grain's seed changes
+(`grainSeed`). `chroma`, `bloom` and a `look` other than `neutral` are one filter on `.mm-stage`
+(`style.filter = url(#mm-fx)`, built by `fxFilter` into the finish's defs `<svg>`): the lens fringe, then
+the bloom, then the look's tone tables. The kit decodes the lens's ramp image before the first seek
+(`warmRamp`), so the first frame draws the fringe.
+
 ## Sound cues
 
-A beat's `cue: "riser"` makes the kit read `sound/riser/pattern.js` (from the same patterns base)
-for two fields: `durationS` and `anchor`. A cue is placed on its beat's arrival (`t` = the beat's
+A beat's `cue: "riser"` makes the kit read `sound/riser/pattern.js` (from the same patterns base, or the cue's
+`recipe.json` drawn by `synth.js`; with `style.sound.profile` set the recipe is read first) for two fields:
+`durationS` and `anchor`. A cue is placed on its beat's arrival (`t` = the beat's
 start), unless the module says `anchor: "end"`: then it ends on the beat's **landing** (the
 arrival plus its entrance; a cascade's last child) and starts `durationS` before it, never before
 0. The cue event carries `d` (= `durationS`, 0 if unknown) and `anchor`. A cue whose
@@ -329,7 +375,7 @@ Rules that live here and nowhere else in code:
   `cutParams` that matches no slot (`transitions/flood`, `transitions/iris`), a garden that grows a
   single plant or nothing (`text/garden`), a `land` value, which a point cloud does not read, or a picture it refuses because it has no transparent ground, no depth map and no flat border (`3d/point-cloud`),
   a reaction with no free place (`emphasis/emote`), a stamp or dimension beat with an entrance
-  (`emphasis/stamp`, `emphasis/dimension`), a figure of zero or below (`data/unit-stack`), an SVG feature
+  (`emphasis/stamp`, `emphasis/dimension`), a figure of zero or below (`data/unit-stack`), a ratio too wide to draw to scale (`data/bubble`), a given total that is not the sum of a waterfall's values (`data/waterfall`), an SVG feature
   a one-line drawing cannot read (`entrances/one-line`). `mm export` prints these; `mm check` reads the
   list right after mount, before any seek, so it does not report them.
 
@@ -407,6 +453,13 @@ at mount the kit lays an SVG `<mask>` (luminance, the picture's layout size, `pr
 object-fit and object-position) beside it, and each seek points the mask's image at the matte frame of the
 same source frame (`mm footage matte`), its decode awaited inside `settle()`. A folder with no matte for
 every frame shows the whole picture, with a `footage: ` warning.
+
+A scene may give `frame` (hero, side, inset, bottom, hidden, SPEC §4): the footage picture is then placed by
+`speaker.js` (a pure pose from the scene list and `t`) and `speaker-layer.js` (the DOM half), the scene's
+section gets `--mm-speaker-*`, `--mm-panel-*` and `--mm-face-*` (px of the frame), `window.mm.faceBox()` returns the face
+box now (`{ x, y, w, h, source }`, `source` `matte` or `default`), and an element a layout marks `data-face-safe` is
+moved clear of the face by its own `left` and `top`. The matte's `face.json` (one head box per source frame, from
+`mm footage matte`) is read with the matte; `faceOfClip` takes the median over a shot.
 
 ## Module reference
 
@@ -486,6 +539,12 @@ Pure; never integrated. A spring is `{ k, c, m }` or `{ bounce, period }`.
 | `random` | `random(seed = 0)` | `next()` → float in `[0, 1)` | `seed` is a number or a string; the same seed gives the same sequence everywhere |
 | `hash` | `hash(string)` | 32-bit unsigned int | FNV-1a, to seed from a selector or a name |
 
+### `params.js`: a pattern's params
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `paramsOf` | `paramsOf(mod, bag, style)` | params | the pattern's own defaults, then the brand's (`style.patterns["group/name"]`), then the beat's `bag` |
+
 ### `seeded.js`: seeded windows
 
 The one place in the kit that replaces `Math.random`, and only while a vendored library needs it.
@@ -510,8 +569,9 @@ The one place in the kit that replaces `Math.random`, and only while a vendored 
 
 | Name | Signature | Returns | Note |
 |---|---|---|---|
-| `count` | `count(el, from, to, p, { pad, fix, prefix, suffix, hold })` | the text written | writes the number at progress `p` (clamped to 0..1) with tabular digits; `hold: true` keeps the prefix and suffix in place but invisible until `p = 1` |
-| `formatNumber` | `formatNumber(v, { pad, fix, prefix, suffix })` | string | the number as written: zero-padded integer digits, `fix` decimals, no thousands separator |
+| `count` | `count(el, from, to, p, { pad, fix, prefix, suffix, hold, compact })` | the text written | writes the number at progress `p` (clamped to 0..1) with tabular digits; `hold: true` keeps the prefix and suffix in place but invisible until `p = 1`; `compact: true` writes a scaled unit (14K, 1.2M, 3B, 2T) |
+| `formatNumber` | `formatNumber(v, { pad, fix, prefix, suffix, compact })` | string | the number as written: zero-padded integer digits, `fix` decimals, no thousands separator; with `compact`, `fix` is the decimals of the scaled number and a value that rounds up to 1000 of a unit moves to the next one (never "1000K") |
+| `compactParts` | `compactParts(v, fix = 0)` | `{ value, unit }` | the number scaled to its unit for `compact` (`1200000, 1` gives `{ value: 1.2, unit: 'M' }`), the unit `''` below 1000 |
 
 ### `room.js`: how far type may scale or move
 
@@ -604,6 +664,7 @@ The pure half runs in Node; the DOM half draws one layer the kit owns. See [Scre
 | `view` | `view(zoom)` | `{ x, y, s }` | the zoom as drawn, its centre clamped to keep the view inside the screen |
 | `locate` | `locate(state, target, box)` | `{ x, y }` | where a mark label or `"x%,y%"` sits on the screen, as fractions, under the state's scroll and zoom |
 | `mountLayer` | `mountLayer(screenEl, initial, swaps, actions)` | the layer element | builds the layer (`data-mm-own`) inside the screen: the content, one per swap target, one overlay per action |
+| `contentMeta` | `contentMeta.get(contentEl)` | `media.json` or `null` | each content element's media.json; a 3D device draws a captured page's `wire` from it |
 | `paint` | `paint(layer, state, { track, box, swaps, warn })` | nothing | draws the content, scrolled, at its frame and zoomed; `track` registers decodes, `warn(src)` names one that failed |
 
 ### `footage.js`: a cut recording on the film's clock
@@ -618,9 +679,53 @@ The pure half runs in Node; the DOM half points the layout's footage pictures at
 | `frameFile` | `frameFile(base, i)` | path | the file `mm media prep` writes for source frame `i` (`f` and `i + 1` in five digits, `.jpg`) |
 | `matteFile` | `matteFile(base, i)` | path | a source frame's matte, `matte/f{i+1}.png` (`mm footage matte`) |
 | `matteAspect` | `matteAspect(fit, position)` | string | the SVG `preserveAspectRatio` that lays a matte over a picture drawn with that object-fit and object-position |
+| `faceOfClip` | `faceOfClip(f, k)` | `[x0, y0, x1, y1] \| null` | the face of picture clip `k`: the median of its source frames' head boxes (shares of the recording, `face.json`), steady in a shot and different at a cut |
 | `footageCtx` | `footageCtx(f, t)` | `{ t, fps, duration, clip, clipAt, words }` | what a pattern reads as `ctx.footage` |
 | `mountFootage` | `async mountFootage(story, { stage, duration, kind }, warnings)` | `{ base, meta, edit, els } \| null` | reads `media.json` and `edit.json` of `story.footage.asset` and finds every `img[data-footage]` (and masks each `data-footage-matte` one with its matte); `null`, with a `footage: ` warning, when something is wrong |
 | `paintFootage` | `paintFootage(f, t, track, warn)` | nothing | points every footage picture in a visible scene at the frame for `t`; `track` registers each decode for `settle()`, `warn(src)` names one that failed |
+
+### `captions.js`: where caption groups break
+
+Pure, no DOM. `text/caption-karaoke` (and any caption pattern) cuts a word list into groups with it. See the pattern card for the params a brand sets (`breaks`, `chars`, `group`).
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `countGroups` | `countGroups(list, size)` | groups | runs of `size` items; a one-item tail joins the run before it (`breaks: count`) |
+| `captionGroups` | `captionGroups(items, { group = 4, chars = 30 })` | groups | the partition of strings or `{ text, at, end }` into groups of `MIN_WORDS` (2) to `MAX_WORDS` (6) words with the lowest cost: `WEIGHT_SIZE` x ((words - group) / group)^2 per group, minus the `breakScore` of each break, plus `DANGLING` for a group ending on a word that wants the next (the, of, and). Never one word alone (one item alone is one group); a group stays within `chars` character units when any partition can (else it is grouped without the limit; 0 is no limit). Reused per list and settings |
+| `breakScore` | `breakScore(prev, next)` | 0 to 1 | how good a break between two words is, the best that applies: a sentence end `BREAK_SCORE.sentence` (1), strong punctuation (, ; : a dash) `strong` (0.7), a pause (both words timed) from `pauseLow` (0.3) at `PAUSE_WEAK_S` (0.15 s) to `pauseHigh` (0.5) at `PAUSE_STRONG_S` (0.4 s), the next word opening a clause or phrase (and, but, because, with, the... English and Romanian) `phrase` (0.2) |
+| `charWidth` | `charWidth(text)` | number | width in character units: a Chinese, Japanese, Korean, fullwidth or emoji character is 2, any other 1 |
+| `lineWidth` | `lineWidth(texts)` | number | the width of words on one line: their widths plus a space between two (none between two wide characters) |
+| `MIN_WORDS`, `MAX_WORDS`, `BREAK_SCORE`, `PAUSE_WEAK_S`, `PAUSE_STRONG_S`, `DANGLING`, `WEIGHT_SIZE` | constants | | the weights above |
+
+### `speaker.js`: where the speaker stands, and the face box
+
+Pure (Node and browser). A scene's `frame` resolved over the brand's knobs, the speaker's box for each mode, the
+pose at any `t` (a move from the previous footage scene's mode, starting `LEAD_S` before the scene, so the frame at a
+scene's start is computed, never remembered), the drift, the face box and the move that clears it.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `MODES`, `SIDES`, `CORNERS` | | arrays | `hero`, `side`, `inset`, `bottom`, `hidden`; `left`, `right`; `tl`, `tr`, `bl`, `br` |
+| `LEAD_S`, `MOVE_S`, `DRIFT_PERIOD_S`, `FACE_PAD`, `INSET_ASPECT` | | numbers | 0.15 s before the scene; the move's length when the style has no `standard` duration; one breath of the drift; 12 % pad on the face box; a card's height over its width |
+| `KNOBS` | | object | the brand's defaults: `frame`, `panelFrame`, `side`, `corner`, `sideSize`, `insetSize`, `bottomSize`, `drift`, `face` |
+| `FACE_DEFAULT` | | object | the default face box as shares of the speaker's box, by format |
+| `parseFace` | `parseFace(s)` | `[x, y, w, h] \| null` | a brand's `face` knob |
+| `resolveFrame` | `resolveFrame(raw, knobs, hasPanel)` | `{ mode, side, corner, sideSize, insetSize, bottomSize, drift, bad }` | a scene's `frame` over the brand's knobs |
+| `modeBox` | `modeBox(frame, { W, H, safe, hero })` | `{ x, y, w, h, o }` | the speaker's box for a mode (`o` = opacity; hidden is 0) |
+| `panelBox` | `panelBox(frame, { W, H, safe })` | `{ x, y, w, h }` | the region the panel slot fills |
+| `poseAt` | `poseAt(keys, t, { W, H, safe, hero, ease, dur, lead })` | `{ x, y, w, h, o }` | the pose at `t` over `keys = [{ at, frame }]`; a move still running when the next starts hands its pose over |
+| `drifted`, `widest` | `drifted(box, t, drift, { W, H })`, `widest(box, drift, { W, H })` | box | the box breathed at `t`; the box at the widest of the breath (what the face zone is measured on) |
+| `faceRect` | `faceRect(box, { rec, face, shares }, pad)` | `{ x, y, w, h } \| null` | the padded face box in frame px: the matte's head through the cover fit, else shares of the box; null when the speaker is away |
+| `clearFace` | `clearFace(rect, obstacles, bounds)` | `{ dx, dy }` | the smallest move that takes `rect` clear of the obstacles inside `bounds`; none when it cannot |
+| `median` | `median(xs)` | number \| null | |
+
+### `speaker-layer.js`: the speaker frame on the page
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `mountSpeaker` | `mountSpeaker(S, warnings)` | state \| null | finds the scenes that show footage, resolves each one's frame, reads each layout's own pose; null for a deck or with no footage |
+| `applySpeaker` | `applySpeaker(S, t)` | nothing | places each visible footage picture and writes the scene's `--mm-speaker-*`, `--mm-panel-*`, `--mm-face-*` |
+| `placeFaceSafe` | `placeFaceSafe(S)` | nothing | moves every `data-face-safe` element clear of the face (and of the ones placed before it) by `left` and `top`; run after every entrance |
 
 ### `device3d.js`: what the 3D devices share
 
@@ -650,7 +755,65 @@ to compile in software).
 | `mark` | `mark(c, ry, extra = {})` | nothing | writes the readouts tests and the gate read as `data-*` on the canvas |
 | `draw` | `draw(c, holder, ctx)` | nothing | renders after the seek's decodes, with the screen copied for this `t` |
 
-### `synth.js`: Web Audio voices for sound patterns
+### `hairline.js`: the thin-line style
+
+The drawing maths of the hairline style (after Hairline, MIT; see NOTICE). Pure: rings live in a
+solid's own plane `(u, v)` and stand along `h`; the caller's `P(u, v, h)` gives a screen point and
+`faces(sample, h)` says whether a sample's side faces the viewer, so one drawing follows any camera.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `rrect` | `rrect(u0, v0, u1, v1, r, n = 6)` | ring | a rounded rectangle, sampled, each sample `{ u, v, nu, nv }` with its outward normal; `r` is cut to half the shorter side |
+| `circ` | `circ(R, n = 48, cu = 0, cv = 0)` | ring | a circle about `(cu, cv)` |
+| `hull` | `hull(points)` | points | the convex hull of screen points |
+| `run` | `run(ring, keep)` | ring | the one cyclic run of samples that pass `keep` |
+| `solid` | `solid(P, faces, ring, inner, h0, h1)` | `{ sil, crease }` | a solid from `h0` to `h1`: the silhouette is the hull of both rings (no vertical corner is drawn), the crease the facing run of `inner` on the lid |
+| `extremes` | `extremes(points)` | `[left, right, lowest]` indices | where a dashed drop falls from |
+| `length`, `partial` | `length(pts, closed)` · `partial(pts, closed, s)` | number · points | a line's length, and its first share `s` by length: a line drawn on |
+
+### `drawn.js`: a device drawn in lines, then made real
+
+The `drawn` move of `3d/phone`. The timeline is a pure function of `u`, the seconds since the beat
+arrived; the lines are painted on a 2D canvas over the WebGL canvas from points projected with the
+device's own camera, so the drawing sits on the device in every pose.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `DRAWN` | `{ draw, gather, reveal, rise }` | `[start, seconds]` each | draw 0–2.35 s, the glass settles 2.45 s for 0.7 s, the band 3.2 s for 1.3 s, the rise 4.35 s for 2.2 s |
+| `phases` | `phases(u, { deck, rest })` | `{ draw, gather, reveal, rise }` | each 0..1; a deck at rest is all 1 |
+| `lift` | `lift(p)` | number | the long ease-out `cubic-bezier(.32, .72, 0, 1)` |
+| `stroke` | `stroke(u, start, dur)` | 0..1 | how much of a line is drawn on at `u` |
+| `linesCanvas` | `linesCanvas(holder)` | canvas | the lines' canvas, declared media, sized to the holder |
+| `paintLines` | `paintLines(cv, { parts, ink, lw, cover, front })` | nothing | one frame of the lines in paint order (plates filled with the ground colour, dashed guides, dots), and the band that clears them where the device is revealed |
+
+### `diagram.js`: what the structure diagrams share
+
+`data/org-chart`, `cycle`, `venn`, `pyramid`, `matrix` and `timeline` build on it, and a pattern with
+nodes and drawn lines can too. It extends `data/flow`'s text grammar: `|` separates items, `,`
+lists siblings, `>` goes deeper (a tree's depth, an item's detail) and a newline is `|`. The look
+is `diagram.css` (a pattern's own css imports it): nodes are a plate behind a label, lines are SVG in
+the stage's pixels, and a brand's knobs (`LOOK`: shape, line weight, accent role, edge role, label
+face) arrive as `--dg-*` variables holding palette roles or a unitless share. Every function is a
+closed form of the progress it is given.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `svgEl` | `svgEl(doc, tag)` | element | an SVG element made by the HTML parser, so the kit needs no namespace string (`runtime/` carries no URL) |
+| `clamp01`, `f2`, `span` | `clamp01(x)` · `f2(x)` · `span(q, a, b)` | number · string · number | clamp to 0..1; two decimals; where `q` sits in `a..b`, clamped |
+| `clock` | `clock(p, ctx)` | 0..1 | the beat's own progress: exactly 1 at p = 1, else `ctx.u / ctx.d`, else `p`, so a pattern runs its own phases |
+| `items` | `items(text)` | strings | the items of a list, split on `\|`, `>`, `,` and newlines |
+| `parseTree` | `parseTree(text)` | nodes | `{ text, depth, parent, children, i }` in reading order: a leading `>` per level (or two spaces of indent) gives the depth, a node belongs to the last node one level up, a second root becomes a child of the first, at most 16 nodes |
+| `separate` | `separate(boxes, { w, h }, pad)` | boxes | pushes overlapping boxes (`{ x, y, w, h, fixed }`, centre and size) apart inside the bounds, in a fixed order |
+| `LOOK` | `{ shape, line, accent, edge, face }` | params | the brand knobs every diagram shares, as pattern params to spread into a pattern's own |
+| `lookVars` | `lookVars(params)` | `{ '--dg-…': value }` | the root's variables for those knobs: palette roles only, the stroke share clamped to 0.001 to 0.02 |
+| `stage` | `stage(el, name, params)` | `{ root, stage, W, H, doc, linePx, portrait }` | rebuilds the slot's content as `.mm-dg.mm-<name>` over a `.mm-dg__stage` and measures it; `linePx` is the stroke weight in px |
+| `node` | `node(s, text, cx, cy, { hero, maxW, soft, bare, square })` | node | text on a plate, centred on (cx, cy) and measured (`w`, `h`, `l`, `r`, `t`, `b`); `maxW` wraps the label |
+| `place` | `place(node, cx, cy)` | node | moves a node |
+| `pop` | `pop(ctx, x)` | number | the style's `ui` spring over x in 0..1: 0 before, exactly 1 after; shapes use it, text never does |
+| `reveal` | `reveal(node, x, ctx)` | nothing | a node arriving at x: the plate springs up, the label eases in; untouched at x = 1 |
+| `layer`, `path`, `drawn`, `head` | `layer(s)` · `path(s, svg, d, mod)` · `drawn(path, u)` · `head(s, svg, x, y, angle, size)` | elements | the SVG layer under the nodes; a path drawable by dash offset (`drawn` draws it `u` of the way, with no dash left at 1); an arrow head with its tip at (x, y) |
+
+### `synth.js`: Web Audio voices for sound patterns, and recipes
 
 Pure in their arguments; the noise is seeded (mulberry32), so a cue renders to the same samples
 every time.
@@ -662,6 +825,90 @@ every time.
 | `burst` | `burst(ctx, { kind, q, f0, f1, at, dur, peak, atk, swell, soft, seed })` | nothing | seeded noise through a filter sweeping `f0` to `f1`, with a gain envelope |
 
 `swell` rises to the peak at the end; `soft` decays to 6 % of the peak and then fades linearly.
+
+A cue can also be data (`patterns/sound/<cue>/recipe.json`, `contracts/sound-recipe.schema.json`; SPEC §9). These
+render it in plain JavaScript, so the same recipe, seed, emphasis and profile give the same samples in a browser
+and in Node:
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `renderRecipe` | `renderRecipe(recipe, { emphasis, gain, seed, profile, sampleRate, roomSeed })` | `{ channels: [left, right], sampleRate, length }` | the recipe as stereo `Float32Array`s: sine partials with a linear attack and an exponential decay to −60 dB at their T60, seeded noise through one biquad, a mid and a quadrature side, and the shared seeded room; `emphasis` is `subtle`, `normal` or `strong`, `gain` a multiplier, `profile` a sound profile object |
+| `layers` | `layers(ctx, at, recipe, opts)` | nothing | `renderRecipe` at the context's rate, played from `at` as a stereo buffer; on a mono context the channels fold to the mid |
+| `recipeModule` | `recipeModule(recipe, profile)` | a sound pattern module | `{ name, group: 'sound', recipe, profile, params: { gain, seed, emphasis }, durationS, render(ctx, at, feel, opts) }`: what the kit and `mm sound` load for a folder with a `recipe.json`; `durationS` is the length in that profile |
+| `applyProfile` | `applyProfile(recipe, profile)` | `{ recipe, sideMidDb }` | the recipe voiced by a sound profile (SPEC §9): partials by `modes`, fundamentals folded into the register and moved to the key, attack and length held to the profile's, the profile's room and level; the recipe given is not changed |
+| `plan` | `plan(recipe, opts)` | `{ layers, room, gain, sideAmp, durationS }` | what a render resolves to, before any sample: the layers that play at that emphasis, each partial's frequency, level and T60 (`t60 × ratio^-0.75`, at least 28 ms), the seeded variation applied |
+| `familyOf` | `familyOf(durationS)` | `input` \| `surface` \| `outcome` \| `swell` | the length ladder: up to 0.06 s, 0.3 s, 0.65 s, then a swell |
+| `seedOf` | `seedOf(name)` | number | a stable seed from a cue's name |
+| `NATIVE_LUFS`, `REF_SEND_DB`, `SIDE_MID_DB`, `FLOOR_T60_S`, `EMPHASIS_RANKS` | `-30` · `-22` · `-22` · `0.028` · `{ subtle: 0, normal: 1, strong: 2 }` | numbers | the level a recipe's `masterGain` is set for (loudest 100 ms), the room send its own `room.send` is written against, the width of a recipe rendered without a profile, the shortest a higher partial lasts, the rank of each emphasis |
+
+### `ground.js`: the brand ground
+
+Browser ESM; the arithmetic is pure and imports in Node. `kit.js` mounts a ground per scene and paints its moving
+parts on every seek.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `GROUND_ROLES` | `['canvas', …, 'accentInk']` | string[] | the palette roles a ground may be drawn in |
+| `GROUND_KINDS` | `['blobs', 'bloom', 'graph-paper', 'dots']` | string[] | |
+| `GROUND_DEFAULTS` | `{ bloom, dots, grid, scan }` | object | every param a newer kind reads, with its default |
+| `BLOOM_FROM` | `0.9` | number | the bloom's scale at the start of its scene |
+| `groundSpec` | `groundSpec(ground)` | `{ kind, mark, … }` | the brand's ground with the kind's blocks filled from the defaults (a missing block reads them; the old blobs ground is `blobs`) |
+| `isAnimated` | `isAnimated(spec)` | boolean | true for a bloom and a graph-paper |
+| `firstBeatWindow` | `firstBeatWindow(beats, sceneStart, floorS)` | seconds | the bloom's rise: from the scene's start to the end of its first beat's arrival, at least `floorS` |
+| `bloomScale` | `bloomScale(u, windowS, enter)` | 0.9 to 1 | the bloom's scale `u` seconds into its scene, through the enter ease `enter(p)` |
+| `phaseOf` | `phaseOf(t, cycle)` | 0 up to 1 | where `t` falls in the cycle; exact, negative `t` included |
+| `gridOffset` | `gridOffset(t, cycle, amp, frameW)` | `{ x, y }` px | the grid's drift: a cosine yoyo, at rest at the cycle's ends, so a loop closes |
+| `scanTop` | `scanTop(t, cycle, bandShare)` | share of the frame height | the scan band's top edge: above the frame at the cycle's start, below it at its end |
+| `heldTime` | `heldTime(t, frameHold)` | seconds | `t` on the style's stop-motion grid |
+| `groundOf` | `groundOf(ground, spec, media)` | `HTMLElement` | the ground element of one scene; `media` collects the mark's decode |
+| `paintGround` | `paintGround(el, spec, frame, at)` | nothing | draws the bloom's scale, the grid's offset and the scan band at `at = { t, u, windowS, enter, hold, deck }` |
+
+### `surface.js`: the glass surface
+
+Pure arithmetic plus one DOM helper; see [Ground and glass](#ground-and-glass).
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `SURFACE_DEFAULTS` | `{ tint, blur, saturate, border, highlight, shadow, shine, angle, shineWidth }` | object | what a brand's `surface` block reads when it leaves a field out |
+| `surfaceSpec` | `surfaceSpec(surface)` | object | the block over the defaults |
+| `glassRoles` | `glassRoles(color)` | `{ light, dark }` | the lighter and the darker of ink and canvas: where the highlight and the shadow lie |
+| `surfaceVars` | `surfaceVars(surface, frame, color)` | `{ '--mm-surface-…': value }` | the custom properties the kit sets on `<html>`; palette roles only |
+| `shinePosition` | `shinePosition(q, move)` | CSS length or `null` | where the shine bar is at linear arrival progress `q`; `null` (off the card) before the sweep, at its end and at every rest |
+| `glass` | `glass(el, mode)` | nothing | opts an element in (`'glass'`: `data-glass` and `data-surface`) or out (anything else) |
+
+### `finish.js`: the finishing looks
+
+Pure arithmetic plus one string builder; see [Overlays](#overlays) (Finish) and SPEC §3.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `LOOKS` | `['neutral', 'warm-print', 'cool-print', 'faded', 'high-contrast']` | array | the named looks `finish.look` accepts |
+| `LOOK_LIMIT` | `0.08` | number | how far a look's tone table may lie from the identity, in 0..1 |
+| `tintRole` | `tintRole(color, 'warm' \| 'cool')` | role name or `null` | the palette role of most chroma within 45° of warm or cool; `null` when none lies that way (the look is then its curve alone) |
+| `lookTables` | `lookTables(look, color, amount = 1)` | `{ r, g, b }` or `null` | 33 samples per channel, each within `LOOK_LIMIT` of the identity; `null` for `neutral` |
+| `gradeOf` | `gradeOf(finish, color)` | `(rgb) => rgb` | the look as a function on an sRGB colour (the identity with none) |
+| `ungradeLuts` | `ungradeLuts(finish, color)` | three 256-entry tables or `null` | the look undone, per channel: a painted value back to the value before the grade; `null` with no look |
+| `ungradeImage` | `ungradeImage(img, luts)` | image | a decoded RGBA image read through `ungradeLuts` (the image itself when `luts` is `null`); G-BRAND judges a frame through it |
+| `overTextShares` | `overTextShares(finish)` | `{ grain, halftone, paper, scanlines }` | the strengths of the layers that lie over text, scaled down in proportion past a total of 1 |
+| `grainSeed` | `grainSeed(t, rate = 12)` | integer | the grain's seed at piece time `t`; changes `rate` times a second, holds at 0 |
+| `chromaRoles` | `chromaRoles(finish)` | `[outer, inner]` | the two roles the lens fringe is drawn in: `finish.chromaRoles`, else `accent` and `muted` |
+| `chromaShift` | `chromaShift(c, short)` | px | the gap between the fringe's two ghosts at the frame's edge: 0.4 % of the short side at `c` = 1 |
+| `bloomGain` | `bloomGain(b)` | number | how much glow bloom adds: at most 0.08 |
+| `needsFx` | `needsFx(finish)` | boolean | whether the stage wears the filter: chroma, bloom, or a look other than `neutral` |
+| `fxFilter` | `fxFilter(finish, color, spec, href)` | string | the `<filter id="mm-fx">`, or `''` when none is needed; `href` is the lens ramp's URL |
+
+### `lens.js`: a lens's colour fringe in palette roles
+
+Draws the fringe of `finish.chroma` and of `transitions/impact`: two ghosts of everything that is not canvas, one pulled toward the frame's rim and one toward its middle by a radial displacement, laid over bare canvas in two palette roles. The displacement is a ramp image made once on a canvas.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `RAMP_SIZE` | `128` | number | the pixels on a side of the ramp image |
+| `GHOST` | `0.75` | number | how much of its role a ghost lays over bare canvas |
+| `rampUrl` | `rampUrl()` | data URL or `null` | the ramp as a PNG, made once; `null` where there is no canvas |
+| `warmRamp` | `warmRamp()` | Promise | resolves once the ramp is decoded, so a filter that reads it draws the fringe on its first frame |
+| `fringePrimitives` | `fringePrimitives({ id, input, result, a, w, h, href, canvas, outer, inner })` | string | filter primitives laying the fringe over `input`; `a` is the gap in px at the edge, the colours are hex |
+| `fringeNode` | `fringeNode(doc, { id, a, w, h, canvas, outer, inner })` | svg node or `null` | a `data-mm-overlay` node holding one filter named `id`, for a scene to wear with `filter: url(#id)` |
 
 ### `rig.js`: a brand's mascot as a puppet
 

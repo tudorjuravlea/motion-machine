@@ -1,0 +1,48 @@
+{
+  "id": "demo-data-pyramid",
+  "kind": "film",
+  "formats": ["9x16", "1x1", "16x9"],
+  "title": "Demo: data/pyramid",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "pyramid",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "data/pyramid", "params": { "nodes": "Purpose|Product|Process|People", "dur": "hold" } },
+        { "at": 3.4, "slot": "sub", "fx": "entrances/fade", "text": "Built from the bottom up" }
+      ],
+      "say": "A demo of the pattern."
+    },
+    {
+      "id": "funnel",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "data/pyramid", "params": { "nodes": "Reach|Try|Stay", "variant": "funnel-up", "hero": 3, "dur": "hold" } },
+        { "at": 3.4, "slot": "sub", "fx": "entrances/fade", "text": "A funnel that fills from its neck" }
+      ],
+      "say": "The funnel-up variant."
+    },
+    {
+      "id": "layers",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "data/pyramid", "params": { "nodes": "Interface|Logic|Data", "variant": "layers", "hero": 2, "dur": "hold" } },
+        { "at": 3.4, "slot": "sub", "fx": "entrances/fade", "text": "Three layers, each a little off the last" }
+      ],
+      "say": "The layers variant."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

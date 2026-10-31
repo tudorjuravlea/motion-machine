@@ -8,6 +8,7 @@
 //                  live timing rules and the floors read it (scripts/check/timing.mjs header).
 // Nothing here times anything itself.
 import { addImplicitPlays, forFormat, resolveStory, schedule } from '../../../runtime/kit/schedule.js';
+import { recipeModule } from '../../../runtime/kit/synth.js';
 import { timelineModel } from '../model.js';
 import { floors, timingRules } from '../../check/timing.mjs';
 import { beatsOf } from '../../lib/cues.mjs';
@@ -47,7 +48,11 @@ export function createEngine({ piece, patternsBase }) {
     const refs = kitRefs(story).filter((r) => !modules.has(r));
     await Promise.all(refs.map(async (ref) => {
       modules.set(ref, null);
-      try { modules.set(ref, (await import(`/${patternsBase}/${ref}/pattern.js`)).default ?? null); } catch { /* the kit's default timing */ }
+      try { modules.set(ref, (await import(`/${patternsBase}/${ref}/pattern.js`)).default ?? null); } catch {
+        // a cue that is data (recipe.json) gives its length like a code cue; any other missing module leaves the kit's default timing
+        const recipe = ref.startsWith('sound/') ? await json(`/${patternsBase}/${ref}/recipe.json`) : null;
+        if (recipe) modules.set(ref, recipeModule(recipe));
+      }
     }));
     const folders = story.scenes.flatMap((sc) => sc.beats.flatMap((b) => [b.asset, ...(b.screen ?? []).map((a) => (a.do === 'screen/swap' || a.do === 'screen/compare' ? a.params?.to : null))]))
       .filter((a) => typeof a === 'string' && a.endsWith('/') && !metas.has(a));

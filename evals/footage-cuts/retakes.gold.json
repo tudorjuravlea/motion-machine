@@ -1,0 +1,29 @@
+{
+  "about": "a false start restarted after a long pause, a clean sentence, a long pause: the first take and the pause go, the second take and the clean sentence stay",
+  "duration": 14,
+  "mustCut": [
+    {
+      "start": 0.6,
+      "end": 3.8,
+      "note": "the false start and the quiet before the real take"
+    },
+    {
+      "start": 7.5,
+      "end": 9.8,
+      "note": "a 2.9 s pause with nothing in it"
+    }
+  ],
+  "optionalCut": [],
+  "mustKeep": [
+    {
+      "start": 4,
+      "end": 7.1,
+      "note": "the take that stays"
+    },
+    {
+      "start": 10,
+      "end": 12.3,
+      "note": "the clean sentence"
+    }
+  ]
+}

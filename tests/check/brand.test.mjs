@@ -123,6 +123,20 @@ for (const dir of ['blend-multiply', 'blend-screen', 'vignette-ink']) {
   });
 }
 
+// A look is part of the brand: the style declares it (`finish.look`), the stage wears it, and the gate reads
+// the palette through the same tone tables. A grade the style did not declare, on top of it, still fails.
+test('G-BRAND/look-faded: a piece wearing the look its style declares is the brand', async () => {
+  const res = await run('G-BRAND/look-faded');
+  const r = row(res, 'G-BRAND');
+  assert.equal(r.status, 'PASS', JSON.stringify(r.evidence));
+  assert.deepEqual(res.rules.filter((x) => x.status === 'FAIL').map((x) => x.id), []);
+});
+
+test('G-BRAND/look-extra-grade: a grade the style did not declare, over a declared look, fails', async () => {
+  const r = failsOnly(await run('G-BRAND/look-extra-grade'), 'G-BRAND', { inherent: ['W-LITERAL', 'W-CONTRAST'] });
+  assert.match(r.evidence.reason, /off the palette/);
+});
+
 for (const dir of ['vignette-black', 'grade-contrast', 'grade-saturate']) {
   test(`G-BRAND/${dir}: a finish that is not made of brand roles fails`, async () => {
     const r = failsOnly(await run(`G-BRAND/${dir}`), 'G-BRAND', { inherent: ['W-LITERAL', 'W-CONTRAST'] });

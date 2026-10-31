@@ -146,23 +146,33 @@ story (`--force` stamps the file `UNCHECKED`); otherwise it seeks every frame, p
 in order, and for a deck also writes a standalone folder, a handout and a walkthrough. With
 `--workers N` several pages draw in parallel and the result is proved identical to one page. `sound`
 renders each cue once through an `OfflineAudioContext`, mixes it with the track and normalises
-loudness. `review` builds a single page from the direction log and the stills.
+loudness; a cue is code (`pattern.js`) or data (`recipe.json`, rendered to the same samples in Node and
+in the browser by `runtime/kit/synth.js`), voiced by the style's sound profile (`styles/sound/`), and the mix
+is stereo; a style or story may map a cue to a sound file with a licence record beside it
+(`scripts/lib/sound-sample.mjs`). `sound-listen` renders every recipe under each profile into a page of
+players and measured numbers. `sound mine` cuts a recording into its sounds and fits a profile to the
+set (`scripts/lib/sound-mine.mjs`), `sound clone` finds a new recipe in a profile's style by seeded search
+(`scripts/lib/sound-clone.mjs`), and W-PALETTE measures a piece's cues against its profile. `review` builds a single page from the direction log and the stills.
 
 ### Capture and embed
 
 Folder: `scripts/capture-brand.mjs`, `scripts/capture-motion.mjs`, `scripts/capture-site.mjs`,
-`scripts/media-prep.mjs`, `scripts/media-layers.mjs`, `scripts/footage-cut.mjs`, `scripts/footage-matte.mjs`,
+`scripts/media-prep.mjs`, `scripts/media-layers.mjs`, `scripts/footage-cut.mjs`, `scripts/footage-review.mjs`,
+`scripts/footage-scenes.mjs`, `scripts/footage-audit.mjs`, `scripts/footage-verify.mjs`, `scripts/footage-matte.mjs`, `scripts/footage-eval.mjs` (the scored cut evals in `evals/footage-cuts/`),
 `scripts/mascot-import.mjs`, `scripts/skill-new.mjs`, `skill/templates/brand-skill/`. Contract:
 [SPEC §13](../SPEC.md#13-capture-and-embed-the-three-modes). Tests: `tests/capture/`,
 `tests/cli/capture-site.test.mjs`, `tests/cli/media-prep.test.mjs`, `tests/cli/media-layers.test.mjs`,
-`tests/cli/footage-cut.test.mjs`, `tests/cli/footage-matte.test.mjs`, `tests/cli/mascot-import.test.mjs`,
+`tests/cli/footage-cut.test.mjs`, `tests/cli/footage-review.test.mjs`, `tests/kit/footage-review.test.mjs`, `tests/cli/footage-sound.test.mjs`, `tests/kit/footage-acoustic.test.mjs`, `tests/cli/footage-scenes.test.mjs`, `tests/kit/footage-scenes.test.mjs`, `tests/kit/footage-eval.test.mjs`, `tests/cli/footage-matte.test.mjs`, `tests/cli/mascot-import.test.mjs`,
 `tests/cli/skill-new.test.mjs`.
 
 Brand and motion capture read a source and write a style half with its evidence. `capture site`
 and `media prep` turn a web page or a screen recording into assets a device screen can show,
 seekable frame by frame. `media layers` takes one still picture apart into a plate and parts with
 depths, which `moves/depth-parallax` moves; `footage cut` cuts a prepared talking-head recording in
-its measured pauses and writes an edit the kit plays on the film's clock, and `footage matte` writes
+its measured pauses (or exactly the cuts a director approved from `footage review`'s proposals) and writes an
+edit the kit plays on the film's clock, `footage review --audio` hears the sound before it proposes dead air, `footage scenes`
+finds the scene cuts the review and the cut keep clear of, `footage audit` and `footage verify` check the cuts before and after
+the cut is made, and `footage matte` writes
 a person mask per frame so a layout can stand the speaker in the brand. `brand mascot` imports a
 character drawn in any vector tool into a brand half by its layer names. `skill new` scaffolds a
 thin skill for one brand that loads this engine's skill and pins that brand's look.

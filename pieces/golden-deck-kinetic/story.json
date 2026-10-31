@@ -14,7 +14,7 @@
     },
     {
       "id": "f2",
-      "text": "The gate checks 40 rules: 14 errors and 26 warnings.",
+      "text": "The gate checks 53 rules: 14 errors and 39 warnings.",
       "source": "SPEC §7"
     },
     {
@@ -194,8 +194,7 @@
           "step": 1,
           "slot": "figure",
           "fx": "style:figure",
-          "value": 40,
-          "text": "40 rules",
+          "value": 53, "text": "53 rules",
           "fact": "f2",
           "params": {
             "suffix": " rules"
@@ -217,7 +216,7 @@
           "text": "determinism · legibility · pacing · style · sound"
         }
       ],
-      "say": "And a gate measures every result: thirty-seven rules, from determinism to legibility at phone size to loudness. Press. Nothing ships on a feeling."
+      "say": "And a gate measures every result: forty-seven rules, from determinism to legibility at phone size to loudness. Press. Nothing ships on a feeling."
     },
     {
       "id": "both",

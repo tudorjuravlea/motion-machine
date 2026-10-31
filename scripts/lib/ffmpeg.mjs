@@ -5,7 +5,7 @@ import { spawn, spawnSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { MissingToolError } from './cli.mjs';
+import { MissingToolError, UsageError } from './cli.mjs';
 
 /** The binary to run for `ffmpeg` or `ffprobe`: the path in MM_FFMPEG or MM_FFPROBE when set, else the name (found on PATH). */
 export function bin(name, env = process.env) {
@@ -38,13 +38,48 @@ export const COLOR_TAGS = ['-colorspace', 'bt709', '-color_primaries', 'bt709', 
 /** Filter that blends `sub` instants per frame and keeps the last of each group of `sub`. */
 export const subFilter = (sub) => (sub > 1 ? `tmix=frames=${sub},select='not(mod(n+1,${sub}))',setpts=PTS-STARTPTS,` : '');
 
-export function encodeArgs({ out, fps = 30, sub = 1, comment } = {}) {
+/** The encoders ffmpeg lists (`ffmpeg -encoders`), as one string; cached. Empty when ffmpeg cannot run. */
+let encoderText = null;
+export function encoderList() {
+  if (encoderText == null) {
+    const r = spawnSync(bin('ffmpeg'), ['-hide_banner', '-encoders'], { encoding: 'utf8' });
+    encoderText = r.error || r.status !== 0 ? '' : r.stdout;
+  }
+  return encoderText;
+}
+
+/** Whether `list` (ffmpeg's encoder list) offers VideoToolbox's H.264 encoder. */
+export const hasVideoToolbox = (list = encoderList()) => /^\s*V\S*\s+h264_videotoolbox\b/m.test(list);
+
+/** Bits per pixel per frame the hardware encode is given: a constant bitrate near x264's CRF 16 for flat graphics. */
+export const HW_BITS_PER_PIXEL = 0.2;
+
+export const ENCODERS = ['auto', 'software', 'videotoolbox'];
+
+/**
+ * Which encoder a run uses. `software` (the default) is libx264, the bit-exact encode; `auto` and
+ * `videotoolbox` use the hardware H.264 encoder when ffmpeg lists it and fall back to software when it
+ * does not. Never hardware with `prove`: the proof stays in software. Returns { requested, used, reason }
+ * where `reason` says why a request was not met (null when it was).
+ */
+export function chooseEncoder(requested = 'software', { prove = false, list = encoderList() } = {}) {
+  if (!ENCODERS.includes(requested)) throw new UsageError(`--encoder takes ${ENCODERS.join(', ')}, not "${requested}"`);
+  if (requested === 'software') return { requested, used: 'software', reason: null };
+  if (prove) return { requested, used: 'software', reason: '--prove renders in software: the proof stays bit-exact' };
+  if (!hasVideoToolbox(list)) return { requested, used: 'software', reason: 'this ffmpeg lists no h264_videotoolbox encoder' };
+  return { requested, used: 'videotoolbox', reason: null };
+}
+
+export function encodeArgs({ out, fps = 30, sub = 1, comment, encoder = 'software', width, height } = {}) {
+  const video = encoder === 'videotoolbox'
+    ? ['-c:v', 'h264_videotoolbox', '-b:v', String(Math.round((width ?? 1080) * (height ?? 1920) * fps * HW_BITS_PER_PIXEL)), '-profile:v', 'high', '-allow_sw', '0', '-tag:v', 'avc1']
+    : ['-c:v', 'libx264', '-preset', 'slow', '-crf', '16', '-tune', 'animation'];
   // a silent stereo AAC track, its handler named `silent`, so the apps accept the file before `mm sound`
   // muxes the real mix (which replaces it); G-PEAK and W-LOUDNESS do not take it for sound (sound.mjs hasAudio)
   return ['-y', '-hide_banner', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps * sub), '-c:v', 'png', '-i', '-',
     '-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=stereo', '-map', '0:v', '-map', '1:a', '-c:a', 'aac', '-b:a', '128k', '-shortest', '-metadata:s:a:0', 'handler_name=silent',
     '-vf', subFilter(sub) + COLOR_FILTER,
-    '-c:v', 'libx264', '-preset', 'slow', '-crf', '16', '-tune', 'animation', ...COLOR_TAGS, '-movflags', '+faststart', '-r', String(fps),
+    ...video, ...COLOR_TAGS, '-movflags', '+faststart', '-r', String(fps),
     // the muxer waits for a packet of every stream before it writes, instead of flushing when the
     // silent audio runs 10 s ahead of x264's lookahead. Without it the mov chunk tables (stsc/stco)
     // follow when frames arrived, so the same frames gave different MP4 bytes. The streams are unchanged.

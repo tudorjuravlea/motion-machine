@@ -35,8 +35,12 @@ const CASES = {
   'W-EMPTY': ['W-EMPTY', (r) => { assert.ok(r.evidence.measured > 6); assert.ok(Math.abs(r.evidence.instant - 5) < 0.05, String(r.evidence.instant)); }],
 };
 
+// Findings the same fixture also earns from rules that came after it: a ghosted line (W-CONTRAST/faint) is also
+// a leftover at a rest (W-FOCUS), the desktop-and-phone piece (W-CONTRAST/gradient) draws six sizes and radii (W-TOKENS), and the dense opening of W-PACE is two neighbouring scenes of one layout (W-SAMEBOX).
+const ALSO = { 'W-CONTRAST/faint': ['W-FOCUS'], 'W-CONTRAST/gradient': ['W-TOKENS'], 'W-PACE': ['W-SAMEBOX'] };
+
 for (const [dir, [id, more]] of Object.entries(CASES)) {
-  test(`fixtures/negatives/${dir} warns ${id} and nothing else`, async () => more(warnsOnly(await run(dir), id)));
+  test(`fixtures/negatives/${dir} warns ${id} and nothing else`, async () => more(warnsOnly(await run(dir), id, { inherent: ALSO[dir] ?? [] })));
 }
 
 test('W-SUB: the negative warns when checked as an export with --sub 4', async () => {

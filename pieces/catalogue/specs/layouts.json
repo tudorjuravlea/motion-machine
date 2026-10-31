@@ -10,6 +10,26 @@
    "id": "f1",
    "text": "1",
    "source": "catalogue layout demo, not a claim"
+  },
+  {
+   "id": "f2",
+   "text": "9",
+   "source": "catalogue layout demo, not a claim"
+  },
+  {
+   "id": "f11",
+   "text": "1284",
+   "source": "catalogue layout demo, not a claim"
+  },
+  {
+   "id": "f12",
+   "text": "48",
+   "source": "catalogue layout demo, not a claim"
+  },
+  {
+   "id": "f13",
+   "text": "23",
+   "source": "catalogue layout demo, not a claim"
   }
  ],
  "items": [
@@ -548,6 +568,517 @@
        "text": "github.com/tudorjuravlea/motion-machine"
       }
      ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/label-column",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/label-column",
+     "min": 4.4,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "label-column: labels joined by leaders.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.3,
+       "slot": "object",
+       "fx": "entrances/mask-reveal",
+       "asset": "assets/layers.svg"
+      },
+      {
+       "at": 1,
+       "slot": "label-1",
+       "fx": "entrances/fade",
+       "text": "Glass",
+       "params": {
+        "x": 0.5,
+        "y": 0.15,
+        "spec": "Toughened"
+       }
+      },
+      {
+       "at": 1.3,
+       "slot": "label-2",
+       "fx": "entrances/fade",
+       "text": "Display",
+       "params": {
+        "x": 0.5,
+        "y": 0.33,
+        "spec": "Bright"
+       }
+      },
+      {
+       "at": 1.6,
+       "slot": "label-3",
+       "fx": "entrances/fade",
+       "text": "Camera",
+       "params": {
+        "x": 0.65,
+        "y": 0.48,
+        "spec": "Wide"
+       }
+      },
+      {
+       "at": 1.9,
+       "slot": "label-4",
+       "fx": "entrances/fade",
+       "text": "Battery",
+       "params": {
+        "x": 0.5,
+        "y": 0.73,
+        "spec": "Long-lived"
+       }
+      }
+     ]
+    }
+   ],
+   "assets": [
+    {
+     "from": "patterns/layouts/label-column/demo/assets/layers.svg",
+     "to": "assets/layers.svg"
+    },
+    {
+     "from": "patterns/layouts/label-column/demo/assets/layers.licence.json",
+     "to": "assets/layers.licence.json"
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/object-card",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/object-card",
+     "min": 4.4,
+     "beats": [
+      {
+       "at": 0.2,
+       "slot": "object",
+       "fx": "entrances/drop",
+       "params": {
+        "variant": "calendar"
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "mark",
+       "fx": "entrances/fade",
+       "text": "March"
+      },
+      {
+       "at": 1,
+       "slot": "figure",
+       "fx": "data/counter",
+       "fact": "f2",
+       "value": 9,
+       "params": {
+        "size": "display"
+       }
+      },
+      {
+       "at": 1.2,
+       "slot": "label",
+       "fx": "entrances/fade",
+       "text": "Days to first reply"
+      },
+      {
+       "at": 1.8,
+       "slot": "note",
+       "fx": "entrances/fade",
+       "text": "object-card: a stat inside an object."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/pile-up",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/pile-up",
+     "min": 4,
+     "beats": [
+      {
+       "at": 0.3,
+       "slot": "card-1",
+       "fx": "entrances/pop",
+       "text": "Signed",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.55,
+       "slot": "card-2",
+       "fx": "entrances/pop",
+       "text": "Loved",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.8,
+       "slot": "card-3",
+       "fx": "entrances/pop",
+       "text": "Invited",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 1.05,
+       "slot": "card-4",
+       "fx": "entrances/pop",
+       "text": "Again",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 1.25,
+       "slot": "card-5",
+       "fx": "entrances/pop",
+       "text": "Easy",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 1.45,
+       "slot": "card-6",
+       "fx": "entrances/pop",
+       "text": "Renewed",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 2.0,
+       "slot": "headline",
+       "fx": "entrances/rise",
+       "text": "pile-up"
+      },
+      {
+       "at": 2.3,
+       "slot": "sub",
+       "fx": "entrances/fade",
+       "text": "The pile is the message."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/shortlist",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/shortlist",
+     "min": 4.4,
+     "beats": [
+      {
+       "at": 0.3,
+       "slot": "headline",
+       "fx": "entrances/rise",
+       "text": "shortlist"
+      },
+      {
+       "at": 0.8,
+       "slot": "item-1",
+       "fx": "entrances/pop",
+       "text": "Hall"
+      },
+      {
+       "at": 0.95,
+       "slot": "item-2",
+       "fx": "entrances/pop",
+       "text": "Loft"
+      },
+      {
+       "at": 1.1,
+       "slot": "item-3",
+       "fx": "entrances/pop",
+       "text": "Glasshouse",
+       "params": {
+        "pick": true
+       }
+      },
+      {
+       "at": 1.25,
+       "slot": "item-4",
+       "fx": "entrances/pop",
+       "text": "Yard"
+      },
+      {
+       "at": 1.4,
+       "slot": "item-5",
+       "fx": "entrances/pop",
+       "text": "Mill"
+      },
+      {
+       "at": 2.8,
+       "slot": "result",
+       "fx": "entrances/drop",
+       "text": "One is picked, the rest clear."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/social-card",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/social-card",
+     "min": 4.6,
+     "beats": [
+      {
+       "at": 0.2,
+       "slot": "avatar",
+       "fx": "entrances/fade",
+       "text": "AS"
+      },
+      {
+       "at": 0.2,
+       "slot": "handle",
+       "fx": "entrances/fade",
+       "text": "@alex.sample",
+       "params": {
+        "variant": "post"
+       }
+      },
+      {
+       "at": 0.4,
+       "slot": "sub",
+       "fx": "entrances/fade",
+       "text": "2 min ago"
+      },
+      {
+       "at": 0.7,
+       "slot": "body",
+       "fx": "entrances/rise",
+       "text": "social-card: a post, with counters that tick."
+      },
+      {
+       "at": 1.6,
+       "slot": "stat-1",
+       "fx": "entrances/count",
+       "value": 1284,
+       "fact": "f11",
+       "params": {
+        "from": 1200
+       }
+      },
+      {
+       "at": 1.9,
+       "slot": "stat-2",
+       "fx": "entrances/count",
+       "value": 48,
+       "fact": "f12",
+       "params": {
+        "from": 40
+       }
+      },
+      {
+       "at": 2.2,
+       "slot": "stat-3",
+       "fx": "entrances/count",
+       "value": 23,
+       "fact": "f13",
+       "params": {
+        "from": 20
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/talking-full",
+   "lead": true,
+   "footage": "assets/talk/",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/talking-full",
+     "duration": 2.8,
+     "frame": "hero",
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "entrances/fade",
+       "text": "talking-full",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "The speaker fills the frame."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/talking-full",
+     "duration": 3.0,
+     "frame": {
+      "mode": "side",
+      "side": "left"
+     },
+     "beats": [
+      {
+       "at": 0.2,
+       "slot": "panel",
+       "fx": "data/stat-tile",
+       "text": "takes cut",
+       "value": 42,
+       "params": {
+        "size": "body",
+        "label": "takes cut"
+       }
+      },
+      {
+       "at": 0.4,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "side: a column and a panel."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/talking-full",
+     "duration": 2.8,
+     "frame": {
+      "mode": "inset",
+      "corner": "br"
+     },
+     "beats": [
+      {
+       "at": 0.2,
+       "slot": "panel",
+       "fx": "data/stat-tile",
+       "text": "seconds saved",
+       "value": 18,
+       "params": {
+        "size": "body",
+        "label": "seconds saved"
+       }
+      },
+      {
+       "at": 0.4,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "inset: a card in the corner."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/talking-full",
+     "duration": 3.4,
+     "frame": "bottom",
+     "beats": [
+      {
+       "at": 0.2,
+       "slot": "panel",
+       "fx": "data/stat-tile",
+       "text": "retakes found",
+       "value": 7,
+       "params": {
+        "size": "body",
+        "label": "retakes found"
+       }
+      },
+      {
+       "at": 0.5,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "bottom: the lower half, a panel above."
+      }
+     ]
+    }
+   ],
+   "assets": [
+    {
+     "from": "patterns/layouts/talking-full/demo/assets/talk",
+     "to": "assets/talk"
+    },
+    {
+     "from": "patterns/layouts/talking-full/demo/assets/talk.licence.json",
+     "to": "assets/talk.licence.json"
+    }
+   ]
+  },
+  {
+   "pattern": "layouts/talking-cutout",
+   "lead": true,
+   "footage": "assets/shape/",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/talking-cutout",
+     "duration": 2.6,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "backdrop",
+       "fx": "entrances/rise",
+       "text": "SHAPE",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.3,
+       "slot": "caption",
+       "fx": "entrances/rise",
+       "text": "talking-cutout: a speaker before huge words."
+      }
+     ]
+    },
+    {
+     "layout": "layouts/talking-cutout",
+     "duration": 2.6,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "backdrop",
+       "fx": "entrances/rise",
+       "text": "MOVES ON",
+       "params": {
+        "lines": 2
+       }
+      },
+      {
+       "at": 0.4,
+       "slot": "headline",
+       "fx": "entrances/rise",
+       "text": "Words stand behind."
+      }
+     ]
+    }
+   ],
+   "assets": [
+    {
+     "from": "patterns/layouts/talking-cutout/demo/assets/shape",
+     "to": "assets/shape"
+    },
+    {
+     "from": "patterns/layouts/talking-cutout/demo/assets/shape.licence.json",
+     "to": "assets/shape.licence.json"
     }
    ]
   }

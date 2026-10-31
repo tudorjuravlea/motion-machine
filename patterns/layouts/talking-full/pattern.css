@@ -1,12 +1,15 @@
 /* talking-full: the story's footage fills the frame (an <img data-footage data-media>: the kit points
    it at the frame the edit maps t to, and the gate masks it); a headline on a canvas plate in the top
    band and a caption on a canvas plate low in the frame sit over it, so their contrast is the brand's
-   ink on canvas whatever the footage shows. */
+   ink on canvas whatever the footage shows.
+   A scene may give a speaker frame (hero, side, inset, bottom, hidden): the kit then sets the footage's
+   box inline and writes --mm-panel-* (the rest of the frame beside the speaker) and --mm-face-* on the
+   scene; the plates keep to the panel's columns and, like the panel's content, stand clear of the face. */
 .talking-full {
   position: absolute;
   inset: 0;
   box-sizing: border-box;
-  padding: var(--mm-safe) var(--mm-safe) calc(var(--mm-safe) * 1.5);
+  padding: var(--mm-safe) calc(var(--mm-frame-w) - var(--mm-panel-x, var(--mm-safe)) - var(--mm-panel-w, calc(var(--mm-frame-w) - var(--mm-safe) * 2))) calc(var(--mm-safe) * 1.5) var(--mm-panel-x, var(--mm-safe));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -23,6 +26,32 @@
   object-fit: cover;
 }
 .talking-full__footage:not([src]) { visibility: hidden; }
+/* the panel: the region beside the speaker (the whole safe area in hero, inset and hidden), holding a
+   tile or a picture that a beat brings in */
+.talking-full__panel {
+  position: absolute;
+  z-index: 1;
+  box-sizing: border-box;
+  left: var(--mm-panel-x, var(--mm-safe));
+  top: var(--mm-panel-y, var(--mm-safe));
+  width: var(--mm-panel-w, calc(var(--mm-frame-w) - var(--mm-safe) * 2));
+  height: var(--mm-panel-h, calc(var(--mm-frame-h) - var(--mm-safe) * 2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  color: var(--mm-color-ink);
+}
+.talking-full__tile {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  pointer-events: auto;
+}
 .talking-full__headline,
 .talking-full__caption {
   position: relative;
@@ -56,5 +85,16 @@
   text-wrap: balance;
 }
 .talking-full__headline[data-empty],
+.talking-full__tile[data-empty],
 .talking-full__caption[data-empty] { display: none; }
 [data-format="16x9"] .talking-full__caption { max-width: 70%; }
+/* overlay: the safe box itself (the footage fills the frame, the layout is padded by the safe margin), a
+   positioned area for what is drawn over the speaker and not in the text flow: a lower third, an annotation. */
+.talking-full__overlay {
+  position: absolute;
+  z-index: 2;
+  inset: var(--mm-safe) var(--mm-safe) calc(var(--mm-safe) * 1.5);
+  font-size: var(--mm-size-body);
+  pointer-events: none;
+}
+.talking-full__overlay[data-empty] { display: none; }

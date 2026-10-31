@@ -1,0 +1,367 @@
+{
+  "id": "catalogue-entrances-5",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Entrances, part 5 of 5",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "87",
+      "source": "catalogue demo number, not a claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Entrances",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "How things arrive. Part 5 of 5."
+        }
+      ],
+      "say": "How things arrive.",
+      "duration": 3.6
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "character-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "character",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 1,
+          "slot": "figure",
+          "fx": "entrances/character",
+          "params": {
+            "mood": "happy"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "The mascot hops in, then keeps the beat.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "entrances/character",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "character: The mascot hops in, then keeps the beat.",
+      "duration": 4.8
+    },
+    {
+      "id": "character-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "character",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 1,
+          "slot": "figure",
+          "fx": "entrances/character",
+          "params": {
+            "mood": "excited",
+            "from": "left"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "mood: excited, from: left. It hops in from the side.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "mood: excited, from: left. It hops in from the side.",
+      "duration": 4.6
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "one-line",
+      "layout": "layouts/caption-bar",
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "entrances/one-line",
+          "asset": "assets/mark.svg",
+          "params": {
+            "dur": 3.2
+          }
+        },
+        {
+          "at": 3.5,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "one-line: a mark drawn in one stroke, the pen never lifting."
+        }
+      ],
+      "id": "one-line-a",
+      "duration": 7.3
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "one-line",
+      "layout": "layouts/caption-bar",
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "entrances/one-line",
+          "asset": "assets/mark.svg",
+          "params": {
+            "dur": 3.2,
+            "weight": 2.2,
+            "curves": 2.5
+          }
+        },
+        {
+          "at": 3.5,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "weight: 2.2, curves: 2.5. A heavier pen that slows more."
+        }
+      ],
+      "id": "one-line-b",
+      "duration": 7.3
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "photo-wake",
+      "layout": "layouts/media",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "image",
+          "fx": "entrances/photo-wake",
+          "asset": "assets/field.png",
+          "params": {
+            "frame": "bleed"
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "photo-wake"
+        },
+        {
+          "at": 1.2,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "A two-ink print, then an accent front brings the colour."
+        }
+      ],
+      "id": "photo-wake-a",
+      "duration": 4.55
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "photo-wake",
+      "layout": "layouts/media",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "image",
+          "fx": "entrances/photo-wake",
+          "asset": "assets/field.png",
+          "params": {
+            "frame": "bleed",
+            "origin": "bottom-right",
+            "band": 0.2,
+            "warp": 0.7
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "photo-wake"
+        },
+        {
+          "at": 1.2,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "origin: bottom-right, band: 0.2. From the corner."
+        }
+      ],
+      "id": "photo-wake-b",
+      "duration": 4
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "sketch",
+      "layout": "layouts/bento-3",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "sketch: a pen draws each box, then the label.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "tile-1",
+          "fx": "entrances/sketch",
+          "text": "Plan"
+        },
+        {
+          "at": 1,
+          "slot": "tile-2",
+          "fx": "entrances/sketch",
+          "text": "Track"
+        },
+        {
+          "at": 1.5,
+          "slot": "tile-3",
+          "fx": "entrances/sketch",
+          "text": "Ship"
+        }
+      ],
+      "id": "sketch-a",
+      "duration": 5.15
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "sketch",
+      "layout": "layouts/bento-3",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "pen: marker, fill: wash, shape: pill.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "tile-1",
+          "fx": "entrances/sketch",
+          "text": "Plan",
+          "params": {
+            "pen": "marker",
+            "fill": "wash",
+            "shape": "pill"
+          }
+        },
+        {
+          "at": 1,
+          "slot": "tile-2",
+          "fx": "entrances/sketch",
+          "text": "Track",
+          "params": {
+            "pen": "marker",
+            "fill": "wash",
+            "shape": "pill"
+          }
+        },
+        {
+          "at": 1.5,
+          "slot": "tile-3",
+          "fx": "entrances/sketch",
+          "text": "Ship",
+          "params": {
+            "pen": "marker",
+            "fill": "wash",
+            "shape": "pill"
+          }
+        }
+      ],
+      "id": "sketch-b",
+      "duration": 4.25
+    }
+  ],
+  "share": "Entrances (5/5): character, one-line, photo-wake, sketch. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

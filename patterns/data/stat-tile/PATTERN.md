@@ -27,6 +27,9 @@ The figure comes from the beat's `value` (the kit writes it as `data-value`). Pa
 | prefix | string | (empty) | text before the figure |
 | suffix | string | (empty) | text after the figure |
 | size | enum(display|h1|h2|body|caption) | display | the style size role of the figure |
+| surface | enum(flat|glass) | flat | `flat` is the surface role as a plain fill; `glass` is the brand's glass surface (`surface` block: a tint of the surface role, the backdrop blurred, a hairline in the line role, a top highlight, a soft shadow, and one shine bar that sweeps the tile as it arrives) |
+
+Brand knobs: size, surface (a brand sets `style.patterns["data/stat-tile"] = { surface: "glass" }` once, and the glass look itself in its `surface` block).
 
 ## Style variables consumed
 - `--mm-size-<size>` for the role named by `size` and `--mm-size-body` for secondary text (the caption role is under the 16x9 body floor, G-LEGIBLE)
@@ -37,6 +40,8 @@ The figure comes from the beat's `value` (the kit writes it as `data-value`). Pa
 
 ## Legibility and rest notes
 At p = 1 the figure equals the value, the label and delta are fully visible, and nothing moves. The label is the `label` param, else the slot's own text; the delta is shown as given, never computed. Label and delta fade in over p 0.2 to 0.6 and 0.55 to 0.95, so the tile is complete at p = 1. A delta that starts with a minus sign takes the quiet chip; any other is drawn in the accent.
+
+With `surface: glass` the tile's own fill gives way to the brand's tint (`--mm-surface-*`, set by the kit from the brand's `surface` block), so W-CONTRAST measures the text over the rendered pixels under it. The shine bar lies over the tile only while it arrives (the last 70 % of the entrance) and is off it at every rest.
 
 ## Provenance
 original

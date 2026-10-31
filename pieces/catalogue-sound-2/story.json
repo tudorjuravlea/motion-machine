@@ -1,0 +1,513 @@
+{
+  "id": "catalogue-sound-2",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Sound cues, part 2 of 2",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Sound cues",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Synthesised, never sampled. Turn the sound on. Part 2 of 2."
+        }
+      ],
+      "say": "Synthesised, never sampled. Turn the sound on.",
+      "duration": 4.35
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Listen as it lands.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Each cue plays on its own moment."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.65
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "ready",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "ready",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "Ready",
+          "cue": "ready"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Something is present and ready.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/ready",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "ready-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "attention",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "attention",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "New",
+          "cue": "attention"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A nudge: look here.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/attention",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "attention-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "warning",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "warning",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Check",
+          "cue": "warning"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Caution: take a second look.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/warning",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "warning-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "error",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "error",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/drop",
+          "text": "Failed",
+          "cue": "error"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A failure; the contour falls.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/error",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "error-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "loading",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "loading",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/typewriter",
+          "text": "Loading",
+          "cue": "loading"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Work is under way.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/loading",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "loading-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "tap",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "tap",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Tap",
+          "cue": "tap"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A touch on a control.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/tap",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "tap-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "toggle-on",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "toggle-on",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "On",
+          "cue": "toggle-on"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A switch turned on.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/toggle-on",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "toggle-on-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "toggle-off",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "toggle-off",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "Off",
+          "cue": "toggle-off"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A switch turned off.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/toggle-off",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "toggle-off-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "open",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "open",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/mask-reveal",
+          "text": "Open",
+          "cue": "open"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Something opens.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/open",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "open-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "close",
+      "layout": "layouts/split",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "close",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Close",
+          "cue": "close"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Something closes.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "sound/close",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "close-a",
+      "duration": 4.2
+    }
+  ],
+  "share": "Sound cues (2/2): ready, attention, warning, error, loading, tap, toggle-on, toggle-off, open, close. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

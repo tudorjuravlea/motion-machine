@@ -1,17 +1,21 @@
 // W-MIX (SPEC §7, §9): more than two cues sounding at once; a cue retriggered within 45 ms; cue
 // peaks outside 6-8 dB above the bed; cues per 10 s outside the style's band; a cue with no visible
-// event. Structure comes from the schedule and the sound patterns' durations; peaks come from
-// out/cues.json when `mm sound` has run. A sub-check that could not run (no out/cues.json, or a cue
+// event; a stereo mix that leans more than 0.5 dB to one side. Structure comes from the schedule and
+// the sound patterns' durations; peaks and the lean come from out/cues.json when `mm sound` has run
+// (a cues.json from before the lean was recorded is simply not judged for it). A sub-check that could not run (no out/cues.json, or a cue
 // pattern whose duration had to be guessed) makes a clean result SKIP with `partial: true`, never
 // PASS; any finding still WARNs.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { rule } from '../lib/report.mjs';
 import { BED_BAND_DB, COOLDOWN_S, cueEvents, loadCueModules, resolvePatternsBase } from '../sound.mjs';
+import { loadProfile } from '../lib/sound-profile.mjs';
+import { sampleMap } from '../lib/sound-sample.mjs';
 
 const FALLBACK_S = 0.15;
 const VISIBLE = new Set(['arrive', 'cut', 'depart', 'move']);
 const VISIBLE_WINDOW_S = 0.04;
+const BALANCE_MAX_DB = 0.5;
 
 export default async function (ctx) {
   if (ctx.schedule?.kind === 'deck') return rule('W-MIX', 'SKIP', { reason: 'deck cues sit on presses, not on a clock' });
@@ -23,7 +27,9 @@ export default async function (ctx) {
   const reasons = [];
   const push = (kind, message, c, extra = {}) => reasons.push({ kind, message, instant: c?.t, selector: c?.selector, ...extra });
   const base = resolvePatternsBase(ctx.dir, ctx.patternsBase);
-  const mods = await loadCueModules(all.map((c) => c.name), base);
+  let profile = null;
+  try { profile = ctx.style?.sound?.profile ? loadProfile(ctx.style.sound.profile, ctx.dir) : null; } catch { /* a profile that cannot be read is `mm sound`'s error to name */ }
+  const mods = await loadCueModules(all.map((c) => c.name), base, profile, { samples: sampleMap(ctx.story, ctx.style, ctx.dir) });
   const dur = (c) => Number(mods[c.name]?.durationS ?? FALLBACK_S);
   const unresolved = [...new Set(all.filter((c) => !mods[c.name]).map((c) => c.name))];
   const cues = all.filter((c) => c.name !== 'bed');
@@ -80,7 +86,18 @@ export default async function (ctx) {
     }
   }
 
-  const evidence = { peaks, ...(unresolved.length ? { unresolvedPatterns: unresolved } : {}) };
+  // 6. the stereo mix leans no more than 0.5 dB (left minus right, K-weighted, recorded by `mm sound`)
+  let lean = null;
+  if (existsSync(cuesFile)) {
+    const j = JSON.parse(readFileSync(cuesFile, 'utf8'));
+    const b = j.loudness?.balanceDb;
+    if (typeof b === 'number') {
+      lean = b;
+      if (Math.abs(b) > BALANCE_MAX_DB + 0.005) push('balance', `the stereo mix leans ${b > 0 ? 'left' : 'right'} by ${Math.abs(b).toFixed(2)} dB, the limit is ${BALANCE_MAX_DB} dB`, null, { measured: b });
+    }
+  }
+
+  const evidence = { peaks, ...(lean !== null ? { balanceDb: lean } : {}), ...(unresolved.length ? { unresolvedPatterns: unresolved } : {}) };
   const missing = [];
   if (peaks !== 'checked against the bed') missing.push(`peaks ${peaks}`);
   if (unresolved.length) missing.push(`overlap judged with a ${FALLBACK_S} s stand-in for ${unresolved.join(', ')} (no pattern module)`);

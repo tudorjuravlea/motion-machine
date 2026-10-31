@@ -1,0 +1,18 @@
+<!doctype html>
+<!-- A page for the wire (tests/cli/capture-site.test.mjs): a white rounded card on grey, an image, a
+     round 10 px dot, a paragraph that wraps onto two lines, a hidden box and a fixed header. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>wire</title>
+<style>body { margin: 0; background: #E5E5E5; font: 16px/24px sans-serif; color: #111; }
+header { position: fixed; top: 0; left: 0; right: 0; height: 56px; background: #FFFFFF; border-bottom: 1px solid #999; }
+header span { position: absolute; left: 16px; top: 16px; }
+main { padding: 80px 20px 40px; }
+#card { background: #FFFFFF; border-radius: 16px; width: 300px; height: 120px; margin-bottom: 20px; }
+#pic { display: block; width: 100px; height: 60px; margin-bottom: 20px; }
+#dot { width: 10px; height: 10px; border-radius: 50%; background: #2F6F5E; margin-bottom: 20px; }
+#para { width: 200px; margin-bottom: 20px; }
+#ghost { display: none; background: #F00; width: 80px; height: 80px; }
+#ghost-text { display: none; }</style></head>
+<body><header id="bar"><span id="label">Wire</span></header>
+<main><div id="card"></div><img id="pic" src="wire.png" alt="">
+<div id="dot"></div><div id="para">alpha beta gamma delta epsilon zeta eta</div>
+<div id="ghost"><p id="ghost-text">hidden words</p></div></main></body></html>

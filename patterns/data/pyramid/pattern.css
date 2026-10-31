@@ -1,0 +1,24 @@
+/* data/pyramid: the shared diagram look (runtime/kit/diagram.css), a stage sized to the format, and
+   the bands and slabs: every fill a palette role (or a tint of ink), every outline the edge role. */
+@import url('../../../runtime/kit/diagram.css');
+.mm-pyr .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.5); }
+[data-format="9x16"] .mm-pyr .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.42); }
+[data-format="16x9"] .mm-pyr .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.68); }
+.mm-pyr__band {
+  fill: var(--mm-color-surface);
+  stroke: var(--mm-color-surface);
+  stroke-linejoin: round;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+.mm-pyr__band--hero { fill: var(--dg-accent); stroke: var(--dg-accent); }
+/* a band's label carries the band's fill, so the contrast check reads the colour the text sits on */
+.mm-pyr .mm-dg__node--bare .mm-dg__label { color: var(--mm-color-surfaceInk); background: var(--mm-color-surface); }
+.mm-pyr .mm-dg__node--bare.mm-dg__node--hero .mm-dg__label { color: var(--dg-accent-ink); background: var(--dg-accent); }
+.mm-pyr[data-variant="layers"] .mm-dg__node--bare .mm-dg__label { color: var(--mm-color-ink); background: none; text-align: left; }
+.mm-pyr[data-variant="layers"] .mm-dg__node--bare.mm-dg__node--hero .mm-dg__label { color: var(--mm-color-ink); background: none; font-weight: var(--mm-weight-display); }
+.mm-pyr .mm-pyr__face { fill: var(--mm-color-surface); }
+.mm-pyr .mm-pyr__face--hero { fill: var(--dg-accent); }
+.mm-pyr__shade { stroke: none; }
+.mm-pyr__shade--l { fill: color-mix(in srgb, var(--mm-color-ink) 8%, transparent); }
+.mm-pyr__shade--r { fill: color-mix(in srgb, var(--mm-color-ink) 18%, transparent); }

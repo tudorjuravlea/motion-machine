@@ -1,0 +1,168 @@
+{
+  "id": "catalogue-layouts-3",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Layouts, part 3 of 4",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "1",
+      "source": "catalogue layout demo, not a claim"
+    },
+    {
+      "id": "f2",
+      "text": "9",
+      "source": "catalogue layout demo, not a claim"
+    },
+    {
+      "id": "f11",
+      "text": "1284",
+      "source": "catalogue layout demo, not a claim"
+    },
+    {
+      "id": "f12",
+      "text": "48",
+      "source": "catalogue layout demo, not a claim"
+    },
+    {
+      "id": "f13",
+      "text": "23",
+      "source": "catalogue layout demo, not a claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "footage": {
+    "asset": "assets/talk/"
+  },
+  "scenes": [
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "talking-full",
+      "layout": "layouts/talking-full",
+      "duration": 2.8,
+      "frame": "hero",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "talking-full",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "The speaker fills the frame."
+        }
+      ],
+      "id": "talking-full-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "talking-full",
+      "layout": "layouts/talking-full",
+      "duration": 3,
+      "frame": {
+        "mode": "side",
+        "side": "left"
+      },
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "panel",
+          "fx": "data/stat-tile",
+          "text": "takes cut",
+          "value": 42,
+          "params": {
+            "size": "body",
+            "label": "takes cut"
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "side: a column and a panel."
+        }
+      ],
+      "id": "talking-full-b"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "talking-full",
+      "layout": "layouts/talking-full",
+      "duration": 2.8,
+      "frame": {
+        "mode": "inset",
+        "corner": "br"
+      },
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "panel",
+          "fx": "data/stat-tile",
+          "text": "seconds saved",
+          "value": 18,
+          "params": {
+            "size": "body",
+            "label": "seconds saved"
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "inset: a card in the corner."
+        }
+      ],
+      "id": "talking-full-c"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "talking-full",
+      "layout": "layouts/talking-full",
+      "duration": 3.4,
+      "frame": "bottom",
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "panel",
+          "fx": "data/stat-tile",
+          "text": "retakes found",
+          "value": 7,
+          "params": {
+            "size": "body",
+            "label": "retakes found"
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "bottom: the lower half, a panel above."
+        }
+      ],
+      "id": "talking-full-d"
+    }
+  ],
+  "share": "Layouts (3/4): talking-full. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

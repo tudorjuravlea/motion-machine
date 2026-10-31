@@ -52,6 +52,15 @@ advises: a direction may break a line on purpose, and the director decides.
 - 2 s of quiet after the last arrival in a film; one element at most on a deck's last press (W-QUIET);
 - no 4 s window without an arrival, cut or move (W-DEAD; a long held hero shot is a choice to name);
 - arrivals per 10 s inside the motion style's band (W-PACE), cues per 10 s inside its sound band (W-MIX).
+- no text over the speaker's face (W-FACE): a talking layout keeps its headline, caption and panel tile clear of the face box; a frame mode (`side`, `inset`, `bottom`) leaves more room.
+- a beat that illustrates a spoken word names it (`anchor: "the word"`) and arrives from 1.8 s before to 0.2 s after it, at the word minus 0.5 s by default (W-ANCHOR, against the footage's words or the voice's `<track>.words.json`);
+- the questions the film raises are declared in `loops`: at most two open at once, each closed before the call to action (W-LOOP);
+- one beat lit in the accent at a time, and a finished text retired to 0, not left half there (W-FOCUS);
+- few values, reused: at most 4 stroke widths, 5 font sizes and 3 corner radii in a piece (W-TOKENS);
+- an exit and the next scene's entrance travel the same way at the same speed, within 5 % (W-SEAM);
+- no template: not more than half of the scenes put their content in the same boxes, and no two neighbouring scenes of one layout differ in text only (W-SAMEBOX);
+- every cue measured against the style's sound profile, and every sound file with its licence on record (W-PALETTE, W-SAMPLE-LICENSE);
+- every motion eased through its whole duration, with no odd frame, no jump-then-stop and no stop between two motions of one element (W-POP, W-DEADSTOP: read from the frames).
 
 When a brief cannot be told legibly in its seconds, say so and offer the re-scope (fewer words,
 fewer scenes, more seconds); the director chooses (AXIOMS.md AXIOM 14).
@@ -82,7 +91,7 @@ story. With a declared BPM and no track, see `pitfalls.md` §1.
 thresholds in a `gate` block in `style/motion.json` (compose again; the composed `style.json` carries
 it). It adjusts warnings only, and every key is optional: `length` (`filmS`, `loopS`, `deckPresses`,
 each `[min, max]`) for W-LENGTH; `deadS` for W-DEAD; `quietS` for W-QUIET; `read` (`perWordS`, `labelS`,
-`sentenceS`) for W-READ; `liftBans` (`centered-title-on-gradient`, `corner-labels`, `frame-borders`) for
+`sentenceS`) for W-READ; `anchor` (`earlyS`, `lateS`) for W-ANCHOR; `tokens` (`strokes`, `sizes`, `radii`) for W-TOKENS; `seamPct` for W-SEAM; `sameBox` (`share`, `minScenes`, `quant`) for W-SAMEBOX; `liftBans` (`centered-title-on-gradient`, `corner-labels`, `frame-borders`) for
 W-BAN, which then stops reporting those looks while the style's `bans` stay as they are. The hold floor,
 the arrival band and the stagger cap are still `pacing` and `motion.stagger` (W-HOLD, W-PACE, W-STAGGER).
 A key naming a G- rule, or any unknown key, is a contract error and `mm check` exits 2: hard rules are
@@ -133,15 +142,25 @@ Not while the studio's Export runs (a second exporter is refused, exit 2).
 
 ```
 mm check pieces/<id>                      # exit 0, or fix and repeat
-mm export pieces/<id> --prove             # every format; --prove re-renders in reverse and compares bytes
+mm export pieces/<id> --prove             # every format; --prove re-renders in reverse and compares bytes; each MP4 is read back (out/export-qa.json)
 mm sound pieces/<id>                      # cues + bed, loudnorm, muxed into the MP4s
 mm check pieces/<id>                      # again: G-PEAK and W-LOUDNESS now run on the muxed audio
+mm verify-export pieces/<id>/out/<id>-<format>.mp4   # per format: the muxed file read back (sound, level, silence, black, frozen, every cut's seam)
 mm review pieces/<id>                     # out/review.html, newest round first
 ```
 
 `--sub` defaults to 1. Above 1 the exporter blends instants (`--sub 4`) and W-SUB warns when any
 text travels more than 4 px per frame, because blending turns fast text
 into ghosts; `mm check <piece> --sub N` reports the same warning without exporting.
+
+The export reads each finished MP4 back (SPEC §16.7) and a failed check exits 1: `out/export-qa.json` says which (QA-DURATION,
+QA-BLACK, QA-FROZEN, QA-SEAM …) and `out/export-qa-seams-<format>.png` shows the frames either side of every cut. Its checks of the
+mix (QA-AUDIO, QA-SILENCE, QA-LEVEL) are SKIP until `mm sound` has muxed it; `mm verify-export` runs them. Report its SKIPs, never as PASS.
+
+Edits and checks go in order. `mm check` records the last edit it saw (the `journal` of `out/check.json`, the
+last receipt of `out/studio/journal.jsonl`); `mm export` refuses a report older than the last edit, and `--force`
+stamps the media UNCHECKED. After any edit, studio drag or `mm timeline` receipt, run `mm check` again before the
+export or the handover.
 
 Every WARN is read. Show each to the director with its evidence; the director accepts it or asks for a fix,
 in one line in the log, and an accepted warning travels to the handover with that line. A warning the

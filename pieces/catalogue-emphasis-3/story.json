@@ -1,0 +1,521 @@
+{
+  "id": "catalogue-emphasis-3",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Emphasis, part 3 of 3",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "71.5 mm",
+      "source": "catalogue demo number, not a claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Emphasis",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Pointing the eye at what is there. Part 3 of 3."
+        }
+      ],
+      "say": "Pointing the eye at what is there.",
+      "duration": 4.3
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "emote-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "emote",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Wow",
+          "emphasis": "emphasis/emote"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A small hand-drawn reaction pops beside the words.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "emphasis/emote",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "emote: A small hand-drawn reaction pops beside the words.",
+      "duration": 4.1
+    },
+    {
+      "id": "emote-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "emote",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Wow",
+          "emphasis": "emphasis/emote",
+          "params": {
+            "mark": "heart",
+            "side": "left"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "mark: heart, side: left.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "mark: heart, side: left.",
+      "duration": 3.4
+    },
+    {
+      "id": "keyword-cta-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "keyword-cta",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.8,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "GUIDE",
+          "emphasis": "emphasis/keyword-cta"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A keyword chip slams in; arrows bob toward it.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "emphasis/keyword-cta",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "keyword-cta: A keyword chip slams in; arrows bob toward it.",
+      "duration": 4.6
+    },
+    {
+      "id": "keyword-cta-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "keyword-cta",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.8,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "GUIDE",
+          "emphasis": "emphasis/keyword-cta",
+          "params": {
+            "from": "right",
+            "bobs": 5
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "from: right, bobs: 5. Five bobs, from the side.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "from: right, bobs: 5. Five bobs, from the side.",
+      "duration": 4.4
+    },
+    {
+      "id": "stamp-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "stamp",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "Approved",
+          "emphasis": "emphasis/stamp"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A verdict word is stamped on, and stays.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "emphasis/stamp",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "stamp: A verdict word is stamped on, and stays.",
+      "duration": 4.4
+    },
+    {
+      "id": "stamp-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "stamp",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "Approved",
+          "emphasis": "emphasis/stamp",
+          "params": {
+            "emphasis": {
+              "personality": "press",
+              "tilt": "right"
+            }
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "personality: press, tilt: right.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "personality: press, tilt: right.",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "roulette",
+      "layout": "layouts/list-reveal",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "roulette",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "item-1",
+          "fx": "style:body",
+          "text": "A box runs along the row",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "item-2",
+          "fx": "style:body",
+          "text": "and slows down",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "item-3",
+          "fx": "entrances/fade",
+          "text": "on the answer",
+          "emphasis": "emphasis/roulette"
+        }
+      ],
+      "id": "roulette-a",
+      "duration": 4.4
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "roulette",
+      "layout": "layouts/list-reveal",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "roulette",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "item-1",
+          "fx": "style:body",
+          "text": "passes: 3",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "item-2",
+          "fx": "style:body",
+          "text": "Three runs before it lands",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "item-3",
+          "fx": "entrances/fade",
+          "text": "on the answer",
+          "emphasis": "emphasis/roulette",
+          "params": {
+            "emphasis": {
+              "passes": 3
+            }
+          }
+        }
+      ],
+      "id": "roulette-b",
+      "duration": 4.4
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "wash-bloom",
+      "layout": "layouts/bento-3",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "wash-bloom: colour blooms behind each pen.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "tile-1",
+          "fx": "entrances/sketch",
+          "text": "Plan",
+          "emphasis": "emphasis/wash-bloom"
+        },
+        {
+          "at": 1.1,
+          "slot": "tile-2",
+          "fx": "entrances/sketch",
+          "text": "Track",
+          "emphasis": "emphasis/wash-bloom"
+        },
+        {
+          "at": 1.7,
+          "slot": "tile-3",
+          "fx": "entrances/sketch",
+          "text": "Ship",
+          "emphasis": "emphasis/wash-bloom"
+        }
+      ],
+      "id": "wash-bloom-a",
+      "duration": 5
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "wash-bloom",
+      "layout": "layouts/bento-3",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "bloom: muted, offset: 5. One colour, off register.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "tile-1",
+          "fx": "entrances/sketch",
+          "text": "Plan",
+          "emphasis": "emphasis/wash-bloom",
+          "params": {
+            "emphasis": {
+              "bloom": "muted",
+              "offset": 5
+            }
+          }
+        },
+        {
+          "at": 1.1,
+          "slot": "tile-2",
+          "fx": "entrances/sketch",
+          "text": "Track",
+          "emphasis": "emphasis/wash-bloom",
+          "params": {
+            "emphasis": {
+              "bloom": "muted",
+              "offset": 5
+            }
+          }
+        },
+        {
+          "at": 1.7,
+          "slot": "tile-3",
+          "fx": "entrances/sketch",
+          "text": "Ship",
+          "emphasis": "emphasis/wash-bloom",
+          "params": {
+            "emphasis": {
+              "bloom": "muted",
+              "offset": 5
+            }
+          }
+        }
+      ],
+      "id": "wash-bloom-b",
+      "duration": 5.05
+    }
+  ],
+  "share": "Emphasis (3/3): emote, keyword-cta, stamp, roulette, wash-bloom. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

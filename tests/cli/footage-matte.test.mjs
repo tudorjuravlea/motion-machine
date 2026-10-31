@@ -57,7 +57,13 @@ test('supplied masks become one grey mask per frame in assets/<n>/matte/, record
   assert.equal(files.at(-1), `f${String(FRAMES).padStart(5, '0')}.png`);
   const meta = readJson(join(dir, 'assets/shape/media.json'));
   assert.equal(meta.kind, 'sequence');
-  assert.deepEqual(meta.matte, { dir: 'matte/', frames: FRAMES, from: 'masks', median: 3, feather: 3 });
+  assert.deepEqual(meta.matte, { dir: 'matte/', frames: FRAMES, from: 'masks', median: 3, feather: 3, face: 'face.json' });
+  // the head of every frame, shares of the recording: the disc (radius 60 of 640x360, centre y 110) and not the torso bar
+  const face = readJson(join(dir, 'assets/shape', meta.matte.face));
+  assert.equal(face.boxes.length, FRAMES);
+  const [x0, y0, x1, y1] = face.boxes[60];
+  assert.ok(Math.abs(y0 - 50 / 360) < 0.02 && Math.abs(y1 - 170 / 360) < 0.03, `head rows ${y0}..${y1}`);
+  assert.ok(Math.abs((x1 - x0) - 120 / 640) < 0.02, `head width ${x1 - x0}`);
   const px = grey(join(matte, 'f00061.png'));
   assert.equal(px.length, W * H, 'each mask is the frame size');
   assert.ok(px[110 * W + centreX(60)] >= 250, 'the disc is white');

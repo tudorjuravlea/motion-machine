@@ -77,6 +77,71 @@ wrap the flow in at most one scene and never takes its place.
 In 9x16 the phone shows the site rather than the laptop: give scene 5 a `variants` entry for
 `9x16`.
 
+## Product demo, stills first (25 to 40 s): the product, without a recording
+
+Read this before you ask for a screen recording. A live recording wanders: the cursor hunts, a
+spinner turns, a pause sits in the middle of the key action, and the viewer reads a screen while
+the voice has moved on. A still is exactly the state you chose. Take one still per beat of use
+(`mm capture site`, or a screenshot saved to `assets/`), and move the camera and the callouts instead
+of the interface. Use a recording only when the motion is the point (a drag, a loading state that
+resolves, a gesture).
+
+| Step | What the viewer sees | Pattern |
+|---|---|---|
+| 1. A still arrives, tilted in | the whole screen enters leaning in from one side; the next still leans in from the other side, so the eye is never on the same edge twice | `devices/phone` or `devices/browser` with `asset` (`tilt` sets the lean, 0 to 45 degrees, one direction); `3d/phone` or `3d/laptop` for a real turn. `GAP: a full-bleed still that tilts in from alternating sides (closest: devices/phone tilt, layouts/media bleed)`; until then alternate a phone still and a browser still, or the 3D device's `move` |
+| 2. A slow drift | the still is never dead; it moves 3 to 6 % over the shot | `moves/ken-burns` or `moves/push-in` with `moveParams: { "target": "media", "to": 1.05 }` (the picture moves inside the screen, the device stays); `moves/hero-drift` for the whole device |
+| 3. Callouts pinned to the still | a leader line and a short label on the thing being named; they are tied to a mark on the still, not to the frame | `screen/callout` (`at` a mark from `mm capture site --mark`, or a point; `side` where the label sits) |
+| 4. One push to a region | a single move into the part that matters, once per still | `screen/zoom-to` (`at`, `s` about 1.6) |
+
+Rules:
+- **Never crop the UI.** A device picture is covered to the screen edge to edge, so a still of
+  another shape loses its edges (the device cards say so). Make the still the shape of the screen:
+  a phone-shaped capture for a phone, a capture in the laptop's or browser's own proportions (the
+  device card gives them), one asset per format through a `variants` entry. A cut-off menu or a clipped button reads as a mistake. The
+  push in step 4 is the only time part of the screen leaves the frame.
+- **One still, one idea, one push.** Two pushes on one still reads as searching.
+- **Alternate sides** where the pattern lets you. A lean in one direction every time reads as a
+  loop; the drift direction at least does not repeat on two stills in a row.
+- Four to five stills in 30 s. Each holds long enough to read its callout (0.3 s a word, W-READ),
+  and the push comes after the callout has been read, not with it.
+
+## Reel (25 to 35 s): a list, spoken to camera
+
+A speaker, then three to five items, each shown the same way. It is built to be watched in a feed
+with the sound off, so every spoken claim is also on screen. Shots are short (1.1 to 1.4 s, none over
+about 2.8 s; `references/pacing.md`, "Short-form bands"), so each shot carries two or three words at
+most (W-READ). A shot is a beat inside a scene, not a scene of its own.
+
+| # | Scene · layout | s | On screen | Arrives as |
+|---|---|---|---|---|
+| 1 | hook · `layouts/talking-full` | 0–3 | one line that names the subject, finished at frame 0 | `style:headline` 0, instant |
+| 2 | proof · `layouts/talking-full` | 3–6 | one credibility line: what the speaker has done, as a sourced fact | `style:body`; a number with `fact` |
+| 3 | the list · `layouts/list-reveal` | 6–10 | every item's name, soft, before any is explained: an open loop | items `entrances/blur-fade` (see the gap below) |
+| 4 to 6 | item · `layouts/paper-cards` and `layouts/media` | 4 each | see "Per item" | see "Per item" |
+| 7 | callback · `layouts/statement` | 22–25 | the hook's own words again, now answered | `style:headline`; emphasis `emphasis/marker-circle` |
+| 8 | end · `layouts/endcard` | 25–32 | the resource first (page, file or app on screen), then the ask and the link | `devices/browser` with `asset`, then `style:headline`, `style:body` |
+
+Per item (four shots, about 4 s): the item's number and name on a card (`entrances/pop`); the
+definition in one line of eight words or fewer (`style:body`); a literal picture of the thing
+(`layouts/media`, a real screenshot or a drawn object, not a metaphor); then back to the speaker with a
+punch-in (`moves/punch` on the footage, or `moves/push-in`). The speaker is never off screen for more
+than 3.5 s: if the card, the definition and the picture would take longer, cut back to the speaker
+between them.
+
+`GAP: a list that rests soft and sharpens one item at a time as the speaker reaches it (closest:
+entrances/blur-fade, moves/rack-focus)`. Until it exists, show the list blurred in scene 3 and
+re-show each item sharp on its own card in its scene.
+
+**Close the loop.** Scene 7 must answer scene 1 in the same words. If the hook promised a result,
+scene 7 shows it. A callback to a hook the piece did not keep is worse than none.
+
+**Draft three openings, keep the truthful one.** Before scene 1 is fixed, write three different first
+lines for the same subject, for example: a question ("Why do your posts stop at 200 views?"), a
+result ("I got 40,000 views from one change"), a count ("Three edits that fix flat posts"). Strike any
+line that the facts cannot back; a hook that promises more than the piece pays out is the one that
+gets scrolled past on the second watch. Of those left, take the one that names the subject soonest.
+Log all three and the choice (`references/direction-log.md`).
+
 ## Recipe: search → results (one scene, about 4 s)
 
 The moment a query becomes answers. No device is needed: the layout is the search.

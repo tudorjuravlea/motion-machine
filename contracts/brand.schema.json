@@ -73,9 +73,59 @@
     "ground": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["blobs", "blur"],
-      "description": "what sits behind every scene; optional, a flat canvas by default. Blobs are blurred shapes in the brand's own colours (added to the palette G-BRAND checks), placed and sized by shares of the frame; the mark is a picture centred and scaled past the frame, faint",
+      "description": "what sits behind every scene; optional, a flat canvas by default. `kind` picks one: `blobs` (the default: blurred shapes in the brand's own colours, added to the palette G-BRAND checks, placed and sized by shares of the frame; needs `blobs` and `blur`), `bloom` (a radial light rising from the bottom centre, with an optional dot grid), `graph-paper` (a fine and a heavy grid that drift and loop, with an optional scan band) or `dots` (the dot grid alone). The three newer kinds draw only in palette roles, with sizes as shares of the frame, and need no other field: every block is optional and reads its defaults. The mark is a picture centred and scaled past the frame, faint, on any kind",
+      "allOf": [
+        { "if": { "properties": { "kind": { "const": "blobs" } } },
+          "then": { "required": ["blobs", "blur"], "properties": { "blobs": true, "blur": true, "bloom": false, "dots": false, "grid": false } },
+          "else": { "properties": { "blobs": false, "blur": false } } },
+        { "if": { "required": ["kind"], "properties": { "kind": { "const": "bloom" } } }, "then": { "properties": { "grid": false } } },
+        { "if": { "required": ["kind"], "properties": { "kind": { "const": "graph-paper" } } }, "then": { "properties": { "bloom": false, "dots": false } } },
+        { "if": { "required": ["kind"], "properties": { "kind": { "const": "dots" } } }, "then": { "properties": { "bloom": false, "grid": false } } }
+      ],
       "properties": {
+        "kind": { "enum": ["blobs", "bloom", "graph-paper", "dots"], "description": "the ground's kind; blobs when absent, so every ground written before kinds existed stays valid" },
+        "bloom": {
+          "type": "object", "additionalProperties": false,
+          "description": "kind bloom: a radial light rising from the bottom centre. On each scene it scales from 0.9 to 1 with the enter ease over the scene's first beat (at least a standard duration); a deck draws it full size",
+          "properties": {
+            "role":     { "$ref": "#/$defs/role", "description": "the palette role the light is made of; accent by default" },
+            "width":    { "type": "number", "exclusiveMinimum": 0, "maximum": 3, "description": "the light's width, share of the frame width; 1.2 by default" },
+            "height":   { "type": "number", "exclusiveMinimum": 0, "maximum": 3, "description": "how high the light reaches above the bottom edge, share of the frame height; 0.75 by default" },
+            "strength": { "type": "number", "minimum": 0, "maximum": 1, "description": "the share of the role at the light's centre; 0.5 by default. Text over a strong light must still clear W-CONTRAST" }
+          }
+        },
+        "dots": {
+          "type": "object", "additionalProperties": false,
+          "description": "the dot grid: faint dots on a regular grid. Alone on kind dots, optional on kind bloom",
+          "properties": {
+            "role":     { "$ref": "#/$defs/role", "description": "line by default" },
+            "spacing":  { "type": "number", "minimum": 0.004, "maximum": 0.2, "description": "distance between dots, share of the frame width, rounded to whole pixels; 0.025 by default" },
+            "size":     { "type": "number", "exclusiveMinimum": 0, "maximum": 0.6, "description": "a dot's diameter, share of the spacing; 0.12 by default" },
+            "strength": { "type": "number", "minimum": 0, "maximum": 1, "description": "the share of the role in a dot; 0.6 by default" }
+          }
+        },
+        "grid": {
+          "type": "object", "additionalProperties": false,
+          "description": "kind graph-paper: a fine grid and a heavier one every Nth line. It wanders out and back (a cosine yoyo) and, with `scan`, a soft band sweeps down the frame once per `cycle`; the motion repeats exactly every `cycle` seconds, so a film whose length is a whole number of cycles closes its loop. A deck draws it still",
+          "properties": {
+            "role":     { "$ref": "#/$defs/role", "description": "line by default" },
+            "spacing":  { "type": "number", "minimum": 0.004, "maximum": 0.2, "description": "a fine cell, share of the frame width, rounded to whole pixels; 0.02 by default" },
+            "every":    { "type": "integer", "minimum": 2, "maximum": 12, "description": "fine cells per heavy line; 5 by default" },
+            "weight":   { "type": "number", "minimum": 0.0002, "maximum": 0.004, "description": "the fine line's width, share of the frame width (at least 1 px; the heavy line is twice it); 0.0006 by default" },
+            "strength": { "type": "number", "minimum": 0, "maximum": 1, "description": "the heavy line's share of the role (the fine line takes 45 % of it); 0.7 by default" },
+            "drift":    { "type": "number", "minimum": 0, "maximum": 0.1, "description": "how far the grid wanders, share of the frame width; 0.012 by default, 0 for a still grid" },
+            "cycle":    { "type": "number", "minimum": 1, "maximum": 60, "description": "seconds for one drift and one scan; 8 by default" },
+            "scan": {
+              "type": "object", "additionalProperties": false,
+              "description": "a soft band that sweeps once per cycle, from above the frame to below it",
+              "properties": {
+                "role":     { "$ref": "#/$defs/role", "description": "accent by default" },
+                "size":     { "type": "number", "exclusiveMinimum": 0, "maximum": 1, "description": "the band's height, share of the frame height; 0.18 by default" },
+                "strength": { "type": "number", "minimum": 0, "maximum": 1, "description": "the share of the role at the band's middle; 0.1 by default" }
+              }
+            }
+          }
+        },
         "blobs": {
           "type": "array", "minItems": 1, "maxItems": 8,
           "items": {
@@ -112,9 +162,53 @@
         "edgeFringe": { "type": "number", "minimum": 0, "maximum": 1, "description": "a soft accent glow along the frame's edge, outside the safe area" },
         "paperEdge":  { "type": "number", "minimum": 0, "maximum": 1, "description": "a rough surface-coloured border inside the frame's edge, within the safe margin; it is a frame border, so W-BAN warns unless the brand lists `frame-borders` in `allow`" },
         "misregister": { "type": "number", "minimum": 0, "maximum": 1, "description": "a print plate off register: the scene's shapes printed again in accent under themselves, offset down and to one side (at 1, 0.4 % of the frame width, the side seeded per scene); every emphasis kicks the plate and it settles before the rest. Stepped every 2/30 s; never over text" },
-        "paper":      { "type": "number", "minimum": 0, "maximum": 1, "description": "a paper fibre in ink, static (it belongs to the stock, not the film), at no more than 0.08 opacity" }
+        "paper":      { "type": "number", "minimum": 0, "maximum": 1, "description": "a paper fibre in ink, static (it belongs to the stock, not the film), at no more than 0.08 opacity" },
+        "chroma":     { "type": "number", "minimum": 0, "maximum": 1, "description": "a lens's colour fringe, drawn in palette roles only: two ghosts of the picture, one pulled out toward the frame's rim and one in toward its middle, laid in two roles over bare canvas beside every shape; nothing at the middle and most at the rim, where at 1 the ghosts lie 0.4 % of the frame's short side apart. A filter on the whole frame, so a cut carries it" },
+        "chromaRoles": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "enum": ["accent", "ink", "muted", "surface", "line", "accentInk", "canvas"] }, "description": "the two palette roles of the lens fringe, the ghost pulled toward the rim first; accent and muted by default" },
+        "scanlines":  { "type": "number", "minimum": 0, "maximum": 1, "description": "a CRT line screen in ink, one line every few pixels, still. Lies over text, so it shares the 0.08 with grain, halftone and paper" },
+        "bloom":      { "type": "number", "minimum": 0, "maximum": 1, "description": "a soft glow of whatever is lighter than the canvas, blurred and added to the frame at most 0.08 at 1. A style whose ground is its lightest role has little to glow" },
+        "grainRate":  { "type": "number", "minimum": 0, "maximum": 60, "description": "how many times a second the grain changes: 12 by default, 24 for film, 0 holds one grain still" },
+        "look":       { "enum": ["neutral", "warm-print", "cool-print", "faded", "high-contrast"], "description": "a named film-like tone curve and tint, written from the palette roles and a curve and never a literal colour: warm-print and cool-print tint the shadows and highlights toward the palette's warm or cool role (a palette with none gets the curve alone), faded lifts the blacks, high-contrast bends an S. Never more than 0.08 from the plain frame" },
+        "lookAmount": { "type": "number", "minimum": 0, "maximum": 1, "description": "how much of the look is worn: 1 by default, 0 none" }
       }
     },
+    "surface": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "the glass look of a card, set once for the brand and worn by any card-like pattern whose param `surface` is `glass` (a beat, or the brand's own default in `patterns`). Optional, and every field optional: a missing one reads the default. Colours are palette roles: the tint is the surface role at partial strength, the hairline the line role, the top highlight and the shine the lighter of ink and canvas, the shadow the darker. A card keeps its text colour, so keep the tint high enough for it to read over the ground (W-CONTRAST measures the pixels under it)",
+      "properties": {
+        "tint":       { "type": "number", "minimum": 0, "maximum": 1, "description": "the share of the surface role in the fill at its strongest corner (a diagonal of four stops around it); 0.5 by default" },
+        "blur":       { "type": "number", "minimum": 0, "maximum": 0.1, "description": "the blur of what lies behind the card, share of the frame width; 0.012 by default (about 23 px in 16x9)" },
+        "saturate":   { "type": "number", "minimum": 0.5, "maximum": 2, "description": "the behind-the-card saturation; 1 by default. Above 1 it moves the ground's colours off the palette, which G-BRAND can notice" },
+        "border":     { "type": "number", "minimum": 0, "maximum": 1, "description": "the hairline's share of the line role; 0.8 by default" },
+        "highlight":  { "type": "number", "minimum": 0, "maximum": 1, "description": "the inner top edge's share of the lighter of ink and canvas; 0.3 by default" },
+        "shadow":     { "type": "number", "minimum": 0, "maximum": 1, "description": "the soft drop shadow's share of the darker of ink and canvas; 0.45 by default" },
+        "shine":      { "type": "number", "minimum": 0, "maximum": 1, "description": "the shine bar that sweeps once across a card as it arrives, its share of the lighter of ink and canvas; 0.22 by default, 0 for none" },
+        "angle":      { "type": "number", "minimum": 0, "maximum": 45, "description": "the shine bar's lean from the vertical, degrees; 14 by default" },
+        "shineWidth": { "type": "number", "exclusiveMinimum": 0, "maximum": 0.5, "description": "the shine bar's width, share of the card's width; 0.07 by default" }
+      }
+    },
+    "patterns": { "type": "object", "description": "the brand's own defaults for any pattern's params, by pattern (group/name): between the pattern's defaults and a beat's params, so a brand can be made more on brand without touching a story", "propertyNames": { "pattern": "^[a-z0-9-]+/[a-z0-9-]+$" }, "additionalProperties": { "type": "object", "additionalProperties": { "type": ["string", "number", "boolean"] } } },
+    "imagery": { "type": "object", "additionalProperties": false, "required": ["style"], "description": "how generated pictures and clips look (mm gen): added to every image and video prompt with the palette", "properties": {
+      "style": { "type": "string", "minLength": 1, "maxLength": 400 },
+      "mood": { "type": "string", "maxLength": 200 },
+      "avoid": { "type": "string", "maxLength": 300, "description": "what generated pictures must not show; sent as the negative prompt where a model takes one" },
+      "references": { "type": "array", "maxItems": 8, "items": { "type": "string", "minLength": 1 }, "description": "pictures beside the brand file that generators take as style references" },
+      "tone": { "enum": ["none", "palette", "duotone"], "description": "after generation: none keeps the picture, palette pulls its colours toward the brand's, duotone maps it from ink to canvas" } } },
+    "voice": { "type": "object", "additionalProperties": false, "required": ["provider", "id"], "description": "the brand's narration voice (mm gen voice)", "properties": {
+      "provider": { "enum": ["elevenlabs", "higgsfield"] },
+      "id": { "type": "string", "minLength": 1, "description": "the provider's voice id" },
+      "model": { "type": "string" },
+      "language": { "type": "string", "pattern": "^[a-z]{2}(-[A-Z]{2})?$" },
+      "stability": { "type": "number", "minimum": 0, "maximum": 1 },
+      "similarity": { "type": "number", "minimum": 0, "maximum": 1 },
+      "style": { "type": "number", "minimum": 0, "maximum": 1 },
+      "speed": { "type": "number", "minimum": 0.7, "maximum": 1.2 } } },
+    "sound": { "type": "object", "additionalProperties": false, "description": "the brand's sound, chosen once: it wins over the motion half's `sound.profile` when the two halves are composed", "properties": {
+      "profile": { "type": "string", "minLength": 1, "maxLength": 200, "description": "a sound profile (contracts/sound-profile.schema.json): a name in styles/sound/ or a path to a profile file; the cues the style plays are voiced in it and measured against it" } } },
+    "music": { "type": "object", "additionalProperties": false, "required": ["style"], "description": "the brand's music (mm gen music); its tempo is the motion half's sound.bpm", "properties": {
+      "style": { "type": "string", "minLength": 1, "maxLength": 300 },
+      "avoid": { "type": "string", "maxLength": 200 } } },
     "mascot": {
       "type": "object",
       "additionalProperties": false,

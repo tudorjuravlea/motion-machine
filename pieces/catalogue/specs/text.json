@@ -23,6 +23,32 @@
     { "pattern": "text/scramble", "figure": { "text": "Decoded" }, "how": "Letters resolve left to right out of shuffling noise.",
       "knob": { "line": "pool: 0 and 1. Binary noise.", "figure": { "params": { "pool": "01" } } } },
     { "pattern": "text/split-flap", "figure": { "text": "Board" }, "how": "Departure-board tiles flip through letters and land in turn.",
-      "knob": { "line": "flips: 14. The last tile spins longer.", "figure": { "params": { "flips": 14 } } } }
+      "knob": { "line": "flips: 14. The last tile spins longer.", "figure": { "params": { "flips": 14 } } } },
+    { "pattern": "text/annotate", "template": "scenes", "scenes": [
+      { "layout": "layouts/caption-bar", "min": 4, "beats": [
+        { "at": 0.2, "slot": "stage", "fx": "devices/phone", "text": "Preview", "params": { "instant": true } },
+        { "at": 0.6, "slot": "overlay", "fx": "text/annotate", "text": "Tap to open", "params": { "at": "64%,44%", "kind": "tooltip" } },
+        { "at": 0.6, "slot": "caption", "fx": "entrances/fade", "text": "annotate: a small mark that points at the frame." } ] },
+      { "layout": "layouts/caption-bar", "min": 4, "beats": [
+        { "at": 0.2, "slot": "stage", "fx": "devices/phone", "text": "Preview", "params": { "instant": true } },
+        { "at": 0.6, "slot": "overlay", "fx": "text/annotate", "text": "Two minutes", "params": { "at": "18%,72%", "to": "82%,72%", "place": "below", "kind": "brace" } },
+        { "at": 0.6, "slot": "caption", "fx": "entrances/fade", "text": "kind: brace. A span, labelled." } ] } ] },
+    { "pattern": "text/cross-out", "figure": { "text": "Slow|Costly|Simple" }, "how": "Strikes claims through one by one; the last survives.", "minA": 4.4, "minB": 4.2,
+      "knob": { "line": "stroke: scribble, survivor: grow.", "figure": { "params": { "stroke": "scribble", "survivor": "grow" } } } },
+    { "pattern": "text/garden", "figure": { "text": "Growing", "params": { "dur": 2.2, "kind": "flowers", "seed": 2 } }, "how": "Ornament grows out of the letters themselves.", "figAt": 0.8, "minA": 4.6, "minB": 4.6,
+      "knob": { "line": "kind: vines, text: type. Typed, then grown.", "figure": { "params": { "kind": "vines", "text": "type" } } } },
+    { "pattern": "text/lit-sweep", "figure": { "text": "Read with light" }, "how": "Readable at once, lifted word by word.", "minA": 4.4, "minB": 4,
+      "knob": { "line": "edge: accent, floor: 20. A coloured, dimmer start.", "figure": { "params": { "edge": "accent", "floor": 20 } } } },
+    { "pattern": "text/lower-third", "template": "scenes", "scenes": [
+      { "layout": "layouts/caption-bar", "min": 4, "beats": [
+        { "at": 0.2, "slot": "stage", "fx": "devices/phone", "text": "Interview", "params": { "instant": true } },
+        { "at": 0.5, "slot": "overlay", "fx": "text/lower-third", "text": "Alex Sample | Design lead", "params": { "mechanism": "bar-wipe", "side": "left" } },
+        { "at": 0.5, "slot": "caption", "fx": "entrances/fade", "text": "lower-third: names the speaker." } ] },
+      { "layout": "layouts/caption-bar", "min": 4, "beats": [
+        { "at": 0.2, "slot": "stage", "fx": "devices/phone", "text": "Interview", "params": { "instant": true } },
+        { "at": 0.5, "slot": "overlay", "fx": "text/lower-third", "text": "Alex Sample | Design lead", "params": { "mechanism": "stamp", "side": "right" } },
+        { "at": 0.5, "slot": "caption", "fx": "entrances/fade", "text": "mechanism: stamp, side: right." } ] } ] },
+    { "pattern": "text/verdict", "figure": { "text": "North|South", "params": { "winner": 2 } }, "how": "Two names hold; a stamp lands on one.", "figAt": 0.8, "minA": 4.6, "minB": 4.4,
+      "knob": { "line": "winner: 1, personality: press, tilt: right.", "figure": { "params": { "winner": 1, "personality": "press", "tilt": "right" } } } }
   ]
 }

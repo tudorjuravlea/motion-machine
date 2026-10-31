@@ -19,11 +19,12 @@
   },
   "scenes": [
     {
-      "id": "demo",
+      "id": "hero",
       "layout": "layouts/talking-full",
-      "duration": 8.8,
+      "duration": 2.4,
       "cut": "transitions/hard-cut",
       "move": null,
+      "frame": "hero",
       "beats": [
         {
           "at": 0,
@@ -41,7 +42,97 @@
           "text": "Every frame comes from the edit."
         }
       ],
-      "say": "A demo of the pattern: synthetic test footage, cut by mm footage cut, under a headline and a caption."
+      "say": "The speaker fills the frame (hero); the headline stands clear of the face box."
+    },
+    {
+      "id": "side",
+      "layout": "layouts/talking-full",
+      "duration": 2.2,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "frame": {
+        "mode": "side",
+        "side": "left"
+      },
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "panel",
+          "fx": "data/stat-tile",
+          "text": "takes cut",
+          "value": 42,
+          "params": {
+            "size": "body",
+            "label": "takes cut"
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "The speaker steps into a column."
+        }
+      ],
+      "say": "The footage moves into a left column 0.15 s before the panel lands; a tile fills the panel."
+    },
+    {
+      "id": "inset",
+      "layout": "layouts/talking-full",
+      "duration": 2.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "frame": {
+        "mode": "inset",
+        "corner": "br"
+      },
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "panel",
+          "fx": "data/stat-tile",
+          "text": "seconds saved",
+          "value": 18,
+          "params": {
+            "size": "body",
+            "label": "seconds saved"
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Then a card in the corner."
+        }
+      ],
+      "say": "Picture in picture: the footage is a card in a corner, the panel is the whole frame."
+    },
+    {
+      "id": "bottom",
+      "layout": "layouts/talking-full",
+      "duration": 2.2,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "frame": "bottom",
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "panel",
+          "fx": "data/stat-tile",
+          "text": "retakes found",
+          "value": 7,
+          "params": {
+            "size": "body",
+            "label": "retakes found"
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Or the lower half, with a panel above."
+        }
+      ],
+      "say": "The lower part of the frame holds the speaker; the panel stands above."
     }
   ],
   "cta": {

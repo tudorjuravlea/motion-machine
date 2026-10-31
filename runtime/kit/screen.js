@@ -93,9 +93,13 @@ export function locate(state, target, box) {
 // ---------------------------------------------------------------------------------------------
 // DOM
 
+/** Each content element's media.json (null for a still): a 3D device draws a page's wire from it. */
+export const contentMeta = new WeakMap();
+
 function contentEl(doc, asset, meta) {
   const el = doc.createElement('div');
   el.className = 'mm-screen__content';
+  contentMeta.set(el, meta ?? null);
   if (meta?.kind === 'page') {
     for (const t of meta.tiles) {
       const img = doc.createElement('img');

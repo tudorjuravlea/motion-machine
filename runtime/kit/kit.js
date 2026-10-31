@@ -8,9 +8,16 @@ import { random, hash } from './random.js';
 import { schedule as buildSchedule, resolveStory, forFormat, selectorOf, eachParts, addImplicitPlays, screenIssues } from './schedule.js';
 import { initialState, fold, locate, mountLayer, paint } from './screen.js';
 import { footageCtx, mountFootage, paintFootage } from './footage.js';
+import { mountSpeaker, applySpeaker, placeFaceSafe } from './speaker-layer.js';
 import { seeded, seededImport } from './seeded.js';
+import { paramsOf as brandParams } from './params.js';
 import { boilFrame, BOIL_PERIOD } from './rough.js';
 import { fitHeadline, fitWords, bodyFloor, wantsWordFit } from './fit.js';
+import { groundOf, groundSpec, firstBeatWindow, isAnimated, paintGround } from './ground.js';
+import { surfaceVars, shinePosition } from './surface.js';
+import { recipeModule } from './synth.js';
+import { fxFilter, needsFx, overTextShares, grainSeed } from './finish.js';
+import { rampUrl, warmRamp } from './lens.js';
 
 export { spring, track } from './springs.js';
 export { ease } from './ease.js';
@@ -125,7 +132,17 @@ async function mountInner({ story, style, root, patternsBase }) {
       return;
     }
     try {
-      const m = (await seededImport(new URL(`${ref}/pattern.js`, patternsBase).href)).default;
+      let m;
+      if (group === 'sound') {
+        // a cue is pattern.js or a recipe.json (data, drawn by synth.js); with a sound profile set the recipe wins
+        const code = async () => (await seededImport(new URL(`${ref}/pattern.js`, patternsBase).href)).default;
+        const data = async () => {
+          const r = await fetch(new URL(`${ref}/recipe.json`, patternsBase));
+          if (!r.ok) throw new Error(`neither pattern.js nor recipe.json (${r.status})`);
+          return recipeModule(await r.json());
+        };
+        m = style.sound?.profile ? await data().catch(code) : await code().catch(data);
+      } else m = (await seededImport(new URL(`${ref}/pattern.js`, patternsBase).href)).default;
       const fn = group === 'sound' ? 'render' : group === 'screen' ? 'reduce' : 'at';
       if (!m || typeof m[fn] !== 'function') throw new Error(`no default export with ${fn}()`);
       modules[ref] = m;
@@ -149,7 +166,8 @@ async function mountInner({ story, style, root, patternsBase }) {
   const media = [];
   const screenSpecs = [];
   const eachOpts = {};
-  if (style.finish) stage.append(finishDefs());
+  if (style.finish) stage.append(finishDefs(style.finish, style.color, spec));
+  if (needsFx(style.finish)) { stage.style.filter = 'url(#mm-fx)'; waits.push(warmRamp()); }   // chroma, bloom and the look: one filter on the frame
   const scenes = story.scenes.map((sc) => {
     const el = document.createElement('section');
     el.className = 'mm-scene';
@@ -160,7 +178,12 @@ async function mountInner({ story, style, root, patternsBase }) {
     const camera = document.createElement('div');
     camera.className = 'mm-camera';
     camera.innerHTML = layouts[sc.layout];
+    const surfaceOf = sc.beats.map((b) => b.params?.surface).find((v) => v === 'glass' || v === 'flat') ?? style.patterns?.[sc.layout]?.surface;
+    if (surfaceOf === 'glass' && camera.firstElementChild) camera.firstElementChild.dataset.surface = 'glass';   // the layout's cards marked data-glass wear the brand's surface
     el.append(camera);
+    // a brand's defaults for the layout's params (style.patterns["layouts/x"]) land as data-p-* on the layout's root, unless a beat of the scene sets that param itself
+    const own = new Set(sc.beats.flatMap((b) => Object.keys(shared(b))));
+    for (const [k, v] of Object.entries(style.patterns?.[sc.layout] || {})) if (!own.has(k)) camera.firstElementChild?.setAttribute(`data-p-${k.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`, String(v));
     if (style.finish) el.append(finishOf(style.finish, style.color));   // above the camera, in every scene
     if (style.finish?.misregister > 0) el.dataset.misregister = '';   // the plate prints under the camera's shapes
     stage.append(el);
@@ -248,7 +271,11 @@ async function mountInner({ story, style, root, patternsBase }) {
   });
 
   for (const x of screens) x.item = items.find((it) => !it.parent && it.scene === x.scene && it.beat?.slot === x.slot) ?? null;
-  Object.assign(S, { story, style, sched, format, spec, stage, scenes, items, keeps, modules, snapshots, warnings, fonts, screens, footage, cur: 0, t: 0, state: new Map(), vis: [] });
+  Object.assign(S, { story, style, sched, format, spec, stage, scenes, items, keeps, modules, snapshots, warnings, fonts, screens, footage, cur: 0, t: 0, state: new Map(), vis: [], speaker: null, face: null });
+  S.speaker = mountSpeaker(S, warnings);   // where the speaker stands scene by scene (scene.frame), read once the layouts have their boxes
+  // a bloom ground rises over each scene's first beat (at least a standard duration); graph-paper drifts with the piece
+  S.ground = style.ground ? groundSpec(style.ground) : null;
+  S.groundWindows = S.ground && isAnimated(S.ground) ? sched.scenes.map((s) => firstBeatWindow(sched.items.filter((it) => it.scene === s.id && !it.parent), s.start, style.motion.durations.standard / 1000)) : [];
 
   const api = {
     ready: true, kind: story.kind, format,
@@ -256,6 +283,7 @@ async function mountInner({ story, style, root, patternsBase }) {
     position: () => S.cur,
     scenes: sched.scenes.map(({ id, start, end }) => ({ id, start, end })),
     schedule: sched, fonts, warnings,
+    faceBox: () => (S.face ? { ...S.face } : null),   // the face box now, frame px: the matte's head or a default, with `source`
   };
   if (story.kind === 'deck') {
     api.presses = sched.presses;
@@ -413,45 +441,17 @@ function setSrc(el, asset, slot) {
   });
 }
 
-// the brand ground. Blobs are placed and sized by shares of the frame and blurred by a share
-// of its width; the mark is centred, as wide as its share of the frame (clipped above 1) and faint.
-// Chrome, not content: hidden from assistive tech and from the label and ban rules.
-function groundOf(ground, spec, media) {
-  const g = document.createElement('div');
-  g.className = 'mm-ground';
-  g.setAttribute('aria-hidden', 'true');
-  g.setAttribute('data-chrome', '');
-  g.setAttribute('data-keep', '');   // present from the first frame, never an entrance
-  const pct = (v) => `${Math.round(v * 1e6) / 1e4}%`;
-  for (const b of ground.blobs) {
-    const s = document.createElement('span');
-    s.className = 'mm-ground__blob';
-    Object.assign(s.style, { left: pct(b.x), top: pct(b.y), width: pct(b.w), height: pct(b.h), background: b.color, opacity: String(b.alpha), filter: `blur(${px(ground.blur * spec.w)})` });
-    g.append(s);
-  }
-  if (ground.mark) {
-    const m = document.createElement('img');
-    m.className = 'mm-ground__mark';
-    m.alt = '';
-    Object.assign(m.style, { width: pct(ground.mark.width), opacity: String(ground.mark.alpha) });
-    m.setAttribute('src', ground.mark.src);
-    media.push(m.decode().then(() => null, () => `ground mark ${ground.mark.src} did not load`));
-    g.append(m);
-  }
-  return g;
-}
-
 // the brand finish. One overlay per scene above the camera, a layer per strength: grain
 // (ink through seeded noise) and halftone (an ink dot screen) at no more than 0.08 opacity, since they
 // cover text; a vignette toward the darker of ink and canvas that stays at or under 0.08 inside the safe area; an accent glow and a
 // rough surface border, both inside the safe margin. Only palette roles, so G-BRAND's two-colour
-// blends still hold. The grain's seed is set per seek from t (12 Hz), so it flickers like film and is
+// blends still hold. The grain's seed is set per seek from t (12 Hz by default, `grainRate`), so it flickers like film and is
 // the same at every seek. Chrome, not content. The paper is a fibre in ink, also at no more than 0.08,
-// whose noise is seeded once: it belongs to the stock, so it never changes with t. Grain, halftone and
-// fibre all lie over text, so together they stay at or under 0.08: when their strengths add up past 1,
-// each is scaled down in proportion.
-const FINISH_LAYERS = [['grain', 'grain'], ['halftone', 'halftone'], ['vignette', 'vignette'], ['edgeFringe', 'edge'], ['paperEdge', 'paper'], ['paper', 'fibre']];
-const OVER_TEXT = ['grain', 'halftone', 'paper'];
+// whose noise is seeded once: it belongs to the stock, so it never changes with t. Grain, halftone,
+// scanlines and fibre all lie over text, so together they stay at or under 0.08: when their strengths
+// add up past 1, each is scaled down in proportion (finish.js overTextShares). Chroma, bloom and the
+// look are not layers: they are one filter on the stage (finish.js fxFilter).
+const FINISH_LAYERS = [['grain', 'grain'], ['halftone', 'halftone'], ['scanlines', 'scan'], ['vignette', 'vignette'], ['edgeFringe', 'edge'], ['paperEdge', 'paper'], ['paper', 'fibre']];
 // the darker of two hex colours by relative luminance: what a vignette darkens toward
 function darkerOf(a, b) {
   const lum = (hex) => { const n = parseInt(String(hex).replace('#', '').slice(0, 6), 16); const c = [n >> 16, (n >> 8) & 255, n & 255].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
@@ -464,12 +464,11 @@ function finishOf(finish, color) {
   f.setAttribute('aria-hidden', 'true');
   f.setAttribute('data-chrome', '');
   f.setAttribute('data-keep', '');
-  const strength = (key) => { const v = Number(finish[key]); return v > 0 ? Math.min(1, v) : 0; };
-  const overText = OVER_TEXT.reduce((a, k) => a + strength(k), 0);
+  const over = overTextShares(finish);   // grain, halftone, paper and scanlines share the 0.08 that lies over text
+  const strength = (key) => over[key] ?? (Number(finish[key]) > 0 ? Math.min(1, Number(finish[key])) : 0);
   for (const [key, cls] of FINISH_LAYERS) {
-    let v = strength(key);
+    const v = strength(key);
     if (!(v > 0)) continue;
-    if (overText > 1 && OVER_TEXT.includes(key)) v = Math.floor((v / overText) * 1e4) / 1e4;
     const l = document.createElement('span');
     l.className = `mm-finish__${cls}`;
     l.style.setProperty('--mm-finish-v', String(v));
@@ -477,7 +476,7 @@ function finishOf(finish, color) {
   }
   return f;
 }
-function finishDefs() {
+function finishDefs(finish, color, spec) {
   // parsed as HTML so the SVG namespace needs no URL in the runtime (SPEC §2.6)
   const holder = document.createElement('div');
   holder.innerHTML = '<svg id="mm-finish-defs" aria-hidden="true" width="0" height="0" style="position:absolute"></svg>';
@@ -492,12 +491,13 @@ function finishDefs() {
     + '<feComposite in="SourceGraphic" in2="a" operator="in"/></filter>'
     + '<filter id="mm-paper" x="-2%" y="-2%" width="104%" height="104%">'
     + '<feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="7" result="n"/>'
-    + '<feDisplacementMap in="SourceGraphic" in2="n" scale="14" xChannelSelector="R" yChannelSelector="G"/></filter>';
+    + '<feDisplacementMap in="SourceGraphic" in2="n" scale="14" xChannelSelector="R" yChannelSelector="G"/></filter>'
+    + fxFilter(finish, color, spec, rampUrl());   // chroma, bloom and the look: the stage's own filter, if the finish asks for one
   return svg;
 }
 function finishSeed(t) {
   const n = document.querySelector('#mm-finish-defs #mm-grain feTurbulence');
-  if (n) n.setAttribute('seed', String(1 + (Math.floor(t * 12 + 1e-9) % 997)));
+  if (n) n.setAttribute('seed', String(grainSeed(t, S.style.finish.grainRate ?? 12)));
 }
 
 // brand.finish.misregister: a spot plate printed off register. The scene's shapes print again in
@@ -633,6 +633,8 @@ function setVariables(style, spec) {
   set('--mm-headline-scale', c.headlineScale);
   set('--mm-density', DENSITY[c.density] ?? 1);
   set('--mm-accent-text', c.accentText === false ? 'var(--mm-color-ink)' : 'var(--mm-color-accent)');
+  // the glass surface (brand surface block): cards that opt in with `surface: glass` wear it
+  for (const [k, v] of Object.entries(surfaceVars(style.surface, spec, style.color))) set(k, v);
 }
 
 // The composition defaults and the spacing multiplier each density stands for.
@@ -664,12 +666,17 @@ html, body { margin: 0; padding: 0; background: var(--mm-color-canvas); }
 .mm-camera { z-index: 0; }
 .mm-ground { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .mm-ground__blob { position: absolute; display: block; border-radius: 50%; }
+.mm-ground__bloom, .mm-ground__scan { position: absolute; display: block; }
+.mm-ground__dots, .mm-ground__grid { position: absolute; inset: 0; display: block; }
+.mm-ground__bloom { transform-origin: 50% 50%; }
 .mm-ground__mark { position: absolute; top: 50%; left: 50%; max-width: none; height: auto; transform: translate(-50%, -50%); display: block; }
 .mm-finish { position: absolute; inset: 0; z-index: 5; overflow: hidden; pointer-events: none; }
 .mm-finish > span { position: absolute; inset: 0; display: block; }
 .mm-finish__grain { background: var(--mm-color-ink); filter: url(#mm-grain); opacity: calc(0.08 * var(--mm-finish-v)); }
 .mm-finish__halftone { opacity: calc(0.08 * var(--mm-finish-v));
   background-image: radial-gradient(circle, var(--mm-color-ink) 0 28%, transparent 32%); background-size: calc(var(--mm-frame-w) / 160) calc(var(--mm-frame-w) / 160); }
+.mm-finish__scan { opacity: calc(0.08 * var(--mm-finish-v));
+  background-image: linear-gradient(to bottom, var(--mm-color-ink) 0 40%, transparent 40% 100%); background-size: 100% calc(min(var(--mm-frame-w), var(--mm-frame-h)) / 270); }
 .mm-finish__vignette { background: radial-gradient(ellipse farthest-corner at 50% 50%, transparent 0 62%,
   color-mix(in srgb, var(--mm-finish-shade) calc(8% * var(--mm-finish-v)), transparent) 88%,
   color-mix(in srgb, var(--mm-finish-shade) calc(40% * var(--mm-finish-v)), transparent) 100%); }
@@ -679,6 +686,14 @@ html, body { margin: 0; padding: 0; background: var(--mm-color-canvas); }
 .mm-finish__paper { box-sizing: border-box; border: calc(var(--mm-safe) * 0.4 * var(--mm-finish-v)) solid var(--mm-color-surface); filter: url(#mm-paper); }
 .mm-device-frame { position: absolute; inset: 0; z-index: 6; display: block; width: 100%; height: 100%; max-width: none; pointer-events: none; }
 .mm-scene { background: var(--mm-color-canvas); }
+/* the glass surface: any element marked data-glass inside a data-surface=glass scope (a layout's root, or the element itself). The accent variant (data-glass="accent") keeps the accent fill and takes the edge and the shine only; the others' own fill gives way to the tint. */
+[data-surface="glass"] [data-glass], [data-glass][data-surface="glass"] {
+  overflow: hidden; -webkit-backdrop-filter: blur(var(--mm-surface-blur)) saturate(var(--mm-surface-saturate)); backdrop-filter: blur(var(--mm-surface-blur)) saturate(var(--mm-surface-saturate));
+  box-shadow: var(--mm-surface-shadow); background-color: transparent;
+  background-image: var(--mm-surface-shine), var(--mm-surface-fill); background-size: 260% 100%, 100% 100%; background-repeat: no-repeat;
+  background-position: var(--mm-shine-x, -3%) 0, 0 0; }
+[data-surface="glass"] [data-glass="accent"], [data-glass="accent"][data-surface="glass"] {
+  -webkit-backdrop-filter: none; backdrop-filter: none; background-color: var(--mm-color-accent); background-image: var(--mm-surface-shine); background-size: 260% 100%; background-position: var(--mm-shine-x, -3%) 0; }
 [data-empty] { visibility: hidden; }`;
   document.head.append(el);
 }
@@ -759,13 +774,7 @@ function springCtx(style) {
 }
 
 // A pattern's defaults under the bag the story gives it.
-function paramsOf(mod, bag) {
-  const out = {};
-  const ps = mod.params;
-  if (Array.isArray(ps)) for (const p of ps) out[p.name] = p.default;
-  else if (ps && typeof ps === 'object') for (const [k, v] of Object.entries(ps)) out[k] = v && typeof v === 'object' && 'default' in v ? v.default : v;
-  return { ...out, ...(bag || {}) };
-}
+function paramsOf(mod, bag) { return brandParams(mod, bag, S.style); }
 
 // Param routing: a beat's scalar params go to its entrance, and to its exit and emphasis unless
 // params.exit / params.emphasis give those their own bag.
@@ -841,6 +850,16 @@ function runFx(it, p, u) {
   // finished from TOL before the end, as entrance() and progressOf() count it: a pattern reading u / d sees exactly 1
   // there; past the end u runs on (a 3D device keeps turning after its entrance)
   mod.at(it.el, p, ctxFor(it.selector, { params: paramsOf(mod, shared(it.beat)), u: u >= it.d - TOL && u < it.d ? it.d : u, d: it.d, scene: it.scene }));
+  shineGlass(it.el, it.d > 0 ? clamp01(u / it.d) : 1);
+}
+
+// A glass card's one shine sweep on arrival: the bar crosses the card over the last 70 % of the entrance and is off
+// the card before and after, so a rest never shows it. Written on every draw, so any seek order paints the same.
+function shineGlass(el, q) {
+  for (const g of el.matches('[data-glass]') ? [el] : el.querySelectorAll('[data-glass]')) {
+    const at = g.closest('[data-surface="glass"]') ? shinePosition(q, (p) => ease('move', p, S.style)) : null;
+    if (at) g.style.setProperty('--mm-shine-x', at); else g.style.removeProperty('--mm-shine-x');
+  }
 }
 
 function runExit(it, q) {
@@ -874,13 +893,24 @@ function runMove(i, p, extra) {
     ctxFor(`[data-scene="${sc.id}"] .mm-camera`, { params: paramsOf(mod, sc.moveParams), scene: sc.id, ...extra }));
 }
 
+// the moving parts of the brand ground, per scene: a pure function of the instant, the scene's start and the style
+function paintGrounds() {
+  const deck = S.story.kind === 'deck', hold = S.style.motion?.frameHold, enter = (p) => ease('enter', p, S.style);
+  S.sched.scenes.forEach((sc, i) => {
+    const g = S.scenes[i].el.querySelector(':scope > .mm-ground');
+    if (g) paintGround(g, S.ground, S.spec, { t: S.t, u: S.t - sc.start, windowS: S.groundWindows[i], enter, hold, deck });
+  });
+}
+
 export function seek(t) {
   if (!S.ready) throw new Error('kit: seek before mount');
   restore();
   S.state = new Map();
   late = [];
   if (S.story.kind === 'deck') seekDeck(t); else seekFilm(t);
+  placeFaceSafe(S);   // after every entrance: what a layout marks data-face-safe stands clear of the face
   if (S.style.finish?.grain > 0) finishSeed(t);
+  if (S.ground && isAnimated(S.ground)) paintGrounds();
   if (S.style.finish?.misregister > 0) misregisterAt(S.t);
   runScreens();
   if (S.footage) paintFootage(S.footage, S.t, trackDecode, decodeWarning);
@@ -995,6 +1025,7 @@ function seekFilm(t) {
   const vis = sc.map((s, i) => t >= s.start && (i === sc.length - 1 || t < sc[i + 1].start + sc[i + 1].cut.d));
   S.vis = vis;
   sc.forEach((s, i) => { if (!vis[i]) S.scenes[i].el.style.visibility = 'hidden'; });
+  applySpeaker(S, t);   // the footage stands where speaker.js puts it at t, before any move reads its box
   for (let i = 1; i < sc.length; i++) {
     const d = sc[i].cut.d;
     if (d > 0 && vis[i] && vis[i - 1]) runTransition(i, t - sc[i].start, d);

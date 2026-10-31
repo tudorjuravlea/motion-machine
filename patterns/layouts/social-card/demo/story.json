@@ -1,0 +1,198 @@
+{
+  "id": "demo-social-card",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: layouts/social-card",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo likes on a post",
+      "source": "demo fixture, an invented figure that carries no claim"
+    },
+    {
+      "id": "f2",
+      "text": "Demo comments on a post",
+      "source": "demo fixture, an invented figure that carries no claim"
+    },
+    {
+      "id": "f3",
+      "text": "Demo shares of a post",
+      "source": "demo fixture, an invented figure that carries no claim"
+    },
+    {
+      "id": "f4",
+      "text": "Demo posts on a profile",
+      "source": "demo fixture, an invented figure that carries no claim"
+    },
+    {
+      "id": "f5",
+      "text": "Demo followers of a profile",
+      "source": "demo fixture, an invented figure that carries no claim"
+    },
+    {
+      "id": "f6",
+      "text": "Demo accounts followed by a profile",
+      "source": "demo fixture, an invented figure that carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "post",
+      "layout": "layouts/social-card",
+      "duration": 6.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "avatar",
+          "fx": "entrances/fade",
+          "text": "AS"
+        },
+        {
+          "at": 0.2,
+          "slot": "handle",
+          "fx": "entrances/fade",
+          "text": "@alex.sample",
+          "params": {
+            "variant": "post"
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "2 min ago"
+        },
+        {
+          "at": 0.7,
+          "slot": "body",
+          "fx": "entrances/rise",
+          "text": "One small idea, said plainly."
+        },
+        {
+          "at": 1.6,
+          "slot": "stat-1",
+          "fx": "entrances/count",
+          "value": 1284,
+          "fact": "f1",
+          "params": {
+            "from": 1200
+          },
+          "emphasis": "emphasis/indicate"
+        },
+        {
+          "at": 1.9,
+          "slot": "stat-2",
+          "fx": "entrances/count",
+          "value": 48,
+          "fact": "f2",
+          "params": {
+            "from": 40
+          }
+        },
+        {
+          "at": 2.2,
+          "slot": "stat-3",
+          "fx": "entrances/count",
+          "value": 23,
+          "fact": "f3",
+          "params": {
+            "from": 20
+          }
+        }
+      ],
+      "say": "A post card: the like presses and the counters tick."
+    },
+    {
+      "id": "follow",
+      "layout": "layouts/social-card",
+      "duration": 6.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "avatar",
+          "fx": "entrances/fade",
+          "text": "AS"
+        },
+        {
+          "at": 0.2,
+          "slot": "handle",
+          "fx": "entrances/fade",
+          "text": "@alex.sample",
+          "params": {
+            "variant": "follow"
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Design notes"
+        },
+        {
+          "at": 0.6,
+          "slot": "action",
+          "fx": "entrances/pop",
+          "text": "Follow"
+        },
+        {
+          "at": 0.9,
+          "slot": "body",
+          "fx": "entrances/rise",
+          "text": "Weekly notes on shipping small things."
+        },
+        {
+          "at": 1.6,
+          "slot": "stat-1",
+          "fx": "entrances/count",
+          "value": 212,
+          "fact": "f4",
+          "params": {
+            "suffix": " posts",
+            "from": 190
+          }
+        },
+        {
+          "at": 1.9,
+          "slot": "stat-2",
+          "fx": "entrances/count",
+          "value": 4800,
+          "fact": "f5",
+          "params": {
+            "suffix": " followers",
+            "from": 4200
+          }
+        },
+        {
+          "at": 2.2,
+          "slot": "stat-3",
+          "fx": "entrances/count",
+          "value": 96,
+          "fact": "f6",
+          "params": {
+            "suffix": " following",
+            "from": 90
+          }
+        }
+      ],
+      "say": "A follow card: the button and three counters."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

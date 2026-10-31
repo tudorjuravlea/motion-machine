@@ -15,6 +15,21 @@
       "knob": { "line": "d: 300 px. A longer fall.", "figure": { "params": { "exit": { "d": 300 } } } } },
     { "pattern": "exits/push-out", "figure": { "fx": "entrances/rise", "text": "Goodbye", "out": 2, "exit": "exits/push-out" }, "figAt": 0.3,
       "how": "Slides out toward one side while it fades.",
-      "knob": { "line": "side: up. It leaves through the top.", "figure": { "params": { "exit": { "side": "up" } } } } }
+      "knob": { "line": "side: up. It leaves through the top.", "figure": { "params": { "exit": { "side": "up" } } } } },
+    { "pattern": "exits/knife-cut", "figure": { "fx": "entrances/rise", "text": "Goodbye", "out": 2, "exit": "exits/knife-cut" }, "figAt": 0.3,
+      "how": "A blade slices each line; the halves fold shut.",
+      "knob": { "line": "rule: accent. The blade's edge in colour.", "figure": { "params": { "exit": { "rule": "accent" } } } } },
+    { "pattern": "exits/wither", "figure": { "fx": "text/garden", "text": "Seasons", "out": 3, "exit": "exits/wither", "params": { "dur": 1.4, "kind": "vines", "seed": 2 } }, "figAt": 0.6, "minA": 4.4, "minB": 4.4,
+      "how": "A grown garden recedes, letter by letter, to bare type.",
+      "knob": { "line": "type: keep. The bare type stays whole.", "figure": { "params": { "exit": { "type": "keep" } } } } },
+    { "pattern": "exits/lower-third", "template": "scenes", "scenes": [
+      { "layout": "layouts/caption-bar", "min": 4, "beats": [
+        { "at": 0.2, "slot": "stage", "fx": "devices/phone", "text": "Interview", "params": { "instant": true } },
+        { "at": 0.4, "slot": "overlay", "fx": "text/lower-third", "text": "Alex Sample | Design lead", "params": { "mechanism": "bar-wipe" }, "out": 2.7, "exit": "exits/lower-third" },
+        { "at": 0.4, "slot": "caption", "fx": "entrances/fade", "text": "lower-third out: the bar wipes away." } ] },
+      { "layout": "layouts/caption-bar", "min": 4, "beats": [
+        { "at": 0.2, "slot": "stage", "fx": "devices/phone", "text": "Interview", "params": { "instant": true } },
+        { "at": 0.4, "slot": "overlay", "fx": "text/lower-third", "text": "Alex Sample | Design lead", "params": { "mechanism": "typed" }, "out": 2.7, "exit": "exits/lower-third" },
+        { "at": 0.4, "slot": "caption", "fx": "entrances/fade", "text": "mechanism: typed. The name un-types." } ] } ] }
   ]
 }

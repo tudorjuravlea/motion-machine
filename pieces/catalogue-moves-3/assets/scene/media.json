@@ -1,0 +1,65 @@
+{
+  "kind": "layers",
+  "w": 1200,
+  "h": 1200,
+  "source": {
+    "file": "source.png",
+    "sha1": "f0b3a924f58f77c00932ed663c1c866cb1d30149",
+    "from": "scene.png",
+    "fromSha1": "f0b3a924f58f77c00932ed663c1c866cb1d30149"
+  },
+  "plate": {
+    "file": "plate.png",
+    "sha1": "6f059a60a46167706cdffe2639969e2bcd6ae19e",
+    "fill": "push-pull",
+    "depth": 0.4088
+  },
+  "depth": {
+    "file": "depth.png",
+    "sha1": "0e4c582f7e5eb3368c9f67e1117e9da05468ef07"
+  },
+  "depthFrom": "map",
+  "parts": [
+    {
+      "name": "sun",
+      "file": "part-sun.png",
+      "sha1": "728a9f3d72b508e598707363de8c1dea0cd74fb2",
+      "x": 426,
+      "y": 390,
+      "w": 180,
+      "h": 180,
+      "z": 0,
+      "depth": 0.1187
+    },
+    {
+      "name": "box",
+      "file": "part-box.png",
+      "sha1": "f92826054cdada640c201e763641201789e4f584",
+      "x": 684,
+      "y": 504,
+      "w": 210,
+      "h": 210,
+      "z": 1,
+      "depth": 0.902
+    },
+    {
+      "name": "hill",
+      "file": "part-hill.png",
+      "sha1": "c89590c20f0981c8f3a485bd2623cbe771d84f80",
+      "x": 0,
+      "y": 702,
+      "w": 708,
+      "h": 498,
+      "z": 2,
+      "depth": 0.6666
+    }
+  ],
+  "recompose": {
+    "unit": "ΔE76",
+    "threshold": 10,
+    "limit": 0.001,
+    "offPixels": 4,
+    "offShare": 0.000003,
+    "ok": true
+  }
+}

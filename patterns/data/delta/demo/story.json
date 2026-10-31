@@ -1,0 +1,112 @@
+{
+  "id": "demo-data-delta",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "data/delta demo",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo figure for data/delta",
+      "source": "demo fixture, an invented figure that carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "up",
+      "layout": "layouts/title-stack",
+      "duration": 4.2,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/delta",
+          "fact": "f1",
+          "value": 12.4,
+          "params": {
+            "fix": 1,
+            "label": "vs last month",
+            "size": "h1"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Signups"
+        }
+      ],
+      "say": "A rise, good news, in the accent."
+    },
+    {
+      "id": "down",
+      "layout": "layouts/title-stack",
+      "duration": 4.2,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/delta",
+          "fact": "f1",
+          "value": -8,
+          "params": {
+            "good": "down",
+            "label": "vs last quarter",
+            "size": "h1"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Cost per ticket"
+        }
+      ],
+      "say": "A fall in costs is good news too."
+    },
+    {
+      "id": "bad",
+      "layout": "layouts/title-stack",
+      "duration": 4.2,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/delta",
+          "fact": "f1",
+          "value": -3,
+          "params": {
+            "corner": "square",
+            "size": "h1"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Revenue"
+        }
+      ],
+      "say": "A fall in revenue is not."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

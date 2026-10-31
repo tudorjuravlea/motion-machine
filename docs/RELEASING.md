@@ -13,6 +13,9 @@ Run on a clean working tree, from the repository root.
       first note of the report reads "private list read"; when it is absent the report says only the
       shipped generic patterns were swept. CI runs without it, so a release run with the list
       present is the stronger check.
+- [ ] The golden films are exported and read back: `node scripts/mm.mjs export pieces/golden-film-editorial --prove` exits `0`
+      (the frames reproduce, and each MP4 passes the checks of SPEC §16.7 in `out/export-qa.json`); after `mm sound`,
+      `node scripts/mm.mjs verify-export <mp4>` exits `0` on a film with sound.
 - [ ] The golden pieces are checked: `node scripts/mm.mjs check <dir>` on every `pieces/golden-*`,
       each with an `out/check.json` and no FAIL (the R-GOLDEN sweep reads those files). Their `out/`
       folders are not tracked; CI regenerates them.

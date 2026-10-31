@@ -22,7 +22,7 @@ is, what rules it obeys and, above all, what nobody verified (AXIOMS.md AXIOM 8)
 |---|---|---|---|
 
 ## Gate result
-`mm check` exit <0>; G- all PASS; SKIP: <rule: reason>. `--prove`: <ok, n frames per format>.
+`mm check` exit <0>, journal <last receipt id | none>, story version <16 hex>; G- all PASS; SKIP: <rule: reason>. `--prove`: <ok, n frames per format>. `mm verify-export` per format: <ok, or the failed QA- check>; its SKIPs with their reasons.
 
 ## Warnings and why they stand
 | Rule | Evidence | Why it stands | Decided by |
@@ -51,6 +51,14 @@ Director: <name>, <date> · or · pending
 ```
 
 ## Rules
+
+- Do not write the handover while the last edit is newer than the last check: the `journal` in `out/check.json`
+  must be the id of the last receipt in `out/studio/journal.jsonl` (none in both when the story was never edited
+  through the journal). Otherwise run `mm check` again first. State the check's `journal` and the story `version`
+  in "Gate result".
+- "Assets" are in the handover: for every asset the piece uses that MM did not draw, its `assets/<name>.licence.json`
+  (source, licence); W-ASSET-LICENSE rows are warnings like any other. `mm credits <piece>` lists the credits to
+  show; put them on the end card or a credits scene.
 
 - Every WARN in the last `out/check.json` appears in "Warnings and why they stand"; a WARN with no
   row means the handover is not finished. A row says that the director accepted it, in a line.

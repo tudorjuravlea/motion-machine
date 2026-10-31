@@ -4,7 +4,7 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
@@ -42,6 +42,22 @@ test('capture writes tiles that cover the page, none taller than 16,000 device p
     assert.equal(decode(join(work, 'assets', 'fx', t.file)).h, t.h * 3);
   }
   assert.ok(!Number.isNaN(Date.parse(s.captured)));
+});
+
+test('the capture writes its licence record: the page address, "third-party, ask", the date; a person\'s edit survives a recapture of the same page', () => {
+  const first = mm(['capture', 'site', '--url', url('index.html'), '--name', 'lic', '--piece', work, '--device', 'phone']);
+  assert.equal(first.status, 0, first.out);
+  const file = join(work, 'assets', 'lic.licence.json');
+  const rec = JSON.parse(readFileSync(file, 'utf8'));
+  assert.equal(rec.licence, 'third-party, ask');
+  assert.equal(rec.source, 'fixtures/site/index.html', 'a file in the repository is recorded by its repository path');
+  assert.match(rec.retrieved, /^\d{4}-\d\d-\d\d$/);
+  writeFileSync(file, `${JSON.stringify({ ...rec, licence: 'CC0-1.0', author: 'the page owner' })}\n`);
+  const again = mm(['capture', 'site', '--url', url('index.html'), '--name', 'lic', '--piece', work, '--device', 'phone']);
+  assert.equal(again.status, 0, again.out);
+  const kept = JSON.parse(readFileSync(file, 'utf8'));
+  assert.equal(kept.licence, 'CC0-1.0');
+  assert.equal(kept.author, 'the page owner');
 });
 
 test('marks are page-relative boxes in css px', () => {
@@ -157,4 +173,61 @@ test('a smooth-scrolling page is measured at the top: its fixed header is an ove
   const o = site('smooth').overlays;
   assert.equal(o?.length, 1, JSON.stringify(o));
   assert.equal(o[0].y, 0, `the header was measured mid-scroll at y ${o[0].y}`);
+});
+
+test('the wire lists the boxes, dots and text lines of the page in page px', () => {
+  const r = mm(['capture', 'site', '--url', url('wire.html'), '--name', 'wire', '--piece', work, '--mark', 'Card=#card', '--mark', 'Label=#label']);
+  assert.equal(r.status, 0, r.out);
+  const s = site('wire');
+  assert.ok(Array.isArray(s.wire), 'media.json has a wire');
+  assert.ok(!s.wireCut);
+  const at = (k, m) => s.wire.filter((o) => o.k === k && Math.abs(o.x - m.x) <= 1 && Math.abs(o.y - m.y) <= 1 && Math.abs(o.w - m.w) <= 1 && Math.abs(o.h - m.h) <= 1);
+  const rect = (sel) => { const m = s.marks[sel]; return m; };
+  const card = at('box', rect('Card'));
+  assert.equal(card.length, 1, JSON.stringify(s.wire));
+  assert.ok(Math.abs(card[0].r - 16) <= 0.5, `card r ${card[0].r}`);
+  const dots = s.wire.filter((o) => o.k === 'dot');
+  assert.equal(dots.length, 1, JSON.stringify(s.wire));
+  assert.ok(dots[0].w === 10 && dots[0].h === 10 && dots[0].r >= 4.5);
+  const img = s.wire.filter((o) => o.k === 'box' && o.w === 100 && o.h === 60);
+  assert.equal(img.length, 1, JSON.stringify(s.wire));
+  for (const o of s.wire) assert.ok(o.w >= 2 && o.h >= 2 && o.y < s.height);
+});
+
+test('a paragraph that wraps onto two lines gives two text shapes, one above the other', () => {
+  const s = site('wire');
+  const dot = s.wire.find((o) => o.k === 'dot');
+  const para = s.wire.filter((o) => o.k === 'text' && !o.fixed && o.y > dot.y);
+  assert.equal(para.length, 2, JSON.stringify(para));
+  assert.ok(para[1].y > para[0].y + 10, 'the second line is below the first');
+  assert.ok(para.every((o) => o.r === 0 && o.w <= 200 + 1));
+});
+
+test('shapes inside the fixed header carry fixed and overlay, as marks do', () => {
+  const s = site('wire');
+  const bar = s.wire.filter((o) => o.y < 56 && o.fixed);
+  assert.ok(bar.some((o) => o.k === 'box'), 'the header box');
+  const label = bar.find((o) => o.k === 'text');
+  assert.ok(label, 'the header label');
+  assert.equal(label.overlay, s.marks.Label.overlay);
+  assert.equal(label.overlay, 0);
+  assert.ok(s.wire.filter((o) => !o.fixed).every((o) => o.overlay == null));
+});
+
+test('a display:none element and its text contribute nothing to the wire', () => {
+  const s = site('wire');
+  assert.equal(s.wire.filter((o) => o.k === 'box' && o.w === 80).length, 0);
+  assert.equal(s.wire.filter((o) => o.k === 'text').length, 3);   // the label and the two paragraph lines
+});
+
+test('a fixed bar is only in its overlay: the tiles show the page under it, so it never scrolls away as a copy', () => {
+  const r = mm(['capture', 'site', '--url', url('fixed-bar.html'), '--name', 'bar', '--piece', work]);
+  assert.equal(r.status, 0, r.out);
+  const s = site('bar');
+  assert.equal(s.overlays?.length, 1, JSON.stringify(s.overlays));
+  const o = s.overlays[0];
+  const rgb = decode(join(work, 'assets', 'bar', s.tiles[0].file)).px(195 * 3, (o.y + o.h / 2) * 3);
+  assert.ok(near(rgb, [255, 255, 255]), `the tile holds the bar at its place: ${rgb}`);
+  const bar = decode(join(work, 'assets', 'bar', o.file)).px(o.w * 1.5, o.h * 1.5);
+  assert.ok(near(bar, [0x1F, 0x6F, 0xEB]), `the overlay lost the bar: ${bar}`);
 });

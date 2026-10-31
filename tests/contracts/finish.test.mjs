@@ -22,7 +22,7 @@ test('a brand may carry a finish of five strengths, each optional, and the finis
 test('a finish refuses a strength outside 0..1 and unknown keys', () => {
   assert.equal(v.brand({ ...paper, finish: { grain: 1.2 } }), false);
   assert.equal(v.brand({ ...paper, finish: { vignette: -0.1 } }), false);
-  assert.equal(v.brand({ ...paper, finish: { bloom: 0.5 } }), false);
+  assert.equal(v.brand({ ...paper, finish: { sparkle: 0.5 } }), false);
 });
 
 test('compose carries the finish into the style, and the style schema accepts it', () => {

@@ -1,0 +1,16 @@
+{
+  "name": "toggle-off",
+  "meaning": "a switch turned off: a setting disabled, a mode left",
+  "durationS": 0.06,
+  "layers": [
+    { "kind": "tone", "f": 880, "attackS": 0.001, "t60": 0.028, "peak": 0.9 },
+    { "kind": "tone", "f": 587.33, "attackS": 0.001, "t60": 0.032, "peak": 1, "offsetS": 0.022 },
+    { "kind": "noise", "attackS": 0.001, "t60": 0.01, "peak": 0.45, "filter": { "type": "bandpass", "f": 3200, "q": 1 } },
+    { "kind": "noise", "attackS": 0.001, "t60": 0.01, "peak": 0.5, "offsetS": 0.022, "filter": { "type": "bandpass", "f": 2800, "q": 1 }, "from": 1 },
+    { "kind": "tone", "f": 293.66, "attackS": 0.001, "t60": 0.03, "peak": 0.8, "offsetS": 0.022, "from": 2 }
+  ],
+  "room": { "send": -22, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "masterGain": 0.1706,
+  "vary": { "pitch": 0.02, "force": 0.12 },
+  "emphasis": { "subtle": 0, "normal": 1, "strong": 2 }
+}

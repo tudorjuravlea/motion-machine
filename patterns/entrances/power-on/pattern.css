@@ -1,0 +1,16 @@
+/* entrances/power-on: the bright line. pattern.js appends it inside the slot while the line crosses
+   and the opening runs, sets --mm-po-tone (a palette role) and --mm-po-weight (a share of the
+   frame's short side) on it, and scales it across; a seek restores the slot, so no line is left at a rest. */
+.mm-power-on__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  display: block;
+  visibility: visible;
+  height: calc(min(var(--mm-frame-w), var(--mm-frame-h)) * var(--mm-po-weight));
+  translate: 0 -50%;
+  pointer-events: none;
+  background: var(--mm-po-tone);
+  box-shadow: 0 0 var(--mm-space-3) var(--mm-space-0) color-mix(in srgb, var(--mm-po-tone) 60%, transparent);
+}

@@ -10,6 +10,8 @@
 // settle(), so no frame is painted while its mask is still loading. The pure half (outputFrame,
 // clipAt, sourceFrame, matteFile, matteAspect, footageCtx) runs in Node for the tests.
 
+import { median } from './speaker.js';
+
 const r3 = (x) => Math.round(x * 1000) / 1000;
 
 /** The output frame at film second t, held at the edit's first and last frames. */
@@ -30,6 +32,25 @@ export function clipAt(edit, t) {
 export function sourceFrame(edit, t) {
   const c = edit.picture[clipAt(edit, t)];
   return c.from + Math.max(0, Math.min(c.length - 1, outputFrame(edit, t) - c.start));
+}
+
+/**
+ * The face of picture clip k: the median, coordinate by coordinate, of the head boxes (shares of the
+ * recording, from `mm footage matte`) of the source frames the clip shows. Steady inside a shot and
+ * different from the next shot's, so a graphic that keeps clear of it moves at a cut, not with every
+ * frame. Null when the footage has no face data or the clip has no head in it.
+ */
+const faces = new WeakMap();
+export function faceOfClip(f, k) {
+  if (!f?.face?.boxes) return null;
+  let m = faces.get(f.face);
+  if (!m) faces.set(f.face, (m = new Map()));
+  if (!m.has(k)) {
+    const c = f.edit.picture[k];
+    const own = f.face.boxes.slice(c.from, c.from + c.length).filter(Boolean);
+    m.set(k, own.length ? [0, 1, 2, 3].map((j) => r3(median(own.map((b) => b[j])))) : null);
+  }
+  return m.get(k);
 }
 
 /** A sequence frame's file: mm media prep names source frame i as f{i + 1, five digits}.jpg. */
@@ -91,6 +112,11 @@ export async function mountFootage(story, { stage, duration, kind }, warnings) {
   const matte = meta.matte?.frames === meta.frames ? meta.matte : null;
   if (matted.length && !matte) warnings.push(`footage: ${base}: a layout cuts the speaker out (data-footage-matte) but the folder holds no matte for every frame; run mm footage matte --name ${base.replace(/\/$/, '').split('/').pop()}. The whole picture shows`);
   for (const el of els) el.decoding = 'sync';
+  let face = null;
+  if (meta.matte?.face) {
+    try { face = await getJson(new URL(`${base}${meta.matte.face}`, location.href)); if (!Array.isArray(face.boxes) || face.boxes.length !== meta.frames) throw new Error('it does not hold one box per frame'); }
+    catch (e) { face = null; warnings.push(`footage: ${base}: the face data is unusable (${e.message}); graphics keep clear of a default face box (re-run mm footage matte)`); }
+  }
   const masks = new Map();
   if (matte) {
     matted.forEach((el, k) => {
@@ -104,7 +130,7 @@ export async function mountFootage(story, { stage, duration, kind }, warnings) {
       masks.set(el, svg.querySelector('image'));
     });
   }
-  return { base, meta, edit, els, masks };
+  return { base, meta, edit, els, masks, face };
 }
 
 /**
@@ -122,6 +148,12 @@ export function paintFootage(f, t, track, warn) {
       track(el.decode().catch(() => { if (el.getAttribute('src') === src) warn?.(src); }));
     }
     const mask = f.masks?.get(el);
+    if (mask) {   // the mask is the size of the picture's box now (a speaker frame moves and resizes the box)
+      const w = String(el.offsetWidth), h = String(el.offsetHeight);
+      if (mask.getAttribute('width') !== w || mask.getAttribute('height') !== h) {
+        for (const n of [mask, mask.parentNode]) { n.setAttribute('width', w); n.setAttribute('height', h); }
+      }
+    }
     if (mask && mask.getAttribute('href') !== matteFile(f.base, i)) {
       const m = matteFile(f.base, i);
       mask.setAttribute('href', m);

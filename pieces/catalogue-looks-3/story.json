@@ -1,0 +1,160 @@
+{
+  "id": "catalogue-looks-3",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Dots",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Dots",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "The dot grid alone."
+        }
+      ],
+      "say": "The dot grid alone.",
+      "duration": 3.6
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Look at the frame.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Each film changes the style once, and says so."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 4.25
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "dots",
+      "layout": "layouts/statement",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "ground: dots",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "The quietest ground: a grid of small dots."
+        }
+      ],
+      "id": "dots-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "dots",
+      "layout": "layouts/list-reveal",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "dots",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "item-1",
+          "fx": "entrances/rise",
+          "text": "role: line colour"
+        },
+        {
+          "at": 0.6,
+          "slot": "item-2",
+          "fx": "entrances/rise",
+          "text": "spacing: share of width"
+        },
+        {
+          "at": 0.9,
+          "slot": "item-3",
+          "fx": "entrances/rise",
+          "text": "strength: how faint"
+        }
+      ],
+      "id": "dots-b",
+      "duration": 4.8
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "dots",
+      "layout": "layouts/statement",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Under type",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Nothing competes with the words."
+        }
+      ],
+      "id": "dots-c",
+      "duration": 4.2
+    }
+  ],
+  "share": "Dots: dots. A ground kind: dots.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

@@ -62,6 +62,13 @@ export function refsOf(story) {
   return out;
 }
 
+/** The cues a story's beats name: [{ cue, where }]. A cue is the folder patterns/sound/<cue>/, resolved apart from refsOf (a sound pattern is not a visual one). */
+export function cueRefsOf(story) {
+  const out = [];
+  for (const sc of story.scenes) for (const b of sc.beats) if (b.cue) out.push({ cue: b.cue, where: `${sc.id}.${b.slot}.cue` });
+  return out;
+}
+
 /** A reference resolves when its folder holds the file the kit loads (pattern.js or pattern.html). */
 export function resolvesPattern(base, ref) {
   const dir = join(base, ref);

@@ -1,0 +1,23 @@
+{
+  "id": "demo-emphasis-countdown-clock",
+  "kind": "film",
+  "formats": ["16x9", "9x16", "1x1"],
+  "title": "emphasis/countdown-clock demo",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "urgent",
+      "layout": "layouts/statement",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "entrances/rise", "text": "The offer ends tonight", "emphasis": "emphasis/countdown-clock" }
+      ],
+      "say": "A line of urgency, with a clock sweeping a full turn over it."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

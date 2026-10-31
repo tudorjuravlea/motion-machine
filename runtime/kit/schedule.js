@@ -243,7 +243,7 @@ function filmSchedule(story, style, meta, eachOpts) {
       if (meta(beat.fx).ambient && beat.params?.move !== 'still' && end > it.start) events.push({ t: it.start, kind: 'move', selector: it.selector, scene: sc.id, pattern: beat.fx, d: ms(end - it.start), ambient: true });
       if (beat.cue) {
         const c = cueTiming(beat, it.start, it.d, meta);
-        events.push({ t: c.at, kind: 'cue', selector: it.selector, scene: sc.id, cue: beat.cue, d: c.d, anchor: c.anchor });
+        events.push({ t: c.at, kind: 'cue', selector: it.selector, scene: sc.id, cue: beat.cue, d: c.d, anchor: c.anchor, ...(beat.params?.cue ? { params: beat.params.cue } : {}) });
       }
       settled = Math.max(settled, it.start + it.d);
       if (beat.emphasis) {
@@ -376,7 +376,7 @@ function deckSchedule(story, style, meta, eachOpts) {
     }
     if (it.beat.cue && !it.parent) {
       const c = cueTiming(it.beat, it.at, it.d, meta);
-      events.push({ press: it.press, kind: 'cue', selector: it.selector, scene: it.scene, cue: it.beat.cue, d: c.d, anchor: c.anchor, at: c.at, ...span(it, c.at, 0) });
+      events.push({ press: it.press, kind: 'cue', selector: it.selector, scene: it.scene, cue: it.beat.cue, d: c.d, anchor: c.anchor, ...(it.beat.params?.cue ? { params: it.beat.params.cue } : {}), at: c.at, ...span(it, c.at, 0) });
     }
     if (it.emphasis) events.push({ press: it.press, kind: 'move', selector: it.selector, scene: it.scene, pattern: it.emphasis.pattern, d: it.emphasis.d,
       at: it.emphasis.at, from: pos(it.press, it.emphasis.at), to: pos(it.press, ms(it.emphasis.at + it.emphasis.d)) });

@@ -1,0 +1,48 @@
+{
+  "id": "demo-data-org-chart",
+  "kind": "film",
+  "formats": ["9x16", "1x1", "16x9"],
+  "title": "Demo: data/org-chart (fictional team)",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "chart",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "data/org-chart", "params": { "nodes": "Studio|>Design,Build|>>Brand|>Grow|>>Web,Apps", "dur": "hold" } },
+        { "at": 3.4, "slot": "sub", "fx": "entrances/fade", "text": "A stem, a rail, branches, one level at a time" }
+      ],
+      "say": "A demo of the pattern: the chart variant."
+    },
+    {
+      "id": "tree",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "data/org-chart", "params": { "nodes": "Plan|>Scope,Budget|>>Brief|>Schedule", "variant": "tree", "dur": "hold" } },
+        { "at": 3.4, "slot": "sub", "fx": "entrances/fade", "text": "The same tree, left to right" }
+      ],
+      "say": "The tree variant."
+    },
+    {
+      "id": "mind-map",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "data/org-chart", "params": { "nodes": "Launch|>Story,Style|>>Look|>Sound|>>Music,Mix|>Ship", "variant": "mind-map", "dur": "hold" } },
+        { "at": 3.4, "slot": "sub", "fx": "entrances/fade", "text": "A centre and its spokes" }
+      ],
+      "say": "The mind-map variant."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

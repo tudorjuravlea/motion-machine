@@ -5,7 +5,7 @@
   "formats": [
     "16x9"
   ],
-  "title": "Entrances, part 3 of 3",
+  "title": "Entrances, part 3 of 5",
   "language": "en",
   "facts": [
     {
@@ -39,7 +39,7 @@
           "at": 0.4,
           "slot": "sub",
           "fx": "entrances/fade",
-          "text": "How things arrive. Part 3 of 3."
+          "text": "How things arrive. Part 3 of 5."
         }
       ],
       "say": "How things arrive.",
@@ -476,87 +476,9 @@
       ],
       "say": "from: 50. A shorter climb.",
       "duration": 3.4
-    },
-    {
-      "id": "draw-a",
-      "layout": "layouts/split",
-      "cut": "transitions/hard-cut",
-      "move": null,
-      "beats": [
-        {
-          "at": 0,
-          "slot": "headline",
-          "fx": "style:headline",
-          "text": "draw",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0.45,
-          "slot": "figure",
-          "fx": "entrances/draw"
-        },
-        {
-          "at": 0,
-          "slot": "body",
-          "fx": "style:body",
-          "text": "A line grows from one edge and draws itself.",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0,
-          "slot": "caption",
-          "fx": "style:body",
-          "text": "entrances/draw",
-          "params": {
-            "instant": true
-          }
-        }
-      ],
-      "say": "draw: A line grows from one edge and draws itself.",
-      "duration": 4.1
-    },
-    {
-      "id": "draw-b",
-      "layout": "layouts/split",
-      "cut": "transitions/hard-cut",
-      "move": null,
-      "beats": [
-        {
-          "at": 0,
-          "slot": "headline",
-          "fx": "style:headline",
-          "text": "draw",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0.45,
-          "slot": "figure",
-          "fx": "entrances/draw",
-          "params": {
-            "origin": "center"
-          }
-        },
-        {
-          "at": 0,
-          "slot": "body",
-          "fx": "style:body",
-          "text": "origin: center. It grows from the middle.",
-          "params": {
-            "instant": true
-          }
-        }
-      ],
-      "say": "origin: center. It grows from the middle.",
-      "duration": 3.4
     }
   ],
-  "share": "Entrances (3/3): words, typewriter, scatter-settle, assemble, count, draw. Each one shown, explained, then replayed with a knob turned.",
+  "share": "Entrances (3/5): words, typewriter, scatter-settle, assemble, count. Each one shown, explained, then replayed with a knob turned.",
   "cta": {
     "text": "Motion Machine",
     "url": "github.com/tudorjuravlea/motion-machine"

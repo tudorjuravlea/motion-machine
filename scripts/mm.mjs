@@ -16,9 +16,10 @@ const ROOT = dirname(HERE);
 
 const VERBS = {
   doctor: 'doctor.mjs', new: 'new.mjs', serve: 'serve.mjs', stills: 'stills.mjs', export: 'export.mjs', review: 'review.mjs',
-  check: 'check.mjs', beats: 'beats.mjs', sound: 'sound.mjs', 'release-check': 'release-check.mjs',
-  studio: 'studio.mjs', timeline: 'timeline.mjs',
+  check: 'check.mjs', beats: 'beats.mjs', sound: 'sound.mjs', 'sound-listen': 'sound-listen.mjs', 'release-check': 'release-check.mjs',
+  studio: 'studio.mjs', timeline: 'timeline.mjs', gen: 'gen.mjs', 'verify-export': 'verify-export.mjs', credits: 'credits.mjs',
 };
+const SOUND_SUBS = { mine: 'sound-mine.mjs', clone: 'sound-clone.mjs' };   // subcommands of `sound`, whose first word is otherwise a piece
 const GROUPS = {
   pattern: { lint: 'pattern-lint.mjs', stills: 'pattern-stills.mjs' },   // `list` is built in
   brand: { init: 'brand-init.mjs', onboard: 'brand-onboard.mjs', sheet: 'brand-sheet.mjs', set: 'brand-onboard.mjs', font: 'brand-onboard.mjs', logo: 'brand-onboard.mjs', capture: 'capture-brand.mjs', mascot: 'mascot-import.mjs' },   // onboard, set, font and logo are one script
@@ -26,7 +27,7 @@ const GROUPS = {
   style: { compose: 'compose.mjs', 'export-designmd': 'export-designmd.mjs' },
   skill: { new: 'skill-new.mjs' },
   media: { prep: 'media-prep.mjs', frame: 'media-frame.mjs', layers: 'media-layers.mjs' },
-  footage: { cut: 'footage-cut.mjs', matte: 'footage-matte.mjs' },
+  footage: { cut: 'footage-cut.mjs', review: 'footage-review.mjs', scenes: 'footage-scenes.mjs', audit: 'footage-audit.mjs', verify: 'footage-verify.mjs', matte: 'footage-matte.mjs' },
   capture: { site: 'capture-site.mjs' },
   project: { new: 'project.mjs', make: 'project.mjs', path: 'project.mjs' },   // one script; the subcommand is its first argument
 };
@@ -94,6 +95,13 @@ export function plan(argv) {
     if (verb === 'motion' && sub === 'capture') out = withDefaultName(args);
     if (verb === 'project' || (verb === 'brand' && ['onboard', 'set', 'font', 'logo'].includes(sub))) out = [sub, ...args];
     return { script, args: out, label: `${verb} ${sub}` };
+  }
+  if (verb === 'sound' && SOUND_SUBS[rest[0]]) {       // `mm sound mine|clone …`; a piece named mine or clone is reached by path (./mine)
+    const key = `sound ${rest[0]}`, args = rest.slice(1);
+    if (wantsHelp) return { help: usageText(key), code: 0 };
+    const bad = unknownFlag(key, args);
+    if (bad) return badFlag(key, bad);
+    return { script: SOUND_SUBS[rest[0]], args, label: key };
   }
   if (VERBS[verb]) {
     if (wantsHelp) return { help: usageText(verb), code: 0 };

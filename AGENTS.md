@@ -7,7 +7,7 @@ the [README](README.md).
 ## What this repository is
 
 Motion Machine turns one brief into a short film (20 to 60 s, MP4 in 9x16, 4x5, 1x1 and 16x9) or a
-clicker deck (6 to 20 presses) from 150 brand-neutral patterns, and a gate (`mm check`, 40 rules)
+clicker deck (6 to 20 presses) from 187 brand-neutral patterns, and a gate (`mm check`, 53 rules)
 measures the result. Every frame is a pure function of time `t`. The look comes from one
 `style.json`. A *piece* is a folder holding a `story.json` and a `style.json`. Node 22+,
 Playwright Chromium and ffmpeg 6+ are the whole toolchain. [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)

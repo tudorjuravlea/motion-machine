@@ -11,6 +11,7 @@ import { compile, applyEdits, validateEdit, beatPath, roundTime, EditRefused } f
 import { parseRanges } from '../../scripts/studio/json-splice.js';
 import { validators } from '../../scripts/lib/validate.mjs';
 import { trackedPieces } from '../check/_tracked.mjs';
+import { layoutParamsOf } from '../../scripts/lib/story-edit.mjs';
 
 const ROOT = new URL('../../', import.meta.url).pathname;
 const text = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -28,7 +29,7 @@ for (const g of readdirSync(join(ROOT, 'patterns'))) {
   }
 }
 // a piece's own style resolves its style: roles; the skeleton has none, so it wears a preset
-const ctxFor = (dir, extra = {}) => ({ patterns, style: JSON.parse(text(existsSync(join(ROOT, dir, 'style.json')) ? `${dir}/style.json` : 'styles/presets/kinetic.json')), ...extra });
+const ctxFor = (dir, extra = {}) => ({ patterns, layoutParams: layoutParamsOf(join(ROOT, 'patterns')), style: JSON.parse(text(existsSync(join(ROOT, dir, 'style.json')) ? `${dir}/style.json` : 'styles/presets/kinetic.json')), ...extra });
 
 const used = [];   // every op and inverse this file applies, checked against the schema at the end
 const apply = (t, edits, ctx) => { used.push(...edits); const r = applyEdits(t, edits, ctx); used.push(...r.inverse); return r; };
@@ -240,9 +241,19 @@ test('applyEdits stops at the first refused edit and says which one', () => {
     (e) => e instanceof EditRefused && e.index === 1 && e.code === 'unknown-scene');
 });
 
-// params.wall on entrances/fade in catalogue-layouts-2 is read by nothing (the desktop layout's
-// --mm-wall is CSS-only); reported to the lead, and refused as an unknown param, which is right.
-const DEAD = new Set(['pieces/catalogue-layouts-2 desktop-a/0 wall']);
+test('a shared param belongs to the beat\'s emphasis, exit or layout too (the kit routes scalars there)', () => {
+  const story = { id: 's', kind: 'film', formats: ['16x9'], title: 't', language: 'en', facts: [], audio: { track: null, bpm: null, beats: null }, cta: { text: 'x', url: 'x' },
+    scenes: [{ id: 'a', layout: 'layouts/object-card', duration: 4, cut: 'transitions/hard-cut', move: null, say: '',
+      beats: [{ at: 0, slot: 'title', fx: 'entrances/fade', text: 'x', emphasis: 'emphasis/stamp', params: {} }] }] };
+  const ctx = { ...ctxFor('pieces/golden-film-kinetic'), layoutParams: { 'layouts/object-card': ['variant'] } };
+  const stampKey = Object.keys(patterns['emphasis/stamp'].params)[0];
+  const ok = (key, value, c = ctx) => validateEdit(story, { op: 'beat.param', scene: 'a', beat: 0, key, value }, c);
+  assert.equal(ok(stampKey, patterns['emphasis/stamp'].params[stampKey].default), null, 'a param of the beat\'s emphasis');
+  assert.equal(ok('variant', 'receipt'), null, 'a param of the scene\'s layout');
+  assert.equal(ok('variant', 'receipt', { ...ctx, layoutParams: undefined })?.code, 'unknown-param', 'without the layouts\' params it is unknown, as before');
+  assert.equal(ok('nonsense', 1)?.code, 'unknown-param', 'a key no pattern of the beat takes');
+});
+
 test('every param in every shipped piece and example is accepted by beat.param with its own value', () => {
   const dirs = trackedPieces().filter((d) => existsSync(join(ROOT, d, 'style.json')));
   let n = 0;
@@ -255,7 +266,6 @@ test('every param in every shipped piece and example is accepted by beat.param w
       for (const [fmt, beats] of sets) beats.forEach((b, j) => {
         for (const [k, v] of Object.entries(b.params ?? {})) {
           const r = validateEdit(st, { op: 'beat.param', scene: sc.id, beat: j, key: k, value: v, ...fmt }, ctx);
-          if (DEAD.has(`${d} ${sc.id}/${j} ${k}`)) { assert.equal(r?.code, 'unknown-param'); continue; }
           assert.equal(r, null, `${d} ${sc.id}/${j} ${b.fx} params.${k}=${JSON.stringify(v)}: ${JSON.stringify(r)}`);
           n++;
         }
@@ -273,7 +283,7 @@ const addBeat = (extra, fx = 'entrances/fade') => ({ op: 'beat.add', scene: 'hoo
 test('beat.add checks every key of the new beat the way the single-key ops do', () => {
   const ctx = ctxFor('pieces/golden-film-kinetic');
   for (const [edit, code, hint] of [
-    [addBeat({ cue: 'boom' }), 'bad-value', /tick/],
+    [addBeat({ cue: 'Boom!' }), 'bad-value', /patterns\/sound/],
     [addBeat({ text: 5 }), 'bad-type', /string/],
     [addBeat({ exit: 'moves/pan' }), 'bad-value', /exits\//],
     [addBeat({ emphasis: 'zz' }), 'bad-value', /emphasis\//],

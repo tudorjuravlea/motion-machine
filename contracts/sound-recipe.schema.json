@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:motion-machine:contracts:sound-recipe",
+  "title": "Motion Machine sound recipe (SPEC §9): one cue as data",
+  "description": "A cue written as layers, rendered by runtime/kit/synth.js `layers`. A tone layer is sine partials with a linear attack and an exponential decay set by its T60 (the time to fall 60 dB); partial n decays in t60 x ratio^-0.75, never faster than 28 ms. A noise layer is seeded white noise through one biquad. `from` is the emphasis rank a layer joins at (subtle 0, normal 1, strong 2 unless `emphasis` says otherwise); `offsetS` starts it later in the cue. For a noise layer `filter.f` is the filter's centre and `glideTo` sweeps it. `durationS` is the cue's length: the time by which every layer has ended (offsetS + attackS + t60), at most 1.5 s. The cue's family follows from it (familyOf in synth.js): input up to 0.06 s, surface up to 0.3 s, outcome up to 0.65 s, longer a swell.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "meaning", "durationS", "layers"],
+  "properties": {
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,30}$", "description": "the cue's name: the folder patterns/sound/<name>/ it lives in and the `cue` a beat names" },
+    "meaning": { "type": "string", "minLength": 3, "maxLength": 200, "description": "the visible event the cue marks, in words" },
+    "durationS": { "type": "number", "exclusiveMinimum": 0, "maximum": 1.5 },
+    "layers": {
+      "type": "array", "minItems": 1, "maxItems": 12,
+      "items": { "$ref": "#/$defs/layer" }
+    },
+    "room": { "$ref": "#/$defs/room" },
+    "masterGain": { "type": "number", "exclusiveMinimum": 0, "maximum": 8, "description": "a linear gain on the whole cue, set by measuring so its loudest 100 ms lands on the matched level (-30 LUFS) rendered as written; 1 by default" },
+    "vary": {
+      "type": "object", "additionalProperties": false,
+      "description": "a cue that sounds many times (an input cue) varies a little each time, pitch and force together (one seeded draw for both); an outcome cue leaves it out and is identical every time",
+      "properties": {
+        "pitch": { "type": "number", "minimum": 0, "maximum": 0.1, "description": "the largest shift of every frequency, as a fraction (0.02 is 2 %)" },
+        "force": { "type": "number", "minimum": 0, "maximum": 0.5, "description": "the largest change of the cue's level, as a fraction" }
+      }
+    },
+    "emphasis": {
+      "type": "object", "additionalProperties": false,
+      "description": "the rank of each arrangement; a layer plays when the rank of the beat's emphasis is at least its `from`",
+      "properties": {
+        "subtle": { "type": "integer", "minimum": 0, "maximum": 2 },
+        "normal": { "type": "integer", "minimum": 0, "maximum": 2 },
+        "strong": { "type": "integer", "minimum": 0, "maximum": 2 }
+      }
+    }
+  },
+  "$defs": {
+    "room": {
+      "type": "object", "additionalProperties": false,
+      "description": "the shared room: a short seeded stereo convolution. `send` is dB under the dry cue; the shape (predelay, size, lowpass) is the same for every cue of a palette, which is what makes them one place",
+      "properties": {
+        "send": { "type": "number", "minimum": -60, "maximum": 0 },
+        "predelayS": { "type": "number", "minimum": 0, "maximum": 0.1 },
+        "sizeS": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "lowpassHz": { "type": "number", "minimum": 500, "maximum": 20000 }
+      }
+    },
+    "layer": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "t60"],
+      "properties": {
+        "kind": { "enum": ["tone", "noise"] },
+        "f": { "type": "number", "minimum": 20, "maximum": 20000, "description": "tone: the fundamental in Hz" },
+        "glideTo": { "type": ["number", "null"], "minimum": 20, "maximum": 20000, "description": "tone: the fundamental it glides to; noise: the filter centre it sweeps to; null for no glide" },
+        "glideS": { "type": "number", "minimum": 0, "maximum": 1.5, "description": "how long the glide takes, from the start of the layer (an exponential sweep)" },
+        "attackS": { "type": "number", "minimum": 0.0005, "maximum": 0.6, "description": "linear rise to the peak; 0.001 to 0.003 for a struck sound, longer for a swell" },
+        "t60": { "type": "number", "minimum": 0.005, "maximum": 1.5, "description": "seconds for the layer to fall 60 dB after its peak" },
+        "peak": { "type": "number", "minimum": 0, "maximum": 4, "description": "the layer's linear level before the cue's gain; 1 by default" },
+        "partials": {
+          "type": "array", "maxItems": 12,
+          "description": "tone: [ratio to the fundamental, level in dB] pairs, the fundamental included; [[1, 0]] by default",
+          "items": { "type": "array", "minItems": 2, "maxItems": 2, "prefixItems": [{ "type": "number", "minimum": 0.25, "maximum": 20 }, { "type": "number", "minimum": -90, "maximum": 12 }], "items": false }
+        },
+        "filter": {
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "type": { "enum": ["lowpass", "highpass", "bandpass", "none"] },
+            "f": { "type": "number", "minimum": 20, "maximum": 20000 },
+            "q": { "type": "number", "minimum": 0.1, "maximum": 30 }
+          }
+        },
+        "from": { "type": "integer", "minimum": 0, "maximum": 2, "description": "the emphasis rank the layer joins at: 0 always, 1 from normal up (an ornament that subtle drops), 2 only at strong (the layer strong adds)" },
+        "offsetS": { "type": "number", "minimum": 0, "maximum": 1.4, "description": "when the layer starts, from the start of the cue" }
+      },
+      "allOf": [
+        { "if": { "properties": { "kind": { "const": "tone" } } }, "then": { "required": ["f"], "properties": { "f": { "type": "number" } } } }
+      ]
+    }
+  }
+}

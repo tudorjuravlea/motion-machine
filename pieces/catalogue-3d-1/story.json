@@ -252,9 +252,61 @@
         }
       ],
       "id": "particles-to-shape-b"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "point-cloud",
+      "layout": "layouts/caption-bar",
+      "duration": 7,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "3d/point-cloud",
+          "asset": "assets/bottle.png",
+          "params": {
+            "dur": 3.6
+          }
+        },
+        {
+          "at": 4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "point-cloud: a cut-out rebuilt as glittering points."
+        }
+      ],
+      "id": "point-cloud-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "point-cloud",
+      "layout": "layouts/caption-bar",
+      "duration": 7,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "3d/point-cloud",
+          "asset": "assets/bottle.png",
+          "params": {
+            "dur": 3.6,
+            "colors": "source",
+            "yaw": -25
+          }
+        },
+        {
+          "at": 4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "colors: source, yaw -25. Its own colours."
+        }
+      ],
+      "id": "point-cloud-b"
     }
   ],
-  "share": "Real 3D: phone, laptop, particles-to-shape. Each one shown, explained, then replayed with a knob turned.",
+  "share": "Real 3D: phone, laptop, particles-to-shape, point-cloud. Each one shown, explained, then replayed with a knob turned.",
   "cta": {
     "text": "Motion Machine",
     "url": "github.com/tudorjuravlea/motion-machine"

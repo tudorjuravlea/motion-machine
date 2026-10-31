@@ -1,0 +1,79 @@
+{
+  "id": "demo-keyword-cta",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: emphasis/keyword-cta",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "hold",
+      "layout": "layouts/statement",
+      "duration": 4.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Want the full guide?"
+        },
+        {
+          "at": 1.2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "GUIDE",
+          "params": {
+            "instant": true,
+            "hold": true,
+            "from": "below"
+          },
+          "emphasis": "emphasis/keyword-cta"
+        }
+      ],
+      "say": "Comment the word and the guide is yours."
+    },
+    {
+      "id": "quiet",
+      "layout": "layouts/statement",
+      "duration": 4.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Want the checklist?"
+        },
+        {
+          "at": 1.2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "GUIDE",
+          "params": {
+            "instant": true,
+            "hold": false,
+            "from": "right"
+          },
+          "emphasis": "emphasis/keyword-cta"
+        }
+      ],
+      "say": "Comment the word and the guide is yours."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

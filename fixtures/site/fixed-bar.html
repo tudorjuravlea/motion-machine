@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fixed bar</title>
+<!-- A page 2,000 css px tall on white with a fixed tab bar (#1F6FEB) at the bottom of the viewport:
+     the bar is an overlay, so the tiles must show the page under it, not a copy that scrolls away. -->
+<style>
+  body { margin: 0; background: #FFFFFF; height: 2000px; }
+  nav { position: fixed; left: 16px; right: 16px; bottom: 18px; height: 64px; border-radius: 32px; background: #1F6FEB; }
+</style>
+</head>
+<body>
+  <nav></nav>
+</body>
+</html>

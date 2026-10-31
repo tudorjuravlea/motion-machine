@@ -1,0 +1,325 @@
+{
+  "id": "catalogue-exits-2",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Exits, part 2 of 2",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Exits",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "How things leave. Part 2 of 2."
+        }
+      ],
+      "say": "How things leave.",
+      "duration": 3.6
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "knife-cut-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "knife-cut",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Goodbye",
+          "out": 2,
+          "exit": "exits/knife-cut"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A blade slices each line; the halves fold shut.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "exits/knife-cut",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "knife-cut: A blade slices each line; the halves fold shut.",
+      "duration": 4.1
+    },
+    {
+      "id": "knife-cut-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "knife-cut",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Goodbye",
+          "out": 2,
+          "exit": "exits/knife-cut",
+          "params": {
+            "exit": {
+              "rule": "accent"
+            }
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "rule: accent. The blade's edge in colour.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "rule: accent. The blade's edge in colour.",
+      "duration": 3.4
+    },
+    {
+      "id": "wither-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "wither",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "text/garden",
+          "text": "Seasons",
+          "out": 3,
+          "exit": "exits/wither",
+          "params": {
+            "dur": 1.4,
+            "kind": "vines",
+            "seed": 2
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A grown garden recedes, letter by letter, to bare type.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "exits/wither",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "wither: A grown garden recedes, letter by letter, to bare type.",
+      "duration": 4.55
+    },
+    {
+      "id": "wither-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "wither",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "text/garden",
+          "text": "Seasons",
+          "out": 3,
+          "exit": "exits/wither",
+          "params": {
+            "dur": 1.4,
+            "kind": "vines",
+            "seed": 2,
+            "exit": {
+              "type": "keep"
+            }
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "type: keep. The bare type stays whole.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "type: keep. The bare type stays whole.",
+      "duration": 4.4
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "lower-third",
+      "layout": "layouts/caption-bar",
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Interview",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "overlay",
+          "fx": "text/lower-third",
+          "text": "Alex Sample | Design lead",
+          "params": {
+            "mechanism": "bar-wipe"
+          },
+          "out": 2.7,
+          "exit": "exits/lower-third"
+        },
+        {
+          "at": 0.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "lower-third out: the bar wipes away."
+        }
+      ],
+      "id": "lower-third-a",
+      "duration": 4.1
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "lower-third",
+      "layout": "layouts/caption-bar",
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Interview",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "overlay",
+          "fx": "text/lower-third",
+          "text": "Alex Sample | Design lead",
+          "params": {
+            "mechanism": "typed"
+          },
+          "out": 2.7,
+          "exit": "exits/lower-third"
+        },
+        {
+          "at": 0.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "mechanism: typed. The name un-types."
+        }
+      ],
+      "id": "lower-third-b",
+      "duration": 4.1
+    }
+  ],
+  "share": "Exits (2/2): knife-cut, wither, lower-third. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

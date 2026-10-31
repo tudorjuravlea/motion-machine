@@ -5,7 +5,7 @@
   "formats": [
     "16x9"
   ],
-  "title": "Sound cues",
+  "title": "Sound cues, part 1 of 2",
   "language": "en",
   "facts": [],
   "audio": {
@@ -33,11 +33,11 @@
           "at": 0.4,
           "slot": "sub",
           "fx": "entrances/fade",
-          "text": "Synthesised, never sampled. Turn the sound on."
+          "text": "Synthesised, never sampled. Turn the sound on. Part 1 of 2."
         }
       ],
       "say": "Synthesised, never sampled. Turn the sound on.",
-      "duration": 3.6
+      "duration": 4.35
     },
     {
       "id": "how",
@@ -446,7 +446,7 @@
       "duration": 4.2
     }
   ],
-  "share": "Sound cues: tick, step, press, hit, swipe, riser, success, bed, complete. Each one shown, explained, then replayed with a knob turned.",
+  "share": "Sound cues (1/2): tick, step, press, hit, swipe, riser, success, bed, complete. Each one shown, explained, then replayed with a knob turned.",
   "cta": {
     "text": "Motion Machine",
     "url": "github.com/tudorjuravlea/motion-machine"

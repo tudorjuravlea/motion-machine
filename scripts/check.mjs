@@ -2,7 +2,8 @@
 // mm check (SPEC §7): opens the piece once per format in render mode, runs every rule file in
 // scripts/check/, writes out/check.json and exits 0 (all G- pass), 1 (any G- fails) or 2 (setup
 // or usage). A rule that cannot apply reports SKIP with a reason (AXIOM 8); an id with no rule
-// file yet is reported as SKIP, never as PASS. The report names the story version and the formats
+// file yet is reported as SKIP, never as PASS. The report names the story version, the head of the
+// story's edit journal (the last edit it saw: `mm export` refuses a report older than the last edit) and the formats
 // it checked, and `complete: false` on exit 2; it is written whole once the run ends, so a run
 // interrupted (SIGINT, SIGTERM, SIGHUP: exit 130, 143, 129) writes none and the previous report
 // stays. --progress prints a line per format and rule on stderr.
@@ -21,6 +22,7 @@ import { UsageError, usageText } from './lib/cli.mjs';
 import { patternsBaseOf } from './lib/patterns-base.mjs';
 import { rule, writeReport } from './lib/report.mjs';
 import { versionOf } from './lib/story-version.mjs';
+import { journalHead } from './lib/story-edit.mjs';
 import { resolveStory, forFormat, schedule as buildSchedule, addImplicitPlays } from '../runtime/kit/schedule.js';
 import { contractError, floorsFor, refsOf, sample, isWithin } from './check/_lib.mjs';
 
@@ -32,7 +34,8 @@ export const IDS = ['G-TIME', 'G-DETERMINISM', 'G-LOCAL', 'G-BRAND', 'G-PLACEHOL
   'G-LOOP', 'G-END', 'G-PATTERN-REF', 'G-FACT-REF', 'G-PEAK',
   'W-HOOK', 'W-DEAD', 'W-QUIET', 'W-LENGTH', 'W-SCENE-END', 'W-LOUDNESS', 'W-LITERAL', 'W-PATTERN-CARD', 'W-PROVENANCE',
   'W-FADE-ONLY', 'W-READ', 'W-CUE', 'W-DUR-LITERAL', 'W-BAN', 'W-SUB', 'W-CONTRAST', 'W-PACE', 'W-HOLD', 'W-EMPTY', 'W-ENTRANCE',
-  'W-STAGGER', 'W-AMBIENT', 'W-CAPTION', 'W-OVERSHOOT', 'W-MIX', 'W-ASK'];
+  'W-STAGGER', 'W-AMBIENT', 'W-CAPTION', 'W-OVERSHOOT', 'W-MIX', 'W-ASK', 'W-FACE', 'W-GEN-BRAND',
+  'W-ANCHOR', 'W-POP', 'W-DEADSTOP', 'W-FOCUS', 'W-TOKENS', 'W-SEAM', 'W-LOOP', 'W-SAMEBOX', 'W-ASSET-LICENSE', 'W-PALETTE', 'W-SAMPLE-LICENSE'];
 
 export { patternsBaseOf };
 export class SetupError extends Error {}
@@ -86,16 +89,17 @@ function recording(browser, log) {
 const RANK = { FAIL: 3, WARN: 2, PASS: 1, SKIP: 0 };
 
 /** The warning rule each key of a style's `gate` block tunes. */
-export const TUNED_BY = { length: 'W-LENGTH', deadS: 'W-DEAD', quietS: 'W-QUIET', read: 'W-READ', liftBans: 'W-BAN' };
+export const TUNED_BY = { length: 'W-LENGTH', deadS: 'W-DEAD', quietS: 'W-QUIET', read: 'W-READ', liftBans: 'W-BAN', anchor: 'W-ANCHOR', tokens: 'W-TOKENS', seamPct: 'W-SEAM', sameBox: 'W-SAMEBOX' };
 
 /**
- * Runs the gate over one piece. Returns { rules, code, crashed, schedule, version, formats, tuned } (`tuned`: the warning rules the style's gate block tunes). Pass
+ * Runs the gate over one piece. Returns { rules, code, crashed, schedule, version, journal, formats, tuned } (`tuned`: the warning rules the style's gate block tunes). Pass
  * `browser` and `server` to share them across pieces (tests); `formats` to restrict; `sub` for W-SUB;
  * `progress(line)` to hear each format and rule as it starts.
  */
 export async function runCheck(dir, { formats, format, sub = null, browser, server, rulesDir = RULES_DIR, only = null, progress = null } = {}) {
   dir = resolve(dir);
   if (!isWithin(dir, ROOT)) throw new SetupError(`piece must live under the repo root: ${dir}`);
+  const journal = journalHead(dir);   // the last edit this check will have seen (verify after edit)
   const storyText = readText(join(dir, 'story.json'));
   let story = parseJson(join(dir, 'story.json'), storyText);
   const style = readJson(join(dir, 'style.json'));
@@ -191,7 +195,7 @@ export async function runCheck(dir, { formats, format, sub = null, browser, serv
   }
   const anyFail = out.some((r) => r.status === 'FAIL' && r.id.startsWith('G-'));
   const code = crashed ? 2 : anyFail ? 1 : mountFailed ? 2 : 0;
-  return { rules: out, code, crashed, mountError: mountFailed, schedule: per[fmts[0]].schedule, version: versionOf(storyText), formats: fmts, tuned: Object.keys(style.gate ?? {}).map((k) => TUNED_BY[k]).filter(Boolean) };
+  return { rules: out, code, crashed, mountError: mountFailed, schedule: per[fmts[0]].schedule, version: versionOf(storyText), formats: fmts, journal, tuned: Object.keys(style.gate ?? {}).map((k) => TUNED_BY[k]).filter(Boolean) };
 }
 
 function usage(msg) {
@@ -228,7 +232,7 @@ export async function main(argv = process.argv.slice(2)) {
     if (e instanceof SetupError || e instanceof UsageError) { console.error(`mm check: ${e.message}`); return 2; }
     throw e;
   }
-  const code = writeReport(resolve(dir), result.rules, { quiet: opts.quiet || opts.json, version: result.version, formats: result.formats, complete: result.code !== 2, tuned: result.tuned });
+  const code = writeReport(resolve(dir), result.rules, { quiet: opts.quiet || opts.json, version: result.version, formats: result.formats, journal: result.journal, complete: result.code !== 2, tuned: result.tuned });
   if (opts.json) console.log(JSON.stringify({ rules: result.rules }, null, 2));
   else if (opts.quiet && code === 1) {   // quiet drops the per-rule lines, not the verdict
     const failed = result.rules.filter((r) => r.status === 'FAIL').map((r) => r.id);

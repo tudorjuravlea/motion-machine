@@ -9,7 +9,9 @@
 // or a glow over one), or a multiply or screen blend of roles, and is not the brand ground or a blend of
 // it with a role. Black and white are no roles: a multiply darker than the darkest role or a screen
 // lighter than the lightest is off, and so is a contrast or saturation grade, which moves the roles
-// themselves; the style's `finish` is the brand-safe way to finish a piece. ΔE 2 is calibrated: the
+// themselves; the style's `finish` is the brand-safe way to finish a piece, and a `finish.look` is
+// part of the brand: a frame is read through the look's tone tables undone (so a blend of roles is judged
+// before the grade bent it), and a grade the style did not declare still fails. ΔE 2 is calibrated: the
 // four golden pieces in every format peak at ΔE 1.13, and the three presets' calibration sheet
 // (fixtures/negatives/_palette) keeps every flat role and antialiased edge under it. Off pixels form
 // 4-connected regions; a region under 2 px tall or under 2 px wide is antialiasing, so it is never a
@@ -24,6 +26,7 @@
 import { rule } from '../lib/report.mjs';
 import { auditInstants, firstFamily, frameAt, groundAt, mediaAt, palette, parseColor, rgbKey, round, sources, stripJs, texts } from './_lib.mjs';
 import { offPalette, paletteDistance } from './_pixels.mjs';
+import { ungradeLuts, ungradeImage } from '../../runtime/kit/finish.js';
 
 export const scope = 'format';
 export const DELTA_E = 2;
@@ -66,13 +69,14 @@ export default async function (ctx) {
   // The pixel half: filters, blend modes, shadows, gradients, SVG paint and canvas all end here.
   const rgbOf = (keys) => keys.map((k) => k.split(',').map(Number));
   const dist = paletteDistance(rgbOf([...roles.keys()]), { blendOf: rgbOf([...roles].filter(([, name]) => !name.startsWith('ground-')).map(([k]) => k)) });   // roles and ground colours; multiply and screen blends are of the roles
+  const ungrade = ungradeLuts(ctx.style.finish, ctx.style.color);   // the style's `finish.look` is part of the brand: a frame is read through the look undone (the identity with none)
   let worst = null, region = null;
   for (const t of rests) {
     const s = await ctx.sample(t);
     const { img } = await frameAt(ctx, t);
     const { masks, behind } = await mediaAt(ctx, t);
     const ground = await groundAt(ctx, t);   // blobs overlap, so the ground and blends over it pass
-    const r = offPalette(img, dist, DELTA_E, { rect: s.probe.frame, masks, behind, ground });
+    const r = offPalette(ungradeImage(img, ungrade), dist, DELTA_E, { rect: s.probe.frame, masks, behind: ungradeImage(behind, ungrade), ground: ungradeImage(ground, ungrade) });
     const share = r.total ? r.all / r.total : 0;
     if (!worst || share > worst.share) worst = { instant: t, share, colours: r.colours, masked: masks.length };
     if (!region || r.largest.size > region.size) region = { instant: t, size: r.largest.size, box: r.largest.box, colours: r.colours, masked: masks.length };

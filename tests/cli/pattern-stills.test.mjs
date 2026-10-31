@@ -19,7 +19,7 @@ before(() => {
 });
 after(() => w.cleanup());
 
-const run = (...args) => spawnSync(process.execPath, [join(ROOT, 'scripts', 'pattern-stills.mjs'), ...args], { encoding: 'utf8', timeout: 120_000 });
+const run = (...args) => spawnSync(process.execPath, [join(ROOT, 'scripts', 'pattern-stills.mjs'), ...args], { encoding: 'utf8', timeout: 300_000 });   // `--style all` photographs every shipped preset: the budget grows with the library
 
 test('writes <style>-contact.png and the frames; the scaffold is removed', () => {
   const r = run('entrances/rise', '--style', 'styles/presets/editorial.json', '--format', '16x9', '--patterns', relative(process.cwd(), w.patterns));

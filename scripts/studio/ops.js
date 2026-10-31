@@ -40,13 +40,12 @@ const MEMBERS = {
 const STORY_OPS = ['story.formats'];
 const OPS = Object.keys(MEMBERS);
 const FORMATS = ['9x16', '1x1', '4x5', '16x9'];
-const CUES = ['tick', 'press', 'swipe', 'step', 'hit', 'riser', 'success', 'complete', 'bed'];
 // a beat's keys: the type and the shape each takes (the story schema's, restated without Ajv so the
 // module stays browser-safe; ctx.validate is the backstop). beat.set and beat.add both check by it.
 const KEY = {
   text: ['string', (v) => v.length <= 400, 'at most 400 characters'],
   fx: ['string', (v) => /^((entrances|text|data|devices|3d)\/[a-z][a-z0-9-]*|style:(headline|body|figure|plate))$/.test(v), 'an entrance pattern (entrances/, text/, data/, devices/, 3d/) or style:headline|body|figure|plate'],
-  cue: ['string', (v) => CUES.includes(v), `one of ${CUES.join('|')}`],
+  cue: ['string', (v) => /^[a-z][a-z0-9-]{0,30}$/.test(v), 'a cue name: a folder of patterns/sound/ (lower-case letters, digits and hyphens)'],
   emphasis: ['string', (v) => /^emphasis\/[a-z][a-z0-9-]*$/.test(v), 'an emphasis/<name> pattern'],
   exit: ['string', (v) => /^exits\/[a-z][a-z0-9-]*$/.test(v), 'an exits/<name> pattern'],
   slot: ['string', (v) => /^[a-z][a-z0-9-]{0,30}$/.test(v), 'a lower-case slot name of the layout'],
@@ -58,8 +57,8 @@ const KEY = {
 };
 const SET_KEYS = ['text', 'fx', 'cue', 'emphasis', 'slot', 'fact', 'value', 'asset'];
 // params the kit itself reads from a beat, whatever its pattern (runtime/kit/schedule.js, kit.js)
-const KIT_PARAMS = ['instant', 'dur', 'spring', 'each', 'sep', 'stagger', 'exit', 'emphasis', 'frame', 'move'];
-const BEAT_KEYS = ['at', 'step', 'until', 'out', 'exit', 'slot', 'fx', 'text', 'fact', 'value', 'asset', 'screen', 'params', 'cue', 'emphasis'];
+const KIT_PARAMS = ['instant', 'dur', 'spring', 'each', 'sep', 'stagger', 'exit', 'emphasis', 'cue', 'frame', 'move'];
+const BEAT_KEYS = ['at', 'step', 'until', 'out', 'exit', 'slot', 'fx', 'text', 'fact', 'value', 'asset', 'screen', 'params', 'cue', 'emphasis', 'anchor'];
 const PARAM_KEY = /^[A-Za-z][A-Za-z0-9_-]{0,40}$/;
 
 const no = (code, reason, hint) => ({ code, reason, hint });
@@ -129,15 +128,27 @@ function checkKey(story, ctx, k, v) {
   if (ctx.patterns && (k === 'fx' || k === 'emphasis' || k === 'exit') && !v.startsWith('style:') && !ctx.patterns[v]) return no('bad-value', `no pattern ${v}`, 'pick an installed pattern');
   return null;
 }
-/** Checks param `k` set to `v` (not null) on beat `b`. */
-function checkBeatParam(b, k, v, ctx) {
+/**
+ * Checks param `k` set to `v` (not null) on beat `b` in a scene laid out by `layout`. The kit gives a beat's
+ * scalar params to its entrance, its emphasis and its exit, and writes them on the layout (data-p-*), so a key
+ * the entrance lacks passes when the emphasis or the exit takes it (checked against that pattern) or the
+ * layout lists it (ctx.layoutParams, from the layouts' cards).
+ */
+function checkBeatParam(b, k, v, ctx, layout = null) {
   if (!PARAM_KEY.test(k)) return no('bad-type', `params.${k} is not a param name`, 'a param name is a letter then letters, digits, _ or -');
   if (k === 'exit' || k === 'emphasis') return checkBag(b[k], ctx, v, `params.${k}`);
   if (!isParam(v)) return no('bad-type', `params.${k} must be a string, number or boolean`, 'params take plain values');
   if (k === 'instant') return typeof v === 'boolean' ? null : no('bad-type', 'instant takes a boolean', 'give true or false');
   if (!ctx.patterns || KIT_PARAMS.includes(k)) return null;
   const ref = fxRef(b.fx, ctx.style);
-  return checkParam(ref, ref && ctx.patterns[ref], k, v);
+  const r = checkParam(ref, ref && ctx.patterns[ref], k, v);
+  if (r?.code !== 'unknown-param') return r;
+  for (const other of [b.emphasis, b.exit]) {
+    const meta = typeof other === 'string' ? ctx.patterns[other] : null;
+    if (meta?.params && Object.hasOwn(meta.params, k)) return checkParam(other, meta, k, v);
+  }
+  if (layout && ctx.layoutParams?.[layout]?.includes(k)) return null;
+  return r;
 }
 
 /** story.formats: a non-empty list of distinct film formats. Removing a format leaves the scenes'
@@ -254,7 +265,7 @@ function check(story, edit, ctx) {
     }
     if (b.params !== undefined) {
       if (!isBag(b.params)) return no('bad-type', 'params must be an object of params', 'give an object like { "side": "left" }');
-      for (const [k, x] of Object.entries(b.params)) { const r = checkBeatParam(b, k, x, ctx); if (r) return r; }
+      for (const [k, x] of Object.entries(b.params)) { const r = checkBeatParam(b, k, x, ctx, sc.layout); if (r) return r; }
     }
     if (b.screen !== undefined && !(Array.isArray(b.screen) && b.screen.length <= 24)) return no('bad-type', 'screen must be an array of screen actions', 'give an array of at most 24 actions like { "do": "screen/tap" }');
     return null;
@@ -282,7 +293,7 @@ function check(story, edit, ctx) {
       return checkKey(story, ctx, edit.key, v);
     case 'beat.param':
       if (typeof edit.key !== 'string' || !PARAM_KEY.test(edit.key)) return no('bad-type', 'key must be a param name', 'give the param\'s name, like "side"');
-      return v === null ? null : checkBeatParam(b, edit.key, v, ctx);
+      return v === null ? null : checkBeatParam(b, edit.key, v, ctx, sc.layout);
   }
   return null;
 }

@@ -8,6 +8,9 @@
 // visible state. A deck rest faces the viewer. No clock, no animation loop.
 import { THREE, clamp01, smoothstep01, cssText, cssColour, stage, slab, plate, disc, sheen, sweep, lightAll, phoneBar, alloy, metal, glass, glossy, turn, cross, fitCanvas, mark, draw } from '../../../runtime/kit/device3d.js';
 import { RoundedBoxGeometry } from '../../../runtime/vendor/three/0.170.0/RoundedBoxGeometry.js';
+import { DRAWN, phases, stroke, linesCanvas, paintLines } from '../../../runtime/kit/drawn.js';
+import { rrect as ring, circ, solid, extremes } from '../../../runtime/kit/hairline.js';
+import { contentMeta } from '../../../runtime/kit/screen.js';
 
 const W = 1, H = 3668 / 1752, D = 0.115, R = 0.181, B = 0.0348;   // the slab of devices/phone, in widths
 const SW = W - 2 * B, SH = H - 2 * B, SR = 0.157 * SW;            // the screen inside the bezel
@@ -18,6 +21,143 @@ const KEYS = {
 };
 KEYS.plain = KEYS.island;
 const cache = new WeakMap();
+
+// drawn: the phone lies in the hairline view (seen from 30° up, turned 45°), its glass lifted GAP off the
+// body; the camera starts nearly orthographic (a narrow field from far away) and widens to the hero's
+const GAP = 0.3, GLASS = 0.012, FOV0 = 2.5, FOV1 = 28;
+const axis = (x, y, z, a) => new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(x, y, z), a);
+const ISO = axis(1, 0, 0, Math.PI / 6).multiply(axis(0, 1, 0, Math.PI / 4)).multiply(axis(1, 0, 0, -Math.PI / 2));
+const ISO_BOX = (() => {   // the lying phone's box on screen at its most open (rule 03: fit the extreme pose)
+  const v = new THREE.Vector3(), xs = [], ys = [];
+  for (const x of [-W / 2, W / 2]) for (const y of [-H / 2, H / 2]) for (const z of [-D / 2, D / 2 + GAP + GLASS]) { v.set(x, y, z).applyQuaternion(ISO); xs.push(v.x); ys.push(v.y); }
+  const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+  return { w: x1 - x0, h: y1 - y0, cx: (x0 + x1) / 2, cy: (y0 + y1) / 2 };
+})();
+const RINGS = {
+  body: ring(-W / 2, -H / 2, W / 2, H / 2, R, 8),
+  seat: ring(-W / 2 + B, -H / 2 + B, W / 2 - B, H / 2 - B, R - B, 8),   // the crease: where the glass sits
+  glass: ring(-W / 2 + 0.025, -H / 2 + 0.025, W / 2 - 0.025, H / 2 - 0.025, R - 0.025, 8),
+  screen: ring(-SW / 2, -SH / 2, SW / 2, SH / 2, SR, 8),
+};
+
+// the pose of the drawn move at u: the lying phone turns up into the hero's, the field widens and the
+// camera comes in so the phone keeps its size on screen
+function drawnPose(c, u, q, ctx) {
+  const ph = phases(u, { deck: !!ctx.deck, rest: q >= 1 }), e = ph.rise;
+  const settled = Math.max(0, u - DRAWN.rise[0] - DRAWN.rise[1]);
+  const ry = ctx.deck ? 0 : -0.16 + 0.05 * Math.sin(settled * 0.8);
+  c.phone.quaternion.slerpQuaternions(ISO, new THREE.Quaternion().setFromEuler(new THREE.Euler(0.04, ry, 0)), e);
+  c.phone.position.set(-ISO_BOX.cx * (1 - e), -ISO_BOX.cy * (1 - e), 0);
+  const a = c.camera.aspect, vIso = Math.max(ISO_BOX.h / 0.8, ISO_BOX.w / (0.86 * a)), vHero = (H * 1.08) / Math.min(1, a / 0.62);
+  const fov = Math.exp(Math.log(FOV0) + (Math.log(FOV1) - Math.log(FOV0)) * e);
+  const dist = ((vIso + (vHero - vIso) * e) / 2) / Math.tan((fov * Math.PI) / 360);
+  if (c.camera.fov !== fov || c.camera.far !== dist + 30) { c.camera.fov = fov; c.camera.near = Math.max(0.5, dist - 6); c.camera.far = dist + 30; c.camera.updateProjectionMatrix(); }
+  c.camera.position.set(0, 0.05 * e, dist);
+  c.camera.lookAt(0, -0.05 * e, 0);
+  c.floor.material.opacity = 0.28 * Math.min(1, Math.max(0, (e - 0.4) / 0.6));
+  c.glow.material.opacity = 0.75 * e;
+  const base = -0.9 + 1.64 * ph.reveal;   // the sheen crosses the glass with the band, then rests as the hero's
+  c.shine.material.map.offset.x = base + (0.74 + ry * 1.15 - base) * e;
+  return { ph, ry, gap: GAP * (1 - ph.gather) };
+}
+
+// the wire of the page on the screen, as screen-plane shapes in css px of the hidden screen
+function wireOf(holder, c) {
+  const scr = holder.querySelector('[data-screen]');
+  if (!scr) return null;
+  const box = scr.getBoundingClientRect();
+  const shown = [...scr.querySelectorAll('.mm-screen__content')].find((el) => el.style.visibility !== 'hidden');
+  const meta = shown ? contentMeta.get(shown) : null;
+  const own = !!shown?.querySelector('img.mm-screen__media');
+  const bar = c.bar && (c.bar.status === 'true' || (c.bar.status !== 'false' && !own));
+  const inset = bar ? c.bar.inset(true) * box.height : 0;
+  const out = { w: box.width, h: box.height, bar, shapes: [] };
+  const tile = shown?.querySelector('.mm-screen__tile');
+  if (meta?.kind !== 'page' || !Array.isArray(meta.wire) || !tile) return out;
+  const k = box.width / meta.viewport.w, top0 = tile.getBoundingClientRect().top - box.top - meta.tiles[0].y * k;
+  for (const s of meta.wire) {
+    const y = inset + (s.fixed || s.overlay != null ? s.y * k : top0 + s.y * k), h = s.h * k;
+    if (y + h < inset || y > box.height) continue;
+    out.shapes.push({ k: s.k, x: s.x * k, y, w: s.w * k, h, r: (s.r ?? 0) * k });
+  }
+  return out;
+}
+
+// one frame of the drawing, projected with the camera the 3D phone is about to be drawn with
+function drawnLines(c, holder, u, pose) {
+  const cv = linesCanvas(holder);
+  const { ph, gap } = pose;
+  if (ph.reveal >= 1) { cv.style.display = 'none'; return; }
+  cv.style.display = '';
+  c.phone.updateMatrixWorld(true); c.camera.updateMatrixWorld();
+  const M = c.phone.matrixWorld, V = c.camera.matrixWorldInverse, w = cv.width, h = cv.height;
+  const v = new THREE.Vector3(), n = new THREE.Vector3(), to = new THREE.Vector3();
+  const P = (x, y, z) => { v.set(x, y, z).applyMatrix4(M).project(c.camera); return [((v.x + 1) / 2) * w, ((1 - v.y) / 2) * h]; };
+  const sees = (x, y, z, nx, ny, nz) => { v.set(x, y, z).applyMatrix4(M); n.set(nx, ny, nz).transformDirection(M); return n.dot(to.subVectors(c.camera.position, v)) > 0; };
+  const depth = (x, y, z) => v.set(x, y, z).applyMatrix4(M).applyMatrix4(V).z;
+  const lw = Math.max(1, h / 640);
+  const faceZ = (q, z) => sees(q.u, q.v, z, q.nu, q.nv, 0);
+  const at = (r, z) => r.map((q) => P(q.u, q.v, z));
+  const parts = [];
+  const lid = D / 2, zg = lid + gap, zs = zg + GLASS + 0.001;
+
+  // dashed guides from the lifted glass down to its seat: painted first, so every plate hides them
+  const gl = at(RINGS.glass, zs);
+  for (const i of extremes(gl)) {
+    const q = RINGS.glass[i];
+    parts.push({ pts: [P(q.u, q.v, zs), P(q.u, q.v, lid)], role: 'mid', dash: true, s: stroke(u, 0.15, 0.6), alpha: 1 - ph.gather });
+  }
+  // the body and its keys, far to near
+  const solids = [];
+  const body = solid(P, faceZ, RINGS.body, RINGS.seat, -D / 2, lid);
+  solids.push({ z: depth(0, 0, 0), list: [
+    { pts: body.sil, closed: true, role: 'edge', fill: true, s: stroke(u, 0, 1.1) },
+    { pts: body.crease, role: 'lo', s: stroke(u, 0.55, 0.8) },
+  ] });
+  const keys = KEYS[c.model] ?? KEYS.island;
+  for (const [side, list] of [[-1, keys.left], [1, keys.right]]) for (const [a, b] of list) {
+    const y0 = H / 2 - H * b, y1 = H / 2 - H * a, kz = D * 0.21;
+    const kr = ring(y0, -kz, y1, kz, 0.006, 3), x0 = side * W / 2, x1 = side * (W / 2 + 0.011);
+    const Pk = (uu, vv, hh) => P(hh, uu, vv), Fk = (qq, hh) => sees(hh, qq.u, qq.v, 0, qq.nu, qq.nv);
+    const k = solid(Pk, Fk, kr, null, Math.min(x0, x1), Math.max(x0, x1));
+    solids.push({ z: depth(x1, (y0 + y1) / 2, 0), list: [{ pts: k.sil, closed: true, role: 'edge', fill: true, s: stroke(u, 0.85, 0.4) }] });
+  }
+  solids.sort((A, Bz) => A.z - Bz.z).forEach((x) => parts.push(...x.list));
+
+  // the glass: one thin plate (the bright mark until the band takes the bright), its screen edge and island
+  const glass = solid(P, faceZ, RINGS.glass, null, zg, zg + GLASS);
+  parts.push({ pts: glass.sil, closed: true, role: ph.reveal > 0 ? 'edge' : 'hi', fill: true, s: stroke(u, 0.3, 1.0) });
+  const scr = at(RINGS.screen, zs);
+  parts.push({ pts: scr, closed: true, role: 'mid', s: stroke(u, 0.6, 0.8) });
+  const wire = wireOf(holder, c);
+  const bw = wire?.w || 1, bh = wire?.h || 1;
+  const X = (sx) => (sx / bw - 0.5) * SW, Y = (sy) => (0.5 - sy / bh) * SH;
+  const from = (sx, sy) => 1.1 + (Math.hypot(sx / bw - 0.5, sy / bh) / 1.12) * 0.8;   // spread out from the island
+  const shape = (s, role) => {
+    const t0 = from(s.x + s.w / 2, s.y + s.h / 2);
+    if (s.k === 'text') return { pts: [P(X(s.x), Y(s.y + s.h / 2), zs), P(X(s.x + s.w), Y(s.y + s.h / 2), zs)], role, s: stroke(u, t0, 0.35), clip: scr };
+    if (s.k === 'dot') return { pts: at(circ((Math.min(s.w, s.h) / 2 / bw) * SW, 16, X(s.x + s.w / 2), Y(s.y + s.h / 2)), zs), role: 'edge', dot: true, s: stroke(u, t0, 0.3), clip: scr };
+    return { pts: at(ring(X(s.x), Y(s.y + s.h), X(s.x + s.w), Y(s.y), (s.r / bw) * SW, 4), zs), closed: true, role, s: stroke(u, t0, 0.5), clip: scr };
+  };
+  if (c.model === 'island') {
+    const iw = 0.2385 * SW, ih = 0.0431 * SH, iy = SH / 2 - 0.0161 * SH - ih / 2;
+    parts.push({ pts: at(ring(-iw / 2, iy - ih / 2, iw / 2, iy + ih / 2, ih / 2, 6), zs), closed: true, role: 'edge', s: stroke(u, 0.95, 0.35) });
+    parts.push({ pts: at(circ(ih * 0.3, 16, iw * 0.306, iy), zs), role: 'edge', dot: true, s: stroke(u, 1.2, 0.25) });
+  }
+  if (wire?.bar) {   // the status bar: the time, the signal and the battery, as phoneBar places them
+    const by = 0.0377 * bh, u0 = bw / 393;
+    parts.push(shape({ k: 'text', x: 0.205 * bw - 18 * u0, y: by - 6 * u0, w: 36 * u0, h: 12 * u0 }, 'mid'));
+    parts.push(shape({ k: 'text', x: 0.805 * bw - 33 * u0, y: by - 6 * u0, w: 36 * u0, h: 12 * u0 }, 'mid'));
+    parts.push(shape({ k: 'box', x: 0.805 * bw + 9 * u0, y: by - 6 * u0, w: 24 * u0, h: 12 * u0, r: 3.5 * u0 }, 'mid'));
+  }
+  for (const s of wire?.shapes ?? []) parts.push(shape(s, s.k === 'text' && s.h > 20 * (bw / 393) ? 'edge' : 'mid'));
+
+  const ink = {}; for (const r of ['hi', 'edge', 'mid', 'lo', 'plate']) ink[r] = c.ink[r];
+  const reveal = ph.reveal > 0 ? { a: P(0, H / 2, lid), b: P(0, -H / 2, lid), s: -0.12 + 1.12 * ph.reveal, clip: body.sil } : null;
+  if (reveal) reveal.feather = 0.12 * Math.hypot(reveal.b[0] - reveal.a[0], reveal.b[1] - reveal.a[1]);
+  paintLines(cv, { parts, ink, lw, cover: !!reveal, front: reveal });
+  c.canvas.dataset.drawn = ph.rise > 0 ? 'rise' : ph.reveal > 0 ? 'reveal' : ph.gather > 0 ? 'gather' : 'draw';
+}
 const say = (g, text, x, y) => g.fillText(text, x, y);   // the top bar's words: chrome on a declared-media canvas (canvasText)
 
 // the camera on the back, seen when the phone turns: it faces -z, and from behind object +x is on the left
@@ -110,7 +250,8 @@ function build(el, holder, model, kind) {
   lightAll(c);
   c.floor.position.y = -H / 2 - 0.18;
   c.glow.position.set(0, 0.05, -1.6); c.glow.scale.set(2.3, 2.6, 1);
-  Object.assign(c, { kind, phone, shine, backShine, cutout, model, surface: cssText(holder, '--mm-color-surface'), accent: cssText(holder, '--mm-color-accent') });
+  const ink = Object.fromEntries(['hi', 'edge', 'mid', 'lo', 'plate'].map((r) => [r, cssText(holder, `--hl-${r}`)]));
+  Object.assign(c, { kind, phone, shine, backShine, cutout, model, ink, surface: cssText(holder, '--mm-color-surface'), accent: cssText(holder, '--mm-color-accent') });
   cache.set(el, c);
   return c;
 }
@@ -123,7 +264,7 @@ export default {
   canvasText: true,   // the top bar's time, network and menu words are drawn into the screen texture
   ambient: true,   // it keeps turning after it arrives: a move until the scene ends (schedule)
   params: {
-    move: { type: 'enum(hero|turntable|still|showcase|cross)', default: 'hero', meaning: 'hero turns from edge-on to facing and sways; turntable turns slowly the whole time; still holds a slight angle; showcase starts with the back to the viewer and makes a slow half-turn to face it, then holds; cross faces the viewer at `from`, then travels to `to` making one full turn (its back shows half-way)' },
+    move: { type: 'enum(hero|turntable|still|showcase|cross|drawn)', default: 'hero', meaning: 'hero turns from edge-on to facing and sways; turntable turns slowly the whole time; still holds a slight angle; showcase starts with the back to the viewer and makes a slow half-turn to face it, then holds; cross faces the viewer at `from`, then travels to `to` making one full turn (its back shows half-way); drawn draws the phone lying in thin lines, its glass and the page\'s wire lifted on dashed guides, settles the glass, sweeps a band along it that turns the lines into the real phone, then stands it up into the camera (about 6.5 s; screen actions after that)' },
     from: { type: 'number', default: -0.28, meaning: 'cross: where the phone starts, as a fraction of its slot\'s width from the centre (negative is left)' },
     to: { type: 'number', default: 0.28, meaning: 'cross: where it ends, the same way' },
     crossAt: { type: 'number', default: 2, meaning: 'cross: seconds after the phone arrives that the cross begins' },
@@ -144,6 +285,19 @@ export default {
     fitCanvas(c, holder);
     c.bar = { ...phoneBar(model, String(ctx.params?.statusTime ?? '10:00'), getComputedStyle(holder).getPropertyValue('--mm-font-text').trim() || 'sans-serif', say), status: String(ctx.params?.status ?? 'auto') };
     const q = clamp01(p), u = Math.max(0, Number(ctx.u) || 0);
+    if (ctx.params?.move === 'drawn') {
+      const dp = drawnPose(c, u, q, ctx);
+      holder.style.opacity = '1';
+      c.canvas.style.visibility = dp.ph.reveal > 0 ? '' : 'hidden';   // only lines until the band arrives
+      sweep(c.backShine, dp.ry + Math.PI, 0.18);
+      mark(c, dp.ry, { cutout: c.cutout });
+      ctx.afterSettle(() => drawnLines(c, holder, u, dp));
+      if (dp.ph.reveal > 0) draw(c, holder, ctx);
+      return;
+    }
+    if (c.camera.fov !== FOV1) { c.camera.fov = FOV1; c.camera.near = 0.5; c.camera.far = 60; c.camera.updateProjectionMatrix(); }
+    c.canvas.style.visibility = '';
+    holder.querySelector(':scope > canvas.drawn__lines')?.style.setProperty('display', 'none');
     const pose = ctx.params?.move === 'cross' ? cross(q, u, ctx.params, ctx) : null;
     const ry = pose ? pose.ry : turn(ctx.params?.move ?? 'hero', q, u, ctx);
     c.phone.rotation.set(0.06 * (1 - q) + 0.04, ry, 0);

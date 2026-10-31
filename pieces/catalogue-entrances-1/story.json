@@ -5,7 +5,7 @@
   "formats": [
     "16x9"
   ],
-  "title": "Entrances, part 1 of 3",
+  "title": "Entrances, part 1 of 5",
   "language": "en",
   "facts": [
     {
@@ -39,7 +39,7 @@
           "at": 0.4,
           "slot": "sub",
           "fx": "entrances/fade",
-          "text": "How things arrive. Part 1 of 3."
+          "text": "How things arrive. Part 1 of 5."
         }
       ],
       "say": "How things arrive.",
@@ -469,89 +469,9 @@
       ],
       "say": "d: 1.5. A longer fall, the same clean stop.",
       "duration": 3.8
-    },
-    {
-      "id": "pop-a",
-      "layout": "layouts/split",
-      "cut": "transitions/hard-cut",
-      "move": null,
-      "beats": [
-        {
-          "at": 0,
-          "slot": "headline",
-          "fx": "style:headline",
-          "text": "pop",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0.45,
-          "slot": "figure",
-          "fx": "entrances/pop",
-          "text": "Hello"
-        },
-        {
-          "at": 0,
-          "slot": "body",
-          "fx": "style:body",
-          "text": "Grows from 94 per cent to full, never beyond.",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0,
-          "slot": "caption",
-          "fx": "style:body",
-          "text": "entrances/pop",
-          "params": {
-            "instant": true
-          }
-        }
-      ],
-      "say": "pop: Grows from 94 per cent to full, never beyond.",
-      "duration": 4.1
-    },
-    {
-      "id": "pop-b",
-      "layout": "layouts/split",
-      "cut": "transitions/hard-cut",
-      "move": null,
-      "beats": [
-        {
-          "at": 0,
-          "slot": "headline",
-          "fx": "style:headline",
-          "text": "pop",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0.45,
-          "slot": "figure",
-          "fx": "entrances/pop",
-          "text": "Hello",
-          "params": {
-            "from": 0.9
-          }
-        },
-        {
-          "at": 0,
-          "slot": "body",
-          "fx": "style:body",
-          "text": "from: 0.90. Starts smaller, lands the same.",
-          "params": {
-            "instant": true
-          }
-        }
-      ],
-      "say": "from: 0.90. Starts smaller, lands the same.",
-      "duration": 3.4
     }
   ],
-  "share": "Entrances (1/3): fade, blur-fade, ghost-fade, rise, drop, pop. Each one shown, explained, then replayed with a knob turned.",
+  "share": "Entrances (1/5): fade, blur-fade, ghost-fade, rise, drop. Each one shown, explained, then replayed with a knob turned.",
   "cta": {
     "text": "Motion Machine",
     "url": "github.com/tudorjuravlea/motion-machine"

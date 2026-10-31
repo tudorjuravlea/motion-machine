@@ -23,6 +23,23 @@
       { "layout": "layouts/comparison", "move": "moves/morph", "moveParams": { "from": "left", "to": "headline", "start": 0.6, "dur": 2.4 }, "min": 4, "beats": [
         { "at": 0, "slot": "left", "fx": "style:body", "text": "This box", "params": { "instant": true } },
         { "at": 0, "slot": "right", "fx": "style:body", "text": "dur: 2.4. A slower change.", "params": { "instant": true } },
-        { "at": 0.5, "slot": "headline", "fx": "entrances/fade", "text": "That box" } ] } ] }
+        { "at": 0.5, "slot": "headline", "fx": "entrances/fade", "text": "That box" } ] } ] },
+    { "pattern": "moves/shake", "figure": { "text": "Land", "fx": "entrances/slam" }, "how": "the camera jolts on an impact, then is still.", "moveParams": { "hits": "0.7", "amp": 12 },
+      "knob": { "line": "two hits, amp 28, decay 0.6.", "moveParams": { "hits": "0.7, 1.9", "amp": 28, "decay": 0.6 } } },
+    { "pattern": "moves/depth-parallax", "template": "scenes", "scenes": [
+      { "layout": "layouts/media", "move": "moves/depth-parallax", "moveParams": { "path": "dolly-right" }, "min": 5.4, "beats": [
+        { "at": 0, "slot": "image", "fx": "entrances/fade", "asset": "assets/scene/source.png", "params": { "instant": true, "frame": "bleed" } },
+        { "at": 0.4, "slot": "headline", "fx": "entrances/rise", "text": "depth-parallax" },
+        { "at": 1.4, "slot": "caption", "fx": "entrances/fade", "text": "A still becomes a dolly shot; far layers slide and soften." } ] },
+      { "layout": "layouts/media", "move": "moves/depth-parallax", "moveParams": { "path": "push", "amount": 0.2 }, "min": 4.6, "beats": [
+        { "at": 0, "slot": "image", "fx": "entrances/fade", "asset": "assets/scene/source.png", "params": { "instant": true, "frame": "bleed" } },
+        { "at": 0.4, "slot": "headline", "fx": "entrances/rise", "text": "depth-parallax" },
+        { "at": 1.4, "slot": "caption", "fx": "entrances/fade", "text": "path: push, amount: 0.2. Pushes in instead." } ] } ],
+      "assets": [{ "from": "patterns/moves/depth-parallax/demo/assets/scene", "to": "assets/scene" }] },
+    { "pattern": "moves/punch", "lead": true, "footage": "assets/talk/", "template": "scenes", "scenes": [
+      { "layout": "layouts/talking-full", "duration": 8.8, "move": "moves/punch", "moveParams": { "x": 50, "y": 35 }, "beats": [
+        { "at": 0, "slot": "headline", "fx": "entrances/rise", "text": "punch: every other clip moves closer", "params": { "instant": true } },
+        { "at": 0.8, "slot": "caption", "fx": "entrances/rise", "text": "scale 1.15 by default; the eye line never moves." } ] } ],
+      "assets": [{ "from": "patterns/moves/punch/demo/assets/talk", "to": "assets/talk" }, { "from": "patterns/moves/punch/demo/assets/talk.licence.json", "to": "assets/talk.licence.json" }] }
   ]
 }

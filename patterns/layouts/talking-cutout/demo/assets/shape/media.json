@@ -15,6 +15,7 @@
     "frames": 120,
     "from": "masks",
     "median": 3,
-    "feather": 2
+    "feather": 2,
+    "face": "face.json"
   }
 }

@@ -1,0 +1,314 @@
+{
+  "id": "catalogue-data-3",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Data, part 3 of 5",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Illustrative numbers for the catalogue",
+      "source": "catalogue demo numbers, not a claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Data",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Numbers that arrive as a mechanism. Part 3 of 5."
+        }
+      ],
+      "say": "Numbers that arrive as a mechanism.",
+      "duration": 4
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "cycle-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/cycle",
+          "params": {
+            "nodes": "Plan|Make|Check|Learn",
+            "centre": "Repeat",
+            "hero": 1,
+            "dur": "hold"
+          }
+        },
+        {
+          "at": 3.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "cycle: Steps sit on a ring; arcs close it."
+        }
+      ],
+      "say": "cycle: Steps sit on a ring; arcs close it.",
+      "duration": 6.6
+    },
+    {
+      "id": "cycle-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/cycle",
+          "params": {
+            "nodes": "Plan|Make|Check|Learn",
+            "centre": "Repeat",
+            "hero": 3,
+            "dur": "hold",
+            "shape": "disc"
+          }
+        },
+        {
+          "at": 3.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "cycle: shape: disc, hero: 3."
+        }
+      ],
+      "say": "shape: disc, hero: 3.",
+      "duration": 6.6
+    },
+    {
+      "id": "delta-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/delta",
+          "value": 12.4,
+          "fact": "f1",
+          "params": {
+            "fix": 1,
+            "label": "vs last month",
+            "size": "h1"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "delta: A caret and a counting change, named.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "delta: A caret and a counting change, named.",
+      "duration": 4.1
+    },
+    {
+      "id": "delta-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/delta",
+          "value": -8,
+          "fact": "f1",
+          "params": {
+            "fix": 0,
+            "label": "vs last quarter",
+            "size": "h1",
+            "good": "down"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "delta: good: down. A fall is good news.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "good: down. A fall is good news.",
+      "duration": 3.4
+    },
+    {
+      "id": "gauge-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/gauge",
+          "value": 68,
+          "fact": "f1",
+          "params": {
+            "variant": "arc",
+            "size": "h1"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "gauge: A value on a dial, the readout counting.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "gauge: A value on a dial, the readout counting.",
+      "duration": 4.1
+    },
+    {
+      "id": "gauge-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/gauge",
+          "value": 68,
+          "fact": "f1",
+          "params": {
+            "variant": "needle",
+            "size": "h1"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "gauge: variant: needle. A swinging needle.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "variant: needle. A swinging needle.",
+      "duration": 3.4
+    },
+    {
+      "id": "matrix-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/matrix",
+          "params": {
+            "nodes": "Quick wins>Search,Share|Big bets>Sync|Fill-ins>Themes,Tips|Money pits>Plugins",
+            "x": "Effort",
+            "y": "Impact",
+            "hero": 1,
+            "dur": "hold"
+          }
+        },
+        {
+          "at": 3.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "matrix: Four quadrants; items drop in, one leads."
+        }
+      ],
+      "say": "matrix: Four quadrants; items drop in, one leads.",
+      "duration": 6.6
+    },
+    {
+      "id": "matrix-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/matrix",
+          "params": {
+            "nodes": "Quick wins>Search,Share|Big bets>Sync|Fill-ins>Themes,Tips|Money pits>Plugins",
+            "x": "Effort",
+            "y": "Impact",
+            "hero": 2,
+            "dur": "hold",
+            "shape": "square"
+          }
+        },
+        {
+          "at": 3.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "matrix: hero: 2, shape: square."
+        }
+      ],
+      "say": "hero: 2, shape: square.",
+      "duration": 6.6
+    }
+  ],
+  "share": "Data (3/5): cycle, delta, gauge, matrix. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

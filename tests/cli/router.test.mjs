@@ -26,3 +26,18 @@ test('the verb scripts pass their exit codes through', () => {
   assert.equal(mm(['new', '--kind', 'film']).status, 2, 'usage error from new');
   assert.equal(mm(['stills', '/nonexistent-piece']).status, 2, 'usage error from stills');
 });
+
+test('mm sound routes mine and clone to their scripts and leaves `mm sound <piece>` alone', async () => {
+  const { plan } = await import('../../scripts/mm.mjs');
+  assert.deepEqual(plan(['sound', 'mine', 'in', '--out', 'o', '--own']), { script: 'sound-mine.mjs', args: ['in', '--out', 'o', '--own'], label: 'sound mine' });
+  assert.deepEqual(plan(['sound', 'clone', '--profile', 'glass']), { script: 'sound-clone.mjs', args: ['--profile', 'glass'], label: 'sound clone' });
+  assert.deepEqual(plan(['sound', 'pieces/demo-film', '--formats', '16x9']), { script: 'sound.mjs', args: ['pieces/demo-film', '--formats', '16x9'], label: 'sound' });
+  assert.deepEqual(plan(['sound']), { script: 'sound.mjs', args: [], label: 'sound' });
+  assert.deepEqual(plan(['sound', './mine']), { script: 'sound.mjs', args: ['./mine'], label: 'sound' }, 'a piece named mine is reached by path');
+  assert.match(plan(['sound', 'mine', '--help']).help, /--licence/);
+  assert.match(plan(['sound', 'clone', '-h']).help, /--meaning/);
+  const bad = plan(['sound', 'mine', 'in', '--wobble']);
+  assert.equal(bad.code, 2);
+  assert.match(bad.error, /unknown option --wobble/);
+  assert.match(plan(['help']).help, /sound mine/);
+});

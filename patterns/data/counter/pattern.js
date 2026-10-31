@@ -15,6 +15,7 @@ const PARAMS = {
   prefix: { type: 'string', default: '', meaning: 'text before the figure' },
   suffix: { type: 'string', default: '', meaning: 'text after the figure' },
   size: { type: 'enum(display|h1|h2|body|caption)', default: 'h1', meaning: 'the style size role of the figure' },
+  format: { type: 'enum(plain|compact)', default: 'plain', meaning: 'plain writes the whole number; compact writes a scaled unit (14K, 1.2M, 3B, 2T) and `fix` is the decimals of the scaled number' },
   unit: { type: 'enum(land|always)', default: 'land', meaning: 'land: the prefix and suffix keep their place but show only on the landed figure, so no frame reads "1 rules"; always: they count along' },
 };
 const resolve = (ctx) => {
@@ -40,6 +41,7 @@ export default {
       prefix: String(prm.prefix ?? ''),
       suffix: String(prm.suffix ?? ''),
       hold: prm.unit !== 'always',
+      compact: prm.format === 'compact',
     });
   },
 };

@@ -2,6 +2,7 @@
 // kit's count(); the label settles in after it and the delta last. The label is the `label`
 // param, else the slot's own text. p is clamped at 1: the figure never passes the fact.
 import { count } from '../../../runtime/kit/count.js';
+import { glass } from '../../../runtime/kit/surface.js';
 
 const SIZES = ['display', 'h1', 'h2', 'body', 'caption'];
 const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
@@ -17,6 +18,7 @@ const PARAMS = {
   prefix: { type: 'string', default: '', meaning: 'text before the figure' },
   suffix: { type: 'string', default: '', meaning: 'text after the figure' },
   size: { type: 'enum(display|h1|h2|body|caption)', default: 'display', meaning: 'the style size role of the figure' },
+  surface: { type: 'enum(flat|glass)', default: 'flat', meaning: 'flat: the surface role; glass: the brand\'s glass surface (a tint, a blurred backdrop, a hairline, a shine on arrival)' },
 };
 const resolve = (ctx) => {
   const o = {};
@@ -38,6 +40,7 @@ export default {
     const size = SIZES.includes(prm.size) ? prm.size : 'display';
 
     el.classList.add('mm-stat');
+    glass(el, prm.surface);
     el.style.fontSize = `var(--mm-size-${size})`;
     el.style.opacity = String(clamp01(p * 8));
     el.replaceChildren();

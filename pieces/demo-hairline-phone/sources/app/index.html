@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Focus</title>
+<style>
+  @font-face { font-family: Manrope; src: url(../../../../styles/fonts/manrope/manrope-latin-400-normal.woff2) format('woff2'); font-weight: 400; }
+  @font-face { font-family: Manrope; src: url(../../../../styles/fonts/manrope/manrope-latin-700-normal.woff2) format('woff2'); font-weight: 700; }
+  :root { --bg: #F4F1EA; --card: #FFFFFF; --ink: #1F2328; --muted: #7A7F87; --line: #E4E0D6; --green: #2F6F5E; --mint: #CFE4DA; --sun: #E9A23B; --clay: #D9694A; }
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: Manrope, system-ui, sans-serif; background: var(--bg); color: var(--ink); padding: 64px 20px 120px; }
+  .top { display: flex; align-items: center; justify-content: space-between; }
+  .hello small { display: block; color: var(--muted); font-size: 13px; }
+  .hello h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin-top: 2px; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--mint); border: 2px solid var(--card); }
+  .hero { margin-top: 22px; background: var(--green); color: #fff; border-radius: 24px; padding: 20px; }
+  .hero small { opacity: .75; font-size: 13px; }
+  .hero .big { font-size: 40px; font-weight: 700; letter-spacing: -0.03em; margin: 4px 0 14px; }
+  .bars { display: flex; align-items: flex-end; gap: 10px; height: 86px; }
+  .bars i { flex: 1; background: rgba(255,255,255,.28); border-radius: 8px 8px 4px 4px; }
+  .bars i.now { background: #fff; }
+  .days { display: flex; gap: 10px; margin-top: 8px; }
+  .days b { flex: 1; text-align: center; font-size: 11px; font-weight: 400; opacity: .7; }
+  .tiles { display: flex; gap: 12px; margin-top: 12px; }
+  .tile { flex: 1; background: var(--card); border-radius: 20px; padding: 16px; border: 1px solid var(--line); }
+  .tile small { color: var(--muted); font-size: 12px; }
+  .tile .n { font-size: 24px; font-weight: 700; margin: 4px 0 10px; }
+  .meter { height: 8px; border-radius: 4px; background: var(--line); }
+  .meter i { display: block; height: 8px; width: 66%; border-radius: 4px; background: var(--sun); }
+  .dots { display: flex; gap: 5px; }
+  .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--clay); }
+  .dots i.off { background: var(--line); }
+  h2 { font-size: 17px; margin: 26px 0 10px; display: flex; justify-content: space-between; }
+  h2 small { font-size: 13px; color: var(--green); font-weight: 400; }
+  .row { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 18px; padding: 14px; margin-bottom: 10px; border: 1px solid var(--line); }
+  .row .ic { width: 38px; height: 38px; border-radius: 12px; background: var(--mint); flex: none; }
+  .row .ic.s { background: #F6E3C3; } .row .ic.c { background: #F3D2C7; }
+  .row .tx { flex: 1; }
+  .row .tx b { display: block; font-size: 15px; }
+  .row .tx small { color: var(--muted); font-size: 12px; }
+  .row .ck { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line); }
+  .row .ck.on { background: var(--green); border-color: var(--green); }
+  .tabs { position: fixed; left: 16px; right: 16px; bottom: 18px; height: 64px; background: var(--ink); border-radius: 32px; display: flex; align-items: center; justify-content: space-around; padding: 0 18px; }
+  .tabs i { width: 22px; height: 22px; border-radius: 7px; border: 2px solid rgba(255,255,255,.45); }
+  .tabs i.on { background: #fff; border-color: #fff; }
+  .tabs .add { width: 44px; height: 44px; border-radius: 50%; background: var(--sun); border: none; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="hello"><small>Thursday, 30 October</small><h1>Good morning</h1></div>
+    <div class="avatar"></div>
+  </div>
+  <section class="hero" id="focus">
+    <small>Focus this week</small>
+    <div class="big">14h 20m</div>
+    <div class="bars"><i style="height:46%"></i><i style="height:72%"></i><i style="height:58%"></i><i class="now" style="height:92%"></i><i style="height:34%"></i><i style="height:20%"></i><i style="height:12%"></i></div>
+    <div class="days"><b>M</b><b>T</b><b>W</b><b>T</b><b>F</b><b>S</b><b>S</b></div>
+  </section>
+  <div class="tiles">
+    <div class="tile"><small>Tasks done</small><div class="n">8 of 12</div><div class="meter"><i></i></div></div>
+    <div class="tile"><small>Streak</small><div class="n">14 days</div><div class="dots"><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i></div></div>
+  </div>
+  <h2 id="today">Today <small>See all</small></h2>
+  <div class="row" id="deep"><div class="ic"></div><div class="tx"><b>Deep work</b><small>9:00 – 11:00 · 2 h</small></div><div class="ck on"></div></div>
+  <div class="row"><div class="ic s"></div><div class="tx"><b>Design review</b><small>11:30 – 12:15</small></div><div class="ck on"></div></div>
+  <div class="row"><div class="ic c"></div><div class="tx"><b>Lunch walk</b><small>12:30 – 13:15</small></div><div class="ck"></div></div>
+  <div class="row"><div class="ic"></div><div class="tx"><b>Write the brief</b><small>14:00 – 15:30 · 1.5 h</small></div><div class="ck"></div></div>
+  <div class="row"><div class="ic s"></div><div class="tx"><b>Inbox zero</b><small>16:00 – 16:30</small></div><div class="ck"></div></div>
+  <h2 id="week">Next up <small>Plan</small></h2>
+  <div class="row"><div class="ic c"></div><div class="tx"><b>Team sync</b><small>Friday · 10:00</small></div><div class="ck"></div></div>
+  <div class="row"><div class="ic"></div><div class="tx"><b>Long run</b><small>Saturday · 8:00</small></div><div class="ck"></div></div>
+  <nav class="tabs"><i class="on"></i><i></i><span class="add"></span><i></i><i></i></nav>
+</body>
+</html>

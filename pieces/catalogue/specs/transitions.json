@@ -32,6 +32,25 @@
         { "at": 0.9, "slot": "sub", "fx": "entrances/fade", "text": "The name flew here." } ] },
       { "layout": "layouts/split", "cut": "transitions/shared-element", "cutParams": { "fit": "stretch" }, "min": 3, "beats": [
         { "at": 0, "slot": "headline", "fx": "style:headline", "text": "shared-element", "params": { "instant": true } },
-        { "at": 0.9, "slot": "body", "fx": "entrances/fade", "text": "fit: stretch. It fills the target box exactly." } ] } ] }
+        { "at": 0.9, "slot": "body", "fx": "entrances/fade", "text": "fit: stretch. It fills the target box exactly." } ] } ] },
+    { "pattern": "transitions/anticipation", "how": "A short pull back, then the push through.", "knob": { "line": "mode: slide, direction: up.", "cutParams": { "mode": "slide", "direction": "up" } } },
+    { "pattern": "transitions/beam", "how": "A tilted beam of light opens the next scene.", "knob": { "line": "variant: portal. It opens from a point.", "cutParams": { "variant": "portal" } } },
+    { "pattern": "transitions/brush-wipe", "how": "Painted bands sweep across, then drag away.", "knob": { "line": "bands: 8, tilt: -12. Finer, steeper.", "cutParams": { "bands": 8, "tilt": -12 } } },
+    { "pattern": "transitions/cover", "how": "The new scene slides over the old, held still.", "knob": { "line": "side: right, dim: 0.5. A deeper shade.", "cutParams": { "side": "right", "dim": 0.5 } } },
+    { "pattern": "transitions/dissolve-edge", "how": "A noise field dissolves it, its edge burning.", "knob": { "line": "glow: ink, detail: 5. A craggier edge.", "cutParams": { "glow": "ink", "detail": 5 } } },
+    { "pattern": "transitions/flood", "how": "One colour floods the frame, then drains.", "knob": { "line": "color: ink, speed: 1.5. Darker and quicker.", "cutParams": { "color": "ink", "speed": 1.5 } } },
+    { "pattern": "transitions/impact", "how": "The next scene lands as a hit.", "knob": { "line": "strength: 1, hit: 0.2. A harder, earlier hit.", "cutParams": { "strength": 1, "hit": 0.2 } } },
+    { "pattern": "transitions/re-ink", "how": "Pulled again in another set of inks.", "knob": { "line": "inks: accent, side: top.", "cutParams": { "inks": "accent", "side": "top" } } },
+    { "pattern": "transitions/sketch-to-ink", "template": "scenes", "scenes": [
+      { "layout": "layouts/bento-3", "min": 4.4, "beats": [
+        { "at": 0, "slot": "headline", "fx": "style:headline", "text": "sketch-to-ink", "params": { "instant": true } },
+        { "at": 0.5, "slot": "tile-1", "fx": "entrances/sketch", "text": "Plan" },
+        { "at": 1, "slot": "tile-2", "fx": "entrances/sketch", "text": "Track" },
+        { "at": 1.5, "slot": "tile-3", "fx": "entrances/sketch", "text": "Ship" } ] },
+      { "layout": "layouts/bento-3", "cut": "transitions/sketch-to-ink", "min": 4, "beats": [
+        { "at": 0, "slot": "headline", "fx": "style:headline", "text": "sketch-to-ink", "params": { "instant": true } },
+        { "at": 0, "slot": "tile-1", "fx": "style:body", "text": "Plan", "params": { "instant": true } },
+        { "at": 0, "slot": "tile-2", "fx": "style:body", "text": "Track", "params": { "instant": true } },
+        { "at": 0, "slot": "tile-3", "fx": "style:body", "text": "Ship", "params": { "instant": true } } ] } ] }
   ]
 }

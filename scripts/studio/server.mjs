@@ -113,7 +113,7 @@ function readBody(req) {
 function listPatterns(base) {
   const out = {};
   const dirs = (d) => { try { return readdirSync(d, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name).sort(); } catch { return []; } };
-  for (const g of dirs(base)) out[g] = dirs(join(base, g)).filter((p) => existsSync(join(base, g, p, 'pattern.js')) || existsSync(join(base, g, p, 'pattern.html')));
+  for (const g of dirs(base)) out[g] = dirs(join(base, g)).filter((p) => existsSync(join(base, g, p, 'pattern.js')) || existsSync(join(base, g, p, 'pattern.html')) || (g === 'sound' && existsSync(join(base, g, p, 'recipe.json'))));
   return out;
 }
 

@@ -55,12 +55,12 @@
     },
     {
       "id": "f10",
-      "text": "The gate checks 40 rules: 14 errors (G-) and 26 warnings (W-). On pieces/golden-film-kinetic: 34 PASS, 1 WARN, 5 SKIP.",
-      "source": "SPEC.md §7; scripts/check/ (14 G-*.mjs, 26 W-*.mjs); pieces/golden-film-kinetic/out/check.json"
+      "text": "The gate checks 53 rules: 14 errors (G-) and 39 warnings (W-). On pieces/golden-film-kinetic: 40 PASS, 2 WARN, 11 SKIP.",
+      "source": "SPEC.md §7; scripts/check/ (14 G-*.mjs, 39 W-*.mjs); pieces/golden-film-kinetic/out/check.json"
     },
     {
       "id": "f11",
-      "text": "150 patterns in 12 groups: 3d 4, data 11, devices 5, emphasis 14, entrances 24, exits 6, layouts 20, moves 15, screen 8, sound 9, text 12, transitions 22. None carries a brand. The wall shows each one's demo still in this film's style.",
+      "text": "187 patterns in 12 groups: 3d 4, data 23, devices 5, emphasis 16, entrances 26, exits 7, layouts 22, moves 15, screen 8, sound 19, text 16, transitions 26. None carries a brand. The wall shows each one's demo still in this film's style.",
       "source": "node scripts/mm.mjs pattern list; node scripts/pattern-lint.mjs; capture/assets.json library-wall"
     },
     {
@@ -488,7 +488,7 @@
           "at": 0.15,
           "slot": "headline",
           "fx": "style:headline",
-          "text": "40 rules, measured.",
+          "text": "53 rules, measured.",
           "fact": "f10",
           "step": 1
         },
@@ -505,13 +505,13 @@
           "at": 0,
           "slot": "caption",
           "fx": "style:body",
-          "text": "The golden film: 31 pass, 1 warn, 5 skip.",
+          "text": "The golden film: 40 pass, 2 warn, 11 skip.",
           "fact": "f10",
           "step": 2,
           "cue": "tick"
         }
       ],
-      "say": "So the gate can measure instead of judge. 40 rules: 14 errors that stop an export, 26 warnings that advise. This is its real report on the golden film. Click for the totals.",
+      "say": "So the gate can measure instead of judge. 53 rules: 14 errors that stop an export, 39 warnings that advise. This is its real report on the golden film. Click for the totals.",
       "presses": 2
     },
     {
@@ -538,7 +538,7 @@
           "at": 0.3,
           "slot": "headline",
           "fx": "style:headline",
-          "text": "150 patterns. None branded.",
+          "text": "187 patterns. None branded.",
           "fact": "f11",
           "step": 1,
           "cue": "tick"
@@ -553,7 +553,7 @@
           "cue": "tick"
         }
       ],
-      "say": "Underneath sits a library of 150 patterns in 12 groups. Every still on this wall is drawn in this deck's brand, because no pattern carries one of its own.",
+      "say": "Underneath sits a library of 187 patterns in 12 groups. Every still on this wall is drawn in this deck's brand, because no pattern carries one of its own.",
       "presses": 1
     },
     {

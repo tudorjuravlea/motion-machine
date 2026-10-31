@@ -5,9 +5,15 @@
   "formats": [
     "16x9"
   ],
-  "title": "Emphasis, part 1 of 2",
+  "title": "Emphasis, part 1 of 3",
   "language": "en",
-  "facts": [],
+  "facts": [
+    {
+      "id": "f1",
+      "text": "71.5 mm",
+      "source": "catalogue demo number, not a claim"
+    }
+  ],
   "audio": {
     "track": null,
     "bpm": null,
@@ -33,7 +39,7 @@
           "at": 0.4,
           "slot": "sub",
           "fx": "entrances/fade",
-          "text": "Pointing the eye at what is there. Part 1 of 2."
+          "text": "Pointing the eye at what is there. Part 1 of 3."
         }
       ],
       "say": "Pointing the eye at what is there.",
@@ -396,9 +402,177 @@
       ],
       "say": "color: ink, pad: 0.4. Wider, in ink.",
       "duration": 3.5
+    },
+    {
+      "id": "shine-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "shine",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Shine",
+          "emphasis": "emphasis/shine"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "One band of light crosses the text and leaves.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "emphasis/shine",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "shine: One band of light crosses the text and leaves.",
+      "duration": 4.1
+    },
+    {
+      "id": "shine-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "shine",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Shine",
+          "emphasis": "emphasis/shine",
+          "params": {
+            "emphasis": {
+              "width": 40
+            }
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "width: 40. A broader band.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "width: 40. A broader band.",
+      "duration": 3.4
+    },
+    {
+      "id": "spotlight-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "spotlight",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Me",
+          "emphasis": "emphasis/spotlight"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Everything else dims, then the light lets go.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "emphasis/spotlight",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "spotlight: Everything else dims, then the light lets go.",
+      "duration": 4.1
+    },
+    {
+      "id": "spotlight-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "spotlight",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "Me",
+          "emphasis": "emphasis/spotlight",
+          "params": {
+            "emphasis": {
+              "dim": 0.5
+            }
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "dim: 0.5. A gentler dim.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "dim: 0.5. A gentler dim.",
+      "duration": 3.4
     }
   ],
-  "share": "Emphasis (1/2): indicate, circumscribe, brackets, marker-circle. Each one shown, explained, then replayed with a knob turned.",
+  "share": "Emphasis (1/3): indicate, circumscribe, brackets, marker-circle, shine, spotlight. Each one shown, explained, then replayed with a knob turned.",
   "cta": {
     "text": "Motion Machine",
     "url": "github.com/tudorjuravlea/motion-machine"

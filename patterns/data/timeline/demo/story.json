@@ -1,0 +1,60 @@
+{
+  "id": "demo-data-timeline",
+  "kind": "film",
+  "formats": ["9x16", "1x1", "16x9"],
+  "title": "Demo: data/timeline (fictional plan)",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "roadmap",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "data/timeline", "params": { "nodes": "Q1>Research|Q2>Prototype|Q3>Pilot|Q4>Launch", "hero": 4, "dur": "hold" } },
+        { "at": 3.4, "slot": "sub", "fx": "entrances/fade", "text": "A track that draws, then its stops" }
+      ],
+      "say": "A demo of the pattern: the roadmap variant."
+    },
+    {
+      "id": "milestones",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "data/timeline", "params": { "nodes": "Mar>Kickoff|Jun>Beta|Sep>Launch", "variant": "milestones", "hero": 3, "dur": "hold" } },
+        { "at": 3.4, "slot": "sub", "fx": "entrances/fade", "text": "The date is on the track" }
+      ],
+      "say": "The milestones variant."
+    },
+    {
+      "id": "gantt",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "data/timeline", "params": { "nodes": "Research>0-3|Build>2-7|Test>6-9|Launch>9-10", "variant": "gantt", "unit": "Week", "hero": 2, "dur": "hold" } },
+        { "at": 3.4, "slot": "sub", "fx": "entrances/fade", "text": "Bars grow along a time axis" }
+      ],
+      "say": "The gantt variant."
+    },
+    {
+      "id": "stepper",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "data/timeline", "params": { "nodes": "Brief>What and why|Design>Shape the look|Build>Make it work|Ship>Tell the world", "variant": "stepper", "dur": "hold" } },
+        { "at": 3.4, "slot": "sub", "fx": "entrances/fade", "text": "Numbered steps, one after another" }
+      ],
+      "say": "The stepper variant."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

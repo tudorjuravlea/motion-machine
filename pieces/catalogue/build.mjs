@@ -59,7 +59,10 @@ const T = {
       return b;
     };
     const head = stack ? [] : [still('headline', it.name, 'style:headline')];
-    const line = (t) => still(stack ? 'sub' : 'body', stack ? `${it.name}: ${t}` : t);
+    // a mechanism that takes seconds (a ring that closes, a tree that grows) brings its line in after it
+    const line = (t) => (it.lineAt
+      ? { at: it.lineAt, slot: stack ? 'sub' : 'body', fx: 'entrances/fade', text: stack ? `${it.name}: ${t}` : t }
+      : still(stack ? 'sub' : 'body', stack ? `${it.name}: ${t}` : t));
     const path = layout === 'layouts/split' ? [still('caption', it.pattern)] : [];
     const a = fit({ id: `${it.id}-a`, layout, cut: 'transitions/hard-cut', move: null,
       beats: [...head, fig(), line(it.how), ...path], say: `${it.name}: ${it.how}` }, it.minA ?? 4.1);
@@ -104,18 +107,34 @@ const T = {
   },
 };
 
-function intro(fam, part, parts) {
-  const sub = parts > 1 ? `${fam.sub} Part ${part} of ${parts}.` : fam.sub;
+function intro(fam, part, parts, v = {}) {
+  const base = v.sub ?? fam.sub;
+  const sub = parts > 1 && !v.sub ? `${base} Part ${part} of ${parts}.` : base;
   const open = fit({ id: 'intro', layout: 'layouts/statement', position: 'opening', move: null,
-    beats: [{ at: 0, slot: 'headline', fx: 'style:headline', text: fam.title, params: { instant: true } },
+    beats: [{ at: 0, slot: 'headline', fx: 'style:headline', text: v.title ?? fam.title, params: { instant: true } },
       { at: 0.4, slot: 'sub', fx: 'entrances/fade', text: sub }],
-    say: fam.sub }, Math.max(3.6, words(sub) * PER_WORD + 1));
+    say: base }, Math.max(3.6, words(sub) * PER_WORD + 1));
   const how = fit({ id: 'how', layout: 'layouts/statement', cut: 'transitions/hard-cut', move: null,
-    beats: [{ at: 0, slot: 'headline', fx: 'style:headline', text: fam.watch ?? 'Watch twice.', params: { instant: true } },
-      { at: 0.3, slot: 'sub', fx: 'entrances/fade', text: fam.watchSub ?? 'As shipped, then with one knob turned.' }],
+    beats: [{ at: 0, slot: 'headline', fx: 'style:headline', text: v.watch ?? fam.watch ?? 'Watch twice.', params: { instant: true } },
+      { at: 0.3, slot: 'sub', fx: 'entrances/fade', text: v.watchSub ?? fam.watchSub ?? 'As shipped, then with one knob turned.' }],
     say: 'Watch twice.' }, 2.4);
   if (fam.grid) for (const sc of [open, how]) sc.duration = Math.ceil(sc.duration / fam.grid - 1e-6) * fam.grid;
   return [open, how];
+}
+
+/** A style patch laid over a piece's style: objects merge, null removes a key (a variant's own ground or finish). */
+function patchStyle(dir, patch) {
+  const f = join(dir, 'style.json');
+  const style = JSON.parse(readFileSync(f, 'utf8'));
+  const lay = (to, from) => {
+    for (const [k, v] of Object.entries(from)) {
+      if (v === null) delete to[k];
+      else if (v && typeof v === 'object' && !Array.isArray(v) && to[k] && typeof to[k] === 'object') lay(to[k], v);
+      else to[k] = v;
+    }
+  };
+  lay(style, patch);
+  writeFileSync(f, JSON.stringify(style, null, 2) + '\n');
 }
 
 /** A synthetic 120 BPM track (a kick with a click on every beat, accented downbeats, a two-chord pad), then its grid by `mm beats`. */
@@ -139,32 +158,46 @@ async function build(name) {
   const items = fam.items.map((it) => ({ ...it, id: it.id ?? it.pattern.split('/').pop(), name: it.name ?? it.pattern.split('/').pop() }));
   const groups = [];
   for (const it of items) groups.push({ it, scenes: await T[it.template ?? fam.template](it, fam) });
-  // pack patterns into parts of at most MAX_FILM seconds, then even the parts out
   const len = (g) => g.scenes.reduce((a, s) => a + s.duration, 0);
-  const total = groups.reduce((a, g) => a + len(g), 0);
-  // even parts of at most MAX_FILM seconds, intro included; add a part until every one fits
-  const introLen = (n) => intro(fam, n, n).reduce((a, sc) => a + sc.duration, 0);
-  let nParts = Math.max(1, Math.ceil(total / (MAX_FILM - introLen(1)))), parts;
-  for (;; nParts++) {
-    parts = Array.from({ length: nParts }, () => []);
-    let k = 0, acc = 0;
-    const target = total / nParts;
-    for (const g of groups) {
-      if (acc + len(g) / 2 > target * (k + 1) && k < nParts - 1) k++;
-      parts[k].push(g); acc += len(g);
+  // three kinds of part: `variants` (a family whose pieces each wear their own style patch, one part a variant),
+  // `lead` items (footage runs on the film's clock from 0, so such an item is its own part with no intro),
+  // and the rest, packed into even parts of at most MAX_FILM seconds, intro included
+  const parts = [];
+  if (fam.variants) {
+    for (const v of fam.variants) parts.push({ gs: groups.filter((g) => g.it.variant === v.id), v });
+  } else {
+    const body = groups.filter((g) => !g.it.lead);
+    const total = body.reduce((a, g) => a + len(g), 0);
+    const introLen = (n) => intro(fam, n, n).reduce((a, sc) => a + sc.duration, 0);
+    let n = body.length ? Math.max(1, Math.ceil(total / (MAX_FILM - introLen(1)))) : 0, packed = [];
+    // add a part until every one fits
+    for (; body.length; n++) {
+      packed = Array.from({ length: n }, () => []);
+      let k = 0, acc = 0;
+      const target = total / n;
+      for (const g of body) {
+        if (acc + len(g) / 2 > target * (k + 1) && k < n - 1) k++;
+        packed[k].push(g); acc += len(g);
+      }
+      if (packed.every((gs) => gs.reduce((a, g) => a + len(g), 0) + introLen(n) <= MAX_FILM + 1.5)) break;
     }
-    if (parts.every((gs) => gs.reduce((a, g) => a + len(g), 0) + introLen(nParts) <= MAX_FILM + 1.5)) break;
+    for (const gs of packed) parts.push({ gs });
+    for (const g of groups.filter((x) => x.it.lead)) parts.push({ gs: [g], lead: true });
   }
+  const nParts = parts.length;
   const made = [];
-  parts.forEach((gs, i) => {
+  parts.forEach(({ gs, v, lead }, i) => {
     const id = `catalogue-${name}-${i + 1}`;
     const dir = join(ROOT, 'pieces', id);
     if (!existsSync(join(dir, 'style.json'))) { newPiece({ kind: 'film', style: fam.style, dir }); shareFonts(dir); }
-    const scenes = [...intro(fam, i + 1, nParts), ...gs.flatMap((g) => g.scenes)];
+    if (v?.style) patchStyle(dir, v.style);
+    const scenes = [...(lead ? [] : intro(fam, i + 1, nParts, v)), ...gs.flatMap((g) => g.scenes)];
     for (const g of gs) for (const from of g.it.assets ?? []) cpSync(join(ROOT, from.from), join(dir, from.to), { recursive: true });
-    const story = { id, kind: 'film', generator: 'pieces/catalogue/build.mjs', formats: ['16x9'], title: `${fam.title}${nParts > 1 ? `, part ${i + 1} of ${nParts}` : ''}`,
-      language: 'en', facts: fam.facts ?? [], audio: fam.audio ?? { track: null, bpm: null, beats: null }, scenes,
-      share: `${fam.title}${nParts > 1 ? ` (${i + 1}/${nParts})` : ''}: ${gs.map((g) => g.it.name).join(', ')}. Each one shown, explained, then replayed with a knob turned.`.slice(0, 280),
+    const footage = gs.map((g) => g.it.footage).find(Boolean);
+    const title = v?.title ?? fam.title, numbered = nParts > 1 && !v;
+    const story = { id, kind: 'film', generator: 'pieces/catalogue/build.mjs', formats: ['16x9'], title: `${title}${numbered ? `, part ${i + 1} of ${nParts}` : ''}`,
+      language: 'en', facts: fam.facts ?? [], audio: fam.audio ?? { track: null, bpm: null, beats: null }, ...(footage ? { footage: { asset: footage } } : {}), scenes,
+      share: `${title}${numbered ? ` (${i + 1}/${nParts})` : ''}: ${gs.map((g) => g.it.name).join(', ')}. ${v?.share ?? 'Each one shown, explained, then replayed with a knob turned.'}`.slice(0, 280),
       cta: { text: 'Motion Machine', url: 'github.com/tudorjuravlea/motion-machine' } };
     if (fam.music) music(dir, fam.music, scenes.reduce((a, sc) => a + sc.duration, 0));
     writeFileSync(join(dir, 'story.json'), JSON.stringify(story, null, 2) + '\n');

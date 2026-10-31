@@ -1,0 +1,15 @@
+{
+  "name": "warning",
+  "meaning": "something needs a second look: a caution, a risky action, a figure that is not good news and not yet bad",
+  "durationS": 0.6,
+  "layers": [
+    { "kind": "tone", "f": 440, "attackS": 0.002, "t60": 0.38, "peak": 1, "partials": [[1, 0], [3.99, -30]] },
+    { "kind": "tone", "f": 659.25, "attackS": 0.002, "t60": 0.38, "peak": 0.85, "partials": [[1, 0], [3.99, -30]] },
+    { "kind": "tone", "f": 440, "attackS": 0.002, "t60": 0.38, "peak": 0.55, "offsetS": 0.2, "partials": [[1, 0], [3.99, -30]], "from": 1 },
+    { "kind": "tone", "f": 659.25, "attackS": 0.002, "t60": 0.38, "peak": 0.47, "offsetS": 0.2, "partials": [[1, 0], [3.99, -30]], "from": 1 },
+    { "kind": "tone", "f": 880, "attackS": 0.002, "t60": 0.3, "peak": 0.3, "partials": [[1, 0], [3.99, -30]], "from": 2 }
+  ],
+  "room": { "send": -22, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "masterGain": 0.0509,
+  "emphasis": { "subtle": 0, "normal": 1, "strong": 2 }
+}

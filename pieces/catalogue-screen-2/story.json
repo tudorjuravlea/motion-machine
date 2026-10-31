@@ -309,9 +309,84 @@
         }
       ],
       "id": "play-b"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "compare",
+      "layout": "layouts/caption-bar",
+      "duration": 5.6,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/app/",
+          "params": {
+            "size": "large",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/compare",
+              "at": 0.8,
+              "d": 3.6,
+              "params": {
+                "to": "assets/next.png",
+                "stop": 0.5
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "compare: a line travels and shows another screen."
+        }
+      ],
+      "id": "compare-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "compare",
+      "layout": "layouts/caption-bar",
+      "duration": 5.6,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/app/",
+          "params": {
+            "size": "large",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/compare",
+              "at": 0.8,
+              "d": 3.6,
+              "params": {
+                "to": "assets/next.png",
+                "stop": 0.3,
+                "move": 0.6
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "stop 0.3, move 0.6: stops early, travels longer."
+        }
+      ],
+      "id": "compare-b"
     }
   ],
-  "share": "Screen actions (2/2): callout, island, play. Each one shown, explained, then replayed with a knob turned.",
+  "share": "Screen actions (2/2): callout, island, play, compare. Each one shown, explained, then replayed with a knob turned.",
   "cta": {
     "text": "Motion Machine",
     "url": "github.com/tudorjuravlea/motion-machine"

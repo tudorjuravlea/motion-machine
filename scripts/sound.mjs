@@ -13,6 +13,9 @@
 // sparse, peaky cue mix that linear loudnorm cannot bring to the target goes through a second stage
 // (limiter, then linear gain; see mixdown), checked on a trial AAC encode, and the stage is recorded
 // in out/cues.json.
+// A cue is a code pattern (pattern.js) or data (recipe.json, runtime/kit/synth.js): the style's `sound.profile`
+// voices a recipe, a beat's `params.cue` (gain, seed, emphasis) picks its arrangement, and the cue and mix stems
+// are stereo; the lean of the final mix (left minus right, K-weighted) is recorded in out/cues.json for W-MIX.
 // It holds the piece's export lock (scripts/lib/export-lock.mjs) for its run, since it rewrites the
 // MP4s: beside another `mm export` or `mm sound` it exits 2 at once.
 import { spawn } from 'node:child_process';
@@ -26,6 +29,11 @@ import { ExportBusy, holdForExport } from './lib/story-edit.mjs';
 import { patternsBaseOf } from './lib/patterns-base.mjs';
 import { bin, inputOf } from './lib/ffmpeg.mjs';
 import { decodePcm } from './beats.mjs';
+import { decodeStereo as decodeAt } from './lib/audio-decode.mjs';
+import { balanceDb } from './lib/audio-measure.mjs';
+import { loadCueModule, loadProfile } from './lib/sound-profile.mjs';
+import { loadSample, sampleMap, sampleModule, sampleProblems } from './lib/sound-sample.mjs';
+import { paramsOf } from '../runtime/kit/params.js';
 import { schedule as buildSchedule } from '../runtime/kit/schedule.js';
 import { DRIFT_S, beatsOf, cueEvents, cueName, nearest } from './lib/cues.mjs';
 
@@ -45,6 +53,7 @@ const STAGE2_UNDER_LU = 0.5;      // stage 2 runs when stage 1 lands more than t
 const STAGE2_TRIES = 4;
 const STAGE2_MAX_GAIN_DB = 40;
 const TAIL_S = 0.5;
+const VARY_SEEDS = 4;             // a recipe that varies (taps) is rendered with this many seeds in turn
 
 // --------------------------------------------------------------------------------------------
 // process helpers
@@ -115,12 +124,21 @@ export function resolvePatternsBase(dir, explicit) {
   return cands.find((p) => existsSync(join(p, 'sound'))) ?? (explicit ? resolve(explicit) : join(ROOT, 'patterns'));
 }
 
-/** Imports sound pattern modules in Node (they are deterministic and DOM-free): name → module | null. */
-export async function loadCueModules(names, patternsBase) {
+/**
+ * The sound pattern modules of cue names, in Node (they are deterministic and DOM-free): name → module | null.
+ * A cue is pattern.js, or recipe.json drawn by runtime/kit/synth.js; a folder with both plays its code
+ * unless a sound `profile` is given, which asks for the recipe.
+ */
+export async function loadCueModules(names, patternsBase, profile = null, { strict = false, samples = {} } = {}) {
   const out = {};
   for (const n of new Set(names)) {
-    const file = join(patternsBase, 'sound', n, 'pattern.js');
-    try { out[n] = existsSync(file) ? (await import(pathToFileURL(file).href)).default ?? null : null; } catch { out[n] = null; }
+    try {
+      const entry = samples[n];
+      if (entry) {
+        if (!existsSync(entry.file)) throw new Error(`sample ${entry.rel} (cue ${n}) does not exist`);
+        out[n] = sampleModule(n, entry, await loadSample(entry, profile));      // a mapped sample plays in place of the cue's synthesis
+      } else out[n] = await loadCueModule(patternsBase, n, profile);
+    } catch (e) { if (strict) throw e; out[n] = null; }   // strict: a recipe that does not validate is named, not "not found"
   }
   return out;
 }
@@ -180,8 +198,8 @@ export function planCues(cues, beats) {
 // rendering in the page
 
 async function renderInPage(page, serverUrl, patternsRel, items) {
-  const urls = items.map((it) => ({ ...it, url: `${serverUrl}/${patternsRel}/sound/${it.name}/pattern.js` }));
-  const res = await page.evaluate(async ({ items, sr, tail }) => {
+  const jobs = items.map((it) => ({ key: it.key, name: it.name, feel: it.feel, opts: it.opts, recipe: it.recipe ?? null, profile: it.profile ?? null, url: `${serverUrl}/${patternsRel}/sound/${it.name}/pattern.js`, synth: `${serverUrl}/runtime/kit/synth.js` }));
+  const res = await page.evaluate(async ({ jobs, sr, tail }) => {
     const b64 = (f32) => {
       const u8 = new Uint8Array(f32.buffer, f32.byteOffset, f32.byteLength);
       let s = '';
@@ -189,28 +207,34 @@ async function renderInPage(page, serverUrl, patternsRel, items) {
       return btoa(s);
     };
     const out = [];
-    for (const it of items) {
-      const mod = (await import(it.url)).default;
+    for (const it of jobs) {
+      const mod = it.recipe ? (await import(it.synth)).recipeModule(it.recipe, it.profile) : (await import(it.url)).default;
       if (!mod || typeof mod.render !== 'function') throw new Error(`sound pattern ${it.name} has no render(ctx, at, feel)`);
       const durationS = Number(mod.durationS ?? 1);
       const ctx = new OfflineAudioContext(2, Math.ceil((durationS + tail) * sr), sr);
-      mod.render(ctx, 0, it.feel);
+      mod.render(ctx, 0, it.feel, it.opts);
       const buf = await ctx.startRendering();
-      out.push({ name: it.name, durationS, channels: [b64(buf.getChannelData(0)), b64(buf.getChannelData(Math.min(1, buf.numberOfChannels - 1)))] });
+      out.push({ key: it.key, durationS, channels: [b64(buf.getChannelData(0)), b64(buf.getChannelData(Math.min(1, buf.numberOfChannels - 1)))] });
     }
     return out;
-  }, { items: urls, sr: SR, tail: TAIL_S });
-  return Object.fromEntries(res.map((r) => [r.name, {
+  }, { jobs, sr: SR, tail: TAIL_S });
+  return Object.fromEntries(res.map((r) => [r.key, {
     durationS: r.durationS,
     channels: r.channels.map((s) => { const b = Buffer.from(s, 'base64'); return new Float32Array(b.buffer.slice(b.byteOffset, b.byteOffset + b.length)); }),
   }]));
 }
+
+/** Stereo floats of a file, decoded by ffmpeg at the mix's rate: [left, right]. */
+const decodeStereo = (file) => decodeAt(file, SR);
 
 // --------------------------------------------------------------------------------------------
 // the mix
 
 const fit = (D) => `apad=whole_dur=${D},atrim=0:${D},asetpts=N/SR/TB`;
 const AAC = ['-c:a', 'aac', '-b:a', '192k', '-ar', String(SR)];
+// alimiter (attack 5 ms, on the 4x stream) hands its samples back 1120 of that stream late: 280 at SR. The stage-2 chain
+// drops them, so a cue stays on its sample (tests/sound/sync.test.mjs measures the click in the shipped MP4).
+const LIMITER_LATENCY = 280;
 
 /** Two-pass loudnorm of `chain` (a filter graph ending in one unlabelled output) into `out`; linear when the measured peak allows it. */
 async function loudnormTwoPass(args, chain, { target, tp, D, out }) {
@@ -267,7 +291,7 @@ async function mixdown({ inputs, D, target, out }) {
       // Pre-gain until the limited mix sits at least 0.2 LU over the target, so the final gain is a cut (it can only lower peaks).
       let gain = target - s1.inputLufs + 1, lim = null;
       for (let g = 0; g < 6; g++) {
-        await ffmpeg([...args, '-filter_complex', `${base},volume=${gain.toFixed(2)}dB,aresample=${SR * 4},alimiter=limit=${fromDb(ceiling).toFixed(5)}:attack=5:release=80:level=false,aresample=${SR},${fit(D)}[o]`,
+        await ffmpeg([...args, '-filter_complex', `${base},volume=${gain.toFixed(2)}dB,aresample=${SR * 4},alimiter=limit=${fromDb(ceiling).toFixed(5)}:attack=5:release=80:level=false,aresample=${SR},atrim=start_sample=${LIMITER_LATENCY},${fit(D)}[o]`,
           '-map', '[o]', '-ar', String(SR), '-c:a', 'pcm_f32le', pre]);
         lim = await measureLoudness(pre);
         if (lim.lufs >= target + 0.2 || gain >= STAGE2_MAX_GAIN_DB) break;
@@ -315,6 +339,7 @@ export async function buildSound(pieceDir, { formats = null, patterns = null, lo
   if (story.kind === 'deck') return { code: 0, notes: ['decks are not mixed: a deck has no picture clock to mix against (cues play in `mm serve`)'] };
   const out = join(dir, 'out');
   const palette = style.sound?.palette ?? 'none';
+  const profile = style.sound?.profile ? loadProfile(style.sound.profile, dir) : null;   // the sound look the recipe cues are voiced in (a brand's, when composed)
   const target = style.sound?.loudnessLufs ?? -14;
   const trackRel = story.audio?.track ?? null;
   const track = trackRel ? resolve(dir, trackRel) : null;
@@ -326,7 +351,7 @@ export async function buildSound(pieceDir, { formats = null, patterns = null, lo
 
   const videos = mp4sIn(out, formats);
   const patternsBase = resolvePatternsBase(dir, patterns);
-  let sched = null, cuePlanList = [], buffers = {};
+  let sched = null, cuePlanList = [], buffers = {}, mods = null;
 
   if (wantCues) {
     const rel = relative(ROOT, patternsBase).split(sep).join('/');
@@ -343,10 +368,29 @@ export async function buildSound(pieceDir, { formats = null, patterns = null, lo
       if (grid.missing) notes.push(`audio.beats names ${grid.missing} which does not exist: cues are not snapped`);
       cuePlanList = planCues(raw, grid.beats);
       const names = [...new Set(cuePlanList.map((c) => c.name))];
-      const mods = await loadCueModules(names, patternsBase);
+      const samples = sampleMap(story, style, dir);
+      mods = await loadCueModules(names, patternsBase, profile, { strict: true, samples });
+      for (const n of names.filter((x) => samples[x])) for (const p of sampleProblems(samples[n])) notes.push(`sample ${samples[n].rel} (cue ${n}): ${p} (W-SAMPLE-LICENSE will warn)`);
       const missing = names.filter((n) => !mods[n]);
       if (missing.length) throw new Error(`sound pattern(s) not found under ${join(patternsBase, 'sound')}: ${missing.join(', ')}`);
-      buffers = await renderInPage(piece.page, piece.server.url, rel, names.map((name) => ({ name, feel: palette })));
+      // One render per distinct cue and params (gain, seed, emphasis: the pattern's, the brand's, then the beat's). A recipe that
+      // varies (an input cue) rings through four seeds, so a run of taps is not one sample repeated.
+      const times = new Map();
+      for (const c of cuePlanList) {
+        const mod = mods[c.name];
+        const opts = paramsOf(mod, c.params, style);
+        const n = times.get(c.name) ?? 0;
+        times.set(c.name, n + 1);
+        if (mod.recipe?.vary) opts.seed = (Number(opts.seed) + (n % VARY_SEEDS) * 101) >>> 0;
+        c.opts = opts;
+        c.key = `${c.name}|${JSON.stringify(opts)}`;
+      }
+      const variants = [...new Map(cuePlanList.map((c) => [c.key, c])).values()];
+      buffers = await renderInPage(piece.page, piece.server.url, rel, variants.filter((c) => !mods[c.name].sample).map((c) => ({ key: c.key, name: c.name, feel: palette, opts: c.opts, ...(mods[c.name].recipe ? { recipe: mods[c.name].recipe, profile } : {}) })));
+      for (const c of variants.filter((x) => mods[x.name].sample)) {       // a sample is already decoded, trimmed and matched: only the beat's gain is left
+        const g = Number(c.opts.gain ?? 1);
+        buffers[c.key] = { durationS: mods[c.name].durationS, channels: mods[c.name].channels.map((ch) => ch.map((x) => x * g)) };
+      }
     } finally {
       await piece.close();
     }
@@ -368,7 +412,7 @@ export async function buildSound(pieceDir, { formats = null, patterns = null, lo
   // Bed stem at unity first, so its loudness can be matched to the track.
   const bedStem = [new Float32Array(total), new Float32Array(total)];
   const bedRegions = beds.map((c, i) => {
-    const loop = nat.bed, len = Math.max(1, Math.round(loop.durationS * SR));
+    const loop = nat[c.key], len = Math.max(1, Math.round(loop.durationS * SR));
     const sc = sched.scenes.find((s) => s.id === c.scene);
     const until = Math.min(D, i + 1 < beds.length ? beds[i + 1].at : sc?.end ?? D);
     const startS = Math.round(c.at * SR), endS = Math.min(total, Math.round(until * SR));
@@ -388,7 +432,7 @@ export async function buildSound(pieceDir, { formats = null, patterns = null, lo
   }
 
   let bedGain = 0, bedLufs = null;
-  const medianNat = (() => { const a = plain.map((c) => nat[c.name].peakDb).sort((x, y) => x - y); return a.length ? a[a.length >> 1] : null; })();
+  const medianNat = (() => { const a = plain.map((c) => nat[c.key].peakDb).sort((x, y) => x - y); return a.length ? a[a.length >> 1] : null; })();
   if (beds.length) {
     if (trackInfo) {
       writeFileSync(join(stems, 'bed.wav'), floatWav(bedStem));
@@ -401,7 +445,7 @@ export async function buildSound(pieceDir, { formats = null, patterns = null, lo
 
   // Cue gains.
   const cueGainDb = {};
-  const names = [...new Set(plain.map((c) => c.name))];
+  const names = [...new Set(plain.map((c) => c.key))];
   for (const n of names) {
     const p = nat[n].peakDb;
     if (bedPeak != null) cueGainDb[n] = Math.min(Math.max(p, bedPeak + BED_BAND_DB[0] + 0.25), bedPeak + BED_BAND_DB[1] - 0.25) - p;
@@ -409,7 +453,7 @@ export async function buildSound(pieceDir, { formats = null, patterns = null, lo
     else cueGainDb[n] = 0;
   }
   const cueStem = [new Float32Array(total), new Float32Array(total)];
-  for (const c of plain) addInto(cueStem, nat[c.name].channels, c.at, fromDb(cueGainDb[c.name]));
+  for (const c of plain) addInto(cueStem, nat[c.key].channels, c.at, fromDb(cueGainDb[c.key]));
 
   const inputs = [];
   if (track) inputs.push(track);
@@ -425,11 +469,14 @@ export async function buildSound(pieceDir, { formats = null, patterns = null, lo
   else if (Math.abs(last.shippedLufs - target) > TOLERANCE_LU || last.shippedTruePeak > TRUE_PEAK_MAX) {
     notes.push(`mix encodes to ${round(last.shippedLufs, 1)} LUFS / ${round(last.shippedTruePeak, 1)} dBTP against ${target} LUFS / ${TRUE_PEAK_MAX} dBTP after ${mixInfo.attempts.length} attempt(s), last stage ${mixInfo.stage} (W-LOUDNESS will warn)`);
   }
-  const loudnessRecord = { target, stage: mixInfo.stage, lufs: round(loudness.lufs), truePeak: round(loudness.truePeak), attempts: mixInfo.attempts };
+  // How far the stereo mix leans: left minus right, K-weighted energy, dB (W-MIX warns beyond 0.5).
+  const [mixL, mixR] = await decodeStereo(mixPath);
+  const balance = mixInfo.stage === 'silent' ? 0 : balanceDb([mixL, mixR], SR);
+  const loudnessRecord = { target, stage: mixInfo.stage, lufs: round(loudness.lufs), truePeak: round(loudness.truePeak), balanceDb: round(balance, 2), attempts: mixInfo.attempts };
 
   const cuesJson = [
     ...beds.map((c) => ({ name: 'bed', at: round(c.at, 3), until: round(bedRegions.find((r) => r.c === c).until, 3), feel: palette, peakDb: round(bedPeak), snappedFrom: null, driftMs: null })),
-    ...plain.map((c) => ({ name: c.name, at: round(c.at, 3), feel: palette, peakDb: round(nat[c.name].peakDb + cueGainDb[c.name]), snappedFrom: c.snappedFrom == null ? null : round(c.snappedFrom, 3), driftMs: c.driftMs })),
+    ...plain.map((c) => ({ name: c.name, at: round(c.at, 3), feel: palette, ...(mods?.[c.name]?.recipe ? { emphasis: c.opts.emphasis, profile: profile?.name ?? null } : {}), ...(mods?.[c.name]?.sample ? { sample: mods[c.name].sample.rel, profile: profile?.name ?? null } : {}), peakDb: round(nat[c.key].peakDb + cueGainDb[c.key]), snappedFrom: c.snappedFrom == null ? null : round(c.snappedFrom, 3), driftMs: c.driftMs })),
   ].sort((a, b) => a.at - b.at);
   writeFileSync(join(out, 'cues.json'), JSON.stringify({ loudness: loudnessRecord, cues: cuesJson }, null, 2) + '\n');
 

@@ -1,0 +1,36 @@
+{
+  "id": "demo-data-matrix",
+  "kind": "film",
+  "formats": ["9x16", "1x1", "16x9"],
+  "title": "Demo: data/matrix",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "matrix",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "data/matrix", "params": { "nodes": "Quick wins>Search,Share|Big bets>Sync|Fill-ins>Themes,Tips|Money pits>Plugins", "x": "Effort", "y": "Impact", "hero": 1, "dur": "hold" } },
+        { "at": 3.4, "slot": "sub", "fx": "entrances/fade", "text": "Impact against effort, one quadrant leads" }
+      ],
+      "say": "A demo of the pattern."
+    },
+    {
+      "id": "plain",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "data/matrix", "params": { "nodes": "Do>Fix|Plan>Roadmap|Hand off>Admin|Drop>Rumours", "x": "Time", "y": "Value", "shape": "square", "dur": "hold" } },
+        { "at": 3.4, "slot": "sub", "fx": "entrances/fade", "text": "No hero, square corners" }
+      ],
+      "say": "Without a hero."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

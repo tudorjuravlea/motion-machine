@@ -1,0 +1,283 @@
+{
+  "id": "demo-annotate",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: text/annotate",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "tooltip",
+      "layout": "layouts/caption-bar",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Preview"
+        },
+        {
+          "at": 0.6,
+          "slot": "overlay",
+          "fx": "text/annotate",
+          "text": "Tap to open",
+          "params": {
+            "at": "64%,44%",
+            "kind": "tooltip"
+          }
+        },
+        {
+          "at": 1.2,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Marks beside the device."
+        }
+      ],
+      "say": "The tooltip kind."
+    },
+    {
+      "id": "brace",
+      "layout": "layouts/caption-bar",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Preview"
+        },
+        {
+          "at": 0.6,
+          "slot": "overlay",
+          "fx": "text/annotate",
+          "text": "Two minutes",
+          "params": {
+            "at": "18%,72%",
+            "to": "82%,72%",
+            "place": "below",
+            "kind": "brace"
+          }
+        },
+        {
+          "at": 1.2,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Marks beside the device."
+        }
+      ],
+      "say": "The brace kind."
+    },
+    {
+      "id": "measure",
+      "layout": "layouts/caption-bar",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Preview"
+        },
+        {
+          "at": 0.6,
+          "slot": "overlay",
+          "fx": "text/annotate",
+          "text": "128 mm",
+          "params": {
+            "at": "20%,60%",
+            "to": "80%,60%",
+            "kind": "measure"
+          }
+        },
+        {
+          "at": 1.2,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Marks beside the device."
+        }
+      ],
+      "say": "The measure kind."
+    },
+    {
+      "id": "leader",
+      "layout": "layouts/caption-bar",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Preview"
+        },
+        {
+          "at": 0.6,
+          "slot": "overlay",
+          "fx": "text/annotate",
+          "text": "Status line",
+          "params": {
+            "at": "55%,22%",
+            "to": "78%,10%",
+            "kind": "leader"
+          }
+        },
+        {
+          "at": 1.2,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Marks beside the device."
+        }
+      ],
+      "say": "The leader kind."
+    },
+    {
+      "id": "pulse",
+      "layout": "layouts/caption-bar",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Preview"
+        },
+        {
+          "at": 0.6,
+          "slot": "overlay",
+          "fx": "text/annotate",
+          "text": "Live",
+          "params": {
+            "at": "50%,45%",
+            "kind": "pulse"
+          }
+        },
+        {
+          "at": 1.2,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Marks beside the device."
+        }
+      ],
+      "say": "The pulse kind."
+    },
+    {
+      "id": "crosshair",
+      "layout": "layouts/caption-bar",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Preview"
+        },
+        {
+          "at": 0.6,
+          "slot": "overlay",
+          "fx": "text/annotate",
+          "text": "Focus here",
+          "params": {
+            "at": "50%,40%",
+            "kind": "crosshair"
+          }
+        },
+        {
+          "at": 1.2,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Marks beside the device."
+        }
+      ],
+      "say": "The crosshair kind."
+    },
+    {
+      "id": "chip",
+      "layout": "layouts/caption-bar",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Preview"
+        },
+        {
+          "at": 0.6,
+          "slot": "overlay",
+          "fx": "text/annotate",
+          "text": "00:42",
+          "params": {
+            "at": "40%,50%",
+            "kind": "chip"
+          }
+        },
+        {
+          "at": 1.2,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Marks beside the device."
+        }
+      ],
+      "say": "The chip kind."
+    },
+    {
+      "id": "slot",
+      "layout": "layouts/caption-bar",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Preview"
+        },
+        {
+          "at": 0.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "A caption that is measured."
+        },
+        {
+          "at": 0.9,
+          "slot": "overlay",
+          "fx": "text/annotate",
+          "text": "Under it",
+          "params": {
+            "kind": "brace",
+            "at": "caption"
+          }
+        }
+      ],
+      "say": "A brace along a slot's text."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

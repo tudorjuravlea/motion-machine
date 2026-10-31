@@ -86,7 +86,7 @@ faces and consent; for a deck the audience, running time and language. Probe eve
 (`ffprobe -show_streams <file>`; for a film `mm motion capture --from <video> --out
 pieces/<id>/capture/motion.json` gives the shot list and `motion.capture-notes.md`). Screen
 content, only if a scene shows the product in use (ask for its entry, key action and result): record it (simulator or phone) and `mm media
-prep`, or `mm capture site`; a real device's frame: `mm media frame`. A talking-head recording, a still to take apart, a mascot: the cheatsheet's notes. Write the brief summary; the director confirms it.
+prep`, or `mm capture site`; a real device's frame: `mm media frame`. A talking-head recording, a still to take apart, a mascot: the cheatsheet's notes. A picture, clip, music, sound effect, narration or transcript MM does not draw: `mm gen` (it prints a plan and exits 3; show the plan, get the director's yes, then `--yes`; `references/generate.md`). Write the brief summary; the director confirms it.
 
 **Gate 2 · Treatment.** Offer two or three named directions that differ in impact (hook, rhythm, reveal, production value
 such as 3D devices, finishes, music sync) as well as in look. Each: a short paragraph and a beat sheet
@@ -100,7 +100,7 @@ tempo sheet: `mm pattern stills layouts/title-stack --style <piece>/style.json`,
 sheet into `<piece>/out/gate3/` before the next run (where they land: `references/gates.md`). Music: `mm beats <track.wav>
 [--bpm N] --out <piece>/assets/beats.json`, set `audio.beats`, show the section map. Approval of
 style and grid. The brand half sets the composition (align, headline scale, density),
-and may add a `finish` (grain, vignette, paper edge) and `motion.frameHold: 2` (on twos). **Style
+and may add a `finish` (grain, vignette, paper edge, scanlines, chroma, bloom, a named `look`), a `ground` kind and a glass `surface`, and `motion.frameHold: 2` (on twos). **Style
 audition:** for a new look, render the first 10 s in two or three styles and ask the director to choose between them.
 
 **Gate 4 · Style frames.** Finish `story.json` (roles above), building the strongest scene first.
@@ -114,8 +114,8 @@ background; give the director its URL and reuse it to gate 7 (restart only if it
 `who: "studio"` receipts of `<piece>/out/studio/journal.jsonl`, the director's direction: log, never undo (`references/gates.md`).
 
 **Gate 6 · Cut.** Until **lock**, never while the studio exports: `mm check <piece>` (exit 0, or fix or ask the
-director) → `mm export <piece> --prove` → `mm sound <piece>` (cues, bed, loudness, muxed) →
-`mm check <piece>` again (G-PEAK and W-LOUDNESS run on the mux) → `mm review <piece>`. Export is `--sub 1` by
+director) → `mm export <piece> --prove` (it reads each MP4 back) → `mm sound <piece>` (cues, bed, loudness, muxed) →
+`mm check <piece>` again (G-PEAK and W-LOUDNESS run on the mux) → `mm verify-export <mp4>` per format → `mm review <piece>`. Export is `--sub 1` by
 default; above 1 it blends instants into ghosts of fast text and W-SUB warns, so leave it unless the
 story's text barely travels. Every WARN is read; the director accepts it or asks for a fix, in one line in
 the log. Timecoded notes go into the ledger first; each cut is checked against the whole ledger.
@@ -149,10 +149,10 @@ it before the treatment.
 
 The three agnostic modes (SPEC.md §13), recorded in the log. A style is a
 brand half (colour, type, composition) worn with a motion half (tempo, curves, cuts, entrances).
-- **Apply (preset or compose).** `mm new --kind <k> --style editorial|kinetic|calm-product|nocturne-kinetic|spot-mono|print-plates|blueprint --id
+- **Apply (preset or compose).** `mm new --kind <k> --style editorial|kinetic|calm-product|nocturne-kinetic|spot-mono|print-plates|blueprint|obsidian-premium --id
   <id>` for fictional brands (the cheatsheet's "Looks" note says what each look asks of a story); or any brand with any motion: `mm style compose --brand
   <name|path> --motion <name|path> --out <piece>/style.json`. Shipped halves: brands `linen`,
-  `nocturne`, `paper`, `signal`, `greyfield`, `twoplate`, `draftline`; motions `calm`, `kinetic`, `premium`, `grid`, `stop-motion`, `proof`.
+  `nocturne`, `paper`, `signal`, `greyfield`, `twoplate`, `draftline`, `obsidian`; motions `calm`, `kinetic`, `premium`, `grid`, `stop-motion`, `proof`.
 - **Capture.** `mm brand capture --from <url|index.html|figma-export.json|DESIGN.md|folder of stills> --out
   <piece>/capture/<name>.json [--name <name>] [--color role=#hex]` (a typed hex wins; from stills the fonts land in `ask`, and W-ASK
   warns until they are set) and `mm motion capture --from <video> --out <piece>/capture/<name>.json [--name <name>] [--fps N]`;
@@ -240,11 +240,11 @@ audio not heard, names and dates needing a second read, any face, any ban lifted
 
 ## References (read when)
 
-- `references/gates.md`: each gate. `references/archetypes.md`: the treatment.
+- `references/gates.md`: each gate. `references/archetypes.md`: the treatment (incl. stills-first demo, reel).
   `references/beat-sheet.md`: `story.json`. `references/patterns-cheatsheet.md`: any pattern.
-  `references/direction-log.md`, `references/defects-ledger.md`: first entry, director's notes.
-  `references/handover.md`: gate 7. `references/pitfalls.md`: gate 2 and any fail or warning.
-- Repository root, read when named: `references/pacing.md` (holds, reading time),
+  `references/on-brand.md`: gate 3, a param set twice, `mm gen`. `references/handover.md`: gate 7. `references/material.md`: a transcript, caption, file name or captured page.
+  `references/direction-log.md`, `references/defects-ledger.md`: first entry, notes. `references/pitfalls.md`: gate 2, any fail or warning.
+- Repository root, read when named: `references/pacing.md` (holds, reading time, short-form bands, word reveals),
   `references/transitions.md` (cuts), `references/springs.md` (a motion style), `references/sound.md`
-  (cues, loudness), `references/bans.md` (a generic look), `references/principles.md` (H- rules),
+  (cues, loudness, a bed under a voice), `references/bans.md` (a generic look, data restraint), `references/principles.md` (H- rules),
   `references/troubleshooting.md` (flicker), `runtime/kit/README.md` (params), `GUIDE.md` (a tour), `SPEC.md` (grammar).

@@ -42,5 +42,6 @@ Groups and required files (SPEC §5): `entrances`, `exits`, `emphasis`, `transit
 `data`, `sound`, `screen` and `3d` need `pattern.js`; `layouts`, `text`, `data`, `devices` and `3d`
 need `pattern.html`; every visual group needs `pattern.css` (may be empty for a pure-JS entrance)
 and `demo/story.json`; `sound` needs no CSS, HTML or demo story and instead a `demo/cue.json`
-naming `at` instants. A `screen` pattern's `pattern.js` exports `reduce`, not `at` (see
+naming `at` instants, and a `recipe.json` (a cue as data, `contracts/sound-recipe.schema.json`) may stand in for
+`pattern.js`. A `screen` pattern's `pattern.js` exports `reduce`, not `at` (see
 runtime/kit/README.md); a `3d` pattern builds its scene with `runtime/kit/device3d.js`.

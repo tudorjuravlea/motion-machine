@@ -5,7 +5,7 @@
   "formats": [
     "16x9"
   ],
-  "title": "Exits",
+  "title": "Exits, part 1 of 2",
   "language": "en",
   "facts": [],
   "audio": {
@@ -33,7 +33,7 @@
           "at": 0.4,
           "slot": "sub",
           "fx": "entrances/fade",
-          "text": "How things leave."
+          "text": "How things leave. Part 1 of 2."
         }
       ],
       "say": "How things leave.",
@@ -402,7 +402,7 @@
       "duration": 3.4
     }
   ],
-  "share": "Exits: fade-out, blur-out, drop-out, push-out. Each one shown, explained, then replayed with a knob turned.",
+  "share": "Exits (1/2): fade-out, blur-out, drop-out, push-out. Each one shown, explained, then replayed with a knob turned.",
   "cta": {
     "text": "Motion Machine",
     "url": "github.com/tudorjuravlea/motion-machine"

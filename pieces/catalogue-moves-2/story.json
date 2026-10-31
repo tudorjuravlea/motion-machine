@@ -5,7 +5,7 @@
   "formats": [
     "16x9"
   ],
-  "title": "Camera moves, part 2 of 2",
+  "title": "Camera moves, part 2 of 4",
   "language": "en",
   "facts": [],
   "audio": {
@@ -33,7 +33,7 @@
           "at": 0.4,
           "slot": "sub",
           "fx": "entrances/fade",
-          "text": "The camera, not the content, moves. Part 2 of 2."
+          "text": "The camera, not the content, moves. Part 2 of 4."
         }
       ],
       "say": "The camera, not the content, moves.",
@@ -63,6 +63,97 @@
       ],
       "say": "Watch twice.",
       "duration": 3.05
+    },
+    {
+      "id": "pull-back-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": "moves/pull-back",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "pull-back",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Frame",
+          "params": {}
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Starts close, then settles back to the full frame.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "moves/pull-back",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Starts close, then settles back to the full frame.",
+      "duration": 4.2
+    },
+    {
+      "id": "pull-back-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": "moves/pull-back",
+      "moveParams": {
+        "from": 1.3
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "pull-back",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/pop",
+          "text": "Frame",
+          "params": {}
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "from: 1.3. It starts closer.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "moves/pull-back",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "from: 1.3. It starts closer.",
+      "duration": 3.8
     },
     {
       "id": "reframe-a",
@@ -387,167 +478,9 @@
       ],
       "say": "tilt 3, float 40 px.",
       "duration": 3.8
-    },
-    {
-      "id": "explode-layers-a",
-      "layout": "layouts/bento-3",
-      "cut": "transitions/hard-cut",
-      "move": "moves/explode-layers",
-      "beats": [
-        {
-          "at": 0,
-          "slot": "headline",
-          "fx": "style:headline",
-          "text": "explode-layers: the layers part in depth, then fold flat.",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0.3,
-          "slot": "tile-1",
-          "fx": "entrances/pop",
-          "text": "near"
-        },
-        {
-          "at": 0.44999999999999996,
-          "slot": "tile-2",
-          "fx": "entrances/pop",
-          "text": "middle"
-        },
-        {
-          "at": 0.6,
-          "slot": "tile-3",
-          "fx": "entrances/pop",
-          "text": "far"
-        }
-      ],
-      "say": "the layers part in depth, then fold flat.",
-      "duration": 4.3
-    },
-    {
-      "id": "explode-layers-b",
-      "layout": "layouts/bento-3",
-      "cut": "transitions/hard-cut",
-      "move": "moves/explode-layers",
-      "moveParams": {
-        "tilt": 35,
-        "gap": 500
-      },
-      "beats": [
-        {
-          "at": 0,
-          "slot": "headline",
-          "fx": "style:headline",
-          "text": "explode-layers: tilt 35, gap 500.",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0.3,
-          "slot": "tile-1",
-          "fx": "entrances/pop",
-          "text": "near"
-        },
-        {
-          "at": 0.44999999999999996,
-          "slot": "tile-2",
-          "fx": "entrances/pop",
-          "text": "middle"
-        },
-        {
-          "at": 0.6,
-          "slot": "tile-3",
-          "fx": "entrances/pop",
-          "text": "far"
-        }
-      ],
-      "say": "tilt 35, gap 500.",
-      "duration": 4.3
-    },
-    {
-      "cut": "transitions/hard-cut",
-      "move": "moves/morph",
-      "say": "morph",
-      "layout": "layouts/comparison",
-      "moveParams": {
-        "from": "left",
-        "to": "headline",
-        "start": 1,
-        "dur": 1.2
-      },
-      "beats": [
-        {
-          "at": 0,
-          "slot": "left",
-          "fx": "style:body",
-          "text": "This box",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0,
-          "slot": "right",
-          "fx": "style:body",
-          "text": "morph: one box travels and becomes another.",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0.9,
-          "slot": "headline",
-          "fx": "entrances/fade",
-          "text": "That box"
-        }
-      ],
-      "id": "morph-a",
-      "duration": 4.25
-    },
-    {
-      "cut": "transitions/hard-cut",
-      "move": "moves/morph",
-      "say": "morph",
-      "layout": "layouts/comparison",
-      "moveParams": {
-        "from": "left",
-        "to": "headline",
-        "start": 0.6,
-        "dur": 2.4
-      },
-      "beats": [
-        {
-          "at": 0,
-          "slot": "left",
-          "fx": "style:body",
-          "text": "This box",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0,
-          "slot": "right",
-          "fx": "style:body",
-          "text": "dur: 2.4. A slower change.",
-          "params": {
-            "instant": true
-          }
-        },
-        {
-          "at": 0.5,
-          "slot": "headline",
-          "fx": "entrances/fade",
-          "text": "That box"
-        }
-      ],
-      "id": "morph-b",
-      "duration": 4
     }
   ],
-  "share": "Camera moves (2/2): reframe, orbit, rack-focus, hero-drift, explode-layers, morph. Each one shown, explained, then replayed with a knob turned.",
+  "share": "Camera moves (2/4): pull-back, reframe, orbit, rack-focus, hero-drift. Each one shown, explained, then replayed with a knob turned.",
   "cta": {
     "text": "Motion Machine",
     "url": "github.com/tudorjuravlea/motion-machine"

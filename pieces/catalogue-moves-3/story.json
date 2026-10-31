@@ -1,0 +1,399 @@
+{
+  "id": "catalogue-moves-3",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Camera moves, part 3 of 4",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Camera moves",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "The camera, not the content, moves. Part 3 of 4."
+        }
+      ],
+      "say": "The camera, not the content, moves.",
+      "duration": 4.05
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "explode-layers-a",
+      "layout": "layouts/bento-3",
+      "cut": "transitions/hard-cut",
+      "move": "moves/explode-layers",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "explode-layers: the layers part in depth, then fold flat.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "tile-1",
+          "fx": "entrances/pop",
+          "text": "near"
+        },
+        {
+          "at": 0.44999999999999996,
+          "slot": "tile-2",
+          "fx": "entrances/pop",
+          "text": "middle"
+        },
+        {
+          "at": 0.6,
+          "slot": "tile-3",
+          "fx": "entrances/pop",
+          "text": "far"
+        }
+      ],
+      "say": "the layers part in depth, then fold flat.",
+      "duration": 4.3
+    },
+    {
+      "id": "explode-layers-b",
+      "layout": "layouts/bento-3",
+      "cut": "transitions/hard-cut",
+      "move": "moves/explode-layers",
+      "moveParams": {
+        "tilt": 35,
+        "gap": 500
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "explode-layers: tilt 35, gap 500.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "tile-1",
+          "fx": "entrances/pop",
+          "text": "near"
+        },
+        {
+          "at": 0.44999999999999996,
+          "slot": "tile-2",
+          "fx": "entrances/pop",
+          "text": "middle"
+        },
+        {
+          "at": 0.6,
+          "slot": "tile-3",
+          "fx": "entrances/pop",
+          "text": "far"
+        }
+      ],
+      "say": "tilt 35, gap 500.",
+      "duration": 4.3
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": "moves/morph",
+      "say": "morph",
+      "layout": "layouts/comparison",
+      "moveParams": {
+        "from": "left",
+        "to": "headline",
+        "start": 1,
+        "dur": 1.2
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "left",
+          "fx": "style:body",
+          "text": "This box",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "right",
+          "fx": "style:body",
+          "text": "morph: one box travels and becomes another.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.9,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "That box"
+        }
+      ],
+      "id": "morph-a",
+      "duration": 4.25
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": "moves/morph",
+      "say": "morph",
+      "layout": "layouts/comparison",
+      "moveParams": {
+        "from": "left",
+        "to": "headline",
+        "start": 0.6,
+        "dur": 2.4
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "left",
+          "fx": "style:body",
+          "text": "This box",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "right",
+          "fx": "style:body",
+          "text": "dur: 2.4. A slower change.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "That box"
+        }
+      ],
+      "id": "morph-b",
+      "duration": 4
+    },
+    {
+      "id": "shake-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": "moves/shake",
+      "moveParams": {
+        "hits": "0.7",
+        "amp": 12
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "shake",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/slam",
+          "text": "Land",
+          "params": {}
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "the camera jolts on an impact, then is still.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "moves/shake",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "the camera jolts on an impact, then is still.",
+      "duration": 4.2
+    },
+    {
+      "id": "shake-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": "moves/shake",
+      "moveParams": {
+        "hits": "0.7, 1.9",
+        "amp": 28,
+        "decay": 0.6
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "shake",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "entrances/slam",
+          "text": "Land",
+          "params": {}
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "two hits, amp 28, decay 0.6.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "moves/shake",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "two hits, amp 28, decay 0.6.",
+      "duration": 3.8
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": "moves/depth-parallax",
+      "say": "depth-parallax",
+      "layout": "layouts/media",
+      "moveParams": {
+        "path": "dolly-right"
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "image",
+          "fx": "entrances/fade",
+          "asset": "assets/scene/source.png",
+          "params": {
+            "instant": true,
+            "frame": "bleed"
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "depth-parallax"
+        },
+        {
+          "at": 1.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "A still becomes a dolly shot; far layers slide and soften."
+        }
+      ],
+      "id": "depth-parallax-a",
+      "duration": 5.4
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": "moves/depth-parallax",
+      "say": "depth-parallax",
+      "layout": "layouts/media",
+      "moveParams": {
+        "path": "push",
+        "amount": 0.2
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "image",
+          "fx": "entrances/fade",
+          "asset": "assets/scene/source.png",
+          "params": {
+            "instant": true,
+            "frame": "bleed"
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "depth-parallax"
+        },
+        {
+          "at": 1.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "path: push, amount: 0.2. Pushes in instead."
+        }
+      ],
+      "id": "depth-parallax-b",
+      "duration": 4.6
+    }
+  ],
+  "share": "Camera moves (3/4): explode-layers, morph, shake, depth-parallax. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

@@ -1,0 +1,51 @@
+/* text/annotate: the marks. The module writes geometry and amounts; the look is here. The area is
+   the overlay slot itself, so the mark covers it and lets the picture show through. */
+.mm-an {
+  --mm-an-tone: var(--mm-color-accent);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.mm-an[data-tone="ink"] { --mm-an-tone: var(--mm-color-ink); }
+.mm-an[data-tone="muted"] { --mm-an-tone: var(--mm-color-muted); }
+.mm-an__svg { position: absolute; left: 0; top: 0; overflow: visible; }
+.mm-an__line {
+  fill: none;
+  stroke: var(--mm-an-tone);
+  stroke-width: var(--mm-an-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.mm-an__ring { fill: none; stroke: var(--mm-an-tone); stroke-width: var(--mm-an-stroke); }
+.mm-an__fill { fill: var(--mm-an-tone); stroke: none; }
+.mm-an__surface { fill: var(--mm-color-surface); stroke: var(--mm-an-tone); stroke-width: var(--mm-an-stroke); stroke-linejoin: round; }
+.mm-an__label {
+  position: absolute;
+  box-sizing: border-box;
+  white-space: nowrap;
+  padding: var(--mm-space-2) var(--mm-space-3);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-surface);
+  color: var(--mm-color-surfaceInk);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.2;
+}
+.mm-an__label[hidden] { display: none; }
+.mm-an[data-face="mono"] .mm-an__label {
+  font-family: var(--mm-font-mono);
+  font-weight: var(--mm-weight-mono);
+  letter-spacing: var(--mm-tracking-mono);
+  font-variant-numeric: tabular-nums;
+}
+.mm-an[data-kind="tooltip"] .mm-an__label { border: var(--mm-an-stroke) solid var(--mm-an-tone); }
+/* a measure's value sits on the line, so the plate has no edge of its own */
+.mm-an[data-kind="measure"] .mm-an__label, .mm-an[data-kind="brace"] .mm-an__label { padding-block: var(--mm-space-1); }
+/* a chip is a keycap: a thin edge all round and a thicker one under it */
+.mm-an[data-kind="chip"] .mm-an__label {
+  border: var(--mm-an-stroke) solid var(--mm-color-line);
+  border-bottom-width: calc(var(--mm-an-stroke) * 3);
+  border-radius: var(--mm-radius-1);
+}

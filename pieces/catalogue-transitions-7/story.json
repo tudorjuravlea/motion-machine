@@ -1,0 +1,474 @@
+{
+  "id": "catalogue-transitions-7",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Transitions, part 7 of 7",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Transitions",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "How one scene hands over. Part 7 of 7."
+        }
+      ],
+      "say": "How one scene hands over.",
+      "duration": 3.7
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch three times.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "A card, the cut as shipped, then one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 4.25
+    },
+    {
+      "id": "flood-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "flood",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "One colour floods the frame, then drains.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/flood",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "One colour floods the frame, then drains.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.6
+    },
+    {
+      "id": "flood-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 1.42,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "flood"
+        },
+        {
+          "at": 1.54,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 1.66,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/flood",
+      "duration": 4.12
+    },
+    {
+      "id": "flood-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 1.42,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "flood"
+        },
+        {
+          "at": 1.54,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 1.66,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "color: ink, speed: 1.5. Darker and quicker."
+        }
+      ],
+      "say": "color: ink, speed: 1.5. Darker and quicker.",
+      "cut": "transitions/flood",
+      "cutParams": {
+        "color": "ink",
+        "speed": 1.5
+      },
+      "duration": 4.41
+    },
+    {
+      "id": "impact-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "impact",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "The next scene lands as a hit.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/impact",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "The next scene lands as a hit.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.6
+    },
+    {
+      "id": "impact-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "impact"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/impact",
+      "duration": 3.34
+    },
+    {
+      "id": "impact-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "impact"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "strength: 1, hit: 0.2. A harder, earlier hit."
+        }
+      ],
+      "say": "strength: 1, hit: 0.2. A harder, earlier hit.",
+      "cut": "transitions/impact",
+      "cutParams": {
+        "strength": 1,
+        "hit": 0.2
+      },
+      "duration": 3.93
+    },
+    {
+      "id": "re-ink-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "re-ink",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Pulled again in another set of inks.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/re-ink",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Pulled again in another set of inks.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.6
+    },
+    {
+      "id": "re-ink-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 1.12,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "re-ink"
+        },
+        {
+          "at": 1.24,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 1.36,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/re-ink",
+      "duration": 3.82
+    },
+    {
+      "id": "re-ink-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 1.12,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "re-ink"
+        },
+        {
+          "at": 1.24,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 1.36,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "inks: accent, side: top."
+        }
+      ],
+      "say": "inks: accent, side: top.",
+      "cut": "transitions/re-ink",
+      "cutParams": {
+        "inks": "accent",
+        "side": "top"
+      },
+      "duration": 3.82
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "sketch-to-ink",
+      "layout": "layouts/bento-3",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "sketch-to-ink",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "tile-1",
+          "fx": "entrances/sketch",
+          "text": "Plan"
+        },
+        {
+          "at": 1,
+          "slot": "tile-2",
+          "fx": "entrances/sketch",
+          "text": "Track"
+        },
+        {
+          "at": 1.5,
+          "slot": "tile-3",
+          "fx": "entrances/sketch",
+          "text": "Ship"
+        }
+      ],
+      "id": "sketch-to-ink-a",
+      "duration": 4.4
+    },
+    {
+      "cut": "transitions/sketch-to-ink",
+      "move": null,
+      "say": "sketch-to-ink",
+      "layout": "layouts/bento-3",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "sketch-to-ink",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-1",
+          "fx": "style:body",
+          "text": "Plan",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-2",
+          "fx": "style:body",
+          "text": "Track",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-3",
+          "fx": "style:body",
+          "text": "Ship",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "id": "sketch-to-ink-b",
+      "duration": 4
+    }
+  ],
+  "share": "Transitions (7/7): flood, impact, re-ink, sketch-to-ink. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

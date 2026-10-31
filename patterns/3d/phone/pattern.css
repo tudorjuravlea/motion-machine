@@ -12,3 +12,12 @@
   border-radius: 12% / 5.4%;
 }
 .phone3d__screen .mm-screen { visibility: hidden; }
+/* drawn: the thin lines over the phone, in the hairline roles, all from the palette */
+.phone3d {
+  --hl-hi: var(--mm-color-ink);
+  --hl-edge: color-mix(in srgb, var(--mm-color-ink) 62%, transparent);
+  --hl-mid: color-mix(in srgb, var(--mm-color-ink) 42%, transparent);
+  --hl-lo: color-mix(in srgb, var(--mm-color-ink) 24%, transparent);
+  --hl-plate: var(--mm-color-canvas);
+}
+.drawn__lines { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }

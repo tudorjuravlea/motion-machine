@@ -51,3 +51,44 @@ test('a deck rest shows the phone facing the viewer', async () => {
     assert.ok(Math.abs(c.ry) < 1e-6, `rotation at rest ${c.ry}`);
   } finally { await o.close(); }
 });
+
+// drawn: lines first, the 3D phone hidden behind them; a band reveals the phone; then it stands up
+const drawnState = (page) => page.evaluate(() => {
+  const c = document.querySelector('[data-scene="drawn"] canvas[data-3d]'), l = document.querySelector('[data-scene="drawn"] canvas.drawn__lines');
+  let ink = 0;
+  if (l && l.style.display !== 'none') {
+    const d = l.getContext('2d').getImageData(0, 0, l.width, l.height).data;
+    for (let i = 3; i < d.length; i += 4 * 7) if (d[i] > 0) ink++;
+  }
+  return { phase: c?.dataset.drawn ?? null, shown: c?.style.visibility !== 'hidden', lines: !!l && l.style.display !== 'none', ink, ry: Number(c?.dataset.ry) };
+});
+
+test('drawn: the phone is lines alone, then the band reveals it, then it stands facing the viewer', async () => {
+  const o = await open('phone3d-drawn', '16x9');
+  try {
+    const t0 = startOf((await o.mm.meta()).schedule, 'drawn');
+    await o.mm.seek(t0 + 1.8);
+    let s = await drawnState(o.page);
+    assert.equal(s.phase, 'draw');
+    assert.ok(s.lines && s.ink > 200, `no lines drawn (${s.ink})`);
+    assert.equal(s.shown, false, 'the 3D phone shows before the band');
+    await o.mm.seek(t0 + 3.9);
+    s = await drawnState(o.page);
+    assert.equal(s.phase, 'reveal');
+    assert.ok(s.lines && s.shown, 'during the band both the lines and the phone show');
+    await o.mm.seek(t0 + 7.5);
+    s = await drawnState(o.page);
+    assert.equal(s.lines, false, 'the lines are gone once the phone stands');
+    assert.ok(Math.abs(s.ry + 0.16) < 0.06, `the phone rests near its hero angle (${s.ry})`);
+  } finally { await o.close(); }
+});
+
+test('drawn: the same t gives the same pixels in any seek order, lines and band included', async () => {
+  const o = await open('phone3d-drawn', '16x9'), f = await open('phone3d-drawn', '16x9');
+  try {
+    const t = startOf((await o.mm.meta()).schedule, 'drawn') + 3.85;
+    await framePng(o.page, t + 2); await framePng(o.page, t - 2.5);
+    const a = await framePng(o.page, t), b = await framePng(f.page, t);
+    assert.ok(a.equals(b), 'the drawn frame depends on the seek before it');
+  } finally { await o.close(); await f.close(); }
+});

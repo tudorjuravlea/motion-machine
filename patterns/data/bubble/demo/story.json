@@ -1,0 +1,86 @@
+{
+  "id": "demo-data-bubble",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "data/bubble demo",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo figure for data/bubble",
+      "source": "demo fixture, an invented figure that carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "big",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/bubble",
+          "fact": "f1",
+          "value": 480,
+          "params": {
+            "ref": 12,
+            "refLabel": "one pilot site",
+            "suffix": " sites"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Sites running the programme"
+        }
+      ],
+      "say": "One circle whose area is the value, beside a reference unit."
+    },
+    {
+      "id": "wide",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/bubble",
+          "fact": "f1",
+          "value": 90000,
+          "params": {
+            "ref": 1,
+            "refLabel": "one site",
+            "format": "compact",
+            "tone": "ink"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Readings a day"
+        }
+      ],
+      "say": "A ratio too wide to draw to scale says so."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

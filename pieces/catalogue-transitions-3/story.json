@@ -5,7 +5,7 @@
   "formats": [
     "16x9"
   ],
-  "title": "Transitions, part 3 of 5",
+  "title": "Transitions, part 3 of 7",
   "language": "en",
   "facts": [],
   "audio": {
@@ -33,7 +33,7 @@
           "at": 0.4,
           "slot": "sub",
           "fx": "entrances/fade",
-          "text": "How one scene hands over. Part 3 of 5."
+          "text": "How one scene hands over. Part 3 of 7."
         }
       ],
       "say": "How one scene hands over.",
@@ -379,9 +379,114 @@
         "direction": "counter"
       },
       "duration": 3.34
+    },
+    {
+      "id": "split-a",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "split",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "style:figure",
+          "text": "A",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Opens from a seam through the middle, like doors.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "transitions/split",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Opens from a seam through the middle, like doors.",
+      "cut": "transitions/hard-cut",
+      "duration": 3.65
+    },
+    {
+      "id": "split-b",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "split"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "B"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "At its defaults."
+        }
+      ],
+      "say": "At its defaults.",
+      "cut": "transitions/split",
+      "duration": 3.34
+    },
+    {
+      "id": "split-c",
+      "layout": "layouts/split",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.64,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "split"
+        },
+        {
+          "at": 0.76,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "C"
+        },
+        {
+          "at": 0.88,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "shape: vertical. A straight seam."
+        }
+      ],
+      "say": "shape: vertical. A straight seam.",
+      "cut": "transitions/split",
+      "cutParams": {
+        "shape": "vertical"
+      },
+      "duration": 3.34
     }
   ],
-  "share": "Transitions (3/5): whip-pan, iris, clock-wipe. Each one shown, explained, then replayed with a knob turned.",
+  "share": "Transitions (3/7): whip-pan, iris, clock-wipe, split. Each one shown, explained, then replayed with a knob turned.",
   "cta": {
     "text": "Motion Machine",
     "url": "github.com/tudorjuravlea/motion-machine"

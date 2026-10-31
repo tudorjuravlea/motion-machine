@@ -1,0 +1,88 @@
+{
+  "id": "demo-data-waterfall",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "data/waterfall demo",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo figure for data/waterfall",
+      "source": "demo fixture, an invented figure that carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "walk",
+      "layout": "layouts/title-stack",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/waterfall",
+          "fact": "f1",
+          "value": 128,
+          "params": {
+            "values": "100,45,-30,25,-12",
+            "labels": "Start,New,Lost,Upsell,Churn",
+            "prefix": "$",
+            "suffix": "K",
+            "total": "Total",
+            "size": "body"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Monthly revenue, in thousands"
+        }
+      ],
+      "say": "A start, four changes and the total they leave."
+    },
+    {
+      "id": "neg",
+      "layout": "layouts/title-stack",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/waterfall",
+          "fact": "f1",
+          "params": {
+            "values": "20,-50,35",
+            "labels": "Cash,Spend,Raise",
+            "tone": "ink",
+            "glow": false
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Cash through the year"
+        }
+      ],
+      "say": "A walk that dips below zero and ends in the ink role."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

@@ -32,10 +32,10 @@ rm -rf tour/golden/out
 node scripts/mm.mjs check tour/golden
 ```
 
-The gate runs 40 rules and prints one line each: `PASS`, `FAIL`, `WARN` or `SKIP` (a rule that
+The gate runs 53 rules and prints one line each: `PASS`, `FAIL`, `WARN` or `SKIP` (a rule that
 could not run says so; it never passes silently). Fourteen rules are hard: they guard what breaks a
 piece or the brand, a `FAIL` makes the check exit 1, and `mm export` refuses the piece. The other
-26 advise on craft: a `WARN` never changes the exit code and never blocks an export. A report is
+39 advise on craft: a `WARN` never changes the exit code and never blocks an export. A report is
 written to `tour/golden/out/check.json`. This piece exits 0 and prints two warnings:
 
 ```
@@ -51,6 +51,21 @@ brief needs every line it has left, and kinetic (5–10) passes the same story".
 want gone is a fix instead: cut a line, move an arrival. Either way the warning is read first.
 [tests/golden/accepted-warnings.md](tests/golden/accepted-warnings.md) lists the ones the golden
 pieces keep, with the reason for each.
+
+Seven of the advisory rules read the picture and the story the way an editor would:
+
+- W-ANCHOR: a beat with `anchor: "a spoken phrase"` arrives from 1.8 s before to 0.2 s after that word in the footage or voice words, and the warning names the `at` that fixes it.
+- W-POP: one frame in the middle of a motion that differs from both its neighbours, which match each other.
+- W-DEADSTOP: a motion that makes its whole change in one frame and then waits, or two motions of one element stitched with a stop between them.
+- W-FOCUS: two beats lit in the accent at once at a rest, or a finished text left between 5 % and 50 % visible.
+- W-TOKENS: more than 4 stroke widths, 5 font sizes or 3 corner radii across the rests: a few values reused read as designed.
+- W-SEAM: an exit and the next scene's entrance that travel in opposed directions, or at speeds more than 5 % apart.
+- W-LOOP: a story's declared `loops` (a question posed in one scene, answered in another): at most two open at once, each closed before the call to action.
+- W-SAMEBOX: more than half of the scenes put their content in the same boxes (every scene the same card), or two neighbouring scenes of one layout differ in text only.
+- W-PALETTE: with a `sound.profile` set, a cue the piece plays is off it in register, attack, length for its family, level or peak (recipes, samples and code cues are all measured).
+- W-SAMPLE-LICENSE: a sound file mapped to a cue (`sound.samples`, `audio.samples`) is missing, or has no record beside it naming its source, licence and author.
+
+One more advisory rule reads the assets, not the picture. W-ASSET-LICENSE warns for a still, recording, captured page, imported or generated clip or sound the story uses that has no `assets/<name>.licence.json` (where it came from and under what licence), or whose licence is outside own, generated, CC0, CC-BY and public domain; `mm gen` and `mm capture site` write the record, `licences.accepted` in the story is the person's yes, and `mm credits <piece>` lists the credits to put on an end card. `mm gen` also keeps a cache: the same request twice is one paid call, and a replay (`--again`) is planned first and needs a later `--yes`.
 
 **Break 1: a colour the brand does not own.** The style file is the only look, so a piece's CSS
 holds `--mm-*` variables and nothing else. Paint the scene's camera magenta:

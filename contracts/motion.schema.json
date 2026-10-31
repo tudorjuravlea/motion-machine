@@ -64,7 +64,9 @@
         "palette":      { "type": "string", "enum": ["soft-ui", "percussive", "cinematic", "none"] },
         "bpm":          { "type": "integer", "minimum": 50, "maximum": 200 },
         "loudnessLufs": { "type": "number", "minimum": -24, "maximum": -9 },
-        "cuesPer10s":   { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "integer", "minimum": 0, "maximum": 12 } }
+        "cuesPer10s":   { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "integer", "minimum": 0, "maximum": 12 } },
+        "profile":      { "type": "string", "minLength": 1, "maxLength": 200, "description": "the sound profile (contracts/sound-profile.schema.json) the cues are voiced in and measured against: a name in styles/sound/ or a path to a profile file. The brand half may set it too, and then it wins, so a brand chooses its sound once" },
+        "samples":      { "type": "object", "maxProperties": 40, "propertyNames": { "pattern": "^[a-z][a-z0-9-]{0,30}$" }, "additionalProperties": { "type": "string", "pattern": "^(?!https?:)[^\\s]+\\.(wav|mp3|m4a|flac|ogg)$" }, "description": "cue name -> a sound file in the piece (assets/sounds/x.wav) that `mm sound` mixes in place of the cue's synthesis: trimmed and gain-matched to the profile's level. The cue must still exist under patterns/sound/ (the live preview plays it). Every file needs a record beside it, assets/sounds/x.json (contracts/sound-sample.schema.json): W-SAMPLE-LICENSE. A story's `audio.samples` wins over this" }
       }
     },
     "transitions": {
@@ -122,6 +124,33 @@
             "sentenceS": { "type": "number", "exclusiveMinimum": 0, "maximum": 10, "description": "the least seconds a longer line holds settled (it also needs perWordS per word)" }
           }
         },
+        "anchor": {
+          "type": "object", "additionalProperties": false,
+          "description": "W-ANCHOR: how far a beat may arrive before and after the first word it names, in seconds",
+          "properties": {
+            "earlyS": { "type": "number", "minimum": 0, "maximum": 10, "description": "the most a beat may arrive before its word" },
+            "lateS":  { "type": "number", "minimum": 0, "maximum": 10, "description": "the most a beat may arrive after its word" }
+          }
+        },
+        "tokens": {
+          "type": "object", "additionalProperties": false,
+          "description": "W-TOKENS: the most distinct values a piece may use of each kind at its rests",
+          "properties": {
+            "strokes": { "type": "integer", "minimum": 1, "maximum": 40, "description": "stroke and border widths" },
+            "sizes":   { "type": "integer", "minimum": 1, "maximum": 40, "description": "font sizes" },
+            "radii":   { "type": "integer", "minimum": 1, "maximum": 40, "description": "corner radii" }
+          }
+        },
+        "sameBox": {
+          "type": "object", "additionalProperties": false,
+          "description": "W-SAMEBOX: how many scenes may share one box signature, and from how many scenes the rule reads",
+          "properties": {
+            "share":     { "type": "number", "minimum": 0, "maximum": 1, "description": "the share of scenes that may carry one signature before the rule warns (more than this)" },
+            "minScenes": { "type": "integer", "minimum": 2, "maximum": 40, "description": "the fewest scenes at a rest the rule reads" },
+            "quant":     { "type": "number", "exclusiveMinimum": 0, "maximum": 0.5, "description": "the grid, as a share of the frame, that a box is snapped to" }
+          }
+        },
+        "seamPct": { "type": "number", "minimum": 0, "maximum": 100, "description": "W-SEAM: how far apart, in percent, an exit's speed and the next entrance's speed across a cut may be" },
         "liftBans": {
           "type": "array", "uniqueItems": true,
           "description": "looks W-BAN stops warning about for this style, by name; only the three W-BAN detects can be lifted, and the brand's own `bans` and `allow` stay as they are",

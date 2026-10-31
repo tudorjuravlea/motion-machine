@@ -5,7 +5,7 @@
   "formats": [
     "16x9"
   ],
-  "title": "Data, part 2 of 2",
+  "title": "Data, part 2 of 5",
   "language": "en",
   "facts": [
     {
@@ -39,7 +39,7 @@
           "at": 0.4,
           "slot": "sub",
           "fx": "entrances/fade",
-          "text": "Numbers that arrive as a mechanism. Part 2 of 2."
+          "text": "Numbers that arrive as a mechanism. Part 2 of 5."
         }
       ],
       "say": "Numbers that arrive as a mechanism.",
@@ -69,65 +69,6 @@
       ],
       "say": "Watch twice.",
       "duration": 3.05
-    },
-    {
-      "id": "bar-to-line-a",
-      "layout": "layouts/title-stack",
-      "cut": "transitions/hard-cut",
-      "move": null,
-      "beats": [
-        {
-          "at": 0.2,
-          "slot": "headline",
-          "fx": "data/bar-to-line",
-          "fact": "f1",
-          "params": {
-            "values": "32,48,41,67,82",
-            "labels": "Jan,Feb,Mar,Apr,May"
-          }
-        },
-        {
-          "at": 0,
-          "slot": "sub",
-          "fx": "style:body",
-          "text": "bar-to-line: Bars shrink to dots, and a line joins them.",
-          "params": {
-            "instant": true
-          }
-        }
-      ],
-      "say": "bar-to-line: Bars shrink to dots, and a line joins them.",
-      "duration": 4.2
-    },
-    {
-      "id": "bar-to-line-b",
-      "layout": "layouts/title-stack",
-      "cut": "transitions/hard-cut",
-      "move": null,
-      "beats": [
-        {
-          "at": 0.2,
-          "slot": "headline",
-          "fx": "data/bar-to-line",
-          "fact": "f1",
-          "params": {
-            "values": "32,48,41,67,82",
-            "labels": "Jan,Feb,Mar,Apr,May",
-            "max": 120
-          }
-        },
-        {
-          "at": 0,
-          "slot": "sub",
-          "fx": "style:body",
-          "text": "bar-to-line: max: 120. The same trend with headroom.",
-          "params": {
-            "instant": true
-          }
-        }
-      ],
-      "say": "max: 120. The same trend with headroom.",
-      "duration": 4
     },
     {
       "id": "line-draw-a",
@@ -364,9 +305,71 @@
       ],
       "say": "delta: -4%. The chip shows a drop.",
       "duration": 3.4
+    },
+    {
+      "id": "bubble-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/bubble",
+          "value": 480,
+          "fact": "f1",
+          "params": {
+            "ref": 12,
+            "refLabel": "one pilot site",
+            "suffix": " sites"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "bubble: A circle whose area is the value, beside a unit.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "bubble: A circle whose area is the value, beside a unit.",
+      "duration": 4.1
+    },
+    {
+      "id": "bubble-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/bubble",
+          "value": 480,
+          "fact": "f1",
+          "params": {
+            "ref": 60,
+            "refLabel": "one regional hub",
+            "suffix": " sites"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "bubble: ref: 60. A larger unit to compare with.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "ref: 60. A larger unit to compare with.",
+      "duration": 3.4
     }
   ],
-  "share": "Data (2/2): bar-to-line, line-draw, funnel, flow, stat-tile. Each one shown, explained, then replayed with a knob turned.",
+  "share": "Data (2/5): line-draw, funnel, flow, stat-tile, bubble. Each one shown, explained, then replayed with a knob turned.",
   "cta": {
     "text": "Motion Machine",
     "url": "github.com/tudorjuravlea/motion-machine"

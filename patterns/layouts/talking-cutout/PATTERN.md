@@ -21,8 +21,12 @@ The speaker, cut out of their recording by its person matte, stands in the brand
 | `lines` | number (beat param of `backdrop`) | 1 | the lines the backdrop is sized for, 1 or 2: set 2 for two words to stack them (each then smaller) |
 | `headline` | slot (text) | none | a line on a canvas plate above the caption, at h2 times `--mm-headline-scale`; removed when it has no beat |
 | `caption` | slot (text) | none | a line a step over body size (1.25) on a canvas plate at the foot of the frame; `text/caption-karaoke` with `mode: words` puts the spoken words here; removed when it has no beat |
+| `panel` | slot (a tile or a picture) | none | as on `layouts/talking-full`: the region the speaker leaves in a frame mode other than `hero`; removed when it has no beat |
+| `frame` | scene field | the brand's `frame`, or `panelFrame` for a scene with a panel beat | `hero` (the cut-out stands on the frame's foot as above), `side`, `inset`, `bottom`, `hidden`, as on `layouts/talking-full`; the cut-out's mask follows the box; the backdrop words belong to `hero` and are not drawn in the other modes |
 | `speaker` | markup | the story's `footage` | not a slot: an `<img data-footage data-footage-matte data-media data-keep>` the kit points at the frame the edit maps `t` to, masked by that frame's person matte |
 | `data-format` | html attribute | set by the kit | the speaker box stands on the frame's foot: the full width and 62 % of the height in 9x16, 72 % in 1x1, 66 % in 4x5; in 16x9 the whole recording at two thirds of the frame's width, centred; the head's top is taken to be 6 % of the box under its top; in 16x9 the plates stand in the lower left |
+
+Brand knobs: frame, panelFrame, side, corner, sideSize, insetSize, bottomSize, drift, face (under `style.patterns["layouts/talking-cutout"]`, as on `layouts/talking-full`).
 
 ## Style variables consumed
 - `--mm-color-accent`
@@ -52,6 +56,8 @@ The speaker, cut out of their recording by its person matte, stands in the brand
 - The matte was smoothed when it was written (`mm footage matte`: a 3-frame temporal median and a feather), so the edge neither flickers from frame to frame nor reads as cut with scissors.
 - The speaker box stands on the frame's foot and the recording covers it, so the body leaves through the bottom edge as it leaves the recording's; a box no wider than 16:9 shows the whole height of a wide recording, so the head is never cropped.
 - Headline and caption are ink on canvas plates, so their contrast is the brand's whatever the speaker wears.
+
+- The face-safe zone is as on `layouts/talking-full`: the matte's head (`face.json`, written by `mm footage matte`), padded, in `--mm-face-*`; the headline, the caption and the panel's tile stand clear of it, and a caption that spans a cut moves to the new shot's place.
 
 ## Provenance
 original

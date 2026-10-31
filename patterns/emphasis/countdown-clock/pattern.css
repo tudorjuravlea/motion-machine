@@ -1,0 +1,41 @@
+/* emphasis/countdown-clock: the clock face and the stripe band, both children of the slot that
+   pattern.js writes only while the window runs. One palette role (--mm-cd-ink) carries every line
+   and tint; the stripes sit behind the slot's text (the slot is made a stacking context). */
+.mm-countdown {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  --mm-cd-ink: var(--mm-color-accent);
+}
+.mm-countdown--ink { --mm-cd-ink: var(--mm-color-ink); }
+.mm-countdown--muted { --mm-cd-ink: var(--mm-color-muted); }
+.mm-countdown__band {
+  position: absolute;
+  inset: calc(var(--mm-space-3) * -1) calc(var(--mm-space-4) * -1);
+  border-radius: var(--mm-radius-1);
+  background-image: repeating-linear-gradient(-45deg,
+    color-mix(in srgb, var(--mm-cd-ink) 22%, transparent) 0,
+    color-mix(in srgb, var(--mm-cd-ink) 22%, transparent) var(--mm-space-3),
+    transparent var(--mm-space-3),
+    transparent calc(var(--mm-space-3) * 2));
+}
+.mm-countdown__clock {
+  position: absolute;
+  overflow: visible;
+  max-width: none;
+}
+.mm-countdown__clock[data-place="above"] { bottom: calc(100% + var(--mm-space-3)); }
+.mm-countdown__clock[data-place="below"] { top: calc(100% + var(--mm-space-3)); }
+.mm-countdown__clock[data-align="start"] { left: 0; }
+.mm-countdown__clock[data-align="center"] { left: 50%; }
+.mm-countdown__face,
+.mm-countdown__tick,
+.mm-countdown__hand {
+  fill: none;
+  stroke: var(--mm-cd-ink);
+  stroke-linecap: round;
+}
+.mm-countdown__face { fill: color-mix(in srgb, var(--mm-color-canvas) 80%, transparent); }
+.mm-countdown__sweep { fill: color-mix(in srgb, var(--mm-cd-ink) 24%, transparent); stroke: none; }
+.mm-countdown__pin { fill: var(--mm-cd-ink); }

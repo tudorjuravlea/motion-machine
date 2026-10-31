@@ -5,7 +5,7 @@
   "formats": [
     "16x9"
   ],
-  "title": "Data, part 1 of 2",
+  "title": "Data, part 1 of 5",
   "language": "en",
   "facts": [
     {
@@ -39,7 +39,7 @@
           "at": 0.4,
           "slot": "sub",
           "fx": "entrances/fade",
-          "text": "Numbers that arrive as a mechanism. Part 1 of 2."
+          "text": "Numbers that arrive as a mechanism. Part 1 of 5."
         }
       ],
       "say": "Numbers that arrive as a mechanism.",
@@ -361,9 +361,68 @@
       ],
       "say": "focus: 0. Every bar in the accent.",
       "duration": 3.4
+    },
+    {
+      "id": "bar-to-line-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/bar-to-line",
+          "fact": "f1",
+          "params": {
+            "values": "32,48,41,67,82",
+            "labels": "Jan,Feb,Mar,Apr,May"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "bar-to-line: Bars shrink to dots, and a line joins them.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "bar-to-line: Bars shrink to dots, and a line joins them.",
+      "duration": 4.2
+    },
+    {
+      "id": "bar-to-line-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/bar-to-line",
+          "fact": "f1",
+          "params": {
+            "values": "32,48,41,67,82",
+            "labels": "Jan,Feb,Mar,Apr,May",
+            "max": 120
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "bar-to-line: max: 120. The same trend with headroom.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "max: 120. The same trend with headroom.",
+      "duration": 4
     }
   ],
-  "share": "Data (1/2): counter, odometer, ring, fill-bar, bar-grow. Each one shown, explained, then replayed with a knob turned.",
+  "share": "Data (1/5): counter, odometer, ring, fill-bar, bar-grow, bar-to-line. Each one shown, explained, then replayed with a knob turned.",
   "cta": {
     "text": "Motion Machine",
     "url": "github.com/tudorjuravlea/motion-machine"

@@ -21,6 +21,7 @@ The catalogue of cuts the grammar knows. Durations are seconds at calm, medium a
 | grid-dissolve | not offered | 0.4-0.5 | 0.25-0.4 | topic change | digital, pixelated |
 | flip | 0.7-1.0 | 0.6 | 0.4 | topic change | light-hearted and tactile |
 | light-leak | 0.6-0.8 | 0.5 | 0.3 | opening, climax, wind-down | glowing and filmic |
+| beam | 0.8-1.0 | 0.5-0.6 | 0.3 | opening, climax | light opens the next scene: a sweeping beam, curtains, a portal from a point or an anamorphic streak, in one palette role |
 | whip-pan | not offered | 0.3-0.4 | 0.2 | related, topic change | a fast swing |
 | shared-element | 0.6 | 0.5 | 0.4 | related | one object carried across |
 | flood | 1.3 | 1.3 | 1.3 | topic change, climax | a brand colour pours out of one element and drains into the next, or comes to rest on the dot of an i or a round element; the frame is fully covered at the swap |

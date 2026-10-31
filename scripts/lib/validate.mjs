@@ -12,12 +12,16 @@ export function validators() {
   const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true });
   addFormats(ajv);
   const brandS = schema('brand'), motionS = schema('motion'), styleS = schema('style'), storyS = schema('story'), opsS = schema('edit-ops');
-  ajv.addSchema(brandS).addSchema(motionS).addSchema(styleS).addSchema(storyS).addSchema(opsS);
+  const recipeS = schema('sound-recipe'), profileS = schema('sound-profile'), sampleS = schema('sound-sample');
+  ajv.addSchema(brandS).addSchema(motionS).addSchema(styleS).addSchema(storyS).addSchema(opsS).addSchema(recipeS).addSchema(profileS).addSchema(sampleS);
   return {
     brand: ajv.getSchema(brandS.$id),
     motion: ajv.getSchema(motionS.$id),
     style: ajv.getSchema(styleS.$id),
     story: ajv.getSchema(storyS.$id),
     editOps: ajv.getSchema(opsS.$id),
+    soundRecipe: ajv.getSchema(recipeS.$id),
+    soundProfile: ajv.getSchema(profileS.$id),
+    soundSample: ajv.getSchema(sampleS.$id),
   };
 }

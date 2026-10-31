@@ -1,0 +1,14 @@
+{
+  "name": "soft-ui",
+  "description": "Fitted to the soft-ui palette of the code cues (rounded sine taps, gentle air): pure sines, short notes, a small dark room, quieter than glass. Recipes written for glass lose their inharmonic partials here.",
+  "register": { "maxCentreHz": 2500, "minHz": 70, "tones": "sine" },
+  "key": ["C", "D", "E", "G", "A"],
+  "envelope": {
+    "attackS": [0.002, 0.008],
+    "t60": { "input": [0.01, 0.04], "surface": [0.08, 0.2], "outcome": [0.15, 0.35] }
+  },
+  "modes": "none",
+  "loudness": { "cueLufs100ms": -32, "tolDb": 1.5, "peakDbfs": -13 },
+  "room": { "send": -26, "predelayS": 0.006, "sizeS": 0.15, "lowpassHz": 2800 },
+  "stereo": { "sideMidDb": -28 }
+}

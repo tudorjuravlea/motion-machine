@@ -18,7 +18,8 @@ for (const format of ['9x16', '16x9', '4x5']) {
     const failed = report.rules.filter((x) => x.status === 'FAIL').map((x) => `${x.id}: ${JSON.stringify(x.evidence).slice(0, 240)}`);
     assert.equal(r.status, 0, failed.join('\n') || r.stdout + r.stderr);
     const warned = report.rules.filter((x) => x.status === 'WARN').map((x) => x.id);
-    assert.deepEqual(warned, ['W-AMBIENT'], JSON.stringify(report.rules.filter((x) => x.status === 'WARN').map((x) => [x.id, x.evidence?.reason])));
+    // W-TOKENS: the 16x9 layouts draw six font sizes for a reel of looks; the narrow formats draw five
+    assert.deepEqual(warned, format === '16x9' ? ['W-AMBIENT', 'W-TOKENS'] : ['W-AMBIENT'], JSON.stringify(report.rules.filter((x) => x.status === 'WARN').map((x) => [x.id, x.evidence?.reason])));
     assert.equal(report.rules.find((x) => x.id === 'W-AMBIENT').evidence.scenes.map((s) => s.scene).join(), 'layers');
   });
 }

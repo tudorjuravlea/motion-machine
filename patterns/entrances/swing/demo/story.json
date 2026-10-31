@@ -1,0 +1,91 @@
+{
+  "id": "demo-entrances-swing",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "entrances/swing demo",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo figure for entrances/swing",
+      "source": "demo fixture, an invented figure that carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "tag",
+      "layout": "layouts/object-card",
+      "duration": 4.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "object",
+          "fx": "entrances/swing",
+          "params": {
+            "variant": "tag"
+          }
+        },
+        {
+          "at": 0.8,
+          "slot": "label",
+          "fx": "entrances/fade",
+          "text": "Now"
+        },
+        {
+          "at": 1,
+          "slot": "figure",
+          "fx": "data/counter",
+          "fact": "f1",
+          "value": 24,
+          "params": {
+            "prefix": "$",
+            "size": "display"
+          }
+        }
+      ],
+      "say": "A tag on its cord swings in and hangs still."
+    },
+    {
+      "id": "sign",
+      "layout": "layouts/title-stack",
+      "duration": 4.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/swing",
+          "text": "Open now",
+          "params": {
+            "pivot": "left",
+            "angle": 8,
+            "swings": 1
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Hung on a hinge, then still"
+        }
+      ],
+      "say": "A sign swings from its left edge."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

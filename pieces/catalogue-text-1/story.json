@@ -5,7 +5,7 @@
   "formats": [
     "16x9"
   ],
-  "title": "Text, part 1 of 2",
+  "title": "Text, part 1 of 3",
   "language": "en",
   "facts": [],
   "audio": {
@@ -33,7 +33,7 @@
           "at": 0.4,
           "slot": "sub",
           "fx": "entrances/fade",
-          "text": "Type that moves as it lands. Part 1 of 2."
+          "text": "Type that moves as it lands. Part 1 of 3."
         }
       ],
       "say": "Type that moves as it lands.",
@@ -466,9 +466,89 @@
       ],
       "say": "stroke: accent. The tracing line in colour.",
       "duration": 3.4
+    },
+    {
+      "id": "highlight-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "highlight",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/highlight",
+          "text": "Marked"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "A marker sweeps behind the words as they fade in.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "text/highlight",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "highlight: A marker sweeps behind the words as they fade in.",
+      "duration": 4.4
+    },
+    {
+      "id": "highlight-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "highlight",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/highlight",
+          "text": "Marked",
+          "params": {
+            "strength": 0.15
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "strength: 0.15. A fainter marker.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "strength: 0.15. A fainter marker.",
+      "duration": 3.4
     }
   ],
-  "share": "Text (1/2): caption-karaoke, date-flip, elastic, fit-headline, handwrite. Each one shown, explained, then replayed with a knob turned.",
+  "share": "Text (1/3): caption-karaoke, date-flip, elastic, fit-headline, handwrite, highlight. Each one shown, explained, then replayed with a knob turned.",
   "cta": {
     "text": "Motion Machine",
     "url": "github.com/tudorjuravlea/motion-machine"

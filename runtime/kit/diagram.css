@@ -1,0 +1,59 @@
+/* diagram.css: the look the structure diagrams share (runtime/kit/diagram.js). Every colour is a
+   palette role, every size a style role; the brand knobs arrive as --dg-* variables on the root,
+   each one a palette role or a unitless share (see lookVars). A pattern's own css imports this and
+   gives its stage a height. */
+.mm-dg {
+  display: block;
+  width: calc((var(--mm-frame-w) - 2 * var(--mm-safe)) * 0.94);
+  max-width: 100%;
+  font-family: var(--dg-face, var(--mm-font-text));
+  font-weight: var(--dg-weight, var(--mm-weight-text));
+  letter-spacing: var(--dg-tracking, var(--mm-tracking-text));
+  font-size: var(--mm-size-body);
+  line-height: 1.15;
+  text-align: center;
+  text-transform: none;
+  color: var(--mm-color-ink);
+}
+.mm-dg__stage { position: relative; width: 100%; }
+.mm-dg__wires { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.mm-dg__edge {
+  fill: none;
+  stroke: var(--dg-edge, var(--mm-color-muted));
+  stroke-width: calc(min(var(--mm-frame-w), var(--mm-frame-h)) * var(--dg-line, 0.004));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.mm-dg__edge--accent { stroke: var(--dg-accent, var(--mm-color-accent)); }
+.mm-dg__edge--fill { fill: color-mix(in srgb, var(--dg-accent, var(--mm-color-accent)) 18%, transparent); }
+.mm-dg__head { fill: var(--dg-accent, var(--mm-color-accent)); }
+.mm-dg__node {
+  position: absolute;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+}
+.mm-dg__plate {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--dg-radius, var(--mm-radius-2));
+  background: var(--mm-color-surface);
+}
+/* A label carries the same fill as the plate behind it, so the gate reads the colour the text sits on
+   (the kit's contrast check follows ancestors, not siblings); while a node arrives the kit makes
+   the label's fill transparent and the plate alone springs up (see `reveal`). */
+.mm-dg__label {
+  position: relative;
+  box-sizing: border-box;
+  padding: var(--mm-space-2) var(--mm-space-3);
+  color: var(--mm-color-surfaceInk);
+  background: var(--mm-color-surface);
+  border-radius: var(--dg-radius, var(--mm-radius-2));
+  overflow-wrap: break-word;
+}
+.mm-dg__node--soft .mm-dg__plate { background: color-mix(in srgb, var(--mm-color-ink) 9%, transparent); }
+.mm-dg__node--soft .mm-dg__label { color: var(--mm-color-ink); background: none; }
+.mm-dg__node--bare .mm-dg__plate { display: none; }
+.mm-dg__node--bare .mm-dg__label { color: var(--mm-color-ink); background: none; }
+.mm-dg__node--hero .mm-dg__plate { background: var(--dg-accent, var(--mm-color-accent)); }
+.mm-dg__node--hero .mm-dg__label { color: var(--dg-accent-ink, var(--mm-color-accentInk)); background: var(--dg-accent, var(--mm-color-accent)); }

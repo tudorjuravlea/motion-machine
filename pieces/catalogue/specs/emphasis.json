@@ -3,6 +3,7 @@
   "sub": "Pointing the eye at what is there.",
   "style": "nocturne-kinetic",
   "template": "figure",
+  "facts": [{ "id": "f1", "text": "71.5 mm", "source": "catalogue demo number, not a claim" }],
   "items": [
     { "pattern": "emphasis/indicate", "figure": { "fx": "entrances/rise", "text": "Look here", "emphasis": "emphasis/indicate" }, "how": "One pulse: larger, tinted, then exactly as before.",
       "knob": { "line": "amp: 0.12, tint: 0. Bigger, no colour.", "figure": { "params": { "emphasis": { "amp": 0.12, "tint": 0 } } } } },
@@ -28,6 +29,50 @@
         { "at": 0, "slot": "headline", "fx": "style:headline", "text": "lens", "params": { "instant": true } },
         { "at": 0, "slot": "item-1", "fx": "style:body", "text": "blur: 0.12", "params": { "instant": true } },
         { "at": 0.4, "slot": "item-2", "fx": "entrances/fade", "text": "zoom: 0.1", "emphasis": "emphasis/lens", "params": { "emphasis": { "blur": 0.12, "zoom": 0.1 } } },
-        { "at": 0, "slot": "item-3", "fx": "style:body", "text": "Stronger glass", "params": { "instant": true } } ] } ] }
+        { "at": 0, "slot": "item-3", "fx": "style:body", "text": "Stronger glass", "params": { "instant": true } } ] } ] },
+    { "pattern": "emphasis/act", "figure": { "fx": "entrances/character", "params": { "mood": "calm", "to": "surprised" }, "emphasis": "emphasis/act" }, "figAt": 1, "minA": 4.8, "minB": 4.8,
+      "how": "The mascot's mood changes: eyes shut, face swaps, a take.",
+      "knob": { "line": "amount: 1.5. A bigger take.", "figure": { "params": { "emphasis": { "amount": 1.5 } } } } },
+    { "pattern": "emphasis/countdown-clock", "figure": { "fx": "entrances/rise", "text": "Ends tonight", "emphasis": "emphasis/countdown-clock" }, "minA": 4.4, "minB": 4.2,
+      "how": "A clock hand sweeps a turn over the line.",
+      "knob": { "line": "turns: 2, place: below, stripes: false.", "figure": { "params": { "emphasis": { "turns": 2, "place": "below", "stripes": false } } } } },
+    { "pattern": "emphasis/dimension", "template": "scenes", "scenes": [
+      { "layout": "layouts/statement", "min": 4, "beats": [
+        { "at": 0, "slot": "headline", "fx": "style:headline", "text": "dimension: a measure across what it measures.", "params": { "instant": true } },
+        { "at": 1.3, "slot": "sub", "fx": "entrances/fade", "text": "71.5 mm", "fact": "f1", "params": { "instant": true, "emphasis": { "for": "headline" } }, "emphasis": "emphasis/dimension" } ] },
+      { "layout": "layouts/statement", "min": 4, "beats": [
+        { "at": 0, "slot": "headline", "fx": "style:headline", "text": "tone: ink. The line in ink.", "params": { "instant": true } },
+        { "at": 1.3, "slot": "sub", "fx": "entrances/fade", "text": "71.5 mm", "fact": "f1", "params": { "instant": true, "emphasis": { "for": "headline", "tone": "ink" } }, "emphasis": "emphasis/dimension" } ] } ] },
+    { "pattern": "emphasis/emote", "figure": { "fx": "entrances/rise", "text": "Wow", "emphasis": "emphasis/emote" },
+      "how": "A small hand-drawn reaction pops beside the words.",
+      "knob": { "line": "mark: heart, side: left.", "figure": { "params": { "mark": "heart", "side": "left" } } } },
+    { "pattern": "emphasis/keyword-cta", "figure": { "fx": "entrances/fade", "text": "GUIDE", "emphasis": "emphasis/keyword-cta" }, "figAt": 0.8, "minA": 4.6, "minB": 4.4,
+      "how": "A keyword chip slams in; arrows bob toward it.",
+      "knob": { "line": "from: right, bobs: 5. Five bobs, from the side.", "figure": { "params": { "from": "right", "bobs": 5 } } } },
+    { "pattern": "emphasis/stamp", "figure": { "fx": "entrances/fade", "text": "Approved", "emphasis": "emphasis/stamp" }, "minA": 4.4, "minB": 4.2,
+      "how": "A verdict word is stamped on, and stays.",
+      "knob": { "line": "personality: press, tilt: right.", "figure": { "params": { "emphasis": { "personality": "press", "tilt": "right" } } } } },
+    { "pattern": "emphasis/roulette", "template": "scenes", "scenes": [
+      { "layout": "layouts/list-reveal", "min": 4.4, "beats": [
+        { "at": 0, "slot": "headline", "fx": "style:headline", "text": "roulette", "params": { "instant": true } },
+        { "at": 0, "slot": "item-1", "fx": "style:body", "text": "A box runs along the row", "params": { "instant": true } },
+        { "at": 0, "slot": "item-2", "fx": "style:body", "text": "and slows down", "params": { "instant": true } },
+        { "at": 0.4, "slot": "item-3", "fx": "entrances/fade", "text": "on the answer", "emphasis": "emphasis/roulette" } ] },
+      { "layout": "layouts/list-reveal", "min": 4.4, "beats": [
+        { "at": 0, "slot": "headline", "fx": "style:headline", "text": "roulette", "params": { "instant": true } },
+        { "at": 0, "slot": "item-1", "fx": "style:body", "text": "passes: 3", "params": { "instant": true } },
+        { "at": 0, "slot": "item-2", "fx": "style:body", "text": "Three runs before it lands", "params": { "instant": true } },
+        { "at": 0.4, "slot": "item-3", "fx": "entrances/fade", "text": "on the answer", "emphasis": "emphasis/roulette", "params": { "emphasis": { "passes": 3 } } } ] } ] },
+    { "pattern": "emphasis/wash-bloom", "template": "scenes", "scenes": [
+      { "layout": "layouts/bento-3", "min": 5, "beats": [
+        { "at": 0, "slot": "headline", "fx": "style:headline", "text": "wash-bloom: colour blooms behind each pen.", "params": { "instant": true } },
+        { "at": 0.5, "slot": "tile-1", "fx": "entrances/sketch", "text": "Plan", "emphasis": "emphasis/wash-bloom" },
+        { "at": 1.1, "slot": "tile-2", "fx": "entrances/sketch", "text": "Track", "emphasis": "emphasis/wash-bloom" },
+        { "at": 1.7, "slot": "tile-3", "fx": "entrances/sketch", "text": "Ship", "emphasis": "emphasis/wash-bloom" } ] },
+      { "layout": "layouts/bento-3", "min": 5, "beats": [
+        { "at": 0, "slot": "headline", "fx": "style:headline", "text": "bloom: muted, offset: 5. One colour, off register.", "params": { "instant": true } },
+        { "at": 0.5, "slot": "tile-1", "fx": "entrances/sketch", "text": "Plan", "emphasis": "emphasis/wash-bloom", "params": { "emphasis": { "bloom": "muted", "offset": 5 } } },
+        { "at": 1.1, "slot": "tile-2", "fx": "entrances/sketch", "text": "Track", "emphasis": "emphasis/wash-bloom", "params": { "emphasis": { "bloom": "muted", "offset": 5 } } },
+        { "at": 1.7, "slot": "tile-3", "fx": "entrances/sketch", "text": "Ship", "emphasis": "emphasis/wash-bloom", "params": { "emphasis": { "bloom": "muted", "offset": 5 } } } ] } ] }
   ]
 }

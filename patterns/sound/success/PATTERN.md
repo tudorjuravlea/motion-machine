@@ -1,7 +1,7 @@
 # sound/success
 
 ## Purpose
-Marks a positive outcome, synthesised in three feels with no samples.
+Marks a positive outcome. Two renderings share the name: the code cue (`pattern.js`), three rising notes synthesised in three feels, plays when the style names no `sound.profile`; the recipe (`recipe.json`), a rising spread triad (C, then G, then E above) struck on a mallet with the room doubled, plays when it does.
 
 ## Use when / Do not use when
 Use when:
@@ -20,8 +20,12 @@ Do not use when:
 | gain | number | 0.35 | peak of the cue gain envelope (0 to 1) |
 | seed | number | 71 | seed for the noise component; the same seed renders the same samples |
 
+The recipe takes `gain` (a multiplier, 1 is its matched level), `seed` (the side spread; the default is a number taken from the name) and `emphasis` (`subtle`, `normal` or `strong`: which layers play: the triad alone, the triad with an octave ornament, and that plus a high fifth), set in a beat's `params.cue`. Its `durationS` is 0.6.
+
+Brand knobs: emphasis, gain. A brand sets them for every use with `style.patterns["sound/success"]`; the beat's own values win. The code cue reads `gain` and `seed` from the same place.
+
 ## Style variables consumed
-None of the `--mm-*` variables: a sound pattern has no CSS. The `feel` argument comes from `style.sound.palette`; the style's `loudnessLufs` is applied by the mix, not here. Feels:
+None of the `--mm-*` variables: a sound pattern has no CSS. The `feel` argument comes from `style.sound.palette`; the style's `loudnessLufs` is applied by the mix, not here. When `style.sound.profile` is set the recipe plays and the profile (a name in `styles/sound/` or a path) sets its key, register, attack and length ceilings, room, width and level; `feel` is then not read. Feels of the code cue:
 - soft-ui: three rising sine notes
 - percussive: three short triangle notes
 - cinematic: the same notes over a low third
@@ -31,6 +35,7 @@ Marks a positive outcome; a cue with no visible event does not exist (W-CUE). Le
 
 ## Provenance
 original: synthesised from oscillators, filters and seeded noise; no audio is sampled. The cue vocabulary, the one-shot-under-1.5 s limit and the 45 ms cooldown follow the `romainsimon/uisfx` taxonomy (code MIT, audio CC0), taken as principles; row in `PROVENANCE.md`.
+danielwh2/cuelume, MIT. The recipe only: ideas restated (mallet material for outcomes, a rising contour, a spread voicing, a doubled room, levels matched on the loudest 100 ms); the numbers are our own, set by rendering and measuring; no code and no sound file is taken.
 mulberry32, public domain: the seeded noise generator in `runtime/kit/synth.js`, so a cue renders to the same samples every time; the generator is taken unchanged.
 
 ## Known limits
@@ -38,3 +43,4 @@ mulberry32, public domain: the seeded noise generator in `runtime/kit/synth.js`,
 - Mono output; the mix decides placement.
 - Length is fixed by the module; the pipeline does not stretch it.
 - Rendered peaks can differ by one 16-bit step between runs in Chromium; the module itself has no random state.
+- The recipe was set by measurement, not by ear; `mm sound-listen` writes a page of players beside the numbers. The room is shared with every other recipe cue and is doubled here.

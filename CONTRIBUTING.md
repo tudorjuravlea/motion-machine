@@ -64,7 +64,7 @@ A pattern lives in `patterns/<group>/<name>/` and is complete or it does not exi
    [the patterns cheatsheet](skill/motion-machine/references/patterns-cheatsheet.md). Extend a
    close pattern rather than write a parallel one.
 2. Create the files SPEC section 5 requires for the group (`pattern.js`, `pattern.html`,
-   `pattern.css`, `demo/story.json`; a `sound` pattern takes `demo/cue.json` instead). CSS reads
+   `pattern.css`, `demo/story.json`; a `sound` pattern takes `demo/cue.json` instead, and may be a `recipe.json` in place of `pattern.js`). CSS reads
    only `--mm-*` style variables and spring roles; no literal colour, family, size or duration
    (AXIOM 2, rules G-BRAND and W-LITERAL).
 3. Write `PATTERN.md` with exactly the seven sections of

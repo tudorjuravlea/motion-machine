@@ -1,0 +1,40 @@
+/* versus: two sides and a seam. The before is the muted role at --mm-vs-recess of the size; the after
+   is the tone role at full size (settling up from --mm-vs-grow). The seam is an alpha of the ink role, drawn by
+   scale from its centre. */
+.mm-versus {
+  display: grid;
+  align-items: center;
+  width: calc((var(--mm-frame-w) - 2 * var(--mm-safe)) * 0.9);
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--mm-color-ink);
+}
+.mm-versus[data-axis="across"] { grid-template-columns: 1fr auto 1fr; column-gap: var(--mm-space-5); }
+.mm-versus[data-axis="down"] { grid-template-rows: auto auto auto; row-gap: var(--mm-space-4); justify-items: var(--mm-align); }
+.mm-versus__side { display: flex; flex-direction: column; gap: var(--mm-space-2); min-width: 0; }
+.mm-versus[data-axis="across"] .mm-versus__side { align-items: center; text-align: center; }
+.mm-versus[data-axis="down"] .mm-versus__side { align-items: var(--mm-align); text-align: var(--mm-align); }
+.mm-versus__label {
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.15;
+  color: var(--mm-color-muted);
+}
+.mm-versus__figure { line-height: 1; white-space: nowrap; }
+.mm-versus__side--before .mm-versus__figure {
+  font-size: calc(var(--mm-vs-size) * var(--mm-vs-recess));
+  color: var(--mm-color-muted);
+}
+.mm-versus__side--after .mm-versus__figure {
+  font-size: calc(var(--mm-vs-size) * var(--mm-vs-grow, 1));
+  color: var(--mm-accent-text);
+}
+.mm-versus[data-tone="ink"] .mm-versus__side--after .mm-versus__figure { color: var(--mm-color-ink); }
+.mm-versus__seam { display: block; background: color-mix(in srgb, var(--mm-color-ink) 28%, transparent); }
+.mm-versus[data-axis="across"] .mm-versus__seam { width: calc(var(--mm-space-0) * 0.5); align-self: stretch; transform-origin: center; }
+.mm-versus[data-axis="down"] .mm-versus__seam { height: calc(var(--mm-space-0) * 0.5); width: 100%; transform-origin: left center; }

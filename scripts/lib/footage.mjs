@@ -10,6 +10,8 @@
 
 // 25 ms windows every 10 ms: a window holds two periods of a low (80 Hz) voice, so voiced sound reads
 // steady, and the 10 ms hop is a third of a 30 fps frame, finer than the frame grid cuts snap to.
+import { snapRanges } from './footage-scenes.mjs';
+
 export const HOP_S = 0.01;
 export const WIN_S = 0.025;
 // The room: the level under which the quietest 2 % of windows fall (a quarter second in a 12 s take,
@@ -144,6 +146,29 @@ export function keptRanges(runs, duration, { maxPause = DEFAULTS.maxPause, lead 
   return out;
 }
 
+/** Overlapping or touching spans { s, e } as one, sorted. */
+export function mergeSpans(spans) {
+  const out = [];
+  for (const sp of [...spans].sort((a, b) => a.s - b.s)) {
+    const last = out.at(-1);
+    if (last && sp.s <= last.e + 1e-9) last.e = Math.max(last.e, sp.e);
+    else out.push({ s: sp.s, e: sp.e });
+  }
+  return out;
+}
+
+/** Kept ranges [{ s, e }] of a source of `duration` seconds after removing the spans. */
+export function keptAround(spans, duration) {
+  const out = [];
+  let s = 0;
+  for (const sp of mergeSpans(spans)) {
+    if (sp.s > s) out.push({ s, e: sp.s });
+    s = Math.max(s, sp.e);
+  }
+  if (s < duration) out.push({ s, e: duration });
+  return out;
+}
+
 /** Whole-frame clips { start, from, length } (output frame, 0-based source frame, frames); rounding is carried, never summed. */
 export function quantize(ranges, fps, frames) {
   const out = [];
@@ -234,25 +259,37 @@ export function wav16(samples, rate) {
  * { levels, picture, frames, duration, cuts, onSound, note?, words? }. When the voice stands less than
  * MIN_GAP_DB over the room, the take is refused only if it holds quiet stretches longer than the max
  * pause, which could be pauses or soft speech; when it holds none, the speech fills it and nothing is cut.
+ * `scenes` (seconds of the picture) move a join that would leave a sliver of the other shot onto the scene
+ * change, never into a word (`footage-scenes.mjs`); the plan then carries `scenes: { snapped, held }`.
  */
-export function planEdit({ samples, rate, fps, frames, words = null, maxPause = DEFAULTS.maxPause, lead = DEFAULTS.lead, tail = DEFAULTS.tail, fillers = false }) {
+export function planEdit({ samples, rate, fps, frames, words = null, maxPause = DEFAULTS.maxPause, lead = DEFAULTS.lead, tail = DEFAULTS.tail, fillers = false, cuts: approved = null, scenes = null }) {
   const curve = loudnessCurve(samples, rate);
   const lv = levels(curve);
   const runs = quietRuns(curve, lv.quietDb);
   const long = runs.some((r) => r.b - r.a > maxPause);
   let ranges, note;
-  if (lv.gapDb < MIN_GAP_DB) {
+  if (approved) {
+    // approved cuts replace the pause finder: the recording minus exactly these spans (source seconds); none is the whole take
+    const duration = frames / fps;
+    const bad = approved.find((c) => c.s < -1e-9 || c.e > duration + 1e-9 || !(c.e > c.s));
+    if (bad) throw new Error(`a cut (${bad.s}-${bad.e} s) is outside the recording, which runs 0-${r3(duration)} s`);
+    ranges = keptAround(approved, duration);
+    if (!approved.length) note = 'no cuts approved: the whole recording is kept';
+  } else if (lv.gapDb < MIN_GAP_DB) {
     if (long) throw new Error(`speech stands only ${r3(lv.gapDb)} dB over the room (room ${r3(lv.floorDb)} dBFS, speech ${r3(lv.speechDb)} dBFS) and the take has quiet stretches over ${maxPause} s, so its pauses cannot be told from soft speech; cuts need ${MIN_GAP_DB} dB`);
     ranges = [{ s: 0, e: frames / fps }];
   } else ranges = keptRanges(runs, frames / fps, { maxPause, lead, tail, words: words ?? [], fillers });
+  let onScenes = null;
+  if (scenes?.length) { const r = snapRanges(ranges, scenes, words ?? []); ranges = r.ranges; onScenes = { snapped: r.snapped, held: r.held }; }
   const picture = quantize(ranges, fps, frames);
   const total = picture.reduce((n, c) => n + c.length, 0);
   const cuts = cutsOf(picture, fps);
-  if (!cuts.length) note = `no pause longer than ${maxPause} s inside the speech: nothing to cut${total < frames ? ' (the quiet before and after it is trimmed)' : ''}`;
+  if (!cuts.length && !approved) note = `no pause longer than ${maxPause} s inside the speech: nothing to cut${total < frames ? ' (the quiet before and after it is trimmed)' : ''}`;
   return {
     levels: { floorDb: r3(lv.floorDb), speechDb: r3(lv.speechDb), quietDb: r3(lv.quietDb) },
     picture, frames: total, duration: r3(total / fps), cuts, onSound: onSoundOf(cuts, runs),
     ...(note ? { note } : {}),
+    ...(onScenes ? { scenes: onScenes } : {}),
     ...(words ? { words: mapWords(words, picture, fps) } : {}),
   };
 }

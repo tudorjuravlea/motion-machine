@@ -1,0 +1,160 @@
+{
+  "id": "catalogue-looks-2",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Graph paper",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Graph paper",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "A fine grid, a scan band, a loop."
+        }
+      ],
+      "say": "A fine grid, a scan band, a loop.",
+      "duration": 3.6
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Look at the frame.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Each film changes the style once, and says so."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 4.25
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "graph-paper",
+      "layout": "layouts/statement",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "ground: graph-paper",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "A fine grid, a heavy line every fifth."
+        }
+      ],
+      "id": "graph-paper-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "graph-paper",
+      "layout": "layouts/statement",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "scan",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "A band sweeps the frame once a cycle."
+        }
+      ],
+      "id": "graph-paper-b",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "graph-paper",
+      "layout": "layouts/list-reveal",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "cycle: 8 s",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "item-1",
+          "fx": "entrances/rise",
+          "text": "Drifts out and back"
+        },
+        {
+          "at": 0.6,
+          "slot": "item-2",
+          "fx": "entrances/rise",
+          "text": "sweeps the band"
+        },
+        {
+          "at": 0.9,
+          "slot": "item-3",
+          "fx": "entrances/rise",
+          "text": "repeats exactly"
+        }
+      ],
+      "id": "graph-paper-c",
+      "duration": 4.8
+    }
+  ],
+  "share": "Graph paper: graph-paper. A ground kind: graph-paper.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

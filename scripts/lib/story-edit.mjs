@@ -19,7 +19,8 @@
 // A journal line that does not parse (cut short by a crash) is skipped with a warning on stderr.
 // While an export of the piece holds out/export.lock (scripts/lib/export-lock.mjs), every commit is
 // refused with ExportRunning: the story an export checked is the story it renders.
-// holdForExport takes that lock under the journal lock, so no commit lands between the two.
+// holdForExport takes that lock under the journal lock, so no commit lands between the two, and pins the
+// journal's head with the story (verify after edit: `mm check` records the head it checked, `mm export` compares).
 import { randomBytes } from 'node:crypto';
 import { closeSync, existsSync, ftruncateSync, linkSync, mkdirSync, openSync, readFileSync, readdirSync, renameSync, rmSync, statSync, writeFileSync, writeSync } from 'node:fs';
 import { join } from 'node:path';
@@ -127,6 +128,9 @@ export function readJournal(pieceDir) {
   return parseJournal(readFileSync(journalPath(pieceDir), 'utf8'), journalPath(pieceDir)).receipts;
 }
 
+/** The id of the journal's last receipt (the last edit, an undo included), or null when nothing was ever edited: what `mm check` records and `mm export` compares. */
+export const journalHead = (pieceDir) => readJournal(pieceDir).at(-1)?.id ?? null;
+
 // ---- the journal lock -------------------------------------------------------------------
 
 const LOCK_STALE_MS = 10_000;   // a commit holds the lock for milliseconds
@@ -207,9 +211,28 @@ export function storyErrors(story) {
   return c.story(story) ? null : explain(c.story.errors);
 }
 
-/** What the ops need to validate an edit to this piece: { patterns, style }. */
+/** Each layout's param names, from the Params table of its card ({ 'layouts/<name>': [names] }): the kit writes a beat's params on the layout. */
+export function layoutParamsOf(base) {
+  const dir = join(base, 'layouts'), out = {};
+  let names = [];
+  try { names = readdirSync(dir); } catch { return out; }
+  for (const n of names) {
+    let card;
+    try { card = readFileSync(join(dir, n, 'PATTERN.md'), 'utf8'); } catch { continue; }
+    const sec = /## Params\n([\s\S]*?)(\n## |$)/.exec(card)?.[1] ?? '';
+    // every name in a row's first cell (`x`, `y` share a row), but not slots, markup or html attributes
+    out[`layouts/${n}`] = sec.split('\n').filter((l) => l.startsWith('| `')).flatMap((l) => {
+      const [, first, type = ''] = l.split('|').map((c) => c.trim());
+      return /^(slot|markup|html attribute)\b/.test(type) ? [] : [...first.matchAll(/`([a-zA-Z][\w-]*)`/g)].map((m) => m[1]);
+    });
+  }
+  return out;
+}
+
+/** What the ops need to validate an edit to this piece: { patterns, layoutParams, style }. */
 export async function editContext(pieceDir) {
-  return { patterns: await allPatterns(patternsBaseOf(pieceDir)), style: readStyle(pieceDir) };
+  const base = patternsBaseOf(pieceDir);
+  return { patterns: await allPatterns(base), layoutParams: layoutParamsOf(base), style: readStyle(pieceDir) };
 }
 
 /**
@@ -307,6 +330,6 @@ export function holdForExport(pieceDir, { by } = {}) {
   try { mkdirSync(studioDir(pieceDir), { recursive: true }); } catch (e) { throw new Unwritable(`cannot create out/studio/ (${e.code ?? e.message})`); }
   return withLock(pieceDir, () => {
     const lock = takeExportLock(pieceDir, { by });
-    try { return { ...readStory(pieceDir), ...lock }; } catch (e) { lock.release(); throw e; }
+    try { return { ...readStory(pieceDir), journal: journalHead(pieceDir), ...lock }; } catch (e) { lock.release(); throw e; }
   });
 }

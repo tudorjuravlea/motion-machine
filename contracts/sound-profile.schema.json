@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:motion-machine:contracts:sound-profile",
+  "title": "Motion Machine sound profile (SPEC §9): a style's sound look",
+  "description": "What a family of cues shares: where it sits in pitch, how its notes begin and fade, its material, its level and its room. A style or brand names one (`sound.profile`) once; the cues it plays are voiced by it (synth.js `applyProfile`) and, where the gate looks, measured against it. Shipped in styles/sound/<name>.json; a path to another file also works.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "register", "key", "envelope", "modes", "loudness", "room", "stereo"],
+  "properties": {
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+    "description": { "type": "string", "maxLength": 300 },
+    "register": {
+      "type": "object", "additionalProperties": false, "required": ["maxCentreHz", "minHz", "tones"],
+      "properties": {
+        "maxCentreHz": { "type": "number", "minimum": 200, "maximum": 16000, "description": "nothing is centred above this: a tone's fundamental is folded down by octaves, a band-pass centre is capped" },
+        "minHz": { "type": "number", "minimum": 20, "maximum": 400, "description": "nothing sounds below this: a lower fundamental is folded up by octaves, a lower partial is dropped" },
+        "tones": { "enum": ["sine", "triangle", "mixed"], "description": "what the oscillators are; the renderer draws sines, so the field says what a mined set was" }
+      }
+    },
+    "key": {
+      "type": "array", "uniqueItems": true, "maxItems": 12,
+      "items": { "type": "string", "pattern": "^[A-G][#b]?$" },
+      "description": "the pitch classes the cues' fundamentals sit on (no tonic: a set, not a scale); empty for no constraint"
+    },
+    "envelope": {
+      "type": "object", "additionalProperties": false, "required": ["attackS", "t60"],
+      "properties": {
+        "attackS": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number", "minimum": 0.0005, "maximum": 0.6 }, "description": "[shortest, longest] attack of a struck note" },
+        "t60": {
+          "type": "object", "additionalProperties": false, "required": ["input", "surface", "outcome"],
+          "description": "[shortest, longest] T60 of a note by family (familyOf): input up to 0.06 s long, surface up to 0.3 s, outcome up to 0.65 s",
+          "properties": {
+            "input":   { "$ref": "#/$defs/range" },
+            "surface": { "$ref": "#/$defs/range" },
+            "outcome": { "$ref": "#/$defs/range" }
+          }
+        }
+      }
+    },
+    "modes": { "enum": ["bar", "mallet", "string", "none"], "description": "the material: `bar` inharmonic bar ratios (1 : 2.76 : 5.4), `mallet` (1 : 3.99), `string` harmonic whole-number ratios, `none` pure sines. `none` strips a recipe's partials and `string` snaps them to whole numbers; the others leave the recipe's own" },
+    "loudness": {
+      "type": "object", "additionalProperties": false, "required": ["cueLufs100ms", "tolDb", "peakDbfs"],
+      "properties": {
+        "cueLufs100ms": { "type": "number", "minimum": -60, "maximum": -6, "description": "the level every cue is matched to: its loudest 100 ms, K-weighted, on the stereo render" },
+        "tolDb": { "type": "number", "exclusiveMinimum": 0, "maximum": 6, "description": "how far a cue may sit from that level" },
+        "peakDbfs": { "type": "number", "minimum": -60, "maximum": 0, "description": "the highest sample peak a cue may reach" }
+      }
+    },
+    "room": {
+      "type": "object", "additionalProperties": false, "required": ["send", "predelayS", "sizeS", "lowpassHz"],
+      "properties": {
+        "send": { "type": "number", "minimum": -60, "maximum": 0, "description": "dB under the dry cue; -22 is the reference a recipe's own send is written against" },
+        "predelayS": { "type": "number", "minimum": 0, "maximum": 0.1 },
+        "sizeS": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "lowpassHz": { "type": "number", "minimum": 500, "maximum": 20000 }
+      }
+    },
+    "stereo": {
+      "type": "object", "additionalProperties": false, "required": ["sideMidDb"],
+      "properties": { "sideMidDb": { "type": "number", "minimum": -60, "maximum": 0, "description": "the side signal's level under the mid, dB: a cue is nearly centred, with a little width" } }
+    },
+    "sources": {
+      "type": "array", "maxItems": 200,
+      "description": "where a mined profile's sounds came from; a cue cloned from it carries them. Absent for a profile written by hand",
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["source", "licence"],
+        "properties": { "source": { "type": "string", "minLength": 1 }, "licence": { "type": "string", "minLength": 1 }, "author": { "type": "string" } }
+      }
+    }
+  },
+  "$defs": {
+    "range": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number", "minimum": 0.003, "maximum": 3 } }
+  }
+}

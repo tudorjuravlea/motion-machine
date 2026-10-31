@@ -6,6 +6,7 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { chroma, normHex, roleOfColourName } from '../capture-brand.mjs';
 import { ROOT } from './browser.mjs';
 import { UsageError, slug } from './cli.mjs';
+import { fenceLine } from './fence.mjs';
 import { ROLES, pairsOf, reviewRoles } from './brand-roles.mjs';
 import { validators } from './validate.mjs';
 
@@ -176,7 +177,7 @@ const cell = (s) => String(s).replace(/\|/g, '\\|').replace(/\n/g, ' ');
 /** The review part of a notes section: role table, fixes, warnings, notes and open questions. */
 export function reviewLines(state) {
   const lines = ['| role | hex | confidence | source | evidence |', '|---|---|---|---|---|'];
-  for (const r of ALL_ROLES) if (state.roles[r]) lines.push(`| ${r} | ${state.roles[r].hex} | ${state.roles[r].confidence} | ${state.roles[r].source} | ${cell(state.roles[r].evidence)} |`);
+  for (const r of ALL_ROLES) if (state.roles[r]) lines.push(`| ${r} | ${state.roles[r].hex} | ${state.roles[r].confidence} | ${state.roles[r].source} | ${cell(fenceLine(state.roles[r].evidence, 'evidence'))} |`);
   const fixes = ALL_ROLES.filter((r) => state.roles[r]?.fixed);
   lines.push('', 'Fixes:', ...(fixes.length ? fixes.map((r) => `- ${r}: ${state.roles[r].fixed.from} → ${state.roles[r].fixed.to} (${state.roles[r].fixed.why})`) : ['- none']));
   lines.push('', 'Warnings:', ...(state.warnings.length ? state.warnings.map((w) => `- ${w.id}: ${w.text}`) : ['- none']));

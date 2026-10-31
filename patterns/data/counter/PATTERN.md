@@ -25,7 +25,10 @@ The figure comes from the beat's `value` (the kit writes it as `data-value`). Pa
 | prefix | string | (empty) | text before the figure |
 | suffix | string | (empty) | text after the figure |
 | size | enum(display|h1|h2|body|caption) | h1 | the style size role of the figure |
+| format | enum(plain|compact) | plain | plain writes the whole number; compact writes a scaled unit (14K, 1.2M, 3B, 2T) and `fix` is the decimals of the scaled number, so `$1.2M` is `prefix: $`, `fix: 1`, `format: compact` |
 | unit | enum(land|always) | land | land: the prefix and suffix keep their place but show only on the landed figure, so no frame reads "1 rules"; always: they count along |
+
+Brand knobs: format, size, unit.
 
 ## Style variables consumed
 - `--mm-size-<size>` for the role named by `size`, `--mm-size-caption` and `--mm-size-body` for secondary text
@@ -42,5 +45,6 @@ original
 
 ## Known limits
 - One run of text: the suffix cannot be styled apart from the digits (use `data/stat-tile` or `data/odometer` for that).
-- No thousands separators.
+- No thousands separators (`format: compact` is the way to a short figure).
+- `format: compact` changes the unit as the count crosses 1000, so the figure's width changes while it counts; the box keeps its tabular digits but not its width.
 - A negative `from` or value is supported; counting through zero shows a minus only while the figure is below zero.

@@ -81,6 +81,16 @@ These families are so widely used as a default that setting a piece in one reads
 
 - Settle tails, text-start offsets and the clear-before-enter gap come from measuring product films. They are inputs to W-STAGGER and W-HOLD, not rules of their own.
 
+## Data restraint
+
+Advice for any `data/*` pattern and any figure. One chart carries one message.
+
+- No pie charts, no second axis, no gridlines, no legend, no dashboard of six panels. Label the
+  thing on the thing; a bar is named at its end, not in a key
+- Name the counted thing, not only the numeral: "412 signups this week", never "412"
+- A figure alone in its press (H-ONE); a trend gets a line or bars, a share gets one filled bar or ring
+- Every number cites a story fact (H-FACTS)
+
 ## Composition
 
 Advice for layouts and motion styles; the gate covers the hold floor through W-HOLD.

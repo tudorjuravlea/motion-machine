@@ -6,10 +6,10 @@ export const DRIFT_S = 0.04;
 
 export const cueName = (c) => String(c).replace(/^sound\//, '');
 
-/** Cue events (film) from a schedule: [{ t, name, selector, scene }], sorted. */
+/** Cue events (film) from a schedule: [{ t, name, selector, scene, params? }], sorted; `params` is the beat's `params.cue` bag (gain, seed, emphasis). */
 export function cueEvents(sched) {
   return (sched?.events ?? []).filter((e) => e.kind === 'cue' && typeof e.t === 'number')
-    .map((e) => ({ t: e.t, name: cueName(e.cue), selector: e.selector, scene: e.scene })).sort((a, b) => a.t - b.t);
+    .map((e) => ({ t: e.t, name: cueName(e.cue), selector: e.selector, scene: e.scene, ...(e.params ? { params: e.params } : {}) })).sort((a, b) => a.t - b.t);
 }
 
 /** The sorted beat times of a parsed beats.json (an array, or `{ beats }`), or null when empty. */

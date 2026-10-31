@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:motion-machine:contracts:sound-sample",
+  "title": "Motion Machine sound sample record (SPEC §9): where a sound file came from",
+  "description": "Every sample a style or story maps to a cue (`sound.samples`, `audio.samples`) has a record beside it: `assets/sounds/x.wav` has `assets/sounds/x.json`. A sample with no valid record is warned by W-SAMPLE-LICENSE. `mm sound mine` writes the same three fields for every sound it cuts out of a recording, so a mined sound that is kept as a sample already has its record (copy records/<id>.json beside the wav; the other fields are measurements, which a record may carry).",
+  "type": "object",
+  "required": ["source", "licence", "author"],
+  "properties": {
+    "source": { "type": "string", "minLength": 1, "maxLength": 300, "description": "where the file came from: a page, a pack, a recording session, or `own recording`" },
+    "licence": { "type": "string", "minLength": 1, "maxLength": 200, "description": "the terms it may be used under, as the source states them (CC0-1.0, CC-BY-4.0, a purchased licence, `own recording`)" },
+    "author": { "type": "string", "minLength": 1, "maxLength": 200, "description": "who made the sound; the person themselves for an own recording" },
+    "notes": { "type": "string", "maxLength": 500 }
+  }
+}

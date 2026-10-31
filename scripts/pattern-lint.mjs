@@ -3,7 +3,9 @@
 // patterns/<group>/<name>/ is complete when it holds its group's files, a PATTERN.md with exactly
 // the seven sections in order (each non-empty), provenance that PROVENANCE.md knows, no literal
 // in its CSS or JS, none of the forbidden time sources, and a demo story that validates and uses
-// it. Only complete patterns are listed.
+// it. Only complete patterns are listed. A sound pattern is pattern.js (a cue as code) or recipe.json (a
+// cue as data, valid against contracts/sound-recipe.schema.json and no shorter than its own layers); it
+// needs no demo story but demo/cue.json.
 //
 // A row's id names the rule `mm check` applies to the same text in a piece. W-LITERAL (and the card and
 // provenance rules) only warn a piece, whose studio may have its reasons; here they fail, because the
@@ -18,6 +20,7 @@ import { basename, dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { rule } from './lib/report.mjs';
 import { ROOT, contractError, cssLiterals, jsLiterals, refsOf, timeOffenders } from './check/_lib.mjs';
+import { validators } from './lib/validate.mjs';
 
 export const GROUPS = ['entrances', 'exits', 'emphasis', 'transitions', 'layouts', 'moves', 'text', 'data', 'devices', 'sound', 'screen', '3d'];
 export const SECTIONS = ['Purpose', 'Use when / Do not use when', 'Params', 'Style variables consumed', 'Legibility and rest notes', 'Provenance', 'Known limits'];
@@ -68,6 +71,8 @@ export function cardSources(body) {
   return body.split('\n').map((l) => l.replace(/^\s*[-*]\s*/, '').trim()).filter(Boolean).map((l) => l.split(',')[0].trim());
 }
 
+let recipeValidator = null;
+
 /** Lints one pattern folder. Returns { ref, group, name, complete, rules }. */
 export function lintPattern(dir, { provenance = join(ROOT, 'PROVENANCE.md') } = {}) {
   dir = resolve(dir);
@@ -77,9 +82,24 @@ export function lintPattern(dir, { provenance = join(ROOT, 'PROVENANCE.md') } = 
   const read = (f) => readFileSync(join(dir, f), 'utf8');
   if (!GROUPS.includes(group)) card.push({ reason: `unknown group "${group}"` });
   const visual = group !== 'sound';
-  const required = ['PATTERN.md', ...(NEEDS_JS.has(group) ? ['pattern.js'] : []), ...(NEEDS_HTML.has(group) ? ['pattern.html'] : []),
+  const dataCue = group === 'sound' && has('recipe.json') && !has('pattern.js');   // a recipe stands in for pattern.js
+  const required = ['PATTERN.md', ...(NEEDS_JS.has(group) && !dataCue ? ['pattern.js'] : []), ...(NEEDS_HTML.has(group) ? ['pattern.html'] : []),
     ...(visual ? ['pattern.css', 'demo/story.json'] : ['demo/cue.json'])];
   for (const f of required) if (!has(f)) card.push({ file: `${ref}/${f}`, reason: `missing ${f}` });
+
+  if (group === 'sound' && has('recipe.json')) {
+    let recipe = null;
+    try { recipe = JSON.parse(read('recipe.json')); } catch (e) { card.push({ file: `${ref}/recipe.json`, reason: `invalid JSON: ${e.message}` }); }
+    if (recipe) {
+      const v = (recipeValidator ??= validators().soundRecipe);
+      if (!v(recipe)) card.push({ file: `${ref}/recipe.json`, reason: `recipe does not validate: ${(v.errors ?? []).map((e) => `${e.instancePath || '/'} ${e.message}`).join('; ')}` });
+      else {
+        if (recipe.name !== name) card.push({ file: `${ref}/recipe.json`, reason: `recipe name "${recipe.name}" should be "${name}", the folder` });
+        const ends = recipe.layers.map((l) => (l.offsetS ?? 0) + (l.attackS ?? 0.002) + l.t60);
+        if (recipe.durationS < Math.max(...ends) - 0.011) card.push({ file: `${ref}/recipe.json`, reason: `durationS ${recipe.durationS} ends before its layers do (${Math.max(...ends).toFixed(3)} s)` });
+      }
+    }
+  }
 
   if (has('PATTERN.md')) {
     const { title, sections } = parseCard(read('PATTERN.md'));
@@ -158,7 +178,7 @@ export const listComplete = (root, opts) => lintRoot(root, opts).complete;
 /** For `mm pattern list`: the complete patterns under root (default patterns/), as the lint judges them. */
 export function list(root = join(ROOT, 'patterns'), opts = {}) { return listComplete(root, opts); }
 
-const isPatternDir = (dir) => GROUPS.includes(basename(dirname(dir))) && ['PATTERN.md', 'pattern.js', 'pattern.html', 'pattern.css'].some((f) => existsSync(join(dir, f)));
+const isPatternDir = (dir) => GROUPS.includes(basename(dirname(dir))) && ['PATTERN.md', 'pattern.js', 'pattern.html', 'pattern.css', 'recipe.json'].some((f) => existsSync(join(dir, f)));
 
 /**
  * What `lint <arg>` names: { pattern } (one folder) or { root }, or { error }. `group/name` and a
