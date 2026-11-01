@@ -2,7 +2,7 @@
 // mm media prep <file> --name <n> [--piece <dir>] [--fps 30] [--fit phone|laptop|<W>x<H>] [--trim <a>-<b>] [--quality 90]
 // A screen recording becomes a frame sequence the kit can seek
 // frame-exactly: <piece>/assets/<n>/f00001.jpg … and media.json. ffmpeg decodes any container or
-// codec it reads, applies the display rotation, resamples to a constant rate and fits the frames
+// codec it reads, makes an HDR (PQ) recording SDR (scripts/lib/hdr.mjs), applies the display rotation, resamples to a constant rate and fits the frames
 // inside the box the piece will show them in, never upscaling; without --fit the long side is
 // capped at 1600 px (SPEC §8). Exit 0 written, 1 ffmpeg failed, 2 usage (a trim that starts past
 // the clip's end is a usage error, found before the old asset is touched).
@@ -16,6 +16,7 @@ import { probe, runFfmpeg } from './lib/ffmpeg.mjs';
 import { scanDuration } from './lib/webm.mjs';
 import { cutTrack } from './lib/track.mjs';
 import { readTrack } from '../runtime/kit/cursor.js';
+import { hdrToSdrFilter, isHdr } from './lib/hdr.mjs';
 
 const fail = (message, exitCode) => Object.assign(new Error(message), { exitCode });
 /** The largest screen each device shows a recording in (phone `large` in 9x16; a laptop screen). */
@@ -62,15 +63,16 @@ export async function prep({ file, name, piece = '.', fps = 30, fit, trim, quali
   const [bw, bh] = box ?? CAP;
   const scale = `scale=w='min(${bw},iw)':h='min(${bh},ih)':force_original_aspect_ratio=decrease:force_divisible_by=2`;
   const q = Math.min(31, Math.max(2, Math.round(31 - quality * 0.29)));
+  const hdr = isHdr(source.streams.find((s) => s.codec_type === 'video')?.color_transfer);
   try {
     await runFfmpeg([...(a != null ? ['-ss', String(a), '-to', String(b)] : []), '-i', file,
-      '-vf', `fps=${fps},${scale},format=yuvj420p`, '-an', '-c:v', 'mjpeg', '-q:v', String(q), '-start_number', '1', join(dir, 'f%05d.jpg')]);
+      '-vf', `${hdr ? `${hdrToSdrFilter()},` : ''}fps=${fps},${scale},format=yuvj420p`, '-an', '-c:v', 'mjpeg', '-q:v', String(q), '-start_number', '1', join(dir, 'f%05d.jpg')]);
   } catch (e) { rmSync(dir, { recursive: true, force: true }); throw fail(`ffmpeg could not read ${basename(file)}: ${String(e.message).trim().split('\n').slice(-2).join(' ')}`, 1); }
   const frames = readdirSync(dir).filter((f) => /^f\d{5}\.jpg$/.test(f)).length;
   if (!frames) throw fail(`ffmpeg wrote no frames for ${basename(file)}`, 1);
   const first = probe(join(dir, 'f00001.jpg')).streams[0];
   const meta = { kind: 'sequence', fps, frames, w: first.width, h: first.height, duration: Math.round((frames / fps) * 1000) / 1000,
-    source: { file: basename(file), sha1: await sha1(file) }, prepared: new Date().toISOString() };
+    source: { file: basename(file), sha1: await sha1(file) }, ...(hdr ? { hdr: 'pq to bt709' } : {}), prepared: new Date().toISOString() };
   // a pointer track recorded beside the video (<name>.cursor.json, OpenScreen's sidecar shape) travels with the frames, cut as the video was
   const side = `${file.replace(/\.[^./\\]+$/, '')}.cursor.json`;
   if (existsSync(side)) {

@@ -110,3 +110,16 @@ test('prep honours a 180 display rotation: the top half is the upright clip\'s b
   const dist = (p, q) => Math.max(...p.map((v, i) => Math.abs(v - q[i])));
   assert.ok(dist(a, b) < dist(a, c), `rotated top ${a} vs upright bottom ${b}, upright top ${c}`);
 });
+
+test('prep makes an HDR (PQ) recording SDR: media.json says so and a PQ white stays white', () => {
+  const src = join(work, 'pq.mp4');
+  // a white field tagged as PQ BT.2020, as a phone writes its screen recording
+  const r0 = spawnSync('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i', 'color=c=white:s=320x640:d=0.5', '-c:v', 'libx264', '-pix_fmt', 'yuv420p',
+    '-bsf:v', 'h264_metadata=colour_primaries=9:transfer_characteristics=16:matrix_coefficients=9', src]);
+  assert.equal(r0.status, 0, String(r0.stderr));
+  const r = mm(['media', 'prep', src, '--name', 'pq', '--piece', work]);
+  assert.equal(r.status, 0, r.out);
+  assert.equal(meta('pq').hdr, 'pq to bt709');
+  const px = spawnSync('ffmpeg', ['-v', 'error', '-i', join(work, 'assets', 'pq', 'f00001.jpg'), '-vf', 'scale=1:1,format=rgb24', '-f', 'rawvideo', '-'], { maxBuffer: 1 << 20 });
+  assert.ok(px.stdout[0] > 240, `white came out ${px.stdout[0]}`);
+});

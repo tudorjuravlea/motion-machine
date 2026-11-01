@@ -1,0 +1,22 @@
+/* 3d/tablet: the WebGL canvas fills the slot; the 2D screen it copies is laid out out of sight, in the
+   proportions of the tablet's screen (3:4 upright, 4:3 on its side), sized so the texture stays sharp
+   when the tablet fills the frame. */
+.tablet3d { position: relative; width: 100%; height: 100%; }
+.tablet3d__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.tablet3d__screen {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--mm-frame-h) * 0.5);
+  aspect-ratio: 900 / 1200;
+  visibility: hidden;
+  overflow: hidden;
+  border-radius: 4.44% / 3.33%;
+}
+[data-p-orientation="landscape"] > .tablet3d > .tablet3d__screen,
+.tablet3d[data-orientation="landscape"] > .tablet3d__screen {
+  width: calc(var(--mm-frame-h) * 0.9);
+  aspect-ratio: 1200 / 900;
+  border-radius: 3.33% / 4.44%;
+}
+.tablet3d__screen .mm-screen { visibility: hidden; }

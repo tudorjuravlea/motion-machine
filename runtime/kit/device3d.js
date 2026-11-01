@@ -1,4 +1,4 @@
-// device3d: what the 3D devices (3d/phone, 3d/laptop) share. A stage (renderer, room
+// device3d: what the 3D devices (3d/phone, 3d/laptop, 3d/tablet) share. A stage (renderer, room
 // light for reflections, a key light and a floor shadow), shaped parts (an extruded slab with
 // bevelled edges, a flat rounded plate with 0..1 UVs), the materials (metal, glass, a glossy screen
 // that emits its picture and reflects the room on top), the copy of a hidden 2D screen into a
@@ -91,6 +91,24 @@ function softboxes(kind, accent) {
   return g;
 }
 
+// What the stage draws around the device, the floor's shadow of the key light and the lit backdrop's glow,
+// fades to nothing toward each edge of the canvas (its last 14 %), and the shadow also away from the device's
+// foot (from `reach` out to 1.6 times it, set by lightAll): a slot narrower than the frame, or a shadow longer
+// than the floor, never ends in a hard line. `u` holds the canvas size (fitCanvas) and the reach.
+function softEdges(m, u, radial) {
+  m.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, u);
+    if (radial) shader.vertexShader = `varying vec2 vMmFloor;\n${shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n  vMmFloor = position.xy;')}`;
+    const fade = radial ? ' * ( 1.0 - smoothstep( mmReach, mmReach * 1.6, length( vMmFloor ) ) )' : '';
+    const fs = shader.fragmentShader, end = fs.lastIndexOf('}');
+    shader.fragmentShader = `uniform vec2 mmView; uniform float mmReach;${radial ? ' varying vec2 vMmFloor;' : ''}
+float mmEdge() { vec2 q = gl_FragCoord.xy / mmView; vec2 e = smoothstep( 0.0, 0.14, q ) * smoothstep( 0.0, 0.14, 1.0 - q ); return e.x * e.y; }
+${fs.slice(0, end)}  gl_FragColor.a *= mmEdge()${fade};\n}${fs.slice(end + 1)}`;
+  };
+  m.customProgramCacheKey = () => `mm-soft-edges ${radial ? 'floor' : 'glow'}`;
+  return m;
+}
+
 export function stage(el, cfg = {}) {
   const kind = ['light', 'dark', 'brand'].includes(cfg.studio) ? cfg.studio : 'light';
   const doc = el.ownerDocument;
@@ -110,7 +128,8 @@ export function stage(el, cfg = {}) {
   const wide = pmrem._setSize;   // three.js renders the studio at 256; at 512 the strips mirror crisper on metal
   if (typeof wide === 'function') pmrem._setSize = function () { wide.call(this, 512); };
   const env = pmrem.fromScene(studio(kind, tint), 0.01).texture;
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), new THREE.ShadowMaterial({ opacity: 0.28 }));
+  const edges = { mmView: { value: new THREE.Vector2(1, 1) }, mmReach: { value: 1.6 } };
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), softEdges(new THREE.ShadowMaterial({ opacity: 0.28 }), edges, true));
   floor.rotation.x = -Math.PI / 2;
   floor.receiveShadow = true;
   floor.userData.catcher = true;
@@ -136,7 +155,7 @@ export function stage(el, cfg = {}) {
   const hg = halo.getContext('2d'), grad = hg.createRadialGradient(128, 128, 0, 128, 128, 128), lit = new THREE.Color(1, 1, 1);
   grad.addColorStop(0, lit.getStyle()); grad.addColorStop(0.45, `rgba(${lit.r * 255},${lit.g * 255},${lit.b * 255},0.45)`); grad.addColorStop(1, `rgba(${lit.r * 255},${lit.g * 255},${lit.b * 255},0)`);
   hg.fillStyle = grad; hg.fillRect(0, 0, 256, 256);
-  const glow = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(halo), transparent: true, opacity: 0.75, depthWrite: false, toneMapped: false }));
+  const glow = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), softEdges(new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(halo), transparent: true, opacity: 0.75, depthWrite: false, toneMapped: false }), edges, false));
   glow.renderOrder = -1;
   glow.userData.noDepth = true;
   scene.add(glow);
@@ -145,7 +164,7 @@ export function stage(el, cfg = {}) {
   const tex = new THREE.CanvasTexture(tex2d);
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = 4;
-  return { renderer, canvas, scene, env, floor, key, glow, camera, tex, tex2d, studio: kind };
+  return { renderer, canvas, scene, env, floor, key, glow, camera, tex, tex2d, studio: kind, edges };
 }
 
 export function rrect(w, h, r) {
@@ -177,6 +196,7 @@ export function lightAll(c, opts) {
       if (mt.isMeshStandardMaterial || mt.isShadowMaterial) toneMapped(mt);
     }
   });
+  if (opts?.reach && c.edges) c.edges.mmReach.value = opts.reach;
   if (opts) c.look = new Look(c, opts);
 }
 
@@ -478,6 +498,7 @@ export function fitCanvas(c, holder, params) {
     c.canvas.dataset.studio = cfg.studio;
   }
   const cw = Math.max(2, Math.round(holder.clientWidth)), ch = Math.max(2, Math.round(holder.clientHeight));
+  c.edges?.mmView.value.set(cw, ch);
   if (c.canvas.width !== cw || c.canvas.height !== ch) {
     c.renderer.setSize(cw, ch, false);
     c.camera.aspect = cw / ch;

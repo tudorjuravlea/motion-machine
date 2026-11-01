@@ -23,7 +23,7 @@ answer ("The seven gates" below; the record: "Direction log, defects ledger, han
 
 Run everything through the CLI: `node scripts/mm.mjs <verb>` (or `npm run mm -- <verb>`); start with
 `mm doctor` on a new machine and ask `mm <verb> --help` instead of guessing a flag. Read a file under
-`references/<file>` when the step you are on names it, and not before.
+`references/<file>` when the step you are on names it, and not before. A recording or a still only to be shown on a device ("showcase this", a hero page) skips the rounds: `skill/showcase/SKILL.md`, one command, `mm showcase <file> --check` then without it; nothing zooms unless asked (`--zoom`).
 
 ## Where a piece lives
 

@@ -4,11 +4,13 @@
 // recording on the screen (mm capture site --script) and zooms where the pointer clicked, with the
 // camera's own timing (runtime/kit/camera.js): it has started about a second before the click, joins
 // zooms that are close, follows the cursor a little, and has weight. The recording's own time is the
-// frame screen/play has reached, so the camera is a function of t like everything else.
+// frame screen/play has reached, so the camera is a function of t like everything else. A recording with
+// no pointer track still takes `regions` drawn by hand (`mm showcase` writes them from where it moves).
 // A zoom can also lean the device it is on (tilt, on a device that carries data-tilt-plane) and blur
 // along its own motion (blur); both are drawn by paint() on every seek.
 import { cameraOf, depthScale, motionBlur, pickDepth } from '../../../runtime/kit/camera.js';
 import { lerpTilt, tiltOf, tiltTransform } from '../../../runtime/kit/demoframe.js';
+import { readTrack } from '../../../runtime/kit/cursor.js';
 
 const on = (v) => v !== false && v !== 'false';
 const num = (v, d = 0) => (Number.isFinite(Number(v)) && v !== '' && v !== null ? Number(v) : d);
@@ -32,10 +34,18 @@ function handDrawn(list, track, prm) {
   });
 }
 
+// a recording with no pointer track: a pointer resting at the centre with no clicks, one per recording
+const resting = new WeakMap();
+function stillTrack(meta) {
+  if (!resting.has(meta)) resting.set(meta, readTrack({ version: 2, surface: { w: meta.w || 1, h: meta.h || 1 }, samples: [{ timeMs: 0, cx: 0.5, cy: 0.5 }, { timeMs: Math.round((Number(meta.duration) || 1) * 1000), cx: 0.5, cy: 0.5 }], targets: [] }));
+  return resting.get(meta);
+}
+
 function auto(state, ctx) {
-  const meta = state.content.meta, track = meta?.track;
-  if (!track) return state;   // the gate and the kit say so; drawing never throws
-  const prm = ctx.params;
+  const meta = state.content.meta, prm = ctx.params;
+  const drawn = Array.isArray(prm.regions) && prm.regions.length > 0;
+  if (!meta || (!meta.track && !drawn)) return state;   // the gate and the kit say so; drawing never throws
+  const track = meta.track ?? stillTrack(meta);
   const totalMs = Math.round((Number(meta.duration) || track.samples.at(-1).timeMs / 1000) * 1000);
   const cam = cameraOf(track, {
     totalMs, depth: prm.depth, hold: num(prm.hold) > 0 ? num(prm.hold) * 1000 : undefined, leadMs: num(prm.lead) * 1000,
@@ -71,7 +81,7 @@ export default {
   params: {
     at: { type: 'string', default: '50%,50%', meaning: 'mark: a mark label from media.json, or "x%,y%" of the screen' },
     s: { type: 'number', default: 1.6, meaning: 'mark: the magnification at p = 1 (1 to 4)' },
-    mode: { type: 'enum(mark|auto)', default: 'mark', meaning: 'mark: push in on `at`; auto: zoom where the recording\'s pointer clicked (it needs a pointer track)' },
+    mode: { type: 'enum(mark|auto)', default: 'mark', meaning: 'mark: push in on `at`; auto: zoom where the recording\'s pointer clicked (it needs a pointer track), or only where `regions` say on a recording without one' },
     depth: { type: 'string', default: 'medium', meaning: 'auto: how far, a step of the ladder (gentle 1.25, soft 1.5, medium 1.8, close 2.2, tight 3.5, macro 5), a number 1 to 5, or fit (the deepest step that shows the clicked box with room round it)' },
     follow: { type: 'number', default: 0.35, meaning: 'auto: how much of the cursor\'s follow the view takes while zoomed (0 sits on the click target, 1 follows the cursor)' },
     hold: { type: 'number', default: 0, meaning: 'auto: seconds each zoom is held after it has landed (0: the longer of 1 s and 5 % of the recording)' },

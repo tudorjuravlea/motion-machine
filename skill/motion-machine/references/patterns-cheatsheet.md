@@ -27,6 +27,7 @@ lists). A story passes params as `params` on a beat (entrance), `params.exit` /
 | `layouts/split` | A headline and body on one side and a figure with its caption on the other (16x9), stacked in 9x16 and 1x1. | headline, figure, body, caption | `align=left` |
 | `layouts/stat-hero` | One figure as the whole picture, with a headline and a line of body beneath. | figure, headline, body | `align=center` |
 | `layouts/statement` | One large claim, with an optional sub, for the scene that makes a single point. | headline, sub | `align=left` |
+| `layouts/stage` | The whole frame is one stage for a device or a picture, edge to edge, with no text (`mm showcase` writes it). | stage | none |
 | `layouts/title-stack` | A rule, a headline and a sub, stacked and centred in the safe box: the opening layout. | headline, sub | `align=left` |
 | `layouts/grid-break` | A headline over identical tiles, then one tile that breaks the pattern: accent fill, larger, lifted. | headline, tile-1, tile-2, tile-3, tile-4, tile-5, odd | `align=left` |
 | `layouts/paper-cards` | A headline over up to three torn-edge paper cards at staggered heights, like notes on a board. | headline, card-1, card-2, card-3 | `align=left` |
@@ -257,8 +258,9 @@ Real 3D through the vendored Three.js, rendered in software, frame-identical bet
 
 | id | what it does | key params |
 |---|---|---|
-| `3d/laptop` | A notebook in real 3D turns in as its lid opens, turns slowly or makes a showcase half-turn; its screen plays a recording or a captured page. | `move=hero` `model=notch` `metal=aluminium` `status=auto` `aa=auto` `studio=light` `glow=0.4` `contact=1` |
-| `3d/phone` | A phone in real 3D rises and turns, with the built-in phone's rim, glass, keys and cutouts; hero, turntable, still, a showcase half-turn from its back, or a cross from left to right with one full turn. | `move=hero` `model=island` `metal=aluminium` `status=auto` `aa=auto` `studio=light` `glow=0.4` `contact=1` |
+| `3d/laptop` | A notebook in real 3D turns in as its lid opens, turns slowly or makes a showcase half-turn; its screen plays a recording or a captured page. | `move=hero` `model=notch` `metal=aluminium` `status=auto` `aa=auto` `studio=light` `glow=0.4` `contact=0` |
+| `3d/tablet` | A tablet in real 3D, upright or on its side (`orientation`), turns in like the phone (hero, turntable, still, a showcase half-turn); its screen plays a recording, a still or a captured page. | `move=hero` `orientation=portrait` `metal=aluminium` `status=auto` `aa=auto` `studio=light` `glow=0.4` `contact=0` |
+| `3d/phone` | A phone in real 3D rises and turns, with the built-in phone's rim, glass, keys and cutouts; hero, turntable, still, a showcase half-turn from its back, or a cross from left to right with one full turn. | `move=hero` `model=island` `metal=aluminium` `status=auto` `aa=auto` `studio=light` `glow=0.4` `contact=0` |
 | `3d/particles-to-shape` | Seeded particles fly in through real depth and land on the words, then the real text fades in. | `particles=900` `depth=1` |
 | `3d/point-cloud` | A product cut-out, mark or headline rebuilt as a free-floating 3D object of sparse, glittering points: a seed bursts into a swirling cloud of pale streaks, a front sends each point home in its own colour, and the object rests turned three-quarters, twinkling and swaying. | `points=16000` `density=0.22` `colors=palette` `relief=auto` `depth=0.4` `depthMap=` `yaw=20` `sway=6` `drift=0.6` `streak=10` `origin=center` |
 

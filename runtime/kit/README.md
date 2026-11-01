@@ -448,6 +448,9 @@ follows:
   devices, and a brand sets them once with `style.patterns["3d/phone"]`. Every pass is a pure function of
   the pose at `t`: a fixed jitter table, a seeded noise texture, a focus computed from the camera and the
   device (never an autofocus), no clock and no reading of the frame before.
+- **No hard edges around the device.** The floor's shadow of the key light and the lit backdrop's glow fade to
+  nothing over the last 14 % of the canvas on every side, and the shadow also from `reach` to 1.6 times it away
+  from the device's foot, so a slot narrower than the frame (`layouts/caption-bar`) never cuts them in a line.
 - **Readouts for tests and the gate:** `mark(c, ry, extra)` writes the turn, which face shows and the
   cutout built as `data-*` on the canvas.
 

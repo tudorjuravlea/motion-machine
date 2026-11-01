@@ -20,6 +20,9 @@ docs/private/
 # Scratch folders the tests create next to the pieces (they must sit at the repository's depth)
 .tmp-*/
 
+# What mm showcase writes: the user's own recordings and films
+pieces/showcase-*/
+
 # Generated test inputs
 fixtures/sound/kit-smoke-cues/assets/
 !fixtures/negatives/G-PEAK/out/

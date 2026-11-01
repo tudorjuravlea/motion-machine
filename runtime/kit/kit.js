@@ -983,7 +983,7 @@ async function mountScreen({ sc, b, slot }, warnings) {
     for (const a of b.screen ?? []) if (BRINGS.has(a.do) && a.params?.to) swaps.set(a.params.to, await metaOf(a.params.to));
     const actions = b.screen ?? [];
     // the screen actions that read the recording's pointer track say so when it has none
-    for (const a of actions) if ((a.do === 'screen/pointer' || (a.do === 'screen/zoom-to' && a.params?.mode === 'auto')) && !initial.content.meta?.track) warnings.push(`${where}: ${a.do} reads a pointer track, and ${b.asset ?? 'the bare screen'} has none (mm capture site --script writes one; media.json names it in "cursor")`);
+    for (const a of actions) if ((a.do === 'screen/pointer' || (a.do === 'screen/zoom-to' && a.params?.mode === 'auto' && !a.params?.regions?.length)) && !initial.content.meta?.track) warnings.push(`${where}: ${a.do} reads a pointer track, and ${b.asset ?? 'the bare screen'} has none (mm capture site --script writes one; media.json names it in "cursor")`);
     const layer = mountLayer(screenEl, initial, swaps, actions);
     // pictures that do not change with t are decoded before the first seek, like any asset
     await Promise.all([...layer.querySelectorAll('img[src]')].map((img) => img.decode().catch(() => warnings.push(`${where}: ${img.getAttribute('src')} did not load`))));

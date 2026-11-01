@@ -1,0 +1,14 @@
+/* stage: the whole frame is one slot for a device or a picture, edge to edge: no margin, no text.
+   A 3D device's shot frames it, so its close-ups and a screen-filling ending reach the frame's edges. */
+.stage {
+  position: absolute;
+  inset: 0;
+}
+.stage__area {
+  font-size: var(--mm-size-body);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

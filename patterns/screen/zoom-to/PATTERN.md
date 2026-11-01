@@ -12,14 +12,14 @@ The camera of a device screen: pushes in on a mark or a point until it fills the
 **Do not use when**
 - the whole device should come closer: use a camera move on the scene
 - the detail is text the viewer must read as a fact (the gate cannot read inside media)
-- mode `auto` is asked of a recording that has no pointer track: it leaves the screen as it was, and the kit says so in `mm.warnings`
+- mode `auto` is asked of a recording that has no pointer track and no `regions`: it leaves the screen as it was, and the kit says so in `mm.warnings`
 
 ## Params
 | name | type | default | meaning |
 |---|---|---|---|
 | `at` | string | 50%,50% | mark: a mark label from media.json, or "x%,y%" of the screen |
 | `s` | number | 1.6 | mark: the magnification at p = 1, 1 to 4 |
-| `mode` | enum(mark\|auto) | `mark` | `mark`: push in on `at`; `auto`: zoom where the recording's pointer clicked (needs a pointer track) |
+| `mode` | enum(mark\|auto) | `mark` | `mark`: push in on `at`; `auto`: zoom where the recording's pointer clicked (needs a pointer track), or only where `regions` say on a recording without one |
 | `depth` | string | medium | auto: how far, a step of the ladder (gentle 1.25, soft 1.5, medium 1.8, close 2.2, tight 3.5, macro 5), a number 1 to 5, or `fit` (the deepest step that shows the clicked box with room round it) |
 | `follow` | number | 0.35 | auto: how much of the cursor's follow the view takes while zoomed (0 sits on the click target, 1 follows the cursor) |
 | `hold` | number | 0 | auto: seconds each zoom is held after it has landed (0: the longer of 1 s and 5 % of the recording) |
@@ -28,7 +28,7 @@ The camera of a device screen: pushes in on a mark or a point until it fills the
 | `connect` | boolean | true | auto: zooms at most 1.5 s apart are joined by a pan, not a zoom out and in |
 | `chase` | boolean | true | auto: the camera has weight (an overdamped spring, in closed form, so it arrives without overshoot); off draws the authored camera as it is |
 | `suggest` | boolean | true | auto: one zoom at each click target; off leaves only `regions` |
-| `regions` | array | none | auto: zooms drawn by hand, each `{ at, hold, x, y \| target, depth, tilt }` (seconds into the recording; x, y 0..1 of it; target a selector of the pointer track); the suggestions keep clear of them |
+| `regions` | array | none | auto: zooms drawn by hand, each `{ at, hold, x, y \| target, depth, tilt }` (seconds into the recording; x, y 0..1 of it; target a selector of the pointer track); the suggestions keep clear of them. On a recording with no pointer track they are the only zooms (`mm showcase` measures them from where the recording moves) |
 | `tilt` | enum(none\|iso\|left\|right\|alternate) | `none` | the device leans while the zoom is on (a device with `data-tilt-plane`, as `devices/demo-frame`); `alternate` (auto only): left, then right |
 | `blur` | number | 0 | auto: motion blur along the camera's own speed (0 to 1) |
 

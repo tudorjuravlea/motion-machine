@@ -96,3 +96,13 @@ test('a manual push-in can tilt too, by the share of the zoom it has made', () =
   const half = fold(init, [{ action: { do: 'screen/zoom-to', params: { at: '30%,40%', s: 2, tilt: 'left' } }, module: zoom, start: 0, d: 1 }], 0.5, ctxOf).state;
   near(half.tilt.y, -11);
 });
+
+test('a recording with no pointer track still follows regions drawn by hand (mm showcase writes them from its motion)', () => {
+  const bare = initialState('assets/rec/', { kind: 'sequence', fps: 30, frames: 300, w: 1440, h: 900, duration: 10 });
+  const params = { mode: 'auto', suggest: false, follow: 0, regions: [{ at: 2, hold: 2, x: 0.2, y: 0.3, depth: 2 }] };
+  const s = at(3.5, params, bare);
+  near(s.zoom.s, 2, 0.02);
+  assert.ok(view(s.zoom).x < 0.5 && view(s.zoom).y < 0.5, 'the view moves toward the region');
+  assert.equal(at(0, params, bare).zoom.s, 1, 'before the region the view is the whole recording');
+  assert.deepEqual(at(3.5, { mode: 'auto' }, bare).zoom, bare.zoom, 'no track and no regions: the screen is left as it was');
+});

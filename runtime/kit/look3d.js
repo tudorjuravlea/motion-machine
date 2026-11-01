@@ -25,7 +25,7 @@ import { random } from './random.js';
 export const LOOK_PARAMS = {
   aa: { type: 'enum(auto|ssaa4|ssaa16|msaa|off)', default: 'auto', meaning: 'edge anti-aliasing: ssaa4 and ssaa16 render the frame 4 or 16 times shifted by sixteenths of a pixel and average them (exact, the same on every machine; 16 costs four times as much); msaa is the graphics card\'s own multisampling (fast, driver-dependent); off leaves the edges stepped; auto is ssaa4 in an export and a check, msaa in a preview' },
   glow: { type: 'number', default: 0.4, meaning: 'the screen\'s glow, 0 to 1: the bright parts of the screen\'s picture bloom softly onto the bezel and the air around it (0 is off)' },
-  contact: { type: 'number', default: 1, meaning: 'the soft contact shadow under the device, 0 to 1 (0 is off): dark where the device is close to the floor, a wide faint pool beyond' },
+  contact: { type: 'number', default: 0, meaning: 'a contact shadow right under the device, 0 to 1 (0 is off, the default: the soft long shadow of the key light is the only one): dark where the device is close to the floor, a wide faint pool beyond' },
   contactSoft: { type: 'number', default: 0.5, meaning: 'how far the contact shadow spreads, 0 (tight) to 1 (wide)' },
   occlusion: { type: 'number', default: 0, meaning: 'ambient occlusion, 0 to 1 (0 is off): the creases of the device (a hinge, a key, a lens ring) take a little shade' },
   reflection: { type: 'number', default: 0, meaning: 'a mirror floor, 0 to 1 (0 is off): the device reflected in the floor, strongest at its foot and fading away from it' },
@@ -48,7 +48,7 @@ export function lookOf(params = {}, render = false) {
   const studio = ['light', 'dark', 'brand'].includes(params.studio) ? params.studio : 'light';
   return {
     aa, studio,
-    glow: clamp01(params.glow, LOOK_PARAMS.glow.default), contact: clamp01(params.contact, 1), soft: clamp01(params.contactSoft, 0.5),
+    glow: clamp01(params.glow, LOOK_PARAMS.glow.default), contact: clamp01(params.contact, 0), soft: clamp01(params.contactSoft, 0.5),
     occlusion: clamp01(params.occlusion, LOOK_PARAMS.occlusion.default), reflection: clamp01(params.reflection, 0), reflectSoft: clamp01(params.reflectSoft, 0.5),
     dof: clamp01(params.dof, 0), tilt: clamp01(params.tilt, 0), brushed: clamp01(params.brushed, LOOK_PARAMS.brushed.default),
   };

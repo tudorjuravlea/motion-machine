@@ -62,6 +62,12 @@ scripts/lib/standalone.mjs: the seek-then-screenshot frame loop piped to ffmpeg,
 matrix and tv-range colour recipe, the contact sheet composed in a second headless page, the
 dry-run-before-render habit, the order-independence determinism proof, and the lesson that a
 fixed-length picture needs its audio padded or trimmed to it.
+Ported into scripts/showcase.mjs, scripts/lib/activity.mjs, scripts/lib/hdr.mjs and scripts/lib/hero-page.mjs:
+the one-command CLI (its flags, the plan from the content's shape and length, the --check report, the
+--stills times, the audio pass), the activity analysis of a recording (frame differences on a grid,
+windows, centroids, merging), the HDR PQ to BT.709 SDR filter chain, and the hero page's play-once,
+float and pointer-follow idle. Its looks and its devices are not ported: the film uses Motion Machine's
+own devices and moves.
 
 Derived in shape, not copied: patterns/devices/phone, patterns/devices/browser,
 patterns/devices/laptop and patterns/devices/screen-zoom take abstract device proportions (aspect

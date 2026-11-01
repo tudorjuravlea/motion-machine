@@ -60,7 +60,7 @@
     },
     {
       "id": "f11",
-      "text": "202 patterns in 12 groups: 3d 4, data 23, devices 6, emphasis 16, entrances 27, exits 7, layouts 22, moves 16, screen 9, sound 29, text 17, transitions 26. None carries a brand. The wall shows each one's demo still in this film's style.",
+      "text": "204 patterns in 12 groups: 3d 5, data 23, devices 6, emphasis 16, entrances 27, exits 7, layouts 23, moves 16, screen 9, sound 29, text 17, transitions 26. None carries a brand. The wall shows each one's demo still in this film's style.",
       "source": "node scripts/mm.mjs pattern list; node scripts/pattern-lint.mjs; capture/assets.json library-wall"
     },
     {
@@ -538,7 +538,7 @@
           "at": 0.3,
           "slot": "headline",
           "fx": "style:headline",
-          "text": "202 patterns. None branded.",
+          "text": "204 patterns. None branded.",
           "fact": "f11",
           "step": 1,
           "cue": "tick"
@@ -553,7 +553,7 @@
           "cue": "tick"
         }
       ],
-      "say": "Underneath sits a library of 202 patterns in 12 groups. Every still on this wall is drawn in this deck's brand, because no pattern carries one of its own.",
+      "say": "Underneath sits a library of 204 patterns in 12 groups. Every still on this wall is drawn in this deck's brand, because no pattern carries one of its own.",
       "presses": 1
     },
     {

@@ -17,7 +17,7 @@ const ROOT = dirname(HERE);
 const VERBS = {
   doctor: 'doctor.mjs', new: 'new.mjs', serve: 'serve.mjs', stills: 'stills.mjs', export: 'export.mjs', review: 'review.mjs',
   check: 'check.mjs', beats: 'beats.mjs', sound: 'sound.mjs', 'sound-listen': 'sound-listen.mjs', 'release-check': 'release-check.mjs',
-  studio: 'studio.mjs', timeline: 'timeline.mjs', gen: 'gen.mjs', 'verify-export': 'verify-export.mjs', credits: 'credits.mjs', share: 'share.mjs', 'say-lint': 'say-lint.mjs',
+  studio: 'studio.mjs', timeline: 'timeline.mjs', gen: 'gen.mjs', 'verify-export': 'verify-export.mjs', credits: 'credits.mjs', share: 'share.mjs', showcase: 'showcase.mjs', 'say-lint': 'say-lint.mjs',
 };
 const SOUND_SUBS = { mine: 'sound-mine.mjs', clone: 'sound-clone.mjs', find: 'sound-find.mjs', fetch: 'sound-fetch.mjs', suggest: 'sound-suggest.mjs' };   // subcommands of `sound`, whose first word is otherwise a piece
 const GROUPS = {

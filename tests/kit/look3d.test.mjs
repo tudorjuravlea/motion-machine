@@ -10,12 +10,13 @@ import laptop from '../../patterns/3d/laptop/pattern.js';
 
 const ROOT = new URL('../../', import.meta.url);
 
-test('the defaults: ssaa4 in a render and msaa in a preview, light studio, glow and contact on, the rest off', () => {
+test('the defaults: ssaa4 in a render and msaa in a preview, light studio, glow on, the rest off (the contact shadow too: the key light\'s soft long shadow is the only one)', () => {
   const r = lookOf({}, true), p = lookOf({}, false);
   assert.equal(r.aa, 'ssaa4');
   assert.equal(p.aa, 'msaa');
   assert.equal(r.studio, 'light');
-  assert.ok(r.glow > 0 && r.contact > 0);
+  assert.ok(r.glow > 0);
+  assert.equal(r.contact, 0);
   assert.equal(r.occlusion, 0);
   assert.equal(r.reflection, 0);
   assert.equal(r.dof, 0);
