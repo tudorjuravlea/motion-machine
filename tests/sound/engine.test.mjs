@@ -11,6 +11,7 @@ import { loadProfile } from '../../scripts/lib/sound-profile.mjs';
 import { applyProfile, layerEndS, plan, renderRecipe, resolveRecipe, scaleRecipeTime } from '../../runtime/kit/synth.js';
 import { BEAT_HZ, MODE_TABLES, MODE_SLOPE, decayOf, modePartials } from '../../runtime/kit/modes.js';
 import * as M from '../../scripts/lib/audio-measure.mjs';
+import { fingerprint, fingerprintDiff } from './fingerprint.mjs';
 
 const SR = 48000;
 const { soundRecipe } = validators();
@@ -19,18 +20,34 @@ const hash = (r) => { const h = createHash('sha1'); for (const c of r.channels) 
 const recipe = (layers, extra = {}) => ({ name: 'probe', meaning: 'a probe for the engine tests', durationS: 0.5, layers, ...extra });
 const energy = (x, a = 0, b = x.length) => { let e = 0; for (let i = a; i < b; i++) e += x[i] * x[i]; return e; };
 
-test('every shipped recipe made before the engine grew renders sample for sample as it did: bare, in each profile, at each emphasis, for two seeds', () => {
-  const stored = JSON.parse(readFileSync(join(ROOT, 'tests/sound/data/recipe-hashes.json'), 'utf8'));
-  const profiles = { none: null, glass: loadProfile('glass'), 'soft-ui': loadProfile('soft-ui') };
+// a shipped recipe keyed `name|profile|emphasis|seed`, rendered; `tweak` changes the recipe first. The fingerprints were
+// written from renders whose bits matched the engine before it grew (tests/sound/fingerprint.mjs says what they hold).
+const stored = JSON.parse(readFileSync(join(ROOT, 'tests/sound/data/recipe-fingerprints.json'), 'utf8'));
+const PROFILES = { none: null, glass: loadProfile('glass'), 'soft-ui': loadProfile('soft-ui') };
+const renderKey = (key, tweak = (r) => r) => {
+  const [name, pn, emphasis, seed] = key.split('|');
+  const r = tweak(JSON.parse(readFileSync(join(ROOT, 'patterns/sound', name, 'recipe.json'), 'utf8')));
+  return renderRecipe(r, { sampleRate: SR, emphasis, profile: PROFILES[pn], ...(seed === 'default' ? {} : { seed: Number(seed) }) });
+};
+const asStored = (key, x) => fingerprintDiff(fingerprint(x), stored[key]) === null;
+// Math's functions with every third result one step off in the last bit, as another runtime may round them
+function withLastBitNoise(fn) {
+  const names = ['sin', 'cos', 'tanh', 'exp', 'log2', 'log10', 'sqrt'], orig = names.map((f) => Math[f]);
+  names.forEach((f, j) => { let i = 0; Math[f] = (x) => { const y = orig[j](x); return i++ % 3 ? y * (1 + 2 ** -52) : y; }; });
+  try { return fn(); } finally { names.forEach((f, j) => { Math[f] = orig[j]; }); }
+}
+
+test('every shipped recipe made before the engine grew renders as it did, window by window to a millionth: bare, in each profile, at each emphasis, for two seeds', () => {
   let n = 0;
-  for (const key of Object.keys(stored)) {
-    const [name, pn, emphasis, seed] = key.split('|');
-    const recipeFile = join(ROOT, 'patterns/sound', name, 'recipe.json');
-    const r = JSON.parse(readFileSync(recipeFile, 'utf8'));
-    assert.equal(hash(renderRecipe(r, { sampleRate: SR, emphasis, profile: profiles[pn], ...(seed === 'default' ? {} : { seed: Number(seed) }) })), stored[key], key);
-    n++;
-  }
+  for (const key of Object.keys(stored)) { const d = fingerprintDiff(fingerprint(renderKey(key)), stored[key]); assert.equal(d, null, `${key}: ${d}`); n++; }
   assert.equal(n, 198);
+});
+
+test('a last-bit difference in the runtime\'s maths is not a change to a recipe, and a 0.01 % change of its gain is', () => {
+  const names = [...new Set(Object.keys(stored).map((k) => k.split('|')[0]))].slice(0, 2);
+  const keys = Object.keys(stored).filter((k) => names.includes(k.split('|')[0]));
+  for (const key of keys) assert.ok(withLastBitNoise(() => asStored(key, renderKey(key))), `${key} under last-bit noise`);
+  for (const key of keys) assert.ok(!asStored(key, renderKey(key, (r) => ({ ...r, masterGain: r.masterGain * 1.0001 }))), `${key} with its gain 0.01 % up`);
 });
 
 test('a pass layer is a whoosh: its loudest moment sits at apexAt of its length, and a seed makes the same samples', () => {

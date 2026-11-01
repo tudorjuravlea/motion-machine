@@ -44,7 +44,7 @@ async function open(query = '') {
   page.on('request', (r) => asked.push(r.url()));
   await page.addInitScript(SPY);
   await page.goto(`${url}${query}`, { waitUntil: 'load' });
-  await page.waitForFunction(() => window.mm?.ready);
+  await page.waitForFunction(() => window.mm?.player);
   return { page, problems, asked };
 }
 const position = (page) => page.evaluate(() => window.mm.position());
@@ -52,6 +52,13 @@ const audio = (page) => page.evaluate(() => JSON.parse(JSON.stringify(window.__a
 const arrived = (page, n) => page.waitForFunction((x) => window.mm.position() === x, n, { timeout: 20000 });
 const spanOf = (key) => { const [a, b] = sprite.cues[key]; return { offset: a / 1000, duration: (b - a) / 1000 }; };
 const near = (a, b) => Math.abs(a - b) < 1e-6;
+
+test('the player says when it has started (window.mm.player): the kit is ready before it, so a test or a parent page waits for the player', async () => {
+  const { page } = await open();
+  try {
+    assert.equal(await page.evaluate(() => typeof window.mm.player?.mute), 'function');
+  } finally { await page.close(); }
+});
 
 test('the sprite travels inside index.html as a data URI, and nothing is requested for it', async () => {
   const html = readFileSync(join(dir, 'out', 'deck', 'index.html'), 'utf8');
@@ -185,7 +192,7 @@ test('a deck with no sound has no mute button and no player cost', async () => {
     const page = await browser.newPage();
     await page.addInitScript(SPY);
     await page.goto(`file://${join(bare, 'out', 'deck', 'index.html')}`);
-    await page.waitForFunction(() => window.mm?.ready);
+    await page.waitForFunction(() => window.mm?.player);
     assert.equal(await page.locator('button.mm-deck-mute').count(), 0);
     await page.keyboard.press('ArrowRight');
     await arrived(page, 1);
@@ -210,7 +217,7 @@ test('the stage is scaled to fit the window, whole and centred, whatever the win
     const page = await browser.newPage({ viewport: { width: w, height: h } });
     try {
       await page.goto(url, { waitUntil: 'load' });
-      await page.waitForFunction(() => window.mm?.ready);
+      await page.waitForFunction(() => window.mm?.player);
       const r = await page.evaluate(() => { const b = document.querySelector('.mm-stage').getBoundingClientRect(); return { x: b.x, y: b.y, w: b.width, h: b.height, scrollW: document.documentElement.scrollWidth, scrollH: document.documentElement.scrollHeight }; });
       assert.ok(r.x >= -0.5 && r.y >= -0.5 && r.x + r.w <= w + 0.5 && r.y + r.h <= h + 0.5, `${w}x${h}: inside the window ${JSON.stringify(r)}`);
       assert.ok(Math.abs(r.w / r.h - 16 / 9) < 0.01, 'the frame keeps its shape');

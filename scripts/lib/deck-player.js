@@ -36,12 +36,13 @@ const CSS = `.mm-deck-mute { position: fixed; right: var(--mm-space-2); bottom: 
 
 /**
  * Starts the player on the mounted deck (`win.mm`). `sound` is { src, cues, events } or null for a silent deck.
- * Returns { muted(), mute(on) }; the same two are on `window.mm.sound` when there is a sprite.
+ * Returns { muted(), mute(on) }; the same two are on `window.mm.sound` when there is a sprite, and on `window.mm.player`
+ * once the player has started (with or without a sprite).
  */
 export function startDeckPlayer({ sound = null, win = window } = {}) {
   const doc = win.document, mm = win.mm;
   // a render (the gate, the stills, an export: <html data-render>) is a frame from t alone: no button, no sound, no press in real time
-  if (doc.documentElement.hasAttribute('data-render')) return { muted: () => false, mute() {} };
+  if (doc.documentElement.hasAttribute('data-render')) return (mm.player = { muted: () => false, mute() {} });
   let ctx = null, gain = null, buffer = null, muted = false, started = false, failed = false, button = null;
   const waiting = [];
 
@@ -152,5 +153,6 @@ export function startDeckPlayer({ sound = null, win = window } = {}) {
     win.addEventListener('keydown', (e) => { if (e.key.toLowerCase() === 'm' && !e.altKey && !e.ctrlKey && !e.metaKey && !e.target?.closest?.('input, textarea, select, [contenteditable]')) api.mute(); });
     mm.sound = api;
   }
+  mm.player = api;   // the player has started: the kit was ready before it, so whoever drives the deck waits for this
   return api;
 }

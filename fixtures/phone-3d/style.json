@@ -203,5 +203,10 @@
       5
     ],
     "energy": "calm"
+  },
+  "patterns": {
+    "3d/phone": {
+      "aa": "off"
+    }
   }
 }
