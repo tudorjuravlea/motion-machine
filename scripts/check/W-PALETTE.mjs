@@ -9,7 +9,7 @@
 import { join, resolve } from 'node:path';
 import { rule } from '../lib/report.mjs';
 import { paramsOf } from '../../runtime/kit/params.js';
-import { renderRecipe } from '../../runtime/kit/synth.js';
+import { cueDurationS, recipeOpts, renderRecipe } from '../../runtime/kit/synth.js';
 import { cueEvents, loadCueModules, resolvePatternsBase } from '../sound.mjs';
 import { loadProfile } from '../lib/sound-profile.mjs';
 import { sampleMap } from '../lib/sound-sample.mjs';
@@ -52,14 +52,14 @@ export default async function (ctx) {
       if (r.unresolved) { unmeasured.push(`${c.name}: no sound pattern or sample`); continue; }
       let channels = null;
       if (mod.sample) channels = mod.channels.map((ch) => ch.map((x) => x * Number(opts.gain ?? 1)));
-      else if (mod.recipe) channels = renderRecipe(mod.recipe, { sampleRate: SR, emphasis: opts.emphasis, gain: Number(opts.gain ?? 1), seed: Number(opts.seed) >>> 0, profile }).channels;
+      else if (mod.recipe) channels = renderRecipe(mod.recipe, { sampleRate: SR, emphasis: opts.emphasis, gain: Number(opts.gain ?? 1), seed: Number(opts.seed) >>> 0, profile, ...recipeOpts(opts) }).channels;
       else if (resolve(base) === join(ROOT, 'patterns')) {
         // a code cue: drawn by the library's own page, in the style's palette
         renderer ??= await (await import('../lib/cue-render.mjs')).openRenderer();
         channels = (await renderer.renderChannels([{ cue: c.name, at: AT, feel: palette, opts }], { seconds: 2.5, sampleRate: SR })).channels;
       }
       if (!channels) { unmeasured.push(`${c.name}: a code cue outside the library's patterns/sound/ cannot be drawn here`); continue; }
-      const j = judgeCue(channels, SR, profile, { durationS: mod.durationS, emphasis: opts.emphasis ?? 'normal' });
+      const j = judgeCue(channels, SR, profile, { durationS: mod.recipe ? cueDurationS(mod.recipe, profile, recipeOpts(opts)) : mod.durationS, emphasis: opts.emphasis ?? 'normal' });
       rows.push({ cue: c.name, at: c.t, family: j.family, kind: mod.sample ? 'sample' : mod.recipe ? 'recipe' : 'code', checks: j.checks.map(({ check, ok, measured, band }) => ({ check, ok, measured, band })) });
       for (const m of misses(j)) reasons.push({ cue: c.name, check: m.check, instant: c.t, selector: c.selector, measured: m.measured, band: m.band, message: `${c.name}: ${m.message}` });
     }

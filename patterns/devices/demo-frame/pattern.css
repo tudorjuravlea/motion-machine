@@ -1,0 +1,39 @@
+/* devices/demo-frame: a recording on the brand's ground with no device chrome: a plane of the recording's own
+   shape inside the padded frame, a rounded mask, a shadow that follows what is drawn. Its share of the frame
+   (--demo-fit), its shape (--demo-ratio), its corner and its shadow are set from the pattern's params in JS, all as
+   fractions of the frame, so the look is the same at every format. */
+.demo-frame {
+  position: relative;
+  width: calc(var(--mm-frame-w) * var(--demo-fit, 0.8));
+  height: calc(var(--mm-frame-h) * var(--demo-fit, 0.8));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.demo-frame__shadow {
+  position: relative;
+  width: min(calc(var(--mm-frame-w) * var(--demo-fit, 0.8)), calc(var(--mm-frame-h) * var(--demo-fit, 0.8) * var(--demo-ratio, 1.6)));
+  aspect-ratio: var(--demo-ratio, 1.6);
+}
+.demo-frame__plane {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--mm-color-surface);
+  transform-origin: 50% 50%;
+}
+.demo-frame__screen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--mm-color-surface);
+}
+.demo-frame__media {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.demo-frame__media:not([src]) { display: none; }

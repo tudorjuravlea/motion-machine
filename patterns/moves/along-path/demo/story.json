@@ -1,0 +1,32 @@
+{
+  "id": "demo-moves-along-path",
+  "kind": "film",
+  "formats": ["16x9", "9x16", "1x1"],
+  "title": "moves/along-path demo",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": "moves/along-path",
+      "moveParams": {
+        "path": "M 0 80 C 60 -20 140 -20 200 60 S 340 160 400 40",
+        "target": "sub",
+        "start": 0.8,
+        "dur": 2.6,
+        "trail": "line",
+        "soften": 0.04
+      },
+      "beats": [
+        { "at": 0, "slot": "headline", "fx": "entrances/fade", "text": "A path, then the point that rides it", "params": { "instant": true } },
+        { "at": 0, "slot": "sub", "fx": "entrances/fade", "text": "here", "params": { "instant": true } }
+      ],
+      "say": "A single scene that shows moves/along-path."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

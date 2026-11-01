@@ -25,8 +25,11 @@
           }
         },
         "easings": {
-          "type": "object", "additionalProperties": false,
+          "type": "object",
+          "description": "enter, exit and move are the three roles every pattern reads; a brand may name more (a name a pattern or a beat can ask for), each an ease in the grammar of SPEC §6",
           "required": ["enter", "exit", "move"],
+          "propertyNames": { "pattern": "^[a-z][A-Za-z0-9]{0,30}$" },
+          "additionalProperties": { "$ref": "#/$defs/easing" },
           "properties": {
             "enter": { "$ref": "#/$defs/easing" },
             "exit":  { "$ref": "#/$defs/easing" },
@@ -34,8 +37,11 @@
           }
         },
         "spring": {
-          "type": "object", "additionalProperties": false,
+          "type": "object",
+          "description": "ui, type and heavy are the three roles every pattern reads; a brand may name more feels, each a spring (or a preset by name)",
           "required": ["ui", "type", "heavy"],
+          "propertyNames": { "pattern": "^[a-z][A-Za-z0-9]{0,30}$" },
+          "additionalProperties": { "$ref": "#/$defs/spring" },
           "properties": {
             "ui":    { "$ref": "#/$defs/spring" },
             "type":  { "$ref": "#/$defs/spring" },
@@ -46,13 +52,16 @@
         "overshootMax": { "type": "number", "minimum": 0, "maximum": 0.3, "description": "SPEC §15: bounded by the motion style" },
         "exitRatio":    { "type": "number", "minimum": 0.4, "maximum": 1 },
         "frameHold":    { "type": "integer", "enum": [1, 2, 3], "description": "2 animates elements on twos and 3 on threes (a 10 fps stop-motion grid): elements change only on the shared grid of 2/30 s or 3/30 s, counted in 1/30 s whatever the export frame rate, and an element that would finish inside its last step is drawn finished from that step, so rests are the same with or without the hold; cuts and camera moves stay smooth. Optional, 1 by default" },
+        "reduceMotion": { "type": "string", "enum": ["user", "always"], "description": "decks only: \"user\" (the default) follows the reader's prefers-reduced-motion setting; \"always\" draws every deck without movement (an entrance is a fade of the finished element, an exit a fade out, a cut a cross-fade, no camera move or emphasis), for a brand whose decks are shown to rooms that cannot ask. A film is never changed" },
         "boil":         { "type": "number", "minimum": 0, "maximum": 2, "description": "seconds each frame of a pen stroke's shiver holds (entrances/sketch); 0 keeps strokes still. Optional, 0.4 by default; a deck never shivers" },
         "stagger": {
           "type": "object", "additionalProperties": false,
           "required": ["eachS", "capS"],
           "properties": {
             "eachS": { "type": "number", "minimum": 0.01, "maximum": 0.25 },
-            "capS":  { "type": "number", "minimum": 0.2, "maximum": 1.5 }
+            "capS":  { "type": "number", "minimum": 0.2, "maximum": 1.5 },
+            "from":  { "description": "the order a cascade comes in, for every cascade (a beat's params.stagger.from wins): first (the default), last, center, edges, random, an item index, or a ratio pair [rx, ry] over a grid", "oneOf": [{ "enum": ["first", "last", "center", "edges", "random"] }, { "type": "integer", "minimum": 0 }, { "type": "array", "minItems": 2, "maxItems": 3, "items": { "type": "number", "minimum": 0, "maximum": 1 } }] },
+            "ease":  { "$ref": "#/$defs/easing", "description": "bends the spacing of every cascade (a beat's params.stagger.ease wins): the last child still arrives at the full capped delay" }
           }
         }
       }
@@ -66,7 +75,20 @@
         "loudnessLufs": { "type": "number", "minimum": -24, "maximum": -9 },
         "cuesPer10s":   { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "integer", "minimum": 0, "maximum": 12 } },
         "profile":      { "type": "string", "minLength": 1, "maxLength": 200, "description": "the sound profile (contracts/sound-profile.schema.json) the cues are voiced in and measured against: a name in styles/sound/ or a path to a profile file. The brand half may set it too, and then it wins, so a brand chooses its sound once" },
-        "samples":      { "type": "object", "maxProperties": 40, "propertyNames": { "pattern": "^[a-z][a-z0-9-]{0,30}$" }, "additionalProperties": { "type": "string", "pattern": "^(?!https?:)[^\\s]+\\.(wav|mp3|m4a|flac|ogg)$" }, "description": "cue name -> a sound file in the piece (assets/sounds/x.wav) that `mm sound` mixes in place of the cue's synthesis: trimmed and gain-matched to the profile's level. The cue must still exist under patterns/sound/ (the live preview plays it). Every file needs a record beside it, assets/sounds/x.json (contracts/sound-sample.schema.json): W-SAMPLE-LICENSE. A story's `audio.samples` wins over this" }
+        "suggest":      { "type": "object", "additionalProperties": false, "description": "what `mm sound suggest` proposes, chosen once: `cues` names the cue each kind of moment takes (entrance, type, count, cut, hit, tap, click, settle, exit; the rest keep the defaults), `hitShare` is the share of sounding cuts, strongest first, that take the hit rather than the cut cue (default 0.33), `repeatGapMs` how soon one cue may sound again (default 350)", "properties": {
+          "cues": { "type": "object", "additionalProperties": false, "properties": {
+            "entrance": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,30}$" }, "type": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,30}$" }, "count": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,30}$" },
+            "cut": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,30}$" }, "hit": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,30}$" }, "tap": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,30}$" },
+            "click": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,30}$" }, "settle": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,30}$" }, "exit": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,30}$" } } },
+          "hitShare": { "type": "number", "minimum": 0, "maximum": 1 },
+          "repeatGapMs": { "type": "integer", "minimum": 0, "maximum": 5000 } } },
+        "samples":      { "type": "object", "maxProperties": 40, "propertyNames": { "pattern": "^[a-z][a-z0-9-]{0,30}$" }, "additionalProperties": { "type": "string", "pattern": "^(?!https?:)[^\\s]+\\.(wav|mp3|m4a|flac|ogg)$" }, "description": "cue name -> a sound file in the piece (assets/sounds/x.wav) that `mm sound` mixes in place of the cue's synthesis: trimmed and gain-matched to the profile's level. The cue must still exist under patterns/sound/ (the live preview plays it). Every file needs a record beside it, assets/sounds/x.json (contracts/sound-sample.schema.json): W-SAMPLE-LICENSE. A story's `audio.samples` wins over this" },
+        "licences":     { "type": "array", "minItems": 1, "maxItems": 3, "uniqueItems": true, "items": { "enum": ["cc0", "pdm", "by"] }, "description": "the licences `mm sound find` offers and `mm sound fetch` allows for found sounds (Openverse codes: cc0, pdm for public domain, by for CC BY 2.0 to 4.0); default all three. A brand narrows it once (a brand that credits no one offers cc0 and pdm); a story widens it only by naming a licence in its `audio.acceptLicences`" },
+        "roles":        { "type": "object", "propertyNames": { "enum": ["tap", "knock", "click", "tick", "key", "pop", "popin", "whoosh", "riser", "hit", "drop", "tone"] }, "additionalProperties": { "type": "object", "additionalProperties": false, "properties": { "offsetMs": { "type": "number", "minimum": -500, "maximum": 500 } } }, "description": "per cue role (scripts/lib/sound-roles.mjs), the offset in ms of the cue's anchor (onset, apex or end) from its picture event: negative leads, positive lags. A beat's params.cue.offsetMs wins over this; this wins over the role's own value" },
+        "stopDown":     { "oneOf": [{ "const": false }, { "type": "object", "additionalProperties": false, "properties": { "on": { "type": "boolean" }, "db": { "type": "number", "minimum": 1, "maximum": 24 }, "lengthS": { "type": "number", "minimum": 0.1, "maximum": 2 }, "downMs": { "type": "number", "minimum": 5, "maximum": 500 }, "upMs": { "type": "number", "minimum": 5, "maximum": 500 }, "track": { "type": "boolean", "description": "also dip the story's audio.track (used unchanged otherwise)" } } }], "description": "before a hit cue (or a whoosh whose beat sets params.cue.big) the bed dips db dB (default 9) for lengthS seconds (default 0.4) and returns on the hit; false or on: false turns it off" },
+        "duck":         { "oneOf": [{ "enum": ["light", "normal", "deep", "off"] }, { "const": false }, { "type": "object", "additionalProperties": false, "properties": { "db": { "type": "number", "minimum": -30, "maximum": 0 }, "attackMs": { "type": "number", "minimum": 1, "maximum": 100 }, "releaseMs": { "type": "number", "minimum": 20, "maximum": 1000 } } }], "description": "with a voice track (audio.track with a .words.json beside it, or footage) the bed and the cues duck under speech: light about -4 dB, normal -9 (the default), deep -14, or an object" },
+        "tonalFit":     { "oneOf": [{ "type": "boolean" }, { "type": "object", "additionalProperties": false, "properties": { "maxSemitones": { "type": "number", "minimum": 0, "maximum": 2 } } }], "description": "tonal cues may move up to 2 semitones onto a note of the audio.track's key; skipped when the music has no tonal centre. Off by default: it moves a cue off its sound profile's key" },
+        "cueOverBedDb": { "type": "number", "minimum": 0.5, "maximum": 30, "description": "with a bed: cue and bed together sit this many dB over the bed, so a cue alone sits at bed + 10 log10(10^(x/10) - 1). Unset keeps the 6-8 dB peak band" }
       }
     },
     "transitions": {
@@ -163,7 +185,9 @@
     "band": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number", "minimum": 0, "maximum": 3600 } },
     "easing": {
       "type": "string",
-      "pattern": "^(linear|ease-in|ease-out|ease-in-out|cubic-bezier\\(\\s*-?[0-9.]+\\s*,\\s*-?[0-9.]+\\s*,\\s*-?[0-9.]+\\s*,\\s*-?[0-9.]+\\s*\\))$"
+      "minLength": 1, "maxLength": 600,
+      "pattern": "^[A-Za-z0-9.,()\\-+%\\s'\"]+$",
+      "description": "an ease in the grammar of SPEC §6: linear, ease-in, ease-out, ease-in-out, cubic-bezier(a, b, c, d), a family with a type (back.out(1.7), elastic.out(1, .4), expo.inOut), steps(8), irregular(10), slowMo(0.7, 0.7), expoScale(1, 2), bias(quad.out, 0.4), linear(0, .25 50%, 1), curve(M0,0 C...). The gate (W-EASE) reads what it spells"
     },
     "spring": {
       "oneOf": [
@@ -172,18 +196,29 @@
           "properties": {
             "k": { "type": "number", "exclusiveMinimum": 0, "maximum": 2000 },
             "c": { "type": "number", "exclusiveMinimum": 0, "maximum": 200 },
-            "m": { "type": "number", "exclusiveMinimum": 0, "maximum": 10 }
+            "m": { "type": "number", "exclusiveMinimum": 0, "maximum": 10 },
+            "velocity": { "$ref": "#/$defs/springVelocity" }
           }
         },
         {
           "type": "object", "additionalProperties": false, "required": ["bounce", "period"],
           "properties": {
             "bounce": { "type": "number", "minimum": -1, "exclusiveMaximum": 1, "description": "1 would never settle; the kit floors damping at bounce 0.99" },
-            "period": { "type": "number", "exclusiveMinimum": 0, "maximum": 5, "description": "seconds" }
+            "period": { "type": "number", "exclusiveMinimum": 0, "maximum": 5, "description": "seconds" },
+            "soft": { "type": "boolean", "description": "for a negative bounce: keep the arrival time of the critical spring of the same period (the curve changes shape, not when it lands); otherwise an over-damped spring lands late" },
+            "velocity": { "$ref": "#/$defs/springVelocity" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false, "required": ["preset"],
+          "properties": {
+            "preset": { "enum": ["beat", "plop", "bounce", "swing", "jump", "strike", "smooth"], "description": "a named feel (SPEC §6)" },
+            "velocity": { "$ref": "#/$defs/springVelocity" }
           }
         }
       ]
     },
+    "springVelocity": { "type": "number", "minimum": -50, "maximum": 50, "description": "the initial speed, in distances per second (0 from rest)" },
     "patternRef": { "type": "string", "pattern": "^(entrances|exits|emphasis|transitions|layouts|moves|text|data|devices|sound)/[a-z][a-z0-9-]*$" }
   }
 }

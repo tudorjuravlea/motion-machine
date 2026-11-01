@@ -1,0 +1,15 @@
+{
+  "name": "cut-hit",
+  "meaning": "a hard cut: the picture changes on a beat and the sound lands with it",
+  "durationS": 0.26,
+  "knobs": ["durS"],
+  "layers": [
+    { "kind": "tone", "f": 225, "glideTo": 46, "glideS": 0.15, "envelope": [[0, -40], [0.016, 0], [0.06, -20], [0.16, -52], [0.26, -80]], "drive": 0.6, "peak": 1 },
+    { "kind": "tone", "f": 175, "glideTo": 93, "glideS": 0.03, "attackS": 0.0005, "t60": 0.2, "peak": 0.6 },
+    { "kind": "noise", "filter": { "type": "bandpass", "f": 1226, "q": 0.8 }, "attackS": 0.0005, "t60": 0.006, "peak": 0.17, "from": 1 },
+    { "kind": "noise", "filter": { "type": "bandpass", "f": 374, "q": 1 }, "attackS": 0.0008, "t60": 0.2, "peak": 1, "from": 1 },
+    { "kind": "noise", "filter": { "type": "highpass", "f": 4000, "q": 0.7 }, "attackS": 0.001, "t60": 0.15, "peak": 0.2, "from": 2 }
+  ],
+  "room": { "send": -22, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "masterGain": 0.0741
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// `mm sound [piece] [--formats a,b] [--patterns dir]` (SPEC §9).
+// `mm sound [piece] [--formats a,b] [--patterns dir] [--trace]` (SPEC §9).
 //
 //   schedule cue events ──► snap to the beat grid (drift recorded) ──► render each distinct cue once
 //   through an OfflineAudioContext in a Playwright page ──► place at sample accuracy into a cue stem
@@ -16,6 +16,13 @@
 // A cue is a code pattern (pattern.js) or data (recipe.json, runtime/kit/synth.js): the style's `sound.profile`
 // voices a recipe, a beat's `params.cue` (gain, seed, emphasis) picks its arrangement, and the cue and mix stems
 // are stereo; the lean of the final mix (left minus right, K-weighted) is recorded in out/cues.json for W-MIX.
+// Placement is exact (scripts/lib/sound-place.mjs): the point of the rendered cue its role names (onset, apex or end, measured on
+// the sound) meets its picture event plus the role's offset (a beat's `params.cue.offsetMs` or the style's `sound.roles.<role>.offsetMs`
+// override it), and out/cues.json carries a sync lock per cue (the measured points and where each sits against the picture) that W-CUE
+// judges. The mix: the bed dips before a hit (`sound.stopDown`), the bed and the cues duck under a voice track
+// (`sound.duck`, keyed by its words or its envelope), tonal cues may shift up to 2 semitones to the music's key (`sound.tonalFit`), and
+// W-AUDIBLE's margins are measured in the finished mix and recorded per cue. `--trace` writes out/sound-trace.json: every add (bus,
+// start sample, length, gain, pan, cue, the rule that placed it) and every gain curve.
 // It holds the piece's export lock (scripts/lib/export-lock.mjs) for its run, since it rewrites the
 // MP4s: beside another `mm export` or `mm sound` it exits 2 at once.
 import { spawn } from 'node:child_process';
@@ -30,8 +37,13 @@ import { patternsBaseOf } from './lib/patterns-base.mjs';
 import { bin, inputOf } from './lib/ffmpeg.mjs';
 import { decodePcm } from './beats.mjs';
 import { decodeStereo as decodeAt } from './lib/audio-decode.mjs';
-import { balanceDb } from './lib/audio-measure.mjs';
+import { balanceDb, loudest100ms, ungatedLufs } from './lib/audio-measure.mjs';
 import { loadCueModule, loadProfile } from './lib/sound-profile.mjs';
+import { cueAnchors, lockOf, offsetFor, placeCue } from './lib/sound-place.mjs';
+import { roleNameOf } from './lib/sound-roles.mjs';
+import { DUCK_PRESETS, STOP_DOWN, TONAL_CENTRE_MIN, aloneOverBedDb, bedIsSilent, chromaOf, duckCurve, fitShift, monoAsDual, pitchOfCue, shiftPitch, speechSpansFromAudio, speechSpansFromWords, stopDownCurve, tonalCentre } from './lib/sound-mix.mjs';
+import { auditCue, musicHarshDb } from './lib/sound-audible.mjs';
+import { voiceOf } from './lib/sound-voice.mjs';
 import { loadSample, sampleMap, sampleModule, sampleProblems } from './lib/sound-sample.mjs';
 import { paramsOf } from '../runtime/kit/params.js';
 import { schedule as buildSchedule } from '../runtime/kit/schedule.js';
@@ -53,7 +65,7 @@ const STAGE2_UNDER_LU = 0.5;      // stage 2 runs when stage 1 lands more than t
 const STAGE2_TRIES = 4;
 const STAGE2_MAX_GAIN_DB = 40;
 const TAIL_S = 0.5;
-const VARY_SEEDS = 4;             // a recipe that varies (taps) is rendered with this many seeds in turn
+export const VARY_SEEDS = 4;             // a recipe that varies (taps) is rendered with this many seeds in turn
 
 // --------------------------------------------------------------------------------------------
 // process helpers
@@ -115,7 +127,10 @@ export function loadGrid(dir, story) {
   if (!rel) return { beats: null, declared: false };
   const file = resolve(dir, rel);
   if (!existsSync(file)) return { beats: null, declared: true, missing: rel };   // as written: the evidence a browser gives too
-  return { beats: beatsOf(JSON.parse(readFileSync(file, 'utf8'))), declared: true, file };
+  const json = JSON.parse(readFileSync(file, 'utf8'));
+  // `mm beats` writes `usable: false` when under half of the grid's beats land on a kick: cues are not snapped to such a grid
+  if (json && !Array.isArray(json) && json.usable === false) return { beats: null, declared: true, file, unusable: true, kickShare: json.kickCheck?.share ?? null };
+  return { beats: beatsOf(json), declared: true, file };
 }
 
 /** Where the sound patterns live: explicit, else the piece's own base, then `<dir>/patterns`, `<dir>/../patterns`, then the repo's. */
@@ -174,15 +189,16 @@ function addInto(stem, src, at, gain) {
 // the plan: cues from the schedule, snapped to the grid
 
 /**
- * @param {{t:number,name:string,selector?:string,scene?:string}[]} cues  schedule cue events
+ * @param {{t:number,pictureS?:number,name:string,selector?:string,scene?:string}[]} cues  schedule cue events (`pictureS`: the picture event the sound meets, `t` when absent)
  * @param {number[]|null} beats  the grid, or null
- * @returns cues with { at, snappedFrom, driftMs } — `at` is where the sound plays
+ * @returns cues with { requestedAt, at, snappedFrom, driftMs }: `requestedAt` is the picture event, `at` the instant the sound's anchor point meets (the nearest beat when there is a grid)
  */
 export function planCues(cues, beats) {
   const plan = cues.map((c) => {
-    const grid = beats && c.name !== 'bed' ? nearest(beats, c.t) : null;
-    const drift = grid == null ? 0 : grid - c.t;
-    return { ...c, requestedAt: c.t, at: grid ?? c.t, snappedFrom: grid != null && Math.abs(drift) > 1e-6 ? c.t : null, driftMs: grid != null ? Math.round(drift * 1000) : null };
+    const picture = c.pictureS ?? c.t;
+    const grid = beats && c.name !== 'bed' ? nearest(beats, picture) : null;
+    const drift = grid == null ? 0 : grid - picture;
+    return { ...c, requestedAt: picture, at: grid ?? picture, snappedFrom: grid != null && Math.abs(drift) > 1e-6 ? picture : null, driftMs: grid != null ? Math.round(drift * 1000) : null };
   });
   // Snapping must not merge two retriggers of one cue under the cooldown: the later keeps its own instant.
   const last = new Map();
@@ -197,7 +213,7 @@ export function planCues(cues, beats) {
 // --------------------------------------------------------------------------------------------
 // rendering in the page
 
-async function renderInPage(page, serverUrl, patternsRel, items) {
+export async function renderInPage(page, serverUrl, patternsRel, items) {
   const jobs = items.map((it) => ({ key: it.key, name: it.name, feel: it.feel, opts: it.opts, recipe: it.recipe ?? null, profile: it.profile ?? null, url: `${serverUrl}/${patternsRel}/sound/${it.name}/pattern.js`, synth: `${serverUrl}/runtime/kit/synth.js` }));
   const res = await page.evaluate(async ({ jobs, sr, tail }) => {
     const b64 = (f32) => {
@@ -329,14 +345,19 @@ export const mixable = (story, style) => story?.kind !== 'deck'
 /**
  * @returns {Promise<{code:number, mix?:string, cues?:object[], loudness?:object, muxed?:string[], notes:string[]}>}
  */
-export async function buildSound(pieceDir, { formats = null, patterns = null, log = () => {} } = {}) {
+export async function buildSound(pieceDir, { formats = null, patterns = null, trace = false, sprite: sprite_ = 'wav', log = () => {} } = {}) {
   const dir = resolve(pieceDir);
   const notes = [];
   const story = JSON.parse(readFileSync(join(dir, 'story.json'), 'utf8'));
   const style = JSON.parse(readFileSync(join(dir, 'style.json'), 'utf8'));
   const unknown = (formats ?? []).filter((f) => !story.formats.includes(f));
   if (unknown.length) throw Object.assign(new Error(`this story ships ${story.formats.join(', ')}, not ${unknown.join(', ')}`), { setup: true });
-  if (story.kind === 'deck') return { code: 0, notes: ['decks are not mixed: a deck has no picture clock to mix against (cues play in `mm serve`)'] };
+  if (story.kind === 'deck') {   // a deck has no picture clock to mix against: its cues become a sprite the standalone deck plays (SPEC §10)
+    const { writeDeckSound } = await import('./lib/deck-sound.mjs');
+    const { sprite, files } = await writeDeckSound(dir, { codec: sprite_, patterns, kit: { VARY_SEEDS, loadCueModules, renderInPage, resolvePatternsBase, ffmpeg } });
+    if (!sprite) return { code: 0, notes: ['a deck is not mixed, and this one has no cues to put in a sprite (no cue named, or the style\'s sound palette is "none")'] };
+    return { code: 0, sprite, notes: [...sprite.notes, `a deck is not mixed: its ${Object.keys(sprite.cues).length} distinct cue${Object.keys(sprite.cues).length === 1 ? '' : 's'} are one sprite, ${files.map((f) => relative(process.cwd(), join(dir, 'out', f))).join(' and ')}; \`mm export\` embeds it in the standalone deck, which plays it after the first press`] };
+  }
   const out = join(dir, 'out');
   const palette = style.sound?.palette ?? 'none';
   const profile = style.sound?.profile ? loadProfile(style.sound.profile, dir) : null;   // the sound look the recipe cues are voiced in (a brand's, when composed)
@@ -378,7 +399,8 @@ export async function buildSound(pieceDir, { formats = null, patterns = null, lo
       const times = new Map();
       for (const c of cuePlanList) {
         const mod = mods[c.name];
-        const opts = paramsOf(mod, c.params, style);
+        const { offsetMs, soundOk, big, ...opts } = paramsOf(mod, c.params, style);   // placement and gate params are not the sound's: they must not split its renders
+        c.extra = { offsetMs, soundOk, big };
         const n = times.get(c.name) ?? 0;
         times.set(c.name, n + 1);
         if (mod.recipe?.vary) opts.seed = (Number(opts.seed) + (n % VARY_SEEDS) * 101) >>> 0;
@@ -403,11 +425,45 @@ export async function buildSound(pieceDir, { formats = null, patterns = null, lo
   const stems = join(out, 'stems');
   mkdirSync(stems, { recursive: true });
 
-  // Natural levels per distinct cue.
-  const nat = Object.fromEntries(Object.entries(buffers).map(([n, b]) => [n, { ...b, peakDb: toDb(peakOf(b.channels)) }]));
+  // A voice track (words beside it, or footage): the bed and the cues duck under it.
+  const voice = voiceOf(dir, story);
+
+  // Tonal fit: a tonal cue moves up to ±2 semitones onto a note of the music's key (style.sound.tonalFit), unless the music has no tonal centre.
+  const tonalFit = {};
+  const tfCfg = style.sound?.tonalFit === true ? {} : style.sound?.tonalFit && typeof style.sound.tonalFit === 'object' ? style.sound.tonalFit : null;
+  if (tfCfg && cuePlanList.length && track && !voice) {
+    const maxSt = Math.min(2, Math.max(0, Number(tfCfg.maxSemitones ?? 2)));
+    const chroma = chromaOf(await decodePcm(track), SR), centre = tonalCentre(chroma);
+    for (const [key, b] of Object.entries(buffers)) {
+      const p = pitchOfCue(b.channels, SR);
+      if (!p.tonal) continue;
+      if (centre < TONAL_CENTRE_MIN) { tonalFit[key] = { skipped: 'the music has no tonal centre' }; continue; }
+      const fit = fitShift(p.hz, chroma, maxSt);
+      if (!fit) { tonalFit[key] = { skipped: 'no note of the music within reach' }; continue; }
+      if (Math.abs(fit.semitones) > 0.005) { b.channels = shiftPitch(b.channels, fit.semitones); b.durationS /= 2 ** (fit.semitones / 12); }
+      tonalFit[key] = { semitones: round(fit.semitones, 3), fromHz: round(fit.fromHz, 1), toHz: round(fit.toHz, 1), pitchClass: fit.pitchClass };
+    }
+  }
+
+  // Natural levels per distinct cue (a mono sound is measured and mixed as dual mono), and the points of each that can meet a beat.
+  const nat = Object.fromEntries(Object.entries(buffers).map(([n, b]) => {
+    const channels = monoAsDual(b.channels);
+    return [n, { ...b, channels, peakDb: toDb(peakOf(channels)), anchors: cueAnchors(channels, SR) }];
+  }));
   const plain = cuePlanList.filter((c) => c.name !== 'bed' && c.at < D);
   const beds = cuePlanList.filter((c) => c.name === 'bed' && c.at < D);
   for (const c of cuePlanList) if (c.at >= D) notes.push(`${c.name} at ${round(c.at)} s is past the picture end and is dropped`);
+
+  // Exact placement: the cue's anchor (onset, apex or end, as its role says) meets its picture event plus the role's offset.
+  for (const c of plain) {
+    const a = nat[c.key].anchors;
+    c.offset = offsetFor(c.name, c.extra, style);
+    c.startS = a ? placeCue({ pictureS: c.at, anchors: a, offset: c.offset }).startS : c.at;
+    c.rule = a ? `role ${c.offset.role}: ${c.offset.anchor} ${c.offset.offsetMs >= 0 ? '+' : ''}${c.offset.offsetMs} ms (${c.offset.from})` : 'unplaced (silent sound)';
+    c.lock = a ? lockOf({ pictureS: c.requestedAt, anchors: a, offset: c.offset, startS: c.startS }) : null;
+  }
+  const adds = [], curves = [];
+  const traceAdd = (bus, startS, lengthS, gain, cue, rule) => adds.push({ bus, startSample: Math.round(startS * SR), length: Math.round(lengthS * SR), gain: round(gain, 4), pan: 0, cue, rule });
 
   // Bed stem at unity first, so its loudness can be matched to the track.
   const bedStem = [new Float32Array(total), new Float32Array(total)];
@@ -442,21 +498,72 @@ export async function buildSound(pieceDir, { formats = null, patterns = null, lo
     for (const ch of bedStem) for (let i = 0; i < ch.length; i++) ch[i] *= fromDb(bedGain);
   }
   const bedPeak = beds.length ? bedNatPeak + bedGain : null;
+  for (const r of bedRegions) traceAdd('bed', r.c.at, r.until - r.c.at, fromDb(bedGain), 'bed', 'bed loop');
 
-  // Cue gains.
-  const cueGainDb = {};
+  // Cue gains. With a bed, a cue peaks 6-8 dB over it (or, with style.sound.cueOverBedDb, sits where cue and bed together are that many dB over the
+  // bed); a cue with no bed in the second before it falls back to the profile's fixed level.
+  const cueOverBed = style.sound?.cueOverBedDb ?? null;
+  const aloneDb = cueOverBed == null ? null : aloneOverBedDb(Number(cueOverBed));
   const names = [...new Set(plain.map((c) => c.key))];
-  for (const n of names) {
-    const p = nat[n].peakDb;
-    if (bedPeak != null) cueGainDb[n] = Math.min(Math.max(p, bedPeak + BED_BAND_DB[0] + 0.25), bedPeak + BED_BAND_DB[1] - 0.25) - p;
-    else if (trackInfo) cueGainDb[n] = trackInfo.peakDb - CUE_UNDER_TRACK_PEAK_DB - Math.max(...names.map((x) => nat[x].peakDb));
-    else cueGainDb[n] = 0;
+  const loudestOf = new Map();
+  for (const c of plain) {
+    const n = nat[c.key], p = n.peakDb;
+    const onsetAt = c.startS + (n.anchors?.onsetS ?? 0);
+    if (beds.length && bedIsSilent(bedStem, SR, onsetAt < 0.25 ? onsetAt + 0.75 : onsetAt)) { c.gainDb = 0; c.bedFallback = true; }
+    else if (bedPeak != null && aloneDb != null) {
+      const to = Math.round(onsetAt * SR), win = bedStem.map((ch) => ch.subarray(Math.max(0, to - SR), Math.max(to, 1)));
+      if (!loudestOf.has(c.key)) loudestOf.set(c.key, loudest100ms(n.channels, SR));
+      c.gainDb = Math.min(ungatedLufs(win, SR) + aloneDb - loudestOf.get(c.key), -1 - p);
+    } else if (bedPeak != null) c.gainDb = Math.min(Math.max(p, bedPeak + BED_BAND_DB[0] + 0.25), bedPeak + BED_BAND_DB[1] - 0.25) - p;
+    else if (trackInfo) c.gainDb = trackInfo.peakDb - CUE_UNDER_TRACK_PEAK_DB - Math.max(...names.map((x) => nat[x].peakDb));
+    else c.gainDb = 0;
   }
   const cueStem = [new Float32Array(total), new Float32Array(total)];
-  for (const c of plain) addInto(cueStem, nat[c.key].channels, c.at, fromDb(cueGainDb[c.key]));
+  for (const c of plain) {
+    addInto(cueStem, nat[c.key].channels, c.startS, fromDb(c.gainDb));
+    traceAdd('cues', c.startS, nat[c.key].channels[0].length / SR, fromDb(c.gainDb), c.name, c.rule);
+  }
+
+  // The stop-down: before a hit (or a whoosh marked `big`) the bed dips and returns on it (style.sound.stopDown: on, db, lengthS, track).
+  const sdRaw = style.sound?.stopDown;
+  const stopDown = sdRaw === false || sdRaw?.on === false ? null : { ...STOP_DOWN, ...(sdRaw && typeof sdRaw === 'object' ? sdRaw : {}) };
+  const trackStereo = track ? await decodeStereo(track) : null;
+  let trackFile = track;
+  if (stopDown) {
+    const hits = plain.filter((c) => nat[c.key].anchors && (roleNameOf(c.name) === 'hit' || roleNameOf(c.name) === 'drop' || (roleNameOf(c.name) === 'whoosh' && c.extra.big === true)))
+      .map((c) => c.startS + (roleNameOf(c.name) === 'hit' ? nat[c.key].anchors.onsetS : nat[c.key].anchors.apexS));
+    if (hits.length) {
+      const dip = stopDownCurve(total, SR, hits, stopDown);
+      curves.push({ bus: stopDown.track && track && !voice ? 'bed+track' : 'bed', rule: 'stop-down', db: -Math.abs(stopDown.db), lengthS: stopDown.lengthS, atS: hits.map((h) => round(h, 3)) });
+      if (beds.length) for (const ch of bedStem) for (let i = 0; i < total; i++) ch[i] *= dip[i];
+      if (stopDown.track && trackStereo && !voice) {          // the track is used unchanged unless the brand asks for it to dip too
+        for (const ch of trackStereo) for (let i = 0; i < ch.length && i < total; i++) ch[i] *= dip[i];
+        trackFile = join(stems, 'track.wav');
+        writeFileSync(trackFile, floatWav(trackStereo));
+      }
+    }
+  }
+
+  // Voice-safe ducking: the bed and the cues sit under speech (style.sound.duck: light, normal, deep, off or { db, attackMs, releaseMs }).
+  const duckRaw = style.sound?.duck;
+  let duck = null, speechSpans = [];
+  if (voice && duckRaw !== false && duckRaw !== 'off') {
+    const named = typeof duckRaw === 'string' ? duckRaw : 'normal';
+    if (!DUCK_PRESETS[named]) throw new Error(`style.sound.duck "${duckRaw}" is not light, normal, deep or off`);
+    duck = { name: duckRaw && typeof duckRaw === 'object' ? 'custom' : named, ...DUCK_PRESETS[named], ...(duckRaw && typeof duckRaw === 'object' ? duckRaw : {}) };
+  }
+  let duckC = null;
+  if (voice) {
+    speechSpans = voice.words ? speechSpansFromWords(voice.words) : speechSpansFromAudio(trackStereo, SR);
+    if (duck && speechSpans.length) {
+      duckC = duckCurve(total, SR, speechSpans, duck);
+      for (const st of [bedStem, cueStem]) for (const ch of st) for (let i = 0; i < total; i++) ch[i] *= duckC[i];
+      curves.push({ bus: 'bed+cues', rule: `duck ${duck.name}`, db: duck.db, attackMs: duck.attackMs, releaseMs: duck.releaseMs, spans: speechSpans.map((x) => ({ from: round(x.from, 3), to: round(x.to, 3) })) });
+    }
+  }
 
   const inputs = [];
-  if (track) inputs.push(track);
+  if (track) inputs.push(trackFile);
   if (beds.length) { writeFileSync(join(stems, 'bed.wav'), floatWav(bedStem)); inputs.push(join(stems, 'bed.wav')); }
   if (plain.length) { writeFileSync(join(stems, 'cues.wav'), floatWav(cueStem)); inputs.push(join(stems, 'cues.wav')); }
 
@@ -474,11 +581,51 @@ export async function buildSound(pieceDir, { formats = null, patterns = null, lo
   const balance = mixInfo.stage === 'silent' ? 0 : balanceDb([mixL, mixR], SR);
   const loudnessRecord = { target, stage: mixInfo.stage, lufs: round(loudness.lufs), truePeak: round(loudness.truePeak), balanceDb: round(balance, 2), attempts: mixInfo.attempts };
 
+  // W-AUDIBLE's measures, in the finished mix: each cue against the music (the bed, and the track unless it is the voice) and the voice, as it ships.
+  const gMaster = mixInfo.stage === 'silent' || !Number.isFinite(mixInfo.attempts[0]?.inputLufs) ? 0 : loudness.lufs - mixInfo.attempts[0].inputLufs;
+  const musicAll = beds.length || (trackStereo && !voice)
+    ? [0, 1].map((k) => { const m = Float32Array.from(bedStem[k]); if (trackStereo && !voice) for (let i = 0; i < total && i < trackStereo[k].length; i++) m[i] += trackStereo[k][i]; return m; })
+    : null;
+  const harshRef = musicAll ? musicHarshDb(musicAll, SR) : null;
+  for (const c of plain) {
+    const n = nat[c.key];
+    if (!n.anchors) continue;
+    const len = n.channels[0].length, startI = Math.round(c.startS * SR);
+    const r0 = Math.max(0, startI - Math.round(0.2 * SR)), r1 = Math.min(total, startI + len + Math.round(0.3 * SR));
+    if (r1 - r0 < 64) continue;
+    const g = fromDb(c.gainDb);
+    const cueSeg = n.channels.slice(0, 2).map((ch) => {
+      const seg = new Float32Array(r1 - r0);
+      for (let i = 0; i < len; i++) { const j = startI + i - r0; if (j >= 0 && j < seg.length) seg[j] = ch[i] * g * (duckC ? duckC[startI + i] : 1); }
+      return seg;
+    });
+    const slice = (arrs) => arrs.map((a) => a.subarray(r0, Math.min(r1, a.length)));
+    const pad = (arrs) => arrs.map((a) => { if (a.length === r1 - r0) return a; const z = new Float32Array(r1 - r0); z.set(a); return z; });
+    c.audible = auditCue({
+      cue: cueSeg, music: musicAll ? slice(musicAll) : cueSeg.map((x) => new Float32Array(x.length)), voice: voice && trackStereo ? pad(slice(trackStereo)) : null,
+      sr: SR, startS: r0 / SR, onsetS: c.startS + n.anchors.onsetS, endS: c.startS + n.anchors.endS, G: gMaster, spans: speechSpans, ducked: Boolean(duckC), musicHarshDb: harshRef,
+    });
+  }
+
+  const sk = (c) => (mods?.[c.name]?.recipe ? { emphasis: c.opts.emphasis, profile: profile?.name ?? null } : {});
   const cuesJson = [
     ...beds.map((c) => ({ name: 'bed', at: round(c.at, 3), until: round(bedRegions.find((r) => r.c === c).until, 3), feel: palette, peakDb: round(bedPeak), snappedFrom: null, driftMs: null })),
-    ...plain.map((c) => ({ name: c.name, at: round(c.at, 3), feel: palette, ...(mods?.[c.name]?.recipe ? { emphasis: c.opts.emphasis, profile: profile?.name ?? null } : {}), ...(mods?.[c.name]?.sample ? { sample: mods[c.name].sample.rel, profile: profile?.name ?? null } : {}), peakDb: round(nat[c.key].peakDb + cueGainDb[c.key]), snappedFrom: c.snappedFrom == null ? null : round(c.snappedFrom, 3), driftMs: c.driftMs })),
+    ...plain.map((c) => ({
+      name: c.name, at: round(c.at, 3), requestedAt: round(c.requestedAt, 4), startS: round(c.startS, 4), feel: palette, ...sk(c),
+      ...(mods?.[c.name]?.sample ? { sample: mods[c.name].sample.rel, profile: profile?.name ?? null } : {}),
+      peakDb: round(nat[c.key].peakDb + c.gainDb), snappedFrom: c.snappedFrom == null ? null : round(c.snappedFrom, 3), driftMs: c.driftMs,
+      rule: c.rule, ...(c.lock ? { lock: c.lock } : {}), ...(c.bedFallback ? { bedFallback: true } : {}),
+      ...(tonalFit[c.key] ? { tonalFit: tonalFit[c.key] } : {}), ...(c.audible ? { audible: c.audible } : {}),
+    })),
   ].sort((a, b) => a.at - b.at);
-  writeFileSync(join(out, 'cues.json'), JSON.stringify({ loudness: loudnessRecord, cues: cuesJson }, null, 2) + '\n');
+  const mixRecord = {
+    ...(stopDown ? { stopDown: { db: -Math.abs(stopDown.db), lengthS: stopDown.lengthS, track: Boolean(stopDown.track) } } : {}),
+    ...(duck ? { duck: { name: duck.name, db: duck.db, attackMs: duck.attackMs, releaseMs: duck.releaseMs, voice: relative(dir, voice.file), speech: voice.words ? 'words' : 'envelope', spans: speechSpans.length } } : {}),
+    ...(tfCfg ? { tonalFit: { maxSemitones: Math.min(2, Number(tfCfg.maxSemitones ?? 2)) } } : {}),
+    ...(aloneDb != null ? { cueOverBedDb: Number(cueOverBed) } : {}),
+  };
+  writeFileSync(join(out, 'cues.json'), JSON.stringify({ loudness: loudnessRecord, ...(Object.keys(mixRecord).length ? { mix: mixRecord } : {}), cues: cuesJson }, null, 2) + '\n');
+  if (trace) writeFileSync(join(out, 'sound-trace.json'), JSON.stringify({ sampleRate: SR, adds, curves }, null, 2) + '\n');
 
   const muxed = [];
   for (const v of videos) { await mux(v, mixPath, Math.round((await streamSeconds(v, 'video')) * 1000) / 1000); muxed.push(v); }
@@ -488,9 +635,10 @@ export async function buildSound(pieceDir, { formats = null, patterns = null, lo
 }
 
 function parseArgs(argv) {
-  const { values, positionals } = parseFlags({ args: argv, allowPositionals: true, options: { formats: { type: 'string' }, patterns: { type: 'string' } } });
+  const { values, positionals } = parseFlags({ args: argv, allowPositionals: true, options: { formats: { type: 'string' }, patterns: { type: 'string' }, trace: { type: 'boolean' }, sprite: { type: 'string' } } });
   if (positionals.length > 1) throw new UsageError('at most one piece');
-  return { _: positionals, formats: values.formats?.split(',').filter(Boolean) ?? null, patterns: values.patterns ?? null };
+  if (values.sprite != null && !['wav', 'mp3', 'aac'].includes(values.sprite)) throw new UsageError(`--sprite takes wav, mp3 or aac, not ${values.sprite}`);
+  return { _: positionals, formats: values.formats?.split(',').filter(Boolean) ?? null, patterns: values.patterns ?? null, trace: Boolean(values.trace), sprite: values.sprite ?? 'wav' };
 }
 
 /** CLI entry: returns the exit code (0 done, 1 failed, 2 setup or usage). */
@@ -504,7 +652,7 @@ export async function main(argv) {
   let held;
   try { held = holdForExport(dir, { by: 'mm sound' }); } catch (e) { console.error(`sound: ${e instanceof ExportBusy ? 'refused: ' : ''}${e.reason ?? e.message}`); return 2; }
   try {
-    const res = await buildSound(dir, { formats: a.formats, patterns: a.patterns, log: console.log });
+    const res = await buildSound(dir, { formats: a.formats, patterns: a.patterns, trace: a.trace, sprite: a.sprite, log: console.log });
     for (const n of res.notes) console.log(`sound: ${n}`);
     return res.code;
   } catch (e) {

@@ -23,6 +23,11 @@
 // Once the files are in place they are read back (scripts/lib/export-qa.mjs): out/export-qa.json, the
 // seam sheet out/export-qa-seams-<format>.png, `qa` in out/export.json; a failed check exits 1 (and
 // --prove then says not proved). The mix is muxed later by `mm sound`; `mm verify-export` reads the final file.
+// --alpha (films) draws with a transparent canvas and writes <id>-<format>.webm (VP9 with alpha) instead of an MP4;
+// --alpha-mov adds <id>-<format>.mov (ProRes 4444) for editors. No sound track, poster, loop check or GIF; software encoder.
+// The read-back (QA-ALPHA) decodes the alpha channel: a corner the page left clear is clear, a pixel it drew solid is solid.
+// The file's tags come from the story and never from the clock (scripts/lib/export-meta.mjs): title, description,
+// and the story's `date` as the creation time. --fps 29.97 is written as 30000/1001 (scripts/lib/frame-rate.mjs).
 // A film's outputs (MP4s, GIFs, poster, loop check) are written under staged `.partial` names and
 // renamed together only once every format is in: a run that fails, or is interrupted, leaves out/
 // as the previous run left it. Interrupted (Ctrl-C, SIGTERM, SIGHUP, a closed output pipe),
@@ -40,9 +45,13 @@ import { ExportBusy, Unreadable, holdForExport } from './lib/story-edit.mjs';
 import { versionOf } from './lib/story-version.mjs';
 import { UsageError, fontFiles, resolvePiece, runMain } from './lib/cli.mjs';
 import { isSafeFamily, unsafeStyleValues } from './lib/style-values.mjs';
-import { assertTools, chooseEncoder, loopSeam, probe, runFfmpeg, ssim, startEncoder } from './lib/ffmpeg.mjs';
+import { ALPHA_KINDS, assertTools, chooseEncoder, loopSeam, probe, runFfmpeg, ssim, startEncoder } from './lib/ffmpeg.mjs';
+import { exactFps } from './lib/frame-rate.mjs';
+import { exportMeta } from './lib/export-meta.mjs';
+import { displayText } from './lib/say.mjs';
 import { verdictLines, verifyExport } from './lib/export-qa.mjs';
 import { buildStandalone } from './lib/standalone.mjs';
+import { buildDeckSprite } from './lib/deck-sound.mjs';
 import { momentsOf } from './stills.mjs';
 
 const sha = (buf) => createHash('sha256').update(buf).digest('hex');
@@ -217,10 +226,15 @@ const failFrameFor = (format) => {
  * Test-only hooks (inert unless set): MM_EXPORT_FAIL_FRAME (failFrameFor) and
  * MM_EXPORT_HASHES=<file> (read in exportFilm), which writes { format: [frame SHA-256] }.
  */
-async function renderFilm({ dir, format, fps, sub, out, comment, shared, wantPoster, workers = 1, encoder = 'software' }) {
+/** Several encoders fed the same frames: one object with an encoder's write, end and abort. */
+function fanEncoder(encs) {
+  return { write: (buf) => Promise.all(encs.map((e) => e.write(buf))).then(() => {}), end: () => Promise.all(encs.map((e) => e.end())).then(() => {}), abort: () => Promise.all(encs.map((e) => e.abort())).then(() => {}) };
+}
+
+async function renderFilm({ dir, format, fps, sub, out, comment, meta, shared, wantPoster, workers = 1, encoder = 'software', alpha = null, alsoOut = null }) {
   const t0 = performance.now();
   const failFrame = failFrameFor(format);
-  const opened = [await openPiece(dir, { format, ...shared })];
+  const opened = [await openPiece(dir, { format, ...shared, alpha: !!alpha })];
   let enc = null;
   try {
     const lead = opened[0];
@@ -234,7 +248,7 @@ async function renderFilm({ dir, format, fps, sub, out, comment, shared, wantPos
     const chunks = Array.from({ length: Math.ceil(frames / size) }, (_, c) => [c * size, Math.min(frames, (c + 1) * size)]);
     const pages = Math.min(workers, chunks.length);
     if (pages > 1) {   // every page that opens is closed below, even when another fails to open
-      const more = await Promise.allSettled(Array.from({ length: pages - 1 }, () => openPiece(dir, { format, ...shared })));
+      const more = await Promise.allSettled(Array.from({ length: pages - 1 }, () => openPiece(dir, { format, ...shared, alpha: !!alpha })));
       opened.push(...more.filter((m) => m.status === 'fulfilled').map((m) => m.value));
       const bad = more.find((m) => m.status === 'rejected');
       if (bad) throw bad.reason;
@@ -249,10 +263,12 @@ async function renderFilm({ dir, format, fps, sub, out, comment, shared, wantPos
     const draw = async (page, n) => {
       if (n === failFrame) throw new Error(`MM_EXPORT_FAIL_FRAME: the page drawing frame ${n} of ${format} was told to throw`);
       const pngs = [];
-      for (const t of instantsOfFrame(n, fps, sub)) pngs.push(await framePng(page, t));
+      for (const t of instantsOfFrame(n, fps, sub)) pngs.push(await framePng(page, t, { alpha: !!alpha }));
       return pngs;
     };
-    enc = liveEncoder({ out, fps, sub, comment, encoder, width, height });
+    enc = alpha
+      ? fanEncoder([liveEncoder({ out, fps, sub, comment, meta, kind: alpha, width, height }), ...(alsoOut ? [liveEncoder({ out: alsoOut.out, fps, sub, comment, meta, kind: alsoOut.kind, width, height })] : [])])
+      : liveEncoder({ out, fps, sub, comment, encoder, width, height, meta });
     const hashes = [];
     let first = null, last = null, posterPng = null;
     /** Frame n reaches the encoder: only ever called in frame order. */
@@ -287,13 +303,13 @@ async function renderFilm({ dir, format, fps, sub, out, comment, shared, wantPos
 }
 
 /** Hashes of `instants` (film seconds or deck presses), rendered in a fresh page, optionally last to first. */
-async function hashInstants({ dir, format, instants, reverse = false, shared }) {
-  const opened = await openPiece(dir, { format, ...shared });
+async function hashInstants({ dir, format, instants, reverse = false, shared, alpha = false }) {
+  const opened = await openPiece(dir, { format, ...shared, alpha });
   try {
     const order = instants.map((_, i) => i);
     if (reverse) order.reverse();
     const out = new Array(instants.length);
-    for (const i of order) out[i] = sha(await framePng(opened.page, instants[i]));
+    for (const i of order) out[i] = sha(await framePng(opened.page, instants[i], { alpha }));
     return out;
   } finally {
     await opened.close();
@@ -314,11 +330,12 @@ async function exportFilm(dir, story, o, shared, manifest) {
   const stage = (final) => { const tmp = final.replace(/(\.[^./]+)$/, '.partial$1'); staged.push([tmp, final]); live.staged.add(tmp); return tmp; };
   try {
     for (const format of formats) {
+      if (o.alpha) { await exportAlphaFormat({ dir, story, o, shared, manifest, format, stage, outDir, frameHashes }); continue; }
       const out = join(outDir, `${story.id}-${format}.mp4`);
       const mp4 = stage(out);
       log(`export ${format} → ${out}`);
       const first = format === story.formats[0];   // the poster and loop check are the story's first format's
-      const r = await renderFilm({ dir, format, fps: o.fps, sub: o.sub, out: mp4, comment: o.comment, shared, wantPoster: first, workers: o.workers, encoder: o.encoder.used });
+      const r = await renderFilm({ dir, format, fps: o.fps, sub: o.sub, out: mp4, comment: o.comment, meta: o.meta, shared, wantPoster: first, workers: o.workers, encoder: o.encoder.used });
       frameHashes[format] = r.hashes;
       manifest.captureS = Math.round((manifest.captureS + r.captureS) * 100) / 100;
       log(`  ${format}: ${r.frames} frames captured in ${r.captureS} s by ${r.pages} page${r.pages > 1 ? 's' : ''}`);
@@ -359,6 +376,27 @@ async function exportFilm(dir, story, o, shared, manifest) {
   if (process.env.MM_EXPORT_HASHES) writeFileSync(process.env.MM_EXPORT_HASHES, JSON.stringify(frameHashes));   // test-only
 }
 
+/** One format of a transparent export: <id>-<format>.webm, and the .mov beside it with --alpha-mov, drawn once and fed to both encoders. */
+async function exportAlphaFormat({ dir, story, o, shared, manifest, format, stage, outDir, frameHashes }) {
+  const webm = stage(join(outDir, `${story.id}-${format}.webm`));
+  const mov = o.alphaMov ? stage(join(outDir, `${story.id}-${format}.mov`)) : null;
+  log(`export ${format} → ${join(outDir, `${story.id}-${format}.webm`)}${mov ? ' and .mov' : ''} (transparent)`);
+  const r = await renderFilm({ dir, format, fps: o.fps, sub: o.sub, out: webm, comment: o.comment, meta: o.meta, shared, wantPoster: false, workers: o.workers, alpha: 'webm', alsoOut: mov ? { out: mov, kind: 'mov' } : null });
+  frameHashes[format] = r.hashes;
+  manifest.captureS = Math.round((manifest.captureS + r.captureS) * 100) / 100;
+  log(`  ${format}: ${r.frames} frames captured in ${r.captureS} s by ${r.pages} page${r.pages > 1 ? 's' : ''}`);
+  for (const [tmp, kind] of [[webm, 'webm'], mov && [mov, 'mov']].filter(Boolean)) {
+    const v = probe(tmp).streams.find((s) => s.codec_type === 'video');
+    manifest.files.push({ format, file: join(outDir, `${story.id}-${format}.${ALPHA_KINDS[kind].ext}`), width: v.width, height: v.height, fps: o.fps, sub: o.sub, frames: Number(v.nb_read_frames ?? v.nb_frames), duration: r.duration, comment: o.comment ?? null, captureS: r.captureS, pages: r.pages, encoder: 'software', alpha: true, codec: kind === 'webm' ? 'vp9' : 'prores-4444' });
+  }
+  for (const e of [...r.errors, ...r.warnings]) log(`  warning: ${e}`);
+  if (o.prove) {
+    const instants = Array.from({ length: r.frames }, (_, n) => n / o.fps);
+    const again = await hashInstants({ dir, format, instants, reverse: true, shared, alpha: true });
+    (manifest.prove ??= []).push({ format, frames: r.frames, mismatches: mismatches(r.hashes, again, (n) => `${(n / o.fps).toFixed(3)}s`) });
+  }
+}
+
 async function framePerSchedule(opened) {
   return opened.page.evaluate(() => { const s = window.mm.schedule; return { kind: s.kind, rests: s.rests, events: s.events, pressLengths: s.pressLengths ?? null }; });
 }
@@ -371,8 +409,13 @@ async function exportDeck(dir, story, o, shared, manifest) {
   const format = (o.formats ?? story.formats)[0];
   const style = JSON.parse(readFileSync(join(dir, 'style.json'), 'utf8'));
   assertHandoutStyle(style);   // before any frame is rendered
-  const standalone = buildStandalone(dir, join(outDir, 'deck'), { story, style });
-  manifest.deck = { dir: standalone.dir, modules: standalone.modules, warnings: standalone.warnings };
+  // the deck's cues become one sprite the standalone deck plays after its first press (SPEC §10); a deck with none has no sound
+  let sound = null;
+  const soundPiece = await openPiece(dir, { format, ...shared });
+  try { sound = await buildDeckSprite(dir, { codec: o.sprite ?? 'wav', piece: soundPiece }); } finally { await soundPiece.close(); }
+  const standalone = buildStandalone(dir, join(outDir, 'deck'), { story, style, sound });
+  manifest.deck = { dir: standalone.dir, modules: standalone.modules, warnings: standalone.warnings, ...(standalone.sound ? { sound: { ...standalone.sound, codec: o.sprite ?? 'wav' } } : {}) };
+  for (const n of sound?.notes ?? []) log(`  note: ${n}`);
   for (const w of standalone.warnings) log(`  warning: ${w}`);
 
   const opened = await openPiece(dir, { format, ...shared });
@@ -397,7 +440,7 @@ async function exportDeck(dir, story, o, shared, manifest) {
     const out = join(outDir, 'walkthrough.mp4');
     const tmp = join(outDir, 'walkthrough.partial.mp4');
     live.staged.add(tmp);
-    const enc = liveEncoder({ out: tmp, fps: o.fps, comment: o.comment, encoder: o.encoder.used, width: even(opened.viewport.width), height: even(opened.viewport.height) });
+    const enc = liveEncoder({ out: tmp, fps: o.fps, comment: o.comment, meta: o.meta, encoder: o.encoder.used, width: even(opened.viewport.width), height: even(opened.viewport.height) });
     let frames = 0;
     const hold = async (png) => { for (let k = 0; k < Math.round(WALK_HOLD_S * o.fps); k++) { await enc.write(png); frames++; } };
     try {
@@ -476,7 +519,7 @@ export function handoutHtml({ story, style, dir, pngs, rests, sceneOf, viewport 
     const sc = sceneOf(n);
     const first = sc && !seen.has(sc.id);
     if (sc) seen.add(sc.id);
-    const note = first ? (sc.say ? `<div class="say">${esc(sc.say)}</div>` : '') : `<div class="more">${esc(sc?.id)} continues</div>`;
+    const note = first ? (sc.say ? `<div class="say">${esc(displayText(sc.say))}</div>` : '') : `<div class="more">${esc(sc?.id)} continues</div>`;
     return `<section class="pg"><div class="hd"><b>${esc(story.title)}</b><span>rest ${n} of ${total}${sc ? ` · ${esc(sc.id)}` : ''}</span></div>
     <div class="frame"><img alt="rest ${n}" src="data:image/png;base64,${pngs[i].toString('base64')}"></div>${note}</section>`;
   }).join('')}</body>`;
@@ -498,7 +541,7 @@ async function readBack(dir, o, shared, manifest) {
   const files = shippedFiles(manifest);
   if (!files.length) return;
   try {
-    const { ok, file, report } = await verifyExport(dir, files, { phase: 'export', fps: o.fps, walkHoldS: WALK_HOLD_S, browser: shared.browser });
+    const { ok, file, report } = await verifyExport(dir, files, { phase: 'export', fps: o.fps, sub: o.sub, walkHoldS: WALK_HOLD_S, browser: shared.browser });
     manifest.qa = { file: 'out/export-qa.json', ok, failed: report.files.flatMap((f) => f.checks.filter((c) => c.status === 'FAIL').map((c) => `${basename(f.file)}: ${c.id}`)) };
     for (const l of verdictLines(report, { cwd: dir })) log(l);
   } catch (e) {
@@ -513,6 +556,11 @@ const shippedFiles = (manifest) => (manifest.walkthrough ? [manifest.walkthrough
 export async function exportPiece(dir, opts = {}) {
   const o = { fps: 30, sub: 1, force: false, prove: false, ...opts };
   if (!(o.fps > 0) || !Number.isInteger(o.sub) || o.sub < 1) throw new UsageError('--fps must be positive and --sub a whole number of at least 1');
+  o.fps = exactFps(o.fps).value;   // 29.97 is 30000/1001: the frames, the encode and the read-back all use the exact rate
+  if (o.alphaMov) o.alpha = true;
+  if (o.alpha && o.gif) throw new UsageError('--alpha cannot make a GIF (a GIF has one transparent colour, not an alpha channel): drop --gif');
+  if (o.alpha && opts.encoder && opts.encoder !== 'software') throw new UsageError('--alpha is encoded in software (VP9 and ProRes have no hardware path here): drop --encoder');
+  if (o.sprite != null && !['wav', 'mp3', 'aac'].includes(o.sprite)) throw new UsageError(`--sprite takes wav, mp3 or aac, not ${o.sprite}`);
   o.encoder = chooseEncoder(opts.encoder ?? 'software', { prove: o.prove });
   o.workers ??= defaultWorkers();
   if (!Number.isInteger(o.workers) || o.workers < 1) throw new UsageError('--workers must be a whole number of at least 1');
@@ -527,6 +575,8 @@ export async function exportPiece(dir, opts = {}) {
 /** exportPiece, holding the piece's export lock: `held` is the story it pinned ({ story, version }). */
 async function exportHeld(dir, o, { story, version, journal }, workersRequested) {
   o.version = version;
+  if (o.alpha && story.kind === 'deck') throw new UsageError('--alpha is for films: a deck has no transparent export');
+  o.meta = exportMeta(dir, story);
   const formats = o.formats ?? story.formats;
   if (story.kind !== 'deck') for (const format of formats) if (!VIEWPORTS[format]) throw new UsageError(`unknown format ${format}`);   // before any page opens
   const gate = gateStatus(dir, { formats: story.kind === 'deck' ? formats.slice(0, 1) : formats, version, journal });
@@ -534,9 +584,10 @@ async function exportHeld(dir, o, { story, version, journal }, workersRequested)
   if (!gate.ok) { o.comment = 'UNCHECKED'; log(`warning: ${gate.why}; --force given, the media is stamped UNCHECKED`); }
   mkdirSync(join(dir, 'out'), { recursive: true });
   // a deck draws in one page whatever --workers says
-  const manifest = { piece: dir, id: story.id, kind: story.kind, version, fps: o.fps, sub: o.sub, workers: story.kind === 'deck' ? 1 : o.workers, forced: !gate.ok, checked: gate.ok };
+  const manifest = { piece: dir, id: story.id, kind: story.kind, version, fps: o.fps, ...(exactFps(o.fps).arg.includes('/') ? { fpsName: exactFps(o.fps).name } : {}), sub: o.sub, workers: story.kind === 'deck' ? 1 : o.workers, forced: !gate.ok, checked: gate.ok };
   if (story.kind !== 'deck' && workersRequested > MAX_WORKERS) { manifest.workersRequested = workersRequested; log(`note: --workers ${workersRequested} draws in ${MAX_WORKERS} pages at most`); }
   manifest.encoder = { requested: o.encoder.requested, used: o.encoder.used, ...(o.encoder.reason ? { note: o.encoder.reason } : {}) };
+  if (o.alpha) manifest.alpha = o.alphaMov ? ['webm', 'mov'] : ['webm'];
   if (o.encoder.reason) log(`note: --encoder ${o.encoder.requested}: ${o.encoder.reason}; encoding in software`);
   const share = shareCopy(story);   // written once the export has succeeded
   manifest.share = { file: 'out/share-copy.txt', source: share.source };
@@ -572,12 +623,12 @@ async function exportHeld(dir, o, { story, version, journal }, workersRequested)
 
 runMain(import.meta, async () => {
   const { values, positionals } = parseArgs({ allowPositionals: true, options: {
-    fps: { type: 'string', default: '30' }, sub: { type: 'string', default: '1' }, formats: { type: 'string' }, force: { type: 'boolean', default: false }, prove: { type: 'boolean', default: false }, gif: { type: 'boolean', default: false }, 'gif-width': { type: 'string' }, workers: { type: 'string' }, encoder: { type: 'string' } } });
+    fps: { type: 'string', default: '30' }, sub: { type: 'string', default: '1' }, formats: { type: 'string' }, force: { type: 'boolean', default: false }, prove: { type: 'boolean', default: false }, gif: { type: 'boolean', default: false }, 'gif-width': { type: 'string' }, workers: { type: 'string' }, encoder: { type: 'string' }, sprite: { type: 'string' }, alpha: { type: 'boolean', default: false }, 'alpha-mov': { type: 'boolean', default: false } } });
   const dir = resolvePiece(positionals[0]);
-  const { manifest, code } = await exportPiece(dir, { fps: Number(values.fps), sub: Number(values.sub), formats: values.formats?.split(',').map((s) => s.trim()).filter(Boolean), force: values.force, prove: values.prove, gif: values.gif, gifWidth: values['gif-width'] ? Number(values['gif-width']) : undefined, workers: values.workers === undefined ? undefined : /^\d+$/.test(values.workers) ? Number(values.workers) : NaN, encoder: values.encoder });
+  const { manifest, code } = await exportPiece(dir, { fps: Number(values.fps), sub: Number(values.sub), formats: values.formats?.split(',').map((s) => s.trim()).filter(Boolean), force: values.force, prove: values.prove, gif: values.gif, gifWidth: values['gif-width'] ? Number(values['gif-width']) : undefined, workers: values.workers === undefined ? undefined : /^\d+$/.test(values.workers) ? Number(values.workers) : NaN, encoder: values.encoder, sprite: values.sprite, alpha: values.alpha, alphaMov: values['alpha-mov'] });
   for (const f of manifest.files ?? []) console.log(`${f.format}: ${f.file} (${f.width}x${f.height}, ${f.frames} frames)`);
   if (manifest.loop) console.log(`loop: SSIM last vs first ${manifest.loop.ssim}`);
-  if (manifest.deck) console.log(`deck: ${manifest.deck.dir}\nhandout: ${manifest.handout.file} (${manifest.handout.pages} pages)\nwalkthrough: ${manifest.walkthrough.file} (${manifest.walkthrough.seconds.toFixed(1)} s, ${manifest.walkthrough.transitions} transitions)`);
+  if (manifest.deck) console.log(`deck: ${manifest.deck.dir}${manifest.deck.sound ? ` (sound: ${manifest.deck.sound.cues} cues, ${(manifest.deck.sound.bytes / 1e6).toFixed(1)} MB as ${manifest.deck.sound.codec})` : ''}\nhandout: ${manifest.handout.file} (${manifest.handout.pages} pages)\nwalkthrough: ${manifest.walkthrough.file} (${manifest.walkthrough.seconds.toFixed(1)} s, ${manifest.walkthrough.transitions} transitions)`);
   for (const w of manifest.warnings ?? []) console.log(`warning: ${w}`);
   if (manifest.encoder?.used !== 'software') console.log(`encoder: ${manifest.encoder.used}`);
   if (manifest.qa) console.log(manifest.qa.ok === true ? `read back: ok (${manifest.qa.file})` : manifest.qa.ok === false ? `read back FAILED: ${manifest.qa.failed.join(', ')} (see ${manifest.qa.file})` : `read back: not run (${manifest.qa.error})`);

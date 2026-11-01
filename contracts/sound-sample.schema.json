@@ -9,6 +9,17 @@
     "source": { "type": "string", "minLength": 1, "maxLength": 300, "description": "where the file came from: a page, a pack, a recording session, or `own recording`" },
     "licence": { "type": "string", "minLength": 1, "maxLength": 200, "description": "the terms it may be used under, as the source states them (CC0-1.0, CC-BY-4.0, a purchased licence, `own recording`)" },
     "author": { "type": "string", "minLength": 1, "maxLength": 200, "description": "who made the sound; the person themselves for an own recording" },
-    "notes": { "type": "string", "maxLength": 500 }
+    "notes": { "type": "string", "maxLength": 500 },
+    "openverseId": { "type": "string", "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", "description": "a sound found on Openverse (`mm sound fetch`): its id there. With `source: \"openverse\"`, W-SAMPLE-LICENSE also judges the licence against what the piece offers, the sha1 against the file, and one recording against a second licence" },
+    "title": { "type": "string", "maxLength": 300 },
+    "licenceVersion": { "type": "string", "maxLength": 20, "description": "the licence's version as Openverse states it (4.0)" },
+    "licenceUrl": { "type": "string", "maxLength": 400 },
+    "creator": { "type": "string", "maxLength": 200, "description": "who made it, as Openverse gives it; `author` carries the same name (or `unknown`)" },
+    "creatorUrl": { "type": "string", "maxLength": 400 },
+    "landingUrl": { "type": "string", "maxLength": 400, "description": "the item's own page at its source, where its licence can be read again" },
+    "attribution": { "type": "string", "maxLength": 1000, "description": "the credit line Openverse composed for the item; `mm credits` prints it" },
+    "provider": { "type": "string", "maxLength": 100, "description": "the catalogue Openverse found it in" },
+    "retrieved": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$", "description": "the day it was fetched" },
+    "sha1": { "type": "string", "pattern": "^[0-9a-f]{40}$", "description": "the hash of the file as fetched: W-SAMPLE-LICENSE warns when the file no longer matches" }
   }
 }

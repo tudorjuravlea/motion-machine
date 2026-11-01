@@ -3,6 +3,7 @@
 // random(), so the same slot scatters the same way on every load. Pieces are letters or words.
 // Writes translate, rotate and opacity on spans it creates, and opacity on a slot that paints its
 // own box (it fades in over the first quarter).
+import { splitText, unitsOf, plainOf } from '../../../runtime/kit/split.js';
 const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
 
 // A slot that paints its own box (a fill or a border) fades with its first piece, so the box never
@@ -35,30 +36,10 @@ function shape(ctx, x) {
   return sp && sp.settle ? Math.min(1, sp(x * sp.settle('type'), 'type')) : x;
 }
 
-function split(el, unit) {
-  const found = el.querySelectorAll('[data-mm-s]');
-  if (found.length) return [...found];
-  const words = (el.textContent || '').split(/\s+/).filter(Boolean);
-  el.textContent = '';
-  const doc = el.ownerDocument;
-  const out = [];
-  const make = (text) => {
-    const s = doc.createElement('span');
-    s.className = 'mm-scatter-settle__piece';
-    s.setAttribute('data-mm-s', '');
-    s.textContent = text;
-    out.push(s);
-    return s;
-  };
-  words.forEach((w, i) => {
-    if (i) el.append(' ');
-    if (unit === 'word') { el.append(make(w)); return; }
-    const group = doc.createElement('span');
-    group.className = 'mm-scatter-settle__word';
-    for (const ch of Array.from(w)) group.append(make(ch));
-    el.append(group);
-  });
-  return out;
+// a deck keeps the original text beside the pieces, for a screen reader
+function split(el, unit, ctx) {
+  const u = unitsOf(el) ?? splitText(el, { chars: unit !== 'word', accessible: !!ctx.deck });
+  return unit === 'word' ? u.words : u.chars;
 }
 
 export default {
@@ -69,8 +50,8 @@ export default {
   at(el, p, ctx) {
     const prm = { ...DEFAULTS, ...ctx.params };
     const lin = linear(ctx, p);
-    if (lin >= 1) { el.textContent = (el.textContent || '').split(/\s+/).filter(Boolean).join(' '); return; }
-    const spans = split(el, prm.unit);
+    if (lin >= 1) { el.textContent = plainOf(el.textContent); return; }
+    const spans = split(el, prm.unit, ctx);
     const radius = Number(prm.d) * ctx.style.motion.travel;
     const turn = Number(prm.turn);
     const rnd = ctx.random;

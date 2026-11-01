@@ -2,7 +2,8 @@
 // validates against the story and its pattern's params, then compiles to a JSON patch plus the
 // inverse ops that undo it, so undo is an ordinary edit. Scenes are addressed by id, beats by index
 // (in the variant's beats when the op's format names a variant that has beats); `story.formats` sets
-// the formats the piece ships (removing one leaves the scenes' variants for it in place). Generated stories
+// the formats the piece ships (removing one leaves the scenes' variants for it in place); `audio.sample` maps a
+// cue to a sound file of the piece in `audio.samples` (null removes it). Generated stories
 // and decks refuse every edit. A caller that injects `ctx.validate` (the story schema) gets every
 // edit refused that would leave an invalid story; a caller applying an inverse passes
 // `ctx.inverse`, so the exact old values go back unrounded and unchecked against today's patterns.
@@ -35,9 +36,10 @@ const MEMBERS = {
   'beat.add': ['beat', 'index', 'format', 'raw'],
   'beat.remove': ['beat', 'format'],
   'story.formats': ['value', 'raw'],
+  'audio.sample': ['cue', 'value', 'raw'],
 };
 // ops on the story itself, addressed to no scene
-const STORY_OPS = ['story.formats'];
+const STORY_OPS = ['story.formats', 'audio.sample'];
 const OPS = Object.keys(MEMBERS);
 const FORMATS = ['9x16', '1x1', '4x5', '16x9'];
 // a beat's keys: the type and the shape each takes (the story schema's, restated without Ajv so the
@@ -165,6 +167,18 @@ function checkFormats({ value: v, raw }) {
   return null;
 }
 
+/** audio.sample: a cue name and a sound file in the piece (the story schema's pattern), or null to unmap the cue. */
+function checkSample(story, { cue, value: v, raw }) {
+  if (raw !== undefined && typeof raw !== 'string') return no('bad-type', 'raw must be a string of JSON text', 'leave raw out: inverses carry it so that undo restores the original bytes');
+  if (typeof cue !== 'string') return no('bad-type', 'cue must be a cue name', 'give the name of a cue under patterns/sound/, like "tick"');
+  if (!/^[a-z][a-z0-9-]{0,30}$/.test(cue)) return no('bad-value', `${JSON.stringify(cue.slice(0, 40))} is not a cue name`, 'a cue name is lower-case letters, digits and hyphens, starting with a letter (a folder of patterns/sound/)');
+  if (v !== null && typeof v !== 'string') return no('bad-type', 'value must be the path of a sound file in the piece, or null', 'give a path like assets/sounds/door.wav, or null to unmap the cue: it must be a sound file in the piece');
+  if (v !== null && /^https?:|\s/.test(v)) return no('bad-value', 'a sample is a sound file in the piece, not an address or a name with spaces', 'copy the file into the piece (mm sound fetch does) and give its path, like assets/sounds/door.wav: a sound file in the piece');
+  if (v !== null && !/\.(wav|mp3|m4a|flac|ogg)$/.test(v)) return no('bad-value', `${JSON.stringify(v.slice(0, 60))} is not a sound file the sound system reads`, 'a sound file ends in wav, mp3, m4a, flac or ogg');
+  if (!isBag(story.audio)) return no('bad-value', 'the story has no audio member to hold samples', 'a story always has audio; repair story.json');
+  return null;
+}
+
 /** Why `edit` cannot apply to `story` (raw), or null when it can (exactly when compile succeeds). */
 export function validateEdit(story, edit, ctx = {}) {
   const r = check(story, edit, ctx.inverse ? { ...ctx, patterns: null } : ctx);
@@ -187,6 +201,7 @@ function check(story, edit, ctx) {
   if (story.generator && !ctx.allowGenerated) return no('generated', `this story is written by ${story.generator}`, `edit the input of ${story.generator} and re-run it (node ${story.generator}); edits here would be overwritten`);
   if (story.kind === 'deck') return no('deck', 'decks are read-only in the studio', 'edit the deck\'s story.json by hand; the studio edits films and loops');
   if (edit.op === 'story.formats') return checkFormats(edit);
+  if (edit.op === 'audio.sample') return checkSample(story, edit);
   if (typeof edit.scene !== 'string') return no('bad-type', 'scene must be a scene id', `scenes: ${story.scenes.map((s) => s.id).join(', ')}`);
   const i = story.scenes.findIndex((s) => s.id === edit.scene);
   if (i < 0) return no('unknown-scene', `no scene "${edit.scene}"`, `scenes: ${story.scenes.map((s) => s.id).join(', ')}`);
@@ -315,6 +330,14 @@ function build(story, edit, ctx) {
     // a forward edit writes the canonical order; an inverse, the exact old list
     const value = ctx.inverse ? edit.value : FORMATS.filter((f) => edit.value.includes(f));
     return { patch: same(story.formats, value) ? [] : [{ op: 'replace', path: '/formats', value }], inverse: [{ op: 'story.formats', value: story.formats }] };
+  }
+  if (edit.op === 'audio.sample') {
+    // the cue's file, or null; the last file removed takes the empty `samples` object with it, so undo restores the bytes
+    const { cue } = edit, samples = story.audio.samples, prev = samples && Object.hasOwn(samples, cue) ? samples[cue] : null;
+    let patch;
+    if (edit.value === null) patch = prev === null ? [] : Object.keys(samples).length === 1 ? [{ op: 'remove', path: '/audio/samples' }] : [{ op: 'remove', path: `/audio/samples/${esc(cue)}` }];
+    else patch = samples ? setMember('/audio/samples', samples, cue, edit.value) : [{ op: 'add', path: '/audio/samples', value: { [cue]: edit.value } }];
+    return { patch, inverse: [{ op: 'audio.sample', cue, value: prev }] };
   }
   const i = story.scenes.findIndex((s) => s.id === edit.scene), sc = story.scenes[i], base = `/scenes/${i}`;
   const fmt = edit.format !== undefined ? { format: edit.format } : {};

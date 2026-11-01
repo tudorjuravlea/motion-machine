@@ -26,8 +26,21 @@ A phone in real 3D rises into frame and turns, its screen playing a recording or
 | `status` | enum(auto|true|false) | `auto` | the top bar drawn into the screen: `auto` shows it on a bare screen and a captured page (the page starts below it, as on a real screen) and leaves it to a recording or a still, which carry their own; its text goes dark or light with the content underneath |
 | `statusTime` | string | `10:00` | the time in the top bar |
 | `model` | enum(island|punch|plain) | `island` | the front cutout and the back camera, as devices/phone draws them: a floating island with its lens, five keys and a camera plateau across the top of the back; a punch-hole camera, two keys on the right and a visor across the back; or no cutout and a small camera block |
+| `aa` | enum(auto|ssaa4|ssaa16|msaa|off) | `auto` | edge anti-aliasing. `ssaa4` and `ssaa16` render the frame 4 or 16 times, each shifted by sixteenths of a pixel, and average them: exact and the same on every machine (about 2.5 and 9 times the cost of `msaa` in software). `msaa` is the graphics card's multisampling, `off` leaves edges stepped. `auto` is `ssaa4` in an export, a stills run and a check, `msaa` in a preview |
+| `glow` | number | `0.4` | the screen's glow, 0 to 1 (0 is off): the screen's bright picture blooms softly onto the bezel and the air around it, and never over the picture itself, which stays exact. Seen on a dark ground; on a light one it is a faint halation |
+| `contact` | number | `1` | the soft contact shadow under the device, 0 to 1 (0 is off): the device seen from under the floor as height above it, blurred twice, dark where it touches and a wide faint pool beyond; the key light's own shadow eases as it grows |
+| `contactSoft` | number | `0.5` | how far the contact shadow spreads, 0 (tight) to 1 (wide) |
+| `occlusion` | number | `0` | ambient occlusion (GTAO), 0 to 1 (0 is off): creases take a little shade. Costs about 100 ms a frame in software and can speckle a hard silhouette, so it is off unless a brand wants it |
+| `reflection` | number | `0` | a mirror floor, 0 to 1 (0 is off): the device reflected in the floor, strongest at its foot, fading and softening away from it. Off by default: on a light ground the reflection of a light device is faint |
+| `reflectSoft` | number | `0.5` | how soft the floor's reflection is, 0 (a mirror) to 1 (a polished table) |
+| `studio` | enum(light|dark|brand) | `light` | the light the device is lit by: `light` is a white void with a few softboxes (rectangular lights for crisp highlights on glass and metal, strips mirrored in the metal); `dark` is the dark room the 3D devices used before; `brand` is the void tinted by the canvas role with the accent role as a rim |
+| `dof` | number | `0` | depth of field, 0 to 1 (0 is off): what lies nearer or further than the device is blurred; the focus is set from the camera to the device at that instant, never found by looking at the picture |
+| `tilt` | number | `0` | a tilt-shift blur, 0 to 1 (0 is off): the frame softens toward its top and bottom edges, the row through the device staying sharp |
+| `brushed` | number | `0.35` | the brushed grain of the metal, 0 (smooth satin) to 1 (a strong streak along the grain); a physical material with anisotropy, no dearer to draw than the standard one here |
 | `asset` | beat field | none | a still, a recording folder (`mm media prep`) or a page folder (`mm capture site`) for the screen |
 | `screen` | beat field | none | screen actions (`screen/scroll`, `play`, `swap`, `zoom-to`, `tap`) on the phone's screen; tap rings are drawn into the glass |
+
+Brand knobs: aa, glow, contact, contactSoft, occlusion, reflection, reflectSoft, studio, dof, tilt, brushed, metal, model, status
 
 ## Style variables consumed
 - `--mm-device-body` (the back, brand `devices.finish`)
@@ -50,10 +63,11 @@ A phone in real 3D rises into frame and turns, its screen playing a recording or
 - The canvas is declared media: the gate's pixel rules mask it, and text on its screen is not read.
 
 ## Provenance
-three.js (mrdoob/three.js), MIT: the vendored library and its RoundedBoxGeometry addon (runtime/vendor/three/0.170.0); the phone, its pose and the screen copy are original. The `drawn` move's line style follows Hairline (lucasmarkes/hairline), MIT: its drawing maths adapted in `runtime/kit/hairline.js`, its stroke roles and its long ease-out (see NOTICE).
+three.js (mrdoob/three.js), MIT: the vendored library, its RoundedBoxGeometry addon and the post-processing addons (composer, supersampling, bloom, occlusion, output pass, reflector, rectangular lights) ported from r187 (runtime/vendor/three/0.170.0, see NOTICE); the phone, its pose and the screen copy are original. The `drawn` move's line style follows Hairline (lucasmarkes/hairline), MIT: its drawing maths adapted in `runtime/kit/hairline.js`, its stroke roles and its long ease-out (see NOTICE).
 
 ## Known limits
 - `drawn` draws a page's wire only for a captured page with a `wire` (captured since `mm capture site` records one); a recording or a still shows the phone, the screen edge and the status bar in lines, and its picture arrives with the band.
-- Rendered in software (SwiftShader): slower than the flat devices to export.
+- Rendered in software (SwiftShader): slower than the flat devices to export. The default `ssaa4` draws the frame four times (about 0.25 to 0.35 s a frame at 1792 x 952); `ssaa16` about four times that.
+- The mirror floor shows a hard vertical cut at the edge of its reflection on some poses (seen on a dark ground); it is off by default.
 - Screen overlays other than tap rings (callouts, the island action) are not drawn into the glass yet.
 - One phone per slot. A frame image (`frame`) is flat and stays with devices/phone; the 3D phone is drawn in code only.

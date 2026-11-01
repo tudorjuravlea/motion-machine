@@ -13,7 +13,9 @@ import { renderRecipe } from '../../runtime/kit/synth.js';
 import * as M from '../../scripts/lib/audio-measure.mjs';
 
 const read = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
-const recipes = Object.fromEntries(readdirSync(join(ROOT, 'patterns/sound')).filter((n) => existsSync(join(ROOT, 'patterns/sound', n, 'recipe.json'))).map((n) => [n, read(`patterns/sound/${n}/recipe.json`)]));
+// the first data palette; the cues the newer layers make are measured in tests/sound/engine-cues.test.mjs
+const PALETTE = ['ready', 'attention', 'success', 'warning', 'error', 'loading', 'tap', 'toggle-on', 'toggle-off', 'open', 'close'];
+const recipes = Object.fromEntries(readdirSync(join(ROOT, 'patterns/sound')).filter((n) => PALETTE.includes(n) && existsSync(join(ROOT, 'patterns/sound', n, 'recipe.json'))).map((n) => [n, read(`patterns/sound/${n}/recipe.json`)]));
 const profiles = { glass: read('styles/sound/glass.json'), 'soft-ui': read('styles/sound/soft-ui.json') };
 
 const render = (recipe, opts = {}) => renderRecipe(recipe, opts);

@@ -3,6 +3,9 @@
 // Generates a picture, clip, music, sound effect, narration or transcript through Kie.ai, ElevenLabs or
 // Higgsfield and keeps it in <piece>/assets/gen/ with a record (<name>.gen.json) of how it was made.
 // Everything that costs money or sends a file out first prints a plan and exits 3; only --yes sends.
+// A voice reads its text first (scripts/lib/say.mjs): `[display](spoken)` markers are sent as their spoken form, `<<slot>>` cue
+// markers are taken out, the brand's voice.lexicon respells names; the plan lists the words a voice may get wrong that nothing
+// marks, and --yes refuses (exit 2) until they are marked or --say-ok says they are meant. --scene <id> takes a scene's `say`.
 // The brand steers every prompt (scripts/lib/brand-prompt.mjs) and the record keeps a hash of what steered
 // it, so W-GEN-BRAND can tell a piece to generate again after the brand changes (`--again <name>`).
 // A request is keyed (provider, model, kind, every parameter, the prompt as sent, the hash of each input file,
@@ -10,12 +13,16 @@
 // A replay (`--again`) is planned first and sends only on a later run with --yes, once per plan; a recorded
 // request carries nothing internal. Every generated asset gets assets/gen/<name>.licence.json (scripts/lib/licence.mjs).
 // Text that came from outside (a script file, a recorded prompt, a file name) is shown fenced (scripts/lib/fence.mjs).
+// A provider call retries a 429 or a 5xx twice (Retry-After up to 30 s, else 250 x 2^n ms), carries one idempotency key per POST, and
+// a refused key, a spent quota or a rate limit is one line with a stable code and never the provider's body (scripts/lib/http.mjs).
 // Exit 0 done (or --plan), 1 a provider failed, 2 setup or usage, 3 a plan waits for --yes.
 import { closeSync, copyFileSync, existsSync, mkdirSync, openSync, readFileSync, readSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, dirname, extname, isAbsolute, join, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
 import { UsageError, isArgsError, usageText } from './lib/cli.mjs';
+import { resilientFetch } from './lib/http.mjs';
+import { KIND_NAMES, alignDisplay, cueAnchors, lintSay } from './lib/say.mjs';
 import { fence, fenceLine } from './lib/fence.mjs';
 import { runFfmpeg } from './lib/ffmpeg.mjs';
 import { generatedRecord, writeLicence } from './lib/licence.mjs';
@@ -41,6 +48,7 @@ const OPTIONS = {
   ref: { type: 'string', multiple: true }, image: { type: 'string' }, video: { type: 'string' }, audio: { type: 'string' }, character: { type: 'string' },
   aspect: { type: 'string' }, duration: { type: 'string' }, instrumental: { type: 'string' }, text: { type: 'string' }, script: { type: 'string' },
   voice: { type: 'string' }, language: { type: 'string' }, file: { type: 'string' }, url: { type: 'string' }, job: { type: 'string' },
+  scene: { type: 'string' }, 'say-ok': { type: 'boolean' },
   brand: { type: 'string' }, again: { type: 'string' }, raw: { type: 'boolean' }, fresh: { type: 'boolean' }, plan: { type: 'boolean' }, yes: { type: 'boolean' }, json: { type: 'boolean' },
 };
 
@@ -80,7 +88,7 @@ function contextFrom(io) {
   const env = io.env ?? process.env;
   const secrets = new Set();
   const ctx = {
-    env, home: io.home, cwd: io.cwd ?? process.cwd(), fetch: io.fetch ?? globalThis.fetch, sleep: io.sleep ?? sleepMs, pollMs: io.pollMs, timeoutMs: io.timeoutMs,
+    env, home: io.home, cwd: io.cwd ?? process.cwd(), fetch: resilientFetch(io.fetch ?? globalThis.fetch, { sleep: io.sleep ?? sleepMs }), sleep: io.sleep ?? sleepMs, pollMs: io.pollMs, timeoutMs: io.timeoutMs,
     hf: io.hf ?? null, prep: io.prep ?? null, secrets,
     out: (s) => (io.out ?? console.log)(scrub(s, secrets)),
     err: (s) => (io.err ?? console.error)(scrub(s, secrets)),
@@ -131,20 +139,45 @@ async function credit(opts, ctx) {
   return bad;
 }
 
+/** The scene `id` of the piece's story, with a `say`; a usage error when there is none. */
+function sceneOf(pieceDir, id) {
+  const file = join(pieceDir, 'story.json');
+  if (!existsSync(file)) throw fail(`--scene ${id}: the piece has no story.json`);
+  let story;
+  try { story = JSON.parse(readFileSync(file, 'utf8')); } catch (e) { throw fail(`${file}: ${e.message}`); }
+  const sc = (story.scenes ?? []).find((s) => s.id === id);
+  if (!sc) throw fail(`--scene: no scene "${id}" in the story (scenes: ${(story.scenes ?? []).map((s) => s.id).join(', ')})`);
+  if (typeof sc.say !== 'string' || !sc.say.trim()) throw fail(`--scene ${id}: that scene has no say to read aloud`);
+  return sc;
+}
+
 /** The request this run would make: inputs checked, prompt steered, provider chosen. */
 function buildRequest(opts, kind, { style, styleDir, pieceDir, name }, ctx) {
   const brand = onOff(opts.brand, '--brand', true);
   const abs = (p, flag) => (p === undefined ? null : isAbsolute(p) && existsSync(p) ? p : existing(ctx, p, flag));
   const userRefs = (opts.ref ?? []).map((p) => abs(p, '--ref'));
   const image = abs(opts.image, '--image'), video = abs(opts.video, '--video'), audio = abs(opts.audio, '--audio'), character = abs(opts.character, '--character');
-  let text = opts.text ?? null;
+  let text = opts.text ?? null, scene = null;
+  if (opts.scene !== undefined) {
+    if (kind !== 'voice') throw fail('--scene is for mm gen voice: it takes a scene\'s say from the story');
+    if (opts.text !== undefined || opts.script !== undefined) throw fail('--scene, --text and --script are three ways to give the text: take one');
+    scene = sceneOf(pieceDir, opts.scene);
+    text = scene.say;
+  }
   if (opts.script !== undefined) text = readFileSync(existing(ctx, opts.script, '--script'), 'utf8').trim();
-  if (kind === 'voice' && !text) throw fail('mm gen voice needs --text "…" or --script <file>');
+  if (kind === 'voice' && !text) throw fail('mm gen voice needs --text "…", --script <file> or --scene <id>');
   if (NEEDS_PROMPT.has(kind) && !opts.prompt) throw fail(`mm gen ${kind} needs --prompt "…"`);
   if (kind === 'replace' && (!video || !character)) throw fail('mm gen replace needs --video <clip> and --character <image>');
   if (kind === 'transcribe' && !audio && !video) throw fail('mm gen transcribe needs --audio <file> or --video <file>');
 
+  // a voice's text is read first: markers resolved, names respelled by the brand's lexicon, risky words found
+  let say = null;
   const typed = kind === 'voice' ? text : opts.prompt ?? '';
+  if (kind === 'voice') {
+    say = lintSay(text, { lexicon: brand ? style.voice?.lexicon ?? {} : {} });
+    say.cueProblems = [...say.parsed.problems.map((p) => p.reason), ...(scene ? cueAnchors({ scenes: [scene] }).problems.map((p) => p.reason) : [])];
+    text = say.parsed.spoken;
+  }
   let steered;
   try { steered = steer(kind, typed, style, { brand, voice: opts.voice, styleDir }); } catch (e) { throw e instanceof SteerError ? fail(e.message) : e; }
   for (const r of steered.refs) if (!existsSync(r)) throw fail(`the brand's imagery reference ${rel(pieceDir, r)} does not exist`);
@@ -161,7 +194,7 @@ function buildRequest(opts, kind, { style, styleDir, pieceDir, name }, ctx) {
     provider, req: {
       kind, name, provider: providerName, model: opts.model, typed, prompt: steered.prompt, negative: steered.negative, parts: steered.parts, notes: steered.notes,
       refs, userRefs, image, video, audio, character, aspect: opts.aspect ?? '16:9', duration: num(opts.duration, '--duration'),
-      instrumental: onOff(opts.instrumental, '--instrumental', true), language: opts.language ?? null, text, voice: steered.voice, brand, voiceOverride: opts.voice,
+      instrumental: onOff(opts.instrumental, '--instrumental', true), language: opts.language ?? null, text, say, voice: steered.voice, brand, voiceOverride: opts.voice,
     },
   };
 }
@@ -174,6 +207,7 @@ async function plan(req, prep, extra, ctx, { pieceDir, opts }) {
     brand: steered ? (req.brand ? 'on' : 'off') : 'n/a', brandHash: extra.hash, prompt: prep.prompt, negative: prep.negative || req.negative || null, parameters: prep.parameters,
     uploads: uploads.map((u) => ({ path: rel(pieceDir, u.path), size: u.size, sha256: u.sha256 })), cost: extra.cost ?? 'not quoted', key: extra.key, notes: req.notes, cache: extra.cache, requestKey: extra.requestKey,
     ...(extra.replay ? { replay: true } : {}),
+    ...(req.say ? { say: { findings: req.say.findings.map(({ word, kind, index }) => ({ word, kind, index })), cueProblems: req.say.cueProblems, productWordsChecked: req.say.productWordsChecked } } : {}),
   };
   if (opts.json) { ctx.out(JSON.stringify({ plan: p })); return { plan: p, uploads }; }
   const L = [`mm gen ${req.kind}: plan (nothing has been sent)`];
@@ -187,6 +221,12 @@ async function plan(req, prep, extra, ctx, { pieceDir, opts }) {
   if (Object.keys(p.parameters ?? {}).length) row('settings', fenceLine(JSON.stringify(p.parameters), 'settings'));
   if (!uploads.length) row('uploads', 'none');
   for (const u of uploads) row('uploads', `${fenceLine(rel(pieceDir, u.path), 'file name')}  ${u.size} bytes  sha256 ${u.sha256}`);
+  if (req.say) {
+    const n = req.say.findings.length;
+    row('say-lint', n ? `${n} word${n === 1 ? '' : 's'} a voice may get wrong:` : 'nothing flagged');
+    for (const f of req.say.findings) L.push(`    ${JSON.stringify(f.word)} is a ${KIND_NAMES[f.kind] ?? f.kind} (word ${f.index + 1}); mark it [${f.word}](how it is said) or put it in the brand's voice.lexicon`);
+    for (const c of req.say.cueProblems) L.push(`    ${c}`);
+  }
   row('cost', p.cost);
   row('cache', p.cache);
   if (p.key) row('key', p.key);
@@ -253,7 +293,7 @@ function makeSidecar({ kind, name, req, prep, provider, hash, uploads, pieceDir,
     post: landed?.post ?? null, prepared, words: wordsFile,
     requestKey: key, cacheVersion: CACHE_VERSION, ...extra,
     request: defined({
-      model: prep.model, prompt: req.typed && kind !== 'voice' ? req.typed : undefined, text: kind === 'voice' ? req.text : undefined,
+      model: prep.model, prompt: req.typed && kind !== 'voice' ? req.typed : undefined, text: kind === 'voice' ? req.typed : undefined,
       refs: req.userRefs.length ? req.userRefs.map((p) => rel(pieceDir, p)) : undefined, image: req.image ? rel(pieceDir, req.image) : undefined, video: req.video ? rel(pieceDir, req.video) : undefined,
       audio: req.audio ? rel(pieceDir, req.audio) : undefined, character: req.character ? rel(pieceDir, req.character) : undefined, aspect: req.aspect, duration: req.duration ?? undefined,
       instrumental: kind === 'music' ? req.instrumental : undefined, language: req.language ?? undefined, voice: req.voiceOverride,
@@ -326,6 +366,10 @@ async function generate(kind, opts, ctx, scene) {
   const replay = opts.again !== undefined && !cached;
   await plan(req, prep, { cost, hash, uploads, cache, requestKey: reqKey, replay, key: key ? `${key.name} ${mask(key.value)} (${key.source})` : null }, ctx, { pieceDir, opts });
   if (opts.plan) return 0;
+  if (req.say?.findings.length && opts.yes && !opts['say-ok']) {
+    const n = req.say.findings.length;
+    throw fail(`${n} word${n === 1 ? '' : 's'} a voice may get wrong ${n === 1 ? 'is' : 'are'} not marked (${req.say.findings.map((f) => JSON.stringify(f.word)).join(', ')}): nothing was sent. Mark each as [word](how it is said), add it to the brand's voice.lexicon, or run the same command with --say-ok to send the text as written`);
+  }
   if (replay) {
     // a replay of paid work is planned first: the plan leaves a go-ahead for exactly this request, and a send uses it up
     const file = pendingFile(pieceDir, name);
@@ -345,6 +389,7 @@ async function generate(kind, opts, ctx, scene) {
     if (kind === 'video' || kind === 'replace') if (!opts.raw) prepared = await prepVideo(req, join(pieceDir, landed.file), pieceDir, ctx);
   }
   let wordsFile = null;
+  if (result.words && kind === 'voice' && req.say && req.say.parsed.display !== req.say.parsed.spoken) result.words = alignDisplay(req.say.parsed, result.words);   // the words as shown, so a beat's anchor finds them
   if (result.words && (kind === 'voice' || kind === 'transcribe')) {
     wordsFile = `assets/gen/${name}.words.json`;
     writeJson(join(pieceDir, wordsFile), result.words);

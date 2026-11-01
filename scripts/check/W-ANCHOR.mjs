@@ -8,10 +8,13 @@
 // and no words to check it against). A phrase spoken more than once is matched at the occurrence
 // nearest the beat. Any late, early or anchor-miss warns; an anchor that could not be checked is a
 // partial SKIP, never a PASS. A style's `gate.anchor` sets { earlyS, lateS }. A deck has no clock.
+// A cue marker `<<slot>>` in the scene's `say` is an anchor too (scripts/lib/say.mjs): the beat with that slot is anchored to the
+// word the marker precedes and the two after it, unless the beat names an `anchor` of its own.
 import { existsSync, readFileSync } from 'node:fs';
 import { basename, dirname, extname, join } from 'node:path';
 import { rule } from '../lib/rule.mjs';
 import { wordsFrom } from '../lib/footage.mjs';
+import { cueAnchors } from '../lib/say.mjs';
 import { round } from './_lib.mjs';
 
 export const EARLY_S = 1.8;
@@ -53,15 +56,17 @@ export function wordsOf(dir, story) {
 
 export default async function (ctx) {
   if (ctx.schedule.kind === 'deck') return rule('W-ANCHOR', 'SKIP', { reason: 'a deck has no clock for a spoken word to anchor to' });
-  const anchored = ctx.schedule.items.filter((it) => !it.parent && it.beat?.anchor);
+  const cues = new Map(cueAnchors(ctx.story).anchors.map((a) => [`${a.scene}/${a.slot}`, a.anchor]));
+  const anchorOf = (it) => it.beat?.anchor ?? (it.beat?.slot ? cues.get(`${it.scene}/${it.beat.slot}`) : undefined);
+  const anchored = ctx.schedule.items.filter((it) => !it.parent && anchorOf(it));
   if (!anchored.length) return rule('W-ANCHOR', 'SKIP', { reason: 'no beat names an anchor' });
   const earlyS = ctx.style?.gate?.anchor?.earlyS ?? EARLY_S, lateS = ctx.style?.gate?.anchor?.lateS ?? LATE_S;
   const { words, source, why } = wordsOf(ctx.dir, ctx.story);
   const sceneStart = (id) => ctx.schedule.scenes.find((s) => s.id === id)?.start ?? 0;
   const rows = anchored.map((it) => {
-    const base = { selector: it.selector, anchor: it.beat.anchor, arrives: round(it.start) };
+    const base = { selector: it.selector, anchor: anchorOf(it), arrives: round(it.start) };
     if (!words) return { ...base, status: 'no-words' };
-    const at = occurrences(words, it.beat.anchor);
+    const at = occurrences(words, base.anchor);
     if (!at.length) return { ...base, status: 'anchor-miss' };
     const word = at.reduce((a, b) => (Math.abs(b - it.start) < Math.abs(a - it.start) ? b : a));
     const delta = it.start - word;

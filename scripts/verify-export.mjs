@@ -3,7 +3,9 @@
 // Reads a finished MP4 back and checks it (scripts/lib/export-qa.mjs): a video stream, the story's duration,
 // size and frame rate, sound where the piece has sound, no black frames, no frozen span while the
 // schedule moves, no long silence, the encoded file's true peak and loudness against the style's targets,
-// and every cut of a film for a black, duplicated or offset frame. It writes <piece>/out/export-qa.json
+// and every cut of a film for a black, duplicated or offset frame; the decoded frame count exactly, the frame
+// rate by name (29.97 is 30000/1001), a sane bitrate, and a frame decoded from the file against the same frame
+// drawn cold. A transparent export (.webm, .mov) is read for its alpha channel instead of the sound and the cuts. It writes <piece>/out/export-qa.json
 // and out/export-qa-seams-<format>.png beside it, prints a verdict per file, and exits 0 (all pass or
 // skipped), 1 (a check failed) or 2 (usage, a missing file). `mm export` runs the same checks on what it
 // has just written; this verb is for after `mm sound` muxes the mix, and for any MP4 on its own. The
@@ -35,8 +37,8 @@ runMain(import.meta, async () => {
   assertTools();
   if (!dir) {
     console.log('no piece (it is not in a piece\'s out/ and --piece was not given): only what the file alone can say is checked');
-    const { verifyFile } = await import('./lib/export-qa.mjs');
-    const f = await verifyFile(mp4, { phase: 'final' });
+    const qa = await import('./lib/export-qa.mjs');
+    const f = await (/\.(webm|mov)$/i.test(mp4) ? qa.verifyAlphaFile : qa.verifyFile)(mp4, { phase: 'final' });
     for (const l of verdictLines({ files: [f] })) console.log(l);
     return f.ok ? 0 : 1;
   }

@@ -6,7 +6,8 @@ import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { UsageError } from '../cli.mjs';
 import { runFfmpeg } from '../ffmpeg.mjs';
-import { ProviderError, errorText, guarded } from './common.mjs';
+import { ProviderError, guarded } from './common.mjs';
+import { HttpFailure, describeFailure } from '../http.mjs';
 
 export const name = 'elevenlabs';
 export const hosts = ['api.elevenlabs.io'];
@@ -70,9 +71,10 @@ export function prepare(req) {
 async function call(fetchFn, key, path, init) {
   const res = await fetchFn(`${BASE}${path}`, { ...init, headers: { 'xi-api-key': key, ...(init.headers ?? {}) } });
   if (!res.ok) {
-    let body = null;
-    try { body = await res.json(); } catch { /* not JSON */ }
-    throw new ProviderError(`elevenlabs: HTTP ${res.status}: ${errorText(body, res.statusText || 'request failed')}`);
+    let text = '';
+    try { text = await res.text(); } catch { /* no body */ }
+    const f = describeFailure({ provider: 'elevenlabs', status: res.status, body: text, keyName: 'ELEVENLABS_API_KEY' });
+    throw new HttpFailure(f.message, { ...f, status: res.status });
   }
   return res;
 }

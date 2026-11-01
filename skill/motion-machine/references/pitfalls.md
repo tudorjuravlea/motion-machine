@@ -15,7 +15,10 @@ the grid by arithmetic (beats at `k × 60/bpm` s for the whole length) into `ass
 `{ "bpm": 120, "beats": [0, 0.5, 1, 1.5, …] }` (format and a generating one-liner in
 `beat-sheet.md`), and set `audio.beats` (a known build gap). Then put every cued beat *on* a beat: `scene start + at` within
 40 ms of a grid beat. Scenes need not start on the grid; choose `at` so the sum lands on it. The
-golden films moved `hit` from 0.2 s to 0.5 s and the riser to 20.0 s.
+golden films moved `hit` from 0.2 s to 0.5 s and the riser to 20.0 s. A grid `mm beats` writes with
+`usable: false` (under half its beats land on a kick, so it is probably half a beat off or the track has no kick)
+is not snapped to and W-CUE skips the drift check: read `kickCheck` in the file, move the grid, or set `usable`
+to `true` by hand if the track is right without kicks.
 
 ## 2. The first arrival inside the cut (W-STAGGER)
 

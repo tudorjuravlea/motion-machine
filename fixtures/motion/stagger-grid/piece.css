@@ -1,0 +1,17 @@
+/* Piece-level styles. Colour, family, size, space, radius, duration and easing come only from
+   --mm-* variables (SPEC §3, W-LITERAL). The headline of every scene is a wall of tiles in a 4 by 3 grid. */
+[data-slot="headline"] {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--mm-space-2);
+  width: 100%;
+}
+[data-slot="headline"] > * {
+  display: block;
+  padding: var(--mm-space-3) var(--mm-space-2);
+  background: var(--mm-color-surface);
+  color: var(--mm-color-ink);
+  border-radius: var(--mm-radius-2);
+  text-align: center;
+  font-size: var(--mm-size-h2);
+}

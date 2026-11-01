@@ -1,7 +1,7 @@
 // runtime/kit/diagram.js: the text grammar and the pure helpers the structure-diagram patterns share.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { items, parseTree, separate, span, clock, LOOK, lookVars } from '../../runtime/kit/diagram.js';
+import { items, parseTree, separate, span, clock, LOOK, lookVars, edgePlan } from '../../runtime/kit/diagram.js';
 
 test('items splits on | > , and newlines, trims, drops empties', () => {
   assert.deepEqual(items('Plan|Do > Check,Act'), ['Plan', 'Do', 'Check', 'Act']);
@@ -82,4 +82,28 @@ test('LOOK names the brand knobs every diagram shares, and lookVars turns them i
   assert.equal(d['--dg-accent-ink'], 'var(--mm-color-accentInk)');
   assert.equal(lookVars({ accent: 'neon' })['--dg-accent'], 'var(--mm-color-accent)', 'an unknown role falls back');
   assert.equal(lookVars({ line: 9 })['--dg-line'], '0.02', 'the stroke share is clamped');
+});
+
+test('edgePlan: an edge draws on from nothing with no head, then grows a head trimmed by half its size', () => {
+  const d = 'M 0 0 L 400 0';
+  let e = edgePlan(d, 0, { head: 'end', size: 24 });
+  assert.equal(e.hidden, true, 'nothing at q = 0, so no dot from a round cap');
+  assert.equal(e.heads.length, 0);
+  e = edgePlan(d, 1, { head: 'end', size: 24 });
+  assert.equal(e.heads.length, 1);
+  assert.ok(Math.abs(e.heads[0].x - 400) < 1e-6 && Math.abs(e.heads[0].y) < 1e-6, 'the tip is on the end of the path');
+  assert.ok(Math.abs(e.heads[0].angle) < 1e-9, 'pointing along the line');
+  assert.ok(Math.abs(e.window.b - (1 - 12 / 400)) < 1e-9, 'the line stops half a head short');
+  e = edgePlan(d, 0.05, { head: 'end', size: 24 });
+  assert.ok(Math.abs(e.heads[0].size - 10) < 1e-9, 'a short line carries a small head');
+});
+
+test('edgePlan: a head at the start points back along the path; a head on a curve follows the tangent', () => {
+  const e = edgePlan('M 0 0 L 100 0', 1, { head: 'both', size: 10 });
+  const start = e.heads.find((h) => h.at === 'start'), end = e.heads.find((h) => h.at === 'end');
+  assert.ok(Math.abs(Math.abs(start.angle) - Math.PI) < 1e-9);
+  assert.ok(Math.abs(end.angle) < 1e-9);
+  const c = edgePlan('M 0 0 C 0 100 100 100 100 0', 1, { head: 'end', size: 10 });
+  assert.ok(Math.abs(c.heads[0].angle - -Math.PI / 2) < 1e-6, 'the curve ends going up the page');
+  assert.ok(Math.abs(c.heads[0].x - 100) < 1e-6);
 });

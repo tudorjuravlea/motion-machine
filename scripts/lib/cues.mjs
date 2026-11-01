@@ -6,10 +6,14 @@ export const DRIFT_S = 0.04;
 
 export const cueName = (c) => String(c).replace(/^sound\//, '');
 
-/** Cue events (film) from a schedule: [{ t, name, selector, scene, params? }], sorted; `params` is the beat's `params.cue` bag (gain, seed, emphasis). */
+/**
+ * Cue events (film) from a schedule: [{ t, name, selector, scene, pictureS, params? }], sorted by `t`; `params` is the beat's
+ * `params.cue` bag (gain, seed, emphasis, offsetMs, soundOk, big). `pictureS` is the picture event the sound meets: the beat's
+ * arrival, or for a cue that ends on its beat (`anchor: "end"`; `t` + `d` is the landing) the landing.
+ */
 export function cueEvents(sched) {
   return (sched?.events ?? []).filter((e) => e.kind === 'cue' && typeof e.t === 'number')
-    .map((e) => ({ t: e.t, name: cueName(e.cue), selector: e.selector, scene: e.scene, ...(e.params ? { params: e.params } : {}) })).sort((a, b) => a.t - b.t);
+    .map((e) => ({ t: e.t, name: cueName(e.cue), selector: e.selector, scene: e.scene, pictureS: e.anchor === 'end' && typeof e.d === 'number' ? e.t + e.d : e.t, ...(e.params ? { params: e.params } : {}) })).sort((a, b) => a.t - b.t);
 }
 
 /** The sorted beat times of a parsed beats.json (an array, or `{ beats }`), or null when empty. */

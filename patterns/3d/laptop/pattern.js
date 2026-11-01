@@ -4,7 +4,7 @@
 // or none). It turns like the phone (hero, turntable, still, showcase); in a hero the lid opens as
 // it arrives. The screen is copied from a hidden 2D screen the kit's screen fold drives; the pose
 // is a pure function of p and u; a deck rest faces the viewer with the lid open.
-import { THREE, clamp01, smoothstep01, cssText, cssColour, stage, slab, plate, disc, sheen, sweep, lightAll, menuBar, alloy, metal, glass, glossy, turn, fitCanvas, mark, draw } from '../../../runtime/kit/device3d.js';
+import { THREE, clamp01, smoothstep01, cssText, cssColour, stage, slab, plate, disc, sheen, sweep, lightAll, menuBar, alloy, metal, glass, glossy, turn, fitCanvas, mark, draw, LOOK_PARAMS, lookOf } from '../../../runtime/kit/device3d.js';
 
 const LW = 2, LH = 1.29, LT = 0.024, LR = 0.065;   // the lid, in scene units
 const BD = 1.38, BT = 0.058, BR = 0.075;           // the base: depth (front to back) and thickness
@@ -46,14 +46,14 @@ function deckTexture(doc, col) {
   return tex;
 }
 
-function build(el, holder, model, kind) {
-  const c = stage(el);
+function build(el, holder, model, kind, look) {
+  const c = stage(el, look);
   c.canvas.className = 'laptop3d__canvas';
   const col = (v) => cssColour(holder, v);
   const shellColour = col('--mm-device-body').lerp(col('--mm-device-rim-light'), 0.55);
   const shade = (k) => shellColour.clone().multiplyScalar(k).getStyle();   // the deck's tones, from the shell's own colour
   const m = {
-    shell: alloy(kind, shellColour, 0.4),
+    shell: alloy(kind, shellColour, 0.4, look.brushed),
     glass: glass(col('--mm-device-glass')),
     lens: glass(col('--mm-device-lens-ring'), 0.02),
   };
@@ -100,11 +100,11 @@ function build(el, holder, model, kind) {
   }
   laptop.add(lid);
   c.scene.add(laptop);
-  lightAll(c);
+  lightAll(c, { body: laptop, focus: new THREE.Vector3(0, 0.5, 0), reach: 1.5, height: LH + BT + 0.3 });
   c.floor.position.y = -0.002;
   c.glow.position.set(0, 0.7, -2.2); c.glow.scale.set(4.6, 2.9, 1);
   c.key.position.set(2.5, 5, 4.5);
-  Object.assign(c, { kind, laptop, lid, shine, backShine, cutout, model, surface: cssText(holder, '--mm-color-surface'), accent: cssText(holder, '--mm-color-accent') });
+  Object.assign(c, { kind, brushed: look.brushed, laptop, lid, shine, backShine, cutout, model, surface: cssText(holder, '--mm-color-surface'), accent: cssText(holder, '--mm-color-accent') });
   cache.set(el, c);
   return c;
 }
@@ -124,6 +124,7 @@ export default {
     url: { type: 'string', default: '', meaning: 'the address shown in the browser window\'s pill; empty shows the pill with its padlock only' },
     menu: { type: 'string', default: 'File,Edit,View,Window,Help', meaning: 'the menu bar items, comma-separated, the first in bold; at most 6' },
     metal: { type: 'enum(aluminium|titanium)', default: 'aluminium', meaning: 'the frame: satin aluminium in a neutral, faintly cool grey; or titanium, darker and faintly warm with a finer brushed sheen' },
+    ...LOOK_PARAMS,
     model: { type: 'enum(notch|chin|plain)', default: 'notch', meaning: 'the face of the lid: a camera notch with thin even bezels; a deeper top with a small camera and a chin; or even bezels and no camera' },
   },
   at(el, p, ctx) {
@@ -131,10 +132,11 @@ export default {
     if (!holder) return;
     const model = ctx.params?.model ?? 'notch';
     const kind = ctx.params?.metal ?? 'aluminium';
+    const look = lookOf(ctx.params);
     let c = cache.get(el);
-    if (!c || c.model !== model || c.kind !== kind) c = ctx.seeded(() => build(el, holder, model, kind));   // Three.js names objects with Math.random: seeded here
+    if (!c || c.model !== model || c.kind !== kind || c.studio !== look.studio || c.brushed !== look.brushed) c = ctx.seeded(() => build(el, holder, model, kind, look));   // Three.js names objects with Math.random: seeded here
     if (c.canvas.parentElement !== holder) holder.prepend(c.canvas);   // the seek's restore rebuilt the markup
-    fitCanvas(c, holder);
+    fitCanvas(c, holder, ctx.params);
     const items = String(ctx.params?.menu ?? 'File,Edit,View,Window,Help').split(',').map((x) => x.trim()).filter(Boolean).slice(0, 6);
     c.bar = { ...menuBar(items, String(ctx.params?.statusTime ?? '10:00'), getComputedStyle(holder).getPropertyValue('--mm-font-text').trim() || 'sans-serif', 0.032, String(ctx.params?.url ?? ''), say), status: String(ctx.params?.status ?? 'auto'), browser: String(ctx.params?.browser ?? 'auto') };
     const q = clamp01(p), u = Math.max(0, Number(ctx.u) || 0);

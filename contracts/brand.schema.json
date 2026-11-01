@@ -203,9 +203,11 @@
       "stability": { "type": "number", "minimum": 0, "maximum": 1 },
       "similarity": { "type": "number", "minimum": 0, "maximum": 1 },
       "style": { "type": "number", "minimum": 0, "maximum": 1 },
-      "speed": { "type": "number", "minimum": 0.7, "maximum": 1.2 } } },
+      "speed": { "type": "number", "minimum": 0.7, "maximum": 1.2 },
+      "lexicon": { "type": "object", "maxProperties": 200, "propertyNames": { "minLength": 1, "maxLength": 60 }, "additionalProperties": { "type": "string", "minLength": 1, "maxLength": 120 }, "description": "how this brand's words are said: each key is a word as written, each value how a voice should say it (a respelling such as ZAH-lo); mm gen voice sends the value in the word's place and keeps the word as shown, and W-SAY does not flag a word listed here" } } },
     "sound": { "type": "object", "additionalProperties": false, "description": "the brand's sound, chosen once: it wins over the motion half's `sound.profile` when the two halves are composed", "properties": {
-      "profile": { "type": "string", "minLength": 1, "maxLength": 200, "description": "a sound profile (contracts/sound-profile.schema.json): a name in styles/sound/ or a path to a profile file; the cues the style plays are voiced in it and measured against it" } } },
+      "profile": { "type": "string", "minLength": 1, "maxLength": 200, "description": "a sound profile (contracts/sound-profile.schema.json): a name in styles/sound/ or a path to a profile file; the cues the style plays are voiced in it and measured against it" },
+      "licences": { "type": "array", "minItems": 1, "maxItems": 3, "uniqueItems": true, "items": { "enum": ["cc0", "pdm", "by"] }, "description": "the licences found sounds may carry (`mm sound find`, `mm sound fetch`, W-SAMPLE-LICENSE): Openverse codes cc0, pdm (public domain), by (CC BY 2.0 to 4.0); default all three. Wins over the motion half's `sound.licences` when the two halves are composed" } } },
     "music": { "type": "object", "additionalProperties": false, "required": ["style"], "description": "the brand's music (mm gen music); its tempo is the motion half's sound.bpm", "properties": {
       "style": { "type": "string", "minLength": 1, "maxLength": 300 },
       "avoid": { "type": "string", "maxLength": 200 } } },

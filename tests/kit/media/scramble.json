@@ -1,0 +1,37 @@
+{
+  "id": "kit-scramble",
+  "kind": "film",
+  "formats": ["16x9", "9x16"],
+  "title": "Kit scramble",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "cta": { "text": "", "url": "" },
+  "scenes": [
+    {
+      "id": "decode", "layout": "layouts/statement", "duration": 4, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{ "at": 0.2, "slot": "headline", "fx": "text/scramble", "text": "Decoded from noise", "params": { "dur": 2 } }],
+      "say": ""
+    },
+    {
+      "id": "version", "layout": "layouts/statement", "duration": 4, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{ "at": 0.2, "slot": "headline", "fx": "text/scramble", "text": "Release v1.3", "params": { "before": "Release v1.2", "dur": 2 } }],
+      "say": ""
+    },
+    {
+      "id": "braille", "layout": "layouts/statement", "duration": 4, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{ "at": 0.2, "slot": "headline", "fx": "text/scramble", "text": "Braille noise", "params": { "charset": "braille", "dur": 2 } }],
+      "say": ""
+    },
+    {
+      "id": "shrink", "layout": "layouts/statement", "duration": 4, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{ "at": 0.2, "slot": "headline", "fx": "text/scramble", "text": "Simple", "params": { "before": "Lemon Banana", "dur": 2 } }],
+      "say": ""
+    },
+    {
+      "id": "steps", "layout": "layouts/statement", "duration": 4, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{ "at": 0.2, "slot": "headline", "fx": "text/scramble", "text": "Uptime 99.9%", "params": { "before": "Uptime 99.5%", "charset": "none", "dur": 2 } }],
+      "say": ""
+    }
+  ]
+}

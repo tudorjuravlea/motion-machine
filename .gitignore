@@ -33,6 +33,9 @@ fixtures/media/*.mov
 tests/kit/media/assets/rec/
 tests/kit/media/assets/site/
 tests/kit/media/assets/short/
+tests/kit/media/assets/ses/
+tests/kit/media/assets/ses.webm
+tests/kit/media/assets/ses.cursor.json
 tests/kit/media/assets/*.licence.json
 fixtures/device-film/assets/site-phone/
 fixtures/device-film/assets/site-laptop/

@@ -9,7 +9,7 @@ receives, where a story's params end up, and every function the kit modules expo
 - [What each pattern kind receives](#what-each-pattern-kind-receives) · [Units of travel](#units-of-travel) · [Param routing](#param-routing) · [Cascades](#cascades-data-each--paramseach)
 - [Fragments](#fragments-patternhtml-for-text-data-and-devices) · [Assets](#assets) · [Overlays](#overlays) · [Sound cues](#sound-cues) · [Schedule output](#schedule-output) · [Warnings](#warnings)
 - [Screen actions](#screen-actions) · [3D devices](#3d-devices) · [Footage](#footage)
-- [Module reference](#module-reference): `kit.js` · `params.js` · `schedule.js` · `springs.js` · `ease.js` · `random.js` · `seeded.js` · `fit.js` · `count.js` · `room.js` · `glyphs.js` · `rough.js` · `points.js` · `screen.js` · `footage.js` · `captions.js` · `speaker.js` · `speaker-layer.js` · `device3d.js` · `hairline.js` · `drawn.js` · `synth.js` · `rig.js` · `diagram.js` · `ground.js` · `surface.js` · `finish.js` · `lens.js`
+- [Module reference](#module-reference): `kit.js` · `params.js` · `schedule.js` · `springs.js` · `ease.js` · `curve.js` · `stagger.js` · `inertia.js` · `maths.js` · `random.js` · `seeded.js` · `fit.js` · `count.js` · `room.js` · `glyphs.js` · `rough.js` · `points.js` · `screen.js` · `cursor.js` · `camera.js` · `demoframe.js` · `footage.js` · `captions.js` · `press.js` · `speaker.js` · `speaker-layer.js` · `device3d.js` · `look3d.js` · `dof3d.js` · `floor3d.js` · `hairline.js` · `drawn.js` · `synth.js` · `modes.js` · `aim.js` · `rig.js` · `diagram.js` · `pathkit.js` · `morph.js` · `dash.js` · `projection.js` · `ground.js` · `surface.js` · `finish.js` · `lens.js` · `split.js` · `scramble.js` · `code.js`
 
 ## Mount and seek
 
@@ -234,8 +234,12 @@ child with its entrance pattern:
   `params.sep` (default `|`) into one `<span class="mm-each">` per part.
 - Spacing: `params.stagger` (seconds, finite and at least 0; anything else falls back to the
   style's spacing with a warning), else the slot's `data-stagger`, else `style.motion.stagger.eachS`;
-  the spread of starts is capped at `stagger.capS` (the spacing shrinks). `stagger()` in
-  `schedule.js` does the arithmetic.
+  the spread of starts is capped at `stagger.capS` (the spacing shrinks). `params.stagger` may also be
+  an object, `{ each | amount, from, grid, axis, ease, reverse, seed, jitter, use, total }` (see
+  `stagger.js`): a 2D or 3D grid, a radial order from the centre or the edges, a seeded random order. A
+  brand sets the order of every cascade once with `style.motion.stagger.from` and `.ease`; the beat's
+  object wins. An ease or a `from` that does not parse falls back to a linear row, with one warning.
+  `staggerOffsets()` in `stagger.js` does the arithmetic.
 - The schedule lists one `arrive` event per child (`<slot selector> > :nth-child(k)`); the beat's
   item is the parent, lasts the whole cascade, and owns the exit and the emphasis. Departures
   never stagger: the exit runs once on the parent, `exitRatio` × one child's entrance.
@@ -401,7 +405,11 @@ A `screen/` module exports:
 The screen **state** is `{ content, frameTime, scrollY, zoom: {x, y, s}, swapping, compare? }`:
 `content` is `{ kind: 'still' | 'sequence' | 'page', base, meta }` (`meta` is the folder's
 `media.json`), `frameTime` seconds into a sequence, `scrollY` css px into a page, `zoom` a push-in
-about a point (fractions of the screen).
+about a point (fractions of the screen). `screen/zoom-to` also sets `tilt` (`{ x, y }` degrees, the
+lean of a device with `data-tilt-plane`) and `blur` (`{ sx, sy }`, the deviation of the camera's motion blur
+in px), both read by its `paint`. When the folder's `media.json` names a pointer track in `cursor`, the kit
+reads it with the folder and `content.meta.track` is that track (`cursor.js`'s `readTrack`); `screen/pointer`
+and `screen/zoom-to` with `mode: auto` read it, at the recording's time `frameTime`.
 
 `ctx` in `reduce`, `draw` and `paint`: the common fields above, plus
 
@@ -432,6 +440,14 @@ follows:
   objects with `Math.random` on a first render.
 - **A pose is a pure function** of `p` (the entrance) and `u` (seconds since the beat arrived):
   `turn(move, q, u, ctx)` and `cross(q, u, prm, ctx)`. A deck rest faces the viewer.
+- **The frame is drawn by a chain, not by one render.** The stage draws into a half-float target
+  (linear light, premultiplied by coverage) and an output pass writes the canvas in sRGB, so each effect works
+  on light as it is. Tone mapping (Neutral) sits in each material's own shader (`toneMapped(material)`), so
+  the emissive screen opts out and shows its picture exactly. The look's params (`aa`, `glow`, `contact`,
+  `contactSoft`, `occlusion`, `reflection`, `reflectSoft`, `studio`, `dof`, `tilt`, `brushed`) are on both
+  devices, and a brand sets them once with `style.patterns["3d/phone"]`. Every pass is a pure function of
+  the pose at `t`: a fixed jitter table, a seeded noise texture, a focus computed from the camera and the
+  device (never an autofocus), no clock and no reading of the frame before.
 - **Readouts for tests and the gate:** `mark(c, ry, extra)` writes the turn, which face shows and the
   cutout built as `data-*` on the canvas.
 
@@ -474,7 +490,7 @@ Every export of every module in `runtime/kit/`. Pattern files import from these 
 | `mount` | `async mount({ story, style, root = document.body, patternsBase })` | `window.mm` | builds the page and paints the initial instant; on failure sets `window.mm = { ready: false, error }` and rethrows |
 | `seek` | `seek(t)` | nothing | restores every managed element, paints `t` (film seconds; deck fractional press); synchronous |
 | `goto` | `goto(n)` | nothing | a deck: lands on press `n` (rounded, clamped); a film: `seek(n)` |
-| `next`, `prev` | `next()` · `prev()` | nothing | a deck's press forward and back; `next` fires a cancelable `mm:press` event `{ from, to }` first, so a live host may animate the press itself |
+| `next`, `prev` | `next()` · `prev()` | nothing | a deck's press forward and back (`press.js`: Next finishes a press under way and does nothing on the final pose; Back mid-step restarts the step, at a rest goes to the rest before); `next` fires a cancelable `mm:press` event `{ from, to }` first, so a live host may animate the press itself (`deck-player.js` does, in a standalone deck, and plays that press's cues) |
 | `settle` | `async settle()` | `Promise<void>` | resolves once every decode the last seek asked for is done and every `afterSettle` callback has run |
 | `trackDecode` | `trackDecode(promise)` | the tracked promise | registers a decode `settle()` waits for; a rejection is swallowed |
 | `afterSettle` | `afterSettle(fn)` | nothing | runs `fn` inside `settle()`, after the decodes; a promise it returns is awaited. Callbacks not yet run are dropped at the start of the next seek |
@@ -498,7 +514,7 @@ Pure; imports in Node and in the page. A node is `{ d, f(u) }`: a duration and a
 | `seq` | `seq(...nodes)` | node + `starts` | nodes one after another |
 | `par` | `par(...nodes)` | node | all at once; lasts as long as the longest |
 | `delay` | `delay(x, node)` | node | starts `x` seconds late |
-| `stagger` | `stagger(each, items, { from, index, ease, cap })` | node + `offsets` | children in turn; `from`: `first`, `center`, `last` or `index`; `cap` bounds the whole spread |
+| `stagger` | `stagger(each, items, { from, index, ease, cap, grid, axis, reverse, seed, jitter, use, total })` | node + `offsets` | children in turn, by `stagger.js`'s `staggerOffsets`; `from`: `first`, `center`, `last`, `edges`, `random`, `index` (with `index`), an item index or a ratio pair; `ease` a function or an ease string; `cap` bounds the whole spread |
 | `overlap` | `overlap(a, b, o)` | node + `starts` | `b` starts `o` seconds before `a` ends |
 | `transition` | `transition(a, b, pattern, d)` | node | an overlap by `d` whose `f` gives `{ a, b, pattern, p }`, `p` running 0 to 1 across the overlap |
 | `schedule` | `schedule(story, style, { patterns, each })` | the schedule (see Schedule output) | `patterns` maps a ref to its module or metadata (`dur`, `spring`, `durationS`, `anchor`); `each` supplies a cascade's child count in Node |
@@ -513,24 +529,88 @@ Pure; imports in Node and in the page. A node is `{ d, f(u) }`: a duration and a
 
 ### `springs.js`: closed-form springs
 
-Pure; never integrated. A spring is `{ k, c, m }` or `{ bounce, period }`.
+Pure; never integrated. A spring is `{ k, c, m }`, `{ bounce, period }` or `{ preset }`, each with an optional `velocity` (distances per second; 0 from rest). A negative `bounce` with `soft: true` lands on the critical spring's schedule instead of late.
 
 | Name | Signature | Returns | Note |
 |---|---|---|---|
 | `spring` | `spring(t, params)` | 0 → 1 (may pass 1) | position at `t` seconds; 0 for `t <= 0`, exactly 1 for `t = Infinity` |
-| `spring.settle` | `spring.settle(params)` | seconds | first time after which it stays within 0.005 of 1 |
-| `spring.overshoot` | `spring.overshoot(params, t = Infinity)` | number ≥ 0 | largest value above 1 up to `t`, analytically |
+| `spring.settle` | `spring.settle(params, eps = 0.005)` | seconds | first time after which it stays within `eps` of 1 |
+| `spring.overshoot` | `spring.overshoot(params, t = Infinity)` | number ≥ 0 | largest value above 1 up to `t`, analytically (also with a velocity) |
+| `spring.velocity` | `spring.velocity(t, params)` | distances per second | the analytic speed; the `velocity` at 0; 0 before 0 and at `Infinity` |
+| `spring.from` | `spring.from(t, params, { from = 0, to = 1, velocity })` | number | a spring between any two values; `velocity` in values per second (default `params.velocity` distances per second); exactly `to` at `Infinity` |
+| `spring.velocityFrom` | `spring.velocityFrom(t, params, { from, to, velocity })` | values per second | the speed of `spring.from` |
+| `spring.settleFrom` | `spring.settleFrom(params, { delta = 1, velocity = 0, eps = 0.005 })` | seconds | the time to come to rest within `eps` from `delta` away moving at `velocity` toward the target |
+| `spring.physics` | `spring.physics(params)` | `{ w0, zeta, velocity }` | what a params object stands for: the preset read, the soft landing applied |
+| `spring.presets` | `spring.presets` | `{ beat, plop, bounce, swing, jump, strike, smooth }` | the named feels as `{ k, c, m, velocity? }`; `params.spring: "plop"` or `{ preset: "plop" }` picks one |
 | `track` | `track(t, keys, params)` | number | stacked springs over `[[time, value], …]`: the first value plus one spring per change |
 | `fromReactSpring` | `fromReactSpring({ tension, friction, mass })` | `{ k, c, m }` | react-spring's parameters are the same numbers (defaults 170, 26, 1) |
 
 ### `ease.js`: easing curves
 
+Pure. An ease is a function of `p` that is exactly 0 at `p <= 0` and 1 at `p >= 1`; a string spells one (the grammar is in SPEC §6: families with `in`, `out`, `inOut`, `outIn`; `steps`, `irregular`, `slowMo`, `expoScale`, `bias`, CSS `linear()`, `curve()`, `anticipate`, `reverse`, `mirror`).
+
 | Name | Signature | Returns | Note |
 |---|---|---|---|
-| `ease` | `ease(name, p, style)` | number | `name` is a style role (`enter`, `exit`, `move`, resolved through `style.motion.easings`) or a CSS easing (`linear`, `ease`, `ease-in`, `ease-out`, `ease-in-out`, `cubic-bezier(a, b, c, d)`) |
+| `ease` | `ease(name, p, style)` | number | `name` is a style role (`enter`, `exit`, `move`, or any role the style names, resolved through `style.motion.easings`) or an ease spelled out: `linear`, `ease-in`, `cubic-bezier(a, b, c, d)`, `back.out(1.7)`, `steps(8)` |
 | `ease.overshoot` | `ease.overshoot(name, p, style)` | number ≥ 0 | largest eased value above 1 over `[0, p]` |
-| `parseEasing` | `parseEasing(str)` | `f(p)` | a cached easing function with `f.maxUpTo(p)`; throws on an unknown easing |
-| `cubicBezier` | `cubicBezier(x1, y1, x2, y2)` | `f(p)` | the curve itself, with `f.maxUpTo(p)` |
+| `parseEasing` | `parseEasing(str)` | `f(p)` | a cached easing function with `f.maxUpTo(p)`; throws a `TypeError` on an unknown easing |
+| `cubicBezier` | `cubicBezier(x1, y1, x2, y2)` | `f(p)` | the curve itself, with `f.maxUpTo(p)` (defined in `curve.js`) |
+| `easeFamily` | `easeFamily(name, type = 'out', ...args)` | `f(p)` | a family built directly; `FAMILIES` and `TYPES` list the names |
+| `FAMILIES` · `TYPES` | | arrays | `power`, `quad`, `cubic`, `quart`, `quint`, `sine`, `circ`, `expo`, `back`, `elastic`, `bounce` · `in`, `out`, `inOut`, `outIn` |
+| `steps` | `steps(n, direction = 'end')` | `f(p)` | `n` jumps, `start` or `end`; the last frame is 1 |
+| `irregular` | `irregular(n = 10, randomness = 1, seed = 0)` | `f(p)` | an uneven cadence that never goes down; seeded |
+| `slowMo` | `slowMo(ratio = 0.7, power = 0.7)` | `f(p)` | fast edges, a slow middle |
+| `expoScale` | `expoScale(a = 1, b = 2, inner)` | `f(p)` | `a + (b - a) f(p)` is `a (b/a)^p`: a zoom at a constant rate |
+| `bias` | `bias(f, r = 0)` | `f(p)` | leans an ease, `r` in −1..1 |
+| `reverse` · `mirror` | `reverse(f)` · `mirror(f)` | `f(p)` | `1 - f(1 - p)` · the in-to-inOut mirror |
+| `parseLinear` | `parseLinear(str)` | `{ xs, ys }` | the stops of a CSS `linear(...)`, positioned as CSS reads them |
+| `easeIssues` | `easeIssues(str)` | `[{ kind, message }]` | what is wrong with an ease string (W-EASE): `unknown`, `steps-last`, `curve-backward`, `curve-flat`, `ends` |
+| `toLinear` | `toLinear(f, { tol = 0.0015, start = 64 })` | string | a CSS `linear(...)` for `f`: split where the curve bends, collinear points dropped, 4 decimals |
+| `cssEasing` | `cssEasing(str, opts)` | `{ css, exact }` | the CSS easing for an ease: keywords and `cubic-bezier` as written, `steps()`, else a sampled `linear()` |
+| `bezierPoints` | `bezierPoints(str)` | `[x1, y1, x2, y2]` or `null` | the four numbers of a keyword or `cubic-bezier(...)` |
+
+### `curve.js`: custom curves
+
+Pure. `curve(data)` takes SVG path data (M, L, H, V, C, S and their relative forms) or numbers (4 are a cubic-bezier, 2 + 6n a start point and n cubics) and returns an ease `f(p)` made a function of x, with `f.issues`; `cubicBezier` lives here and `ease.js` re-exports it.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `curve` | `curve(data)` | `f(p)` | `f.maxUpTo(p)`, and `f.issues` (`curve-backward`, `curve-flat`); throws a `TypeError` on data it cannot read |
+| `cubicBezier` | `cubicBezier(x1, y1, x2, y2)` | `f(p)` | the CSS cubic-bezier |
+
+### `stagger.js`: when each item of a cascade starts
+
+Pure and seeded. Options: `each` (seconds a step, default 0.1) or `amount` (the whole spread), `from`, `grid`, `axis`, `ease`, `reverse`, `seed`, `jitter`, `use`, `total`, `cap`, `start` (SPEC §6).
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `staggerOffsets` | `staggerOffsets(n, opts)` | seconds per item | `from`: `first`, `last`, `center`, `edges`, `random`, `index` (with `index`), an item index or a ratio pair over the grid; `grid`: `[cols, rows]` or `[cols, rows, layers]`; `axis`: `x`, `y` or `z`; `jitter`: seconds or `[start, end]`; `use`: one number per item to rank them by |
+| `staggerValues` | `staggerValues(n, opts)` | `{ values, max }` | the distance of each item in steps, after ease, reverse and the shuffle |
+| `distribute` | `distribute(n, [a, b], opts)` | values | any value spread over the items by the same geometry |
+
+### `inertia.js`: a throw that lands
+
+Pure. `inertia({ from, velocity, power = 0.8, timeConstant = 325, min, max, snap, elastic = true, bounceStiffness, bounceDamping, restDelta })` with `timeConstant` in milliseconds, positions in any unit, velocity in units per second, `t` in seconds from the release.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `inertia` | `inertia(opts)` | `{ at(t), velocity(t), target, end, settle, bound }` | friction toward `target`; if that is past a bound, the crossing is solved and a spring (or a wall, with `elastic: false`) takes over; `snap` is a step, a list of places or a function |
+| `FEELS` | `FEELS.throw`, `FEELS.drag` | option sets | the defaults, and the slower dragged-card feel (time constant 750 ms) |
+
+### `maths.js`: small maths
+
+Pure; omit the last argument to get the function (`wrap(0, 360)`).
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `clamp` | `clamp(min, max, v)` | number | held inside the range |
+| `mapRange` | `mapRange(inMin, inMax, outMin, outMax, v)` | number | not clamped |
+| `wrap` | `wrap(min, max, v)` | number | round and round a range: `wrap(0, 360, -10)` is 350 |
+| `wrapYoyo` | `wrapYoyo(min, max, v)` | number | up and down: `wrapYoyo(0, 100, 150)` is 50 |
+| `snap` | `snap(step, v)` or `snap([places], v)` | number | the nearest multiple or place |
+| `randomAt` · `randomIn` | `randomAt(seed, index)` · `randomIn(seed, index, min, max, snapTo)` | number | a float from a seed and an index alone, any order the same |
+| `arcDelta` | `arcDelta(from, to, mode = 'short')` | degrees | the turn `short`, `cw` or `ccw` |
+| `rotateTo` | `rotateTo(from, spec)` | degrees | a number, or `"-170_short"`, `"350_cw"`, `"350_ccw"` |
 
 ### `random.js`: seeded randomness
 
@@ -667,6 +747,69 @@ The pure half runs in Node; the DOM half draws one layer the kit owns. See [Scre
 | `contentMeta` | `contentMeta.get(contentEl)` | `media.json` or `null` | each content element's media.json; a 3D device draws a captured page's `wire` from it |
 | `paint` | `paint(layer, state, { track, box, swaps, warn })` | nothing | draws the content, scrolled, at its frame and zoomed; `track` registers decodes, `warn(src)` names one that failed |
 
+### `cursor.js`: a recorded pointer as a cursor
+
+Pure; the pointer track of a recorded session (the sidecar `<capture>.cursor.json`, [Screen actions](#screen-actions)) turned
+into a cursor that is a function of `t`. Positions are 0..1 of the recorded surface, times are the recording's ms.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `readTrack` | `readTrack(raw)` | track or `null` | a sidecar read tolerantly: samples with a finite time kept and sorted, positions held to 0..1, an unknown cursor type an arrow, `visible` true unless false; a target with no box dropped |
+| `cursorTypeOf` | `cursorTypeOf(css)` | a cursor type | a computed CSS `cursor` as one of `CURSOR_TYPES`; the keyword after any `url()`, an arrow for the rest |
+| `CURSOR_TYPES` | list | `string[]` | the 16 kinds a sample may name |
+| `springConfig` | `springConfig(smoothing)` | `{ k, c, m }` | the spring a smoothing slider 0..1 stands for (0.67: k 319.6, c 60.5, m 1.04) |
+| `smoothPath` | `smoothPath(track, smoothing = 0.67)` | `{ at(timeMs) }` | the path of each visible run, smoothed once on a fixed 240 Hz grid; `at` is `{ cx, cy, vx, vy }` (speed per second) or `null` where the track hides the cursor; a visible cursor holds to the sample that hides it; smoothing 0 is the raw path; memoised per track |
+| `STEP_MS` | number | ms | the smoothing grid, 1000/240 |
+| `rawAt` | `rawAt(track, timeMs)` | `{ cx, cy }` | the recorded position, linear between samples |
+| `typeAt` | `typeAt(track, timeMs)` | a cursor type | the type of the last sample at or before `timeMs` |
+| `clickBounce` | `clickBounce(track, timeMs)` | 1 → 0 | how far a click's bounce has to run: 1 at the click, 0 after `CLICK_MS` (260) |
+| `bounceScale` | `bounceScale(progress, bounce)` | scale | the dip (to 0.76 at bounce 5) and the rebound (to 1.16) of a click; `bounce` 0..5 |
+| `CLICK_MS` | number | ms | the click bounce's length |
+| `blurPx` | `blurPx(speedPxPerS, amount)` | px | the cursor's blur, proportional to speed and `amount` (0..1), at most 6 |
+| `shapeOf` | `shapeOf(type)` | `{ d, w, h, hot }` | the art for a type (arrow, pointer, text; the hands are the pointer, the rest the arrow): path data in a box of `w` by `h` units, and the point the pointer is at; no colour |
+
+### `camera.js`: an automatic camera for a recorded session
+
+Pure; zoom regions read off a pointer track, authored on the source's timing, with a closed-form chase. Times in ms; a position or
+box is 0..1 of the recording; a region is `{ id, source: 'auto' | 'manual', startMs, endMs, depth, focus: { cx, cy }, tilt, follow?, target?, box? }`
+with `startMs` the moment the zoom has landed.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `cameraOf` | `cameraOf(track, options)` | `{ regions, at(timeMs) }` | the camera: `at` is the screen layer's zoom `{ x, y, s }` with `strength`, `tilt` and the velocity `vx, vy, vs` (per second); options `totalMs`, `regions` (by hand), `suggest`, `depth`, `hold`, `leadMs`, `tilt`, `spacing`, `connect`, `follow`, `chase`; memoised per track and options |
+| `suggestZooms` | `suggestZooms(track, { totalMs, existing, depth, hold, leadMs, tilt, spacing })` | regions tagged `auto` | one zoom landing at each click target, centred on its box; the longest-looked-at first, none within `spacing` (1800 ms) of one kept, none overlapping `existing` |
+| `withoutAuto` | `withoutAuto(regions)` | regions | the regions that are not tagged `auto` |
+| `authoredAt` | `authoredAt(regions, timeMs, { connect, follow })` | `{ strength, scale, focus, tilt, region }` | the camera as the regions author it, before the chase; a pan between close zooms has strength 1 |
+| `regionStrength` | `regionStrength(region, timeMs)` | 0..1 | the lead-in (starts about a second before the landing; 0.9941 at `startMs`), the hold, the lead-out |
+| `connectedPairs` | `connectedPairs(regions)` | `[{ from, to, start, end }]` | zooms at most `PAN_GAP_MS` apart, joined by a pan of `PAN_MS` |
+| `LEAD_IN_MS`, `LEAD_OUT_MS`, `OVERLAP_MS`, `PAN_GAP_MS`, `PAN_MS`, `SPACING_MS` | numbers | ms | 1522.575, 1015.05, 500, 1500, 1000, 1800 |
+| `DEPTHS` | `{ gentle, soft, medium, close, tight, macro }` | magnifications | the depth ladder: 1.25, 1.5, 1.8, 2.2, 3.5, 5 |
+| `depthScale` | `depthScale(depth)` | 1..5 | a step's name or a number; an unknown name is `medium` |
+| `pickDepth` | `pickDepth(box)` | a step | the deepest step that shows a box filling at most 35 % of the view |
+| `focusBounds`, `clampFocus`, `softenFocus` | `(…, scale, ratio?)` | bounds, `{ cx, cy }` | where the view's centre may be to stay inside the recording; the soft edge eases into the boundary instead of stopping at it |
+| `transformOf`, `focusOf`, `viewOf` | `transformOf(zoomScale, focus, strength)` | `{ scale, x, y }` (stage fractions) | the stage-normalised zoom transform, its inverse, and the screen layer's `{ x, y, s }` for it |
+| `followPath` | `followPath(track)` | `{ at(timeMs) }` | where a camera that follows the cursor looks: a chase of the recorded pointer, faster the farther behind (0.1 to 0.25 of the gap per 25 ms), run once over a 240 Hz grid |
+| `chaseSeries` | `chaseSeries(values, stepMs, spring)` | `{ at(timeMs) → { value, rate } }` | an overdamped spring chasing a piecewise-linear target, in closed form (a sum of ramp responses); no stepping |
+| `CHASE` | `{ k, c, m }` | the camera's spring | 320, 40, 0.92 |
+| `motionBlur` | `motionBlur(v, stage, amount)` | `{ px, dx, dy }` | the blur of a camera at velocity `v = { vx, vy, vs }` over a `{ w, h }` stage: none under 12 px/s, a squared response up to 14 px at 1400 px/s, times `a(1 + 1.2a)` |
+
+### `demoframe.js`: a recording on a branded ground
+
+Pure; the arithmetic of `devices/demo-frame` and of the lean `screen/zoom-to` gives it. Everything is a fraction of the stage or a
+page pixel (1080 on the short side in every format).
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `paddingScale` | `paddingScale(padding)` | 0.6..1 | the share of the stage a recording takes: 1 minus 0.4 of the padding (0..1) |
+| `fitPlane` | `fitPlane({ w, h }, ratio, padding)` | `{ w, h }` | the largest plane of a shape inside the padded stage |
+| `shadowStack` | `shadowStack(intensity)` | three layers `{ y, blur, alpha }` | down 12, 4, 2 px; blur 48, 16, 8; opacity 0.7, 0.5, 0.3, each times the intensity (0..1) |
+| `shadowCss` | `shadowCss(intensity, role)` | a CSS `filter` | the stack as three `drop-shadow()`s in a tint of one palette role; `none` at 0 |
+| `TILTS` | `{ none, iso, left, right }` | degrees `{ x, y }` | rotateX and rotateY of each preset: iso −10 and −16, left −22 and right 22 about y |
+| `tiltOf`, `lerpTilt` | `tiltOf(kind)`, `lerpTilt(a, b, t)` | `{ x, y }` | a preset by name (flat for an unknown one), and a tilt between two |
+| `perspectivePx` | `perspectivePx(w, h)` | px | 2.6 times the short side |
+| `containScale` | `containScale(tilt, w, h)` | at most 1 | the scale that keeps the leaning plane's projected corners inside the rectangle it started in |
+| `tiltTransform` | `tiltTransform(tilt, w, h)` | a CSS transform | `scale() perspective() rotateX() rotateY()`, or `none` when flat |
+
 ### `footage.js`: a cut recording on the film's clock
 
 The pure half runs in Node; the DOM half points the layout's footage pictures at a frame. See [Footage](#footage).
@@ -696,6 +839,29 @@ Pure, no DOM. `text/caption-karaoke` (and any caption pattern) cuts a word list 
 | `charWidth` | `charWidth(text)` | number | width in character units: a Chinese, Japanese, Korean, fullwidth or emoji character is 2, any other 1 |
 | `lineWidth` | `lineWidth(texts)` | number | the width of words on one line: their widths plus a space between two (none between two wide characters) |
 | `MIN_WORDS`, `MAX_WORDS`, `BREAK_SCORE`, `PAUSE_WEAK_S`, `PAUSE_STRONG_S`, `DANGLING`, `WEIGHT_SIZE` | constants | | the weights above |
+
+### `press.js`: the deck's press model
+
+Pure, no DOM (SPEC §10). `kit.js` navigates a deck through it, and the tests read it without a browser.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `nextRest` | `nextRest(x, presses)` | rest or `null` | from a rest, the rest after it; under way, the end of that press; on the final pose `null` (a press does nothing) |
+| `prevRest` | `prevRest(x)` | rest | under way, the rest the step began from (the step restarts); at a rest, the rest before; never below 0 |
+| `pressFromLocation` | `pressFromLocation(search, hash, presses)` | rest or `null` | a deep link: `?press=n` (a number, rounded and clamped to the deck), else a numeric `#n`, else `null`. Landing on it is a jump and plays nothing |
+| `reducedMotion` | `reducedMotion(style, prefers)` | boolean | whether a deck draws without movement: the reader's `prefers-reduced-motion` (`prefers`) or `style.motion.reduceMotion === 'always'`. With it an entrance under way is the finished element fading in, an exit a fade out, a cut a cross-fade, and a camera move and an emphasis are not drawn; every rest is the same picture. A film is never changed |
+| `cuesOfPress` | `cuesOfPress(events, press)` | events | the sprite events (`{ press, at, key }`) a press plays, in the order they sound; none for rest 0 |
+
+### `deck-player.js` (in `scripts/lib/`, not the kit, because it keeps a live clock): what a standalone deck does when a person drives it
+
+Browser only (`scripts/lib/deck-player.js`; the kit holds nothing that keeps time), loaded by the standalone deck's loader after the piece mounts (never by a piece, and it does nothing in render mode). It takes over the `mm:press` event so a press runs in real time and plays that press's cues from the deck's sprite (SPEC §9, §10); a jump plays nothing. Audio is unlocked by the first gesture and decoded from a base64 data URI, so it works from `file://`.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `startDeckPlayer` | `startDeckPlayer({ sound = null, win = window })` | `{ muted(), mute(on) }` | starts the player on the mounted deck (`win.mm`). `sound` is `{ src, cues, events }` (`src` a data URI) or `null` for a deck with no sound: no button, no audio context. With sound it adds `button.mm-deck-mute` (set in the style's roles) and the `m` key, and `mm.sound` is the same two functions. It also accepts `postMessage` from the embedding page: `{ mm: 'goto', press }`, `{ mm: 'next' }`, `{ mm: 'prev' }` |
+| `decodeDataUri` | `decodeDataUri(src)` | `ArrayBuffer` | the bytes of a `data:<type>;base64,…` URI, without a request |
+| `UNLOCK_EVENTS` | `['touchstart', 'touchend', 'click', 'keydown']` | array | the capture-phase events whose first occurrence unlocks audio |
+| `LATE_MS` | `1000` | number | a cue asked for before the sprite has decoded still plays if the decode finishes within this many ms |
 
 ### `speaker.js`: where the speaker stands, and the face box
 
@@ -729,8 +895,8 @@ scene's start is computed, never remembered), the drift, the face box and the mo
 
 ### `device3d.js`: what the 3D devices share
 
-Imported by `3d/phone` and `3d/laptop`. Materials are standard (physical ones take seconds longer
-to compile in software).
+Imported by `3d/phone` and `3d/laptop`. Materials are standard; only the brushed metal is physical
+(anisotropy), and it draws as fast as a standard one here.
 
 | Name | Signature | Returns | Note |
 |---|---|---|---|
@@ -738,9 +904,10 @@ to compile in software).
 | `clamp01`, `smoothstep01` | `(x)` | number | clamp to 0..1; smoothstep of the clamped value |
 | `SHOWCASE` | 3.2 | seconds | how long the showcase half-turn takes |
 | `cssText`, `cssColour` | `(el, '--var')` | string; `THREE.Color` | a CSS variable's resolved colour, any syntax the browser knows |
-| `stage` | `stage(el)` | `{ renderer, canvas, scene, env, floor, key, glow, camera, tex, tex2d }` | renderer, room light for reflections, key and rim lights, floor shadow and glow |
+| `stage` | `stage(el, cfg)` | `{ renderer, canvas, scene, env, floor, key, glow, camera, tex, tex2d, studio }` | renderer, the studio (`cfg.studio`: light, dark or brand) lighting the metal and glass, a few rectangular softboxes, key and rim lights, floor shadow and glow |
 | `rrect` | `rrect(w, h, r)` | `THREE.Shape` | a rounded rectangle centred on the origin |
-| `lightAll` | `lightAll(c)` | nothing | gives every material the studio as its own envMap |
+| `lightAll` | `lightAll(c, opts)` | nothing | gives every material the studio as its own envMap and its tone mapping; with `opts` (`{ body, focus, reach, height }`) builds the stage's look |
+| `LOOK_PARAMS`, `lookOf` | re-exported from `look3d.js` | | the look's param table and its reading |
 | `slab` | `slab(w, h, d, r, b, mats)` | mesh | an extruded slab with rounded corners (`r`) and bevelled edges (`b`); `mats`: `[faces, sides]` |
 | `plate` | `plate(w, h, r, mat)` | mesh | a flat rounded plate facing +z with 0..1 UVs |
 | `sheen`, `sweep` | `sheen(doc, w, h, r, opacity)` · `sweep(mesh, a, rest)` | mesh · nothing | a soft slanted band of light over a glass face, and its slide as the device turns |
@@ -751,9 +918,35 @@ to compile in software).
 | `menuBar` | `menuBar(items, time, font, height, url, say)` | bar | the laptop's menu bar |
 | `cross` | `cross(q, u, prm, ctx)` | turn in radians | the cross move: one smooth move with one full turn, the back to the viewer half-way |
 | `turn` | `turn(move, q, u, ctx)` | turn in radians | the turn about the vertical axis for a move; a deck rest faces the viewer |
-| `fitCanvas` | `fitCanvas(c, holder)` | nothing | sizes the canvas and camera to the holder |
+| `fitCanvas` | `fitCanvas(c, holder, params)` | nothing | sizes the canvas, camera and look to the holder, and sets the look from the beat's params |
 | `mark` | `mark(c, ry, extra = {})` | nothing | writes the readouts tests and the gate read as `data-*` on the canvas |
-| `draw` | `draw(c, holder, ctx)` | nothing | renders after the seek's decodes, with the screen copied for this `t` |
+| `draw` | `draw(c, holder, ctx)` | nothing | renders (through the look) after the seek's decodes, with the screen copied for this `t` |
+
+### `look3d.js`: the studio look of the 3D stage
+
+The chain that draws a 3D device's frame: supersampling, the screen's glow, occlusion, depth of field, a
+contact shadow, a mirror floor, then the output pass. Built on the post-processing passes ported into
+`runtime/vendor/three/0.170.0/` (see NOTICE). Imported by `device3d.js`.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `LOOK_PARAMS` | | param table | `aa`, `glow`, `contact`, `contactSoft`, `occlusion`, `reflection`, `reflectSoft`, `studio`, `dof`, `tilt`, `brushed`: spread into the params of both 3D devices |
+| `lookOf` | `lookOf(params, render)` | config | the params clamped and checked; `aa: auto` is `ssaa4` when `render` is true (an export, stills or a check) and `msaa` in a preview |
+| `toneMapped` | `toneMapped(material)` | the material | puts Neutral tone mapping in the material's shader; a material with `toneMapped: false` (the screen) is left alone |
+| `Look` | `new Look(c, { body, focus, reach, height })` | look | `configure(cfg)`, `setSize(w, h)`, `render()`; owns the composer and the passes of one stage |
+
+### `dof3d.js`: depth of field
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `DofPass` | `new DofPass(camera)` | pass | blurs each pixel by its circle of confusion from its depth against `uniforms.focus` and from a tilt-shift band; a fixed 32-tap golden-angle spiral, no noise |
+
+### `floor3d.js`: the floor of the 3D stage
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `contactShadow` | `contactShadow({ size, height })` | `{ mesh, update, dispose }` | the device seen from under the floor as height above it, blurred twice (tight and wide) into a black card on the floor; `update(renderer, scene, at, floorY, strength, soft)` |
+| `mirrorFloor` | `mirrorFloor({ size, w, h })` | mesh | the Reflector with its own shader: strongest at the device's footprint, fading and softening with distance; set `material.uniforms` `centre`, `reach`, `strength`, `soft` |
 
 ### `hairline.js`: the thin-line style
 
@@ -811,7 +1004,78 @@ closed form of the progress it is given.
 | `place` | `place(node, cx, cy)` | node | moves a node |
 | `pop` | `pop(ctx, x)` | number | the style's `ui` spring over x in 0..1: 0 before, exactly 1 after; shapes use it, text never does |
 | `reveal` | `reveal(node, x, ctx)` | nothing | a node arriving at x: the plate springs up, the label eases in; untouched at x = 1 |
-| `layer`, `path`, `drawn`, `head` | `layer(s)` · `path(s, svg, d, mod)` · `drawn(path, u)` · `head(s, svg, x, y, angle, size)` | elements | the SVG layer under the nodes; a path drawable by dash offset (`drawn` draws it `u` of the way, with no dash left at 1); an arrow head with its tip at (x, y) |
+| `layer`, `path`, `drawn`, `head` | `layer(s)` · `path(s, svg, d, mod)` · `drawn(path, u, { comet })` · `head(s, svg, x, y, angle, size)` | elements | the SVG layer under the nodes; a path drawable by dash offset (`drawn` draws it `u` of the way with `dash.js`: nothing at 0, so a round cap leaves no dot, and no dash left at 1; `comet`, a share of the path, slides a segment of that length along instead); an arrow head with its tip at (x, y) |
+| `edge`, `edgePlan` | `edge(s, svg, d, u, { head, size, comet, mod })` · `edgePlan(d, u, { head, size, comet })` | element · `{ window, hidden, heads }` | a path drawn `u` of the way with arrowheads (`head`: `end`, `start`, `both`, `none`; `size` the head's depth in px): the line stops half a head short of each tip, and a head is never more than half the line drawn so far. `edgePlan` is the same as numbers (`heads: [{ at, x, y, angle, size }]`), so it can be tested without a page |
+
+### `pathkit.js`: SVG path data as real geometry
+
+The shape morph, the carry along a path and the draw-on read paths through it. A path is
+`{ subs: [{ closed, segs }] }`, every segment one cubic as eight numbers `[x0, y0, c1x, c1y, c2x, c2y, x1, y1]`:
+lines, quadratics and arcs are converted when the data is read, so every later step handles one kind of curve.
+Pure: the same data gives the same numbers in Node and in the page.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `parse` | `parse(d)` | path | every command, absolute or relative, implicit repeats, no separators where none are needed, an arc's flags glued to the next number (`a8 8 0 018 8`); arcs and quadratics become cubics; a bad number ends the path where it is; a subpath that is only a move is dropped |
+| `stringify` | `stringify(path, digits = 3)` | `d` | `M`, then `L` for a straight segment and `C` for a curve, `Z` for a closed subpath; no `-0` |
+| `shape` | `shape(tag, attrs)` | path | `circle`, `ellipse`, `rect` (with `rx`, `ry`), `line`, `polyline`, `polygon`; a circle starts at its right-hand point and runs clockwise on the screen |
+| `cubicAt`, `cubicTan` | `cubicAt(seg, t)` · `cubicTan(seg, t)` | `[x, y]` | the point and the derivative of a segment; a derivative that vanishes at a handle on its anchor falls back to the chord or the next control |
+| `splitCubic`, `subCubic` | `splitCubic(seg, t)` · `subCubic(seg, t0, t1)` | `[seg, seg]` · seg | de Casteljau: a segment split at t, and the part between two values of t as one segment |
+| `cubicLength` | `cubicLength(seg, n = 32)` | number | by `n` chords |
+| `transform`, `reverse` | `transform(path, [a, b, c, d, e, f])` · `reverse(path)` | path | through an SVG matrix; run backwards (subpaths, segments and each segment's points) |
+| `lengthOf` | `lengthOf(path, resolution = 32)` | number | the total length by `resolution` chords a segment |
+| `bbox` | `bbox(path)` | `{ x, y, w, h }` or null | tight: curve extrema, not control points |
+| `subArea` | `subArea(sub)` | number | the signed area of a subpath taken as closed; positive when it runs clockwise on the screen |
+| `fit` | `fit(path, src, dst)` | path | laid into `dst` the way `preserveAspectRatio="xMidYMid meet"` lays a drawing in its frame: even scale, centred; `src` is the box it was drawn in |
+| `measure` | `measure(path, { resolution = 32 })` | `{ length, turn, at, slice }` | an arc-length table (the chord error is about the square of the turn per chord over 24, so raise `resolution` for pixel work) and from it: `length`; `turn`, the signed turning from start to end (a clockwise circle on the screen is +2pi); `at(f, { wrap, window })` gives `{ x, y, angle, tx, ty }` at the fraction `f` of the length, the angle continuous (never folded back into -pi..pi), `wrap` going on past 1 for a loop with its turns kept, `window` (a share of the length) averaging the angle so a corner turns gradually; `slice(a, b)` is the part between two fractions as a path of real cubics (b < a runs backwards, an empty slice has no subpaths) |
+
+### `morph.js`: one shape becoming another
+
+The correspondence is worked out once, as a plan of paired cubic segments with the same count on both sides; a
+frame is its blend at q, so it is a pure function of q. Pieces are paired biggest first by size and nearness
+(a counter goes with a counter), a piece with no partner is grown from, or shrunk to, a point of the other shape; winding is made to agree
+(an open pair is turned so its nearer ends meet); counts are equalised by splitting the longest segments, which
+never moves the outline; a closed pair begins at the cyclic offset whose anchors lie nearest once the centroids coincide (a rotational blend
+asks for the offset nearest once one is also turned about its origin). `moves/morph` in path mode is built on it.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `plan` | `plan(from, to, { smoothing = 0, rotate = false, origin = [0.5, 0.5], originTo })` | `{ pairs, info, rot }` | `from` and `to` are path data or parsed paths. `smoothing` redistributes anchors at equal arc length between corners, one per that share of the shape's diagonal (0 keeps each shape's own); `rotate` blends about an origin (shares of each shape's box; the origin moves from one to the other) by radius and angle, a handle turning with its anchor; `info` is `{ pieces, grown, shifts, rotate }` |
+| `sample` | `sample(plan, q)` | path | the shape at q: exactly the first at 0 and the second at 1 |
+| `sampleD` | `sampleD(plan, q, digits = 2)` | `d` | the same as path data |
+| `pairSubs` | `pairSubs(from, to)` | `[{ a, b }]` | how the pieces go together: indices into each path's `subs`, null where a piece has no partner; deterministic, ties to the lower index |
+| `antiTear` | `antiTear(turns)` | number[] | the anchors' shortest turns (null where an anchor sits on the origin) made consistent along the chain so neighbours never turn opposite ways round: opposite turns of more than 126 degrees go the long way, as do opposite turns that nearly cancel (under 54 degrees) |
+| `CORNER` | 0.2 | radians | a joint that turns by more than this is a corner, and keeps its place when anchors are redistributed |
+| `shares` | `shares(text, fallback)` | `[x, y]` | `50% 50%`, `left top`, `0.5 0.5` or `25%` as a point in shares of a box |
+
+### `dash.js`: a stroke drawn on by a window of dash
+
+Over a path of `pathLength` 1 no length is measured and the pen runs at constant speed. The window is `{ a, b }`, shares of
+the path. An empty window is hidden outright: a zero-length dash with a round cap still paints a dot, and this keeps that dot off
+the first frame. Pure.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `windowAt` | `windowAt(q, { comet = 0, from = 0, to = 1 })` | `{ a, b }` | a trail from `from` to the pen (comet 0), or a segment of share `comet` that enters at `from`, slides and leaves at `to`, its head at the pace of the trail's |
+| `dashOf` | `dashOf(window)` | `{ hidden, array, offset }` | one dash as long as the window starting at `a`, then a gap longer than the path; hidden when the window is empty |
+| `setDash` | `setDash(node, window)` | the dash | writes `pathLength`, the dash and the offset on an SVG shape, and hides it when empty |
+| `headsOf` | `headsOf(window, { len, size, head })` | `{ window, size, heads }` | arrowheads (`end`, `start`, `both`, `none`) on a window of a path `len` px long: the line is trimmed by half a head at each head end, and a head is never more than half the line drawn so far; `heads` is `[{ at, t }]`, the share of the path each tip is at |
+
+### `projection.js`: an element travelling between two boxes
+
+For `transitions/shared-element`. Boxes in, numbers out; nothing here reads the page.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `axisDelta`, `boxDelta` | `axisDelta({ min, max }, { min, max }, origin = 0.5)` · `boxDelta(boxA, boxB, origin)` | `{ origin, scale, translate }` · `{ x, y }` or null | one axis from A to B about an origin: scale is the ratio of lengths and translate puts A's origin point on B's; a scale within 1e-4 of 1 is 1, a translate within 0.01 px of 0 is 0, a box with no length gives scale 1: never NaN. `boxDelta` is null when a box has no size |
+| `journey` | `journey(ra, rb, { fit, mismatch })` | `{ kind, sx, sy, counter, dx, dy, at }` or null | one shared element from box `ra` to `rb`: `fit` `width` (one scale), `stretch` (each axis its own) or `box` (stretch unless the aspects differ by more than 0.2, then `mismatch`: `crop` or `position`); `counter` says the children are to be scaled back; `at(q, { strength, side })` gives both copies' `{ tx, ty, sx, sy }` (the outgoing runs from rest, the incoming ends at rest, the two covering the same box at every q) or, for a crop, the window `{ win }` |
+| `fadeWindows` | `fadeWindows(p)` | `{ lead, follow }` | the incoming scene's opacity (circular ease-out over 0 to 0.5) and the outgoing's (linear over 0.5 to 0.95): never a dip |
+| `compress`, `circOut` | `compress(a, b, ease, p)` · `circOut(t)` | number | progress held at 0 below `a` and 1 above `b`, eased between; circular ease-out |
+| `aspectOff`, `ASPECT_TOLERANCE` | `aspectOff({ w, h }, { w, h })` · 0.2 | boolean · number | whether two boxes differ in aspect ratio by more than the tolerance |
+| `arcPoint`, `ARC` | `arcPoint({ x, y }, q, { strength, side })` · `{ strength: 0.5, peak: 0.5, min: 20 }` | `{ x, y }` | where travel by `d` has got to at q: straight, or on a quadratic arc bowed by `strength` of the distance (the apex is half of it), on the same side of the screen whichever way it goes (`auto`), or `cw` / `ccw`; a hop under `min` px is straight |
+| `cornerFix`, `mixRadius` | `cornerFix(r, sx, sy)` · `mixRadius(ra, rb, q)` | `[hx, hy]` · number | the radii to write so a corner of r px still looks r on the page through a scale, and the radius on the page between two boxes' radii |
+| `shadowFix` | `shadowFix(css, sx, sy)` | css | a computed box-shadow through a scale: offsets divided by their axis's scale, blur and spread by the mean, every shadow of a list, colour untouched |
+| `cropPlace` | `cropPlace(box, win)` | `{ k, tx, ty, clip }` | a box shown through a window of another shape: content scaled evenly to cover it, centred, the rest cut (`clip` insets in the box's own px) |
 
 ### `synth.js`: Web Audio voices for sound patterns, and recipes
 
@@ -832,14 +1096,52 @@ and in Node:
 
 | Name | Signature | Returns | Note |
 |---|---|---|---|
-| `renderRecipe` | `renderRecipe(recipe, { emphasis, gain, seed, profile, sampleRate, roomSeed })` | `{ channels: [left, right], sampleRate, length }` | the recipe as stereo `Float32Array`s: sine partials with a linear attack and an exponential decay to −60 dB at their T60, seeded noise through one biquad, a mid and a quadrature side, and the shared seeded room; `emphasis` is `subtle`, `normal` or `strong`, `gain` a multiplier, `profile` a sound profile object |
+| `renderRecipe` | `renderRecipe(recipe, { emphasis, gain, seed, profile, sampleRate, roomSeed, variant, step, key, durS })` | `{ channels: [left, right], sampleRate, length }` | the recipe as stereo `Float32Array`s: sine partials with a linear attack and an exponential decay to −60 dB at their T60, seeded noise through one biquad, a mid and a quadrature side, and the shared seeded room; `emphasis` is `subtle`, `normal` or `strong`, `gain` a multiplier, `profile` a sound profile object |
 | `layers` | `layers(ctx, at, recipe, opts)` | nothing | `renderRecipe` at the context's rate, played from `at` as a stereo buffer; on a mono context the channels fold to the mid |
-| `recipeModule` | `recipeModule(recipe, profile)` | a sound pattern module | `{ name, group: 'sound', recipe, profile, params: { gain, seed, emphasis }, durationS, render(ctx, at, feel, opts) }`: what the kit and `mm sound` load for a folder with a `recipe.json`; `durationS` is the length in that profile |
+| `recipeModule` | `recipeModule(recipe, profile)` | a sound pattern module | `{ name, group: 'sound', recipe, profile, params: { gain, seed, emphasis, ...the recipe's knobs }, durationS, render(ctx, at, feel, opts) }`: what the kit and `mm sound` load for a folder with a `recipe.json`; `durationS` is the length in that profile |
 | `applyProfile` | `applyProfile(recipe, profile)` | `{ recipe, sideMidDb }` | the recipe voiced by a sound profile (SPEC §9): partials by `modes`, fundamentals folded into the register and moved to the key, attack and length held to the profile's, the profile's room and level; the recipe given is not changed |
 | `plan` | `plan(recipe, opts)` | `{ layers, room, gain, sideAmp, durationS }` | what a render resolves to, before any sample: the layers that play at that emphasis, each partial's frequency, level and T60 (`t60 × ratio^-0.75`, at least 28 ms), the seeded variation applied |
+| `resolveRecipe` | `resolveRecipe(recipe, { variant, key, durS })` | a recipe | the recipe a render starts from: `variant` merges one of the recipe's `variants` over its layers (the base is the default), `key` moves the layers marked `keyed` from the recipe's `key` by the shortest interval, `durS` aims the cue at that length (`aim.js`); unchanged when none is set |
+| `cueDurationS` | `cueDurationS(recipe, profile, opts)` | seconds | the length of a cue as a profile voices it, with a beat's knobs applied: what its family follows from |
+| `recipeOpts` | `recipeOpts(bag)` | `{ variant, step, key, durS }` | the knobs of a beat's `params.cue` (or a brand's `style.patterns["sound/<cue>"]`) picked out of a bag; a recipe's `knobs` list which of them its module adds to `params` |
+| `layerLenS`, `layerEndS` | `layerLenS(layer)` · `layerEndS(layer)` | seconds | how long a layer lasts (its length, the last point of its envelope, or attack + T60; a hard gate ends it sooner) and when it ends in the cue |
+| `scaleRecipeTime` | `scaleRecipeTime(recipe, k)` | a recipe | every time of a recipe (layers, envelopes, sweeps, gates, offsets, glides, the length) multiplied by `k` |
+| `PASS_DEFAULTS`, `PASS_SUB_DEFAULTS`, `GATED_DEFAULTS`, `GATE_RELEASE_S` | objects · `0.004` | | what a field of a `pass` or `gated` layer is when the recipe leaves it out (a whoosh's apex at 0.6 of its length, a 4 ms gate ramp ...) |
 | `familyOf` | `familyOf(durationS)` | `input` \| `surface` \| `outcome` \| `swell` | the length ladder: up to 0.06 s, 0.3 s, 0.65 s, then a swell |
 | `seedOf` | `seedOf(name)` | number | a stable seed from a cue's name |
 | `NATIVE_LUFS`, `REF_SEND_DB`, `SIDE_MID_DB`, `FLOOR_T60_S`, `EMPHASIS_RANKS` | `-30` · `-22` · `-22` · `0.028` · `{ subtle: 0, normal: 1, strong: 2 }` | numbers | the level a recipe's `masterGain` is set for (loudest 100 ms), the room send its own `room.send` is written against, the width of a recipe rendered without a profile, the shortest a higher partial lasts, the rank of each emphasis |
+
+The newer layers of a recipe (SPEC §9; `contracts/sound-recipe.schema.json`): a `pass` layer is a whoosh (a level curve in dB
+rising into an apex, three band-passes at f, 1.6 f and 2.5 f that move with it, and optional `low`, `sub` and `hiss`
+sub-layers and a Doppler glide), a `gated` layer a pulse train whose period shrinks and which ends open; any layer may
+carry an `envelope` in dB, a `gate`, a `tremolo`, a `drive`, a `sweep` and a `chain` of filters, and a tone may name a table
+of `modes` (`modes.js`) and beat as a doublet. These are drawn into their own buffers; a layer that uses none of them is drawn
+as it always was, sample for sample.
+
+### `modes.js`: modal tables
+
+Where the partials of a struck bell, bar or block live, so a recipe names a material (`modes: "tubular"`) instead of listing
+ratios. Pure data and one function; `synth.js` reads it, and the clone and mine lots can too.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `MODE_TABLES` | | `{ name: { kind, ratios, amps, decays? } }` | bells (`tubular` 1 : 2.756 : 5.404 : 8.933, `church`, `glass`, `bowl`), bars (`glock` also called `bar`, `celesta`, `metal`, `marimba` 1 : 3.92 : 9.8, `tine`) and materials (`block`, `shell`, `tok`, `desk`, each mode with a decay multiplier) |
+| `modePartials` | `modePartials(name)` | `[[ratio, dB, decayMultiplier?], ...]` | the table as the partials a tone layer plays, the loudest mode at 0 dB; throws for an unknown name |
+| `decayOf` | `decayOf(decay, ratio, slope)` | seconds | the decay law: `decay x ratio^-slope` for a mode above the fundamental |
+| `MODE_SLOPE`, `BEAT_HZ` | `0.75` · `1` | numbers | the default slope of the law and the beat of a doublet (a `beatHz` of 1) |
+
+### `aim.js`: land a cue's length, apex and pitch
+
+Aim knobs: a cue's own fields are moved until its dry render lasts `durS`, has its loudest 5 ms at `apexS` and sounds at
+`pitchHz`, by rendering, measuring and correcting along a secant (never by resampling). A beat reaches it with `durS` in
+`params.cue`; the others are called from code.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `aim` | `aim(recipe, { durS, apexS, pitchHz })` | a recipe | the recipe given is not changed. Duration: every time is scaled, then the cue ends on `durS` in a 4 ms ramp. Apex: a `pass` layer's `apexAt`, else the envelope's peak point or the loudest layer's `attackS`, steered to land at or just before the target, then the whole cue is started the gap later. Pitch: every tone layer scaled by target / measured; a cue with no tone layer throws, saying noise has no note. A field the recipe leaves out is left out, never filled from the middle of its range |
+| `measureCue` | `measureCue(recipe, opts)` | `{ durS, apexS, pitchHz }` | the dry render's last 2 ms window above -60 dB of its peak, the centre of its loudest 5 ms, the strongest spectral peak near its loudest tone layer (`null` for no tone) |
+| `estimatePitch` | `estimatePitch(channels, sr, nearHz, spanSt)` | Hz or `null` | the strongest peak of the first 0.6 s from the onset within `spanSt` semitones (12) of `nearHz`, refined by a parabola on the log power |
+| `AIM_TOL` | | `{ durS: 0.005, apexS: 0.0025, pitchCents: 50 }` | the tolerances `aim` is held to |
 
 ### `ground.js`: the brand ground
 
@@ -940,3 +1242,52 @@ time. Used by `entrances/character` and `emphasis/act`.
   `markup(m, pose, { id, sheet, aspect })`: the SVG (one face group at most; `data-mood`, `data-sq`, `data-squint`,
   `data-eyes` report the pose; extra parts are `g.mm-rig__part` with `data-part` and `data-swing`; a screen face's
   plate is `rect.mm-rig__plate`); `draw(el, m, pose, opts)` replaces the rig the element shows.
+
+### `split.js`: the text splitter
+
+Cuts a line into lines, words and letters that a pattern can animate; the pure part runs in Node. Words come from `Intl.Segmenter` (a white-space split without it), letters are graphemes, lines are read from the laid-out words, and at rest a pattern restores the plain text. The look is `split.css` (a pattern's css imports it): `.mm-split__line` (a block that does not wrap), `__word` and `__char` (inline blocks), `__mask` (an overflow-clip box, its clip reaching `--mm-split-pad` past a unit), `__rolls` with `__face` and `__twin--top|bottom|left|right`, and `__sr` (the hidden copy).
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `NBSP` | `'\u00a0'` | string | the no-break space a unit takes when it keeps its space |
+| `plainOf` | `plainOf(text)` | string | white space collapsed to single spaces, trimmed |
+| `wordRuns` | `wordRuns(text, lang, { spaces, fallback })` | `[{ text, space }]` | the words with whether a space followed each; punctuation glued (closing to the word before, opening to the word after); `spaces: 'nbsp'` ends a word with a no-break space instead; `fallback: true` forces the no-`Intl.Segmenter` path |
+| `wordsOf` | `wordsOf(text, lang, opts)` | `string[]` | the words alone |
+| `graphemesOf` | `graphemesOf(text, lang, { fallback })` | `string[]` | the characters as read: an accent with its letter, an emoji with its tone, a joined family, a flag |
+| `lineIndexes` | `lineIndexes(boxes)` | `number[]` | the line of each word from its box in reading order (`{ top, left, width, height }`): a new line when the word is lower than the one before by more than half its height and its left edge is back inside that word's span |
+| `splitText` | `splitText(el, { words, chars, lines, spaces, mask, clone, accessible, lang, text })` | `{ text, lines, words, chars, masks }` | replaces the element's children with units (the element's own text, or `text`); `lines: true\|'wrap'` wraps each line in a block span and keeps the slot's width, `'vars'` only writes `--line`; `mask`: `'lines'\|'words'\|'chars'` clips each unit of that kind; `clone`: `'top'\|'bottom'\|'left'\|'right'` gives each letter (each word without letters) a twin that side; `accessible` keeps the original text hidden and the units `aria-hidden`. Each unit has `--word`, `--char`, `--line` and `data-*`; the element has `--lines`, `--words`, `--chars` |
+| `unitsOf` | `unitsOf(el)` | `{ lines, words, chars }` or `null` | the units a split left in the element, for a pattern that draws twice in one seek |
+| `rollOf` | `rollOf(side)` | `[axis, sign]` | which axis a unit translates on, and the sign that brings its twin in |
+
+### `scramble.js`: the scramble plan
+
+Pure. A line decodes from noise, or one text edits into another, as a function of progress; `text/scramble` draws it. Noise is a hash of (seed, position, step), so nothing is remembered between frames.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `expandRanges` | `expandRanges(s)` | string | `'a-e'` to `'abcde'`; a dash first or last is itself |
+| `poolOf` | `poolOf(spec, { own })` | `string[]` | the glyphs noise is drawn from: names joined by `+` or `,` (`lowercase`, `uppercase`, `letters`, `numbers`, `symbols`, `braille`, `blocks`, `shades`, `own` = the line's letters and digits), `none` for no noise, or the brand's own glyphs (a range is expanded); empty is `own` |
+| `hashOf` | `hashOf(a, b, c)` | 0 to 2^32 - 1 | the noise: a hash of three integers |
+| `glyphOf` | `glyphOf(pool, h)` | string | the glyph a hash picks (empty for an empty pool) |
+| `plan` | `plan({ before, after, from, reversed, jitter, settle, hold, delay, rate, d, seed, diff })` | the plan | each glyph's window (`start`, `end`) ranked by position (`from`: `auto`, `left`, `right`, `center`, `random`), the common start and end kept as `prefix` and `suffix` when `before` is given and `diff` is true; ends land on a step boundary of `d` seconds at `rate` Hz |
+| `cellsAt` | `cellsAt(plan, lin, step)` | `[{ state, ch, h, n, o }]` | the cells at linear progress `lin` and glyph step `step`: `same`, `old`, `noise` (no `ch`; `h` is the hash) or `new` |
+| `textAt` | `textAt(plan, lin, step, pool)` | string | the line as a string; an empty pool shows the old glyph until its window closes |
+
+### `code.js`: the code model
+
+Pure. The model behind `text/code`: code on a character grid, edited by steps, drawn as cells at a second. Lexing and diffing happen once, in `buildModel`.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `TOKEN_ROLES` | `[…]` | `string[]` | the eight roles: keyword, name, type, string, number, atom, comment, punct |
+| `expandTabs` | `expandTabs(text, width)` | string | tabs to spaces, to the next tab stop |
+| `lex` | `lex(text, lang)` | `[{ text, role }]` | the tokens (`space` for white space), losing nothing; `js` (also ts, jsx), `py`, `sh`, `json` |
+| `diffTokens` | `diffTokens(a, b)` | `[{ same, a: [from, to), b: [from, to) }]` | a patience diff of two token lists: the shared start and end, then tokens that occur once on each side as anchors, then the gaps; no moves; a delete next to an insert is one change |
+| `parseSteps` | `parseSteps(src)` | `[{ op, at, text, range, find, label }]` | the steps of a beat's `params.steps` (`patterns/text/code/PATTERN.md` has the grammar); throws on an unknown op |
+| `applyStep` | `applyStep(code, step)` | string | the code after one step |
+| `rangesIn` | `rangesIn(spec, code)` | ranges, `null` for `none` | half-open 0-based `[[line, col], [line, col]]` by exact text (`"text"`, `"text" *`), `L2`, `L2-4` or `L2:5+3` |
+| `boxesOf` | `boxesOf(ranges, code)` | `[{ row, from, to }]` | one box per line of a range, clipped to the line |
+| `buildModel` | `buildModel(initial, stepsSrc, { lang, tab })` | the model | the code at each step with its tokens on the grid, the hunks between states, the size of the largest |
+| `stepTimes` | `stepTimes(model, d, { intro, morph })` | `[{ start, len }]` | when each step runs in the beat's `d` seconds |
+| `frameAt` | `frameAt(model, u, times, { ease, intro })` | `{ cells, call, calls, rows, cols }` | the ink at second `u`: cells `{ text, role, row, col, alpha }` (a token that stays slides, an old token fades out over the first 0.4 of the morph, a new one in over the last 0.4, what a select leaves out is drawn at 0.2) and the call-out showing |
+| `tintOf` | `tintOf(spec)` | css or `null` | a role spec (`accent`, `muted/70`) as a `--c-*` variable or a tint of one; anything but `ink`, `muted`, `accent`, `line` is `null` |

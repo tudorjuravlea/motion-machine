@@ -14,6 +14,7 @@ import { CHROME_FACES, reviewPage } from './lib/brand-sheet-page.mjs';
 import { UsageError, findFontSrc, runMain } from './lib/cli.mjs';
 import { workDir } from './lib/project.mjs';
 import { composeToFile, resolveHalf } from './compose.mjs';
+import { curvePlots } from './lib/motion-tokens.mjs';
 import { newPiece } from './new.mjs';
 
 const readJson = (file) => { try { return JSON.parse(readFileSync(file, 'utf8')); } catch (e) { throw new UsageError(`${file}: ${e.message}`); } };
@@ -149,7 +150,7 @@ export async function sheetBrand(folderArg, { motion = 'calm', cwd = process.cwd
     const m = motionHalf.motion ?? {};
     const html = reviewPage({
       ...data, folder: dir, logo, chromeFaces, brandFaces,
-      motion: { name: motionHalf.name ?? basename(motion, '.json'), durations: m.durations, enter: m.easings?.enter },
+      motion: { name: motionHalf.name ?? basename(motion, '.json'), durations: m.durations, enter: m.easings?.enter, curves: m.easings && m.spring ? curvePlots(m) : [] },
       frames: { look: LOOKS.map(([file, , caption]) => ({ file: `frames/${file}.png`, caption })), tempo },
     });
     writeFileSync(join(sheets, 'review.html'), html);

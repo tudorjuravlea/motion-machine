@@ -1,0 +1,20 @@
+{
+  "id": "kit-split-deck",
+  "kind": "deck",
+  "formats": ["16x9"],
+  "title": "Kit split deck",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "cta": { "text": "", "url": "" },
+  "scenes": [
+    {
+      "id": "one", "layout": "layouts/statement", "presses": 2, "cut": "transitions/hard-cut", "move": null,
+      "beats": [
+        { "at": 0, "step": 1, "slot": "headline", "fx": "entrances/line-reveal", "text": "Each line arrives where the page breaks it" },
+        { "at": 0, "step": 2, "slot": "sub", "fx": "entrances/words", "text": "Read for a screen reader too" }
+      ],
+      "say": ""
+    }
+  ]
+}

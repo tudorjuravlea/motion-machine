@@ -3,6 +3,7 @@
 // cascade capped by capS (and by 60 % of the entrance, so every word still has time to land).
 // Each word eases on the type spring, which never overshoots. Writes translate and opacity on
 // per-word spans it creates, and opacity on a slot that paints its own box (it fades with the first word); a seek restores the plain text, so nothing outlives the instant.
+import { splitText, unitsOf, plainOf } from '../../../runtime/kit/split.js';
 const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
 
 // A slot that paints its own box (a fill or a border) fades with its first piece, so the box never
@@ -33,22 +34,8 @@ function shape(ctx, x) {
   return sp && sp.settle ? Math.min(1, sp(x * sp.settle('type'), 'type')) : x;
 }
 
-function split(el) {
-  const found = el.querySelectorAll('[data-mm-w]');
-  if (found.length) return [...found];
-  const words = (el.textContent || '').split(/\s+/).filter(Boolean);
-  el.textContent = '';
-  const doc = el.ownerDocument;
-  return words.map((w, i) => {
-    const s = doc.createElement('span');
-    s.className = 'mm-words__w';
-    s.setAttribute('data-mm-w', '');
-    s.textContent = w;
-    if (i) el.append(' ');
-    el.append(s);
-    return s;
-  });
-}
+// a deck keeps the original text beside the units, for a screen reader
+const split = (el, ctx) => (unitsOf(el) ?? splitText(el, { accessible: !!ctx.deck })).words;
 
 export default {
   name: 'words',
@@ -58,8 +45,8 @@ export default {
   at(el, p, ctx) {
     const prm = { ...DEFAULTS, ...ctx.params };
     const { u, d } = clock(ctx, p);
-    if (u >= d) { el.textContent = (el.textContent || '').split(/\s+/).filter(Boolean).join(' '); return; }
-    const spans = split(el);
+    if (u >= d) { el.textContent = plainOf(el.textContent); return; }
+    const spans = split(el, ctx);
     const n = spans.length;
     if (!n) return;
     const { eachS, capS } = ctx.style.motion.stagger;

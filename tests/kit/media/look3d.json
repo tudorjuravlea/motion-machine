@@ -1,0 +1,61 @@
+{
+  "id": "kit-look3d",
+  "kind": "film",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Kit 3D look",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "scenes": [
+    {
+      "id": "phone",
+      "layout": "layouts/caption-bar",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/site/",
+          "params": {
+            "move": "still",
+            "statusTime": "10:24"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "laptop",
+      "layout": "layouts/caption-bar",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "3d/laptop",
+          "asset": "assets/site/",
+          "params": {
+            "move": "still",
+            "url": "planner.example"
+          }
+        }
+      ],
+      "say": ""
+    }
+  ]
+}

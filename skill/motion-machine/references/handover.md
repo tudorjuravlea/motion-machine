@@ -38,6 +38,17 @@ H-HOOK … H-REF: one line each on how it was applied, or "not applicable" with 
 ## Named gaps
 <what no pattern could do, the stand-in used, where it is recorded (the piece folder's `gaps.md`)>
 
+## Sharing
+
+Offer `mm share <piece>` once the exports are there: it writes a watch folder (a page that plays the MP4 or the deck,
+a poster, link cards, a chapter list, `transcript.json`, `context.md`, `captions.vtt` when the film has caption
+beats, and `share-block.md` to paste where the piece is talked about). It uploads nothing: say so, and that
+publishing is the person's step, with any static host. Pass `--url <where the folder will live>` when it is known (link
+cards and the share block need an absolute address). The page is unlisted unless `--index`. A piece made from a real
+brand's own material is not put on a public host without the director's say. Open the page once yourself and say what you saw. A deck's cues become a sprite (`mm sound <deck>`, embedded by `mm export`)
+that plays after the first press in the standalone deck; say that it was not heard. Under the reader's
+reduced-motion setting a deck fades and does not move; a style can force that with `motion.reduceMotion: "always"`.
+
 ## Unverified
 - Playback was not watched by a human at full speed; pacing was judged from stills and numbers.
 - Audio was not heard; loudness and cue placement were measured, not listened to.

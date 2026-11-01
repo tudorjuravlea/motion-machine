@@ -1,0 +1,19 @@
+/* split.css: the boxes runtime/kit/split.js builds. A pattern that splits text imports this and
+   writes only transform, opacity and clip on the units it gets back. No colour, size or timing here. */
+.mm-split__line { display: block; white-space: nowrap; }
+.mm-split__word { display: inline-block; white-space: nowrap; }
+.mm-split__char { display: inline-block; }
+/* a clip box around one unit: its ink may overhang the line box (descenders, accents), so the clip
+   reaches past the box by --mm-split-pad on every side without changing the layout */
+.mm-split__mask { --mm-split-pad: 0.16em; display: inline-block; overflow: clip; overflow-clip-margin: var(--mm-split-pad); }
+.mm-split__mask--block { display: block; }
+/* a unit with a twin: the face stays in the flow, the twin waits one box away */
+.mm-split__rolls { position: relative; }
+.mm-split__face { display: inline-block; }
+.mm-split__twin { position: absolute; white-space: nowrap; pointer-events: none; }
+.mm-split__twin--top { left: 0; top: -100%; }
+.mm-split__twin--bottom { left: 0; top: 100%; }
+.mm-split__twin--left { top: 0; left: -100%; }
+.mm-split__twin--right { top: 0; left: 100%; }
+/* the original text for a screen reader, out of sight */
+.mm-split__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

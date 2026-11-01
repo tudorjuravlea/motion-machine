@@ -32,8 +32,10 @@ At the end of the entrance the plain text is restored, so the DOM and the pictur
 ## Provenance
 - heygen-com/hyperframes, Apache-2.0: a stagger span of at most 0.5 s, enforced here by capS (W-STAGGER). Idea only; the splitting code is original.
 - emilkowalski/skills, MIT: per-item stagger gaps of 30 to 80 ms read as one gesture; eachS is the style's own number.
+- juliangarnier/anime, MIT: the text is split by the kit's splitter (`runtime/kit/split.js`): words from the platform's word segmenter with punctuation glued, letters as whole graphemes.
 
 ## Known limits
-- the kit does not do `data-each`, so this pattern splits the text itself; markup inside the slot is replaced by plain words
-- a hyphenated word is one unit
+- the kit does not do `data-each`, so this pattern splits the text with the kit's splitter; markup inside the slot is replaced by plain words
+- a hyphenated word is one unit, a dash set between spaces is a unit of its own
+- in a script written without spaces (Japanese) the words come from the dictionary, so the cascade follows them
 - the cascade runs left to right whatever the script direction

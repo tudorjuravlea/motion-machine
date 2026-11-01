@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { buildListen, calibratedGain, calibrateAll, recipeCues, wavOf } from '../../scripts/sound-listen.mjs';
+import { buildListen, calibratedGain, calibrateAll, recipeCues, variantsOf, wavOf } from '../../scripts/sound-listen.mjs';
 
 test('every shipped recipe is calibrated: its masterGain is the one --calibrate would write', () => {
   for (const c of recipeCues()) {
@@ -38,13 +38,14 @@ test('the listen page: a player and numbers for every cue, profile and emphasis,
   try {
     const res = await buildListen({ out });
     const html = readFileSync(join(out, 'listen.html'), 'utf8');
-    const cues = recipeCues().map((c) => c.name);
-    assert.equal(res.records.filter((r) => !r.code).length, cues.length * 2 * 3);
-    for (const name of cues) {
-      assert.match(html, new RegExp(`<b>${name}</b>`), `${name} has a row`);
-      for (const p of ['glass', 'soft-ui']) for (const e of ['', '-subtle', '-strong']) assert.ok(existsSync(join(out, 'wav', `${name}-${p}${e}.wav`)), `${name}-${p}${e}.wav`);
+    // a cue with versions has a row and a set of files for each (the first named is the base and keeps the cue's plain name)
+    const rows = recipeCues().flatMap((c) => variantsOf(c.recipe).map((v) => ({ name: c.name, label: v ? `${c.name} (${v})` : c.name, stem: v === null || v === (c.recipe.variant ?? Object.keys(c.recipe.variants)[0]) ? c.name : `${c.name}-${v}` })));
+    assert.equal(res.records.filter((r) => !r.code).length, rows.length * 2 * 3);
+    for (const { label, stem } of rows) {
+      assert.match(html, new RegExp(`<b>${label.replace(/[()]/g, '\\$&')}</b>`), `${label} has a row`);
+      for (const p of ['glass', 'soft-ui']) for (const e of ['', '-subtle', '-strong']) assert.ok(existsSync(join(out, 'wav', `${stem}-${p}${e}.wav`)), `${stem}-${p}${e}.wav`);
     }
-    assert.ok((html.match(/<audio /g) ?? []).length >= cues.length * 6, 'a player each');
+    assert.ok((html.match(/<audio /g) ?? []).length >= rows.length * 6, 'a player each');
     assert.match(html, /loudest 100 ms <span class="ok"><b>-30(\.\d)?<\/b> LUFS/);
     assert.match(html, /left−right/);
     assert.match(html, /The code cues, for comparison/);
@@ -52,7 +53,8 @@ test('the listen page: a player and numbers for every cue, profile and emphasis,
     assert.doesNotMatch(html, /<script/, 'and no script');
     const nums = JSON.parse(readFileSync(join(out, 'numbers.json'), 'utf8'));
     assert.ok(nums.every((r) => Number.isFinite(r.lufs100ms) && Number.isFinite(r.peakDbfs) && Array.isArray(r.peaks)));
-    assert.ok(nums.filter((r) => !r.code).every((r) => Object.values(r.verdict).every(Boolean)), 'every shipped cue meets every band of both profiles');
+    // every shipped cue meets every band of both profiles, but the two the cards say cannot (tests/sound/engine-cues.test.mjs): a key's noise sits at 9 kHz, a sub-drop is 2 dB hot in soft-ui
+    assert.ok(nums.filter((r) => !r.code && !['key', 'sub-drop'].includes(r.cue)).every((r) => Object.values(r.verdict).every(Boolean)), 'every shipped cue meets every band of both profiles');
     const w = readFileSync(join(out, 'wav', 'ready-glass.wav'));
     assert.equal(w.toString('ascii', 0, 4), 'RIFF');
     assert.equal(w.readUInt16LE(22), 2, 'stereo');

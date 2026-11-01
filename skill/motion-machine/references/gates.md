@@ -59,7 +59,11 @@ advises: a direction may break a line on purpose, and the director decides.
 - few values, reused: at most 4 stroke widths, 5 font sizes and 3 corner radii in a piece (W-TOKENS);
 - an exit and the next scene's entrance travel the same way at the same speed, within 5 % (W-SEAM);
 - no template: not more than half of the scenes put their content in the same boxes, and no two neighbouring scenes of one layout differ in text only (W-SAMEBOX);
-- every cue measured against the style's sound profile, and every sound file with its licence on record (W-PALETTE, W-SAMPLE-LICENSE);
+- every cue measured against the style's sound profile, and every sound file with its licence on record, and a sound found on Openverse still within the licences the piece offers and still the file that was fetched (W-PALETTE, W-SAMPLE-LICENSE), and no cue carrying a click, a DC offset, clipping, a cut tail, a comb ring, a ghost in the tail, stacked attacks or a rising glide (W-SOUND-ARTIFACT); every cue heard in the finished mix, over the music and the voice (W-AUDIBLE), and on its picture event (W-CUE reads the sync lock `mm sound` writes);
+- a film's voice-over (a scene's `say`) read for words a voice may get wrong that nothing marks (W-SAY): acronyms, camelCase names, file names, web addresses, numbers with units. `[display](spoken)` in the text, or the brand's `voice.lexicon`, says how a word is read; `<<slot>>` before a word puts the beat with that slot on it (W-ANCHOR checks it). `mm say-lint` reads a text or a piece, and `mm gen voice` shows the findings in its plan and stops a `--yes` until they are fixed or `--say-ok` says they are meant
+- the shape of the sound: a hook in the first 0.6 s, a spread of levels, no machine-gun, and five places to listen first (W-SOUND-SHAPE);
+- every ease the piece spells read as written: it parses, a custom curve is a function of x, steps are whole, `linear()` stops run 0 to 1 (W-EASE);
+- every deck step reached by a press, and one beat to a slot in a scene (W-DECK-STEP);
 - every motion eased through its whole duration, with no odd frame, no jump-then-stop and no stop between two motions of one element (W-POP, W-DEADSTOP: read from the frames).
 
 When a brief cannot be told legibly in its seconds, say so and offer the re-scope (fewer words,

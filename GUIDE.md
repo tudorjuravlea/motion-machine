@@ -32,10 +32,10 @@ rm -rf tour/golden/out
 node scripts/mm.mjs check tour/golden
 ```
 
-The gate runs 53 rules and prints one line each: `PASS`, `FAIL`, `WARN` or `SKIP` (a rule that
+The gate runs 59 rules and prints one line each: `PASS`, `FAIL`, `WARN` or `SKIP` (a rule that
 could not run says so; it never passes silently). Fourteen rules are hard: they guard what breaks a
 piece or the brand, a `FAIL` makes the check exit 1, and `mm export` refuses the piece. The other
-39 advise on craft: a `WARN` never changes the exit code and never blocks an export. A report is
+45 advise on craft: a `WARN` never changes the exit code and never blocks an export. A report is
 written to `tour/golden/out/check.json`. This piece exits 0 and prints two warnings:
 
 ```
@@ -63,7 +63,13 @@ Seven of the advisory rules read the picture and the story the way an editor wou
 - W-LOOP: a story's declared `loops` (a question posed in one scene, answered in another): at most two open at once, each closed before the call to action.
 - W-SAMEBOX: more than half of the scenes put their content in the same boxes (every scene the same card), or two neighbouring scenes of one layout differ in text only.
 - W-PALETTE: with a `sound.profile` set, a cue the piece plays is off it in register, attack, length for its family, level or peak (recipes, samples and code cues are all measured).
-- W-SAMPLE-LICENSE: a sound file mapped to a cue (`sound.samples`, `audio.samples`) is missing, or has no record beside it naming its source, licence and author.
+- W-AUDIBLE: a cue the finished mix does not let you hear (masked by the music or the voice, silent, over speech with ducking off) or hears harshly (2-6 kHz far over the music); `mm sound` measures it, a beat's `params.cue.soundOk` acknowledges it.
+- W-SAMPLE-LICENSE: a sound file mapped to a cue (`sound.samples`, `audio.samples`) is missing, or has no record beside it naming its source, licence and author; a sound found on Openverse (`mm sound fetch`) also warns when its licence is outside what the piece offers, its file is not the one hashed in its record, or one recording carries two licences.
+- W-SOUND-SHAPE: the shape of a film's sound is off: no sound in its first 0.6 s (or at its first event), the cues all about as loud (under 8 dB from the quietest tenth to the loudest tenth, from six cues), or five of one cue in a row at 0.35 s gaps or less. Its evidence lists the five places to listen first.
+- W-SOUND-ARTIFACT: a cue the piece plays has a click, a DC offset, clipping, a cut-off tail, a comb ring, a ghost in its tail, stacked attacks (a hit) or a rising glide; no sound profile is needed.
+- W-SAY: a film's voice-over (a scene's `say`) holds a word a voice may get wrong that nothing marks: an acronym, a camelCase name, a file name, a web address, a number with a unit. Write `[API](ay pee eye)` to say how it is read (shown as API, spoken as written in the brackets), or put the word in the brand's `voice.lexicon` once. `<<slot>>` before a word puts the beat with that slot on it. `mm say-lint` is the same reading from the terminal, and `mm gen voice` runs it before it asks to spend anything.
+- W-EASE: an ease the piece spells that the kit would not draw as written: a name or argument that does not parse (so the cascade or pattern that asked falls back to its default), a `curve(...)` that runs backwards in x or ends where it starts, `steps(n)` with a partial last step, `linear()` stops that do not run from 0 to 1.
+- W-DECK-STEP: a deck beat is stepped but no press reaches it (a step past its scene's presses, an exit before or past them), or two beats of one scene drive the same slot.
 
 One more advisory rule reads the assets, not the picture. W-ASSET-LICENSE warns for a still, recording, captured page, imported or generated clip or sound the story uses that has no `assets/<name>.licence.json` (where it came from and under what licence), or whose licence is outside own, generated, CC0, CC-BY and public domain; `mm gen` and `mm capture site` write the record, `licences.accepted` in the story is the person's yes, and `mm credits <piece>` lists the credits to put on an end card. `mm gen` also keeps a cache: the same request twice is one paid call, and a replay (`--again`) is planned first and needs a later `--yes`.
 
@@ -378,6 +384,25 @@ copy as `logo/logo-mono.svg`, and records which palette role each of its colours
 
 Real brands live in folders like this one, outside the engine. The brands shipped in
 `styles/brands/` stay fictional.
+
+## Record a product demo from a real session
+
+A demo of a product is a recording of someone using it, with a cursor that moves like a person's and a camera that
+goes where the click is. `mm capture site --script` plays a list of steps on a page, records it, and writes the
+pointer's journey beside the video:
+
+```
+node scripts/mm.mjs capture site --url file://$PWD/fixtures/site/demo-session.html --name plan --piece tour/harbour \
+  --device laptop --script fixtures/site/demo-session.steps.json
+```
+
+It prints where the duration came from, how the video's clock was set (the page flashes red five times before the
+script starts, and the video says when each reached it), whether the first frame is black, and writes
+`tour/harbour/assets/plan.webm`, `plan.cursor.json` (the pointer's samples and the box of everything it clicked) and
+`plan/`, the frames. In the story, give a beat the folder as its `asset` on `devices/demo-frame` and three actions over
+the same span: `screen/play`, `screen/zoom-to` with `"mode": "auto"` (it zooms where the pointer clicked) and
+`screen/pointer` (the cursor, drawn in the palette's colours). Everything is a brand's to set once: the cursor's
+roles, size and weight, the camera's depth and tilt, the frame's padding and shadow, in `style.patterns`.
 
 ## Clean up and go on
 

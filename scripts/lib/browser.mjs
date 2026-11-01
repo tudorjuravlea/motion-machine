@@ -162,7 +162,10 @@ export const SLOW_FRAME_MS = 120_000 * timeoutScale();
 /** How long a piece may take to define `window.mm` once its page has loaded (read at each open, so a test can set the scale late). */
 export const readyMs = () => 30_000 * timeoutScale();
 
-export async function openPiece(dir, { format, render = true, browser, server, query = {}, trap = false } = {}) {
+/** What `--alpha` lays over a piece: the canvas colour is not painted by the page, stage or scenes (the ground, finish and patterns still are). */
+export const ALPHA_CSS = 'html, body, .mm-stage, .mm-scene { background: transparent !important; }';
+
+export async function openPiece(dir, { format, render = true, browser, server, query = {}, trap = false, alpha = false } = {}) {
   const abs = resolve(dir);
   const rel = relative(ROOT, abs).split(sep).join('/');
   if (rel.startsWith('..')) throw new Error(`piece must live under the repo root: ${abs}`);
@@ -194,6 +197,7 @@ export async function openPiece(dir, { format, render = true, browser, server, q
     const failed = await page.evaluate(() => (window.mm.ready === false ? window.mm.error : null));
     if (failed) throw new Error(`piece failed to mount: ${failed}`);
     await page.evaluate(() => document.fonts.ready);
+    if (alpha) await page.addStyleTag({ content: ALPHA_CSS });
     const mm = {
       seek: (t) => page.evaluate(async (x) => { window.mm.seek(x); await window.mm.settle?.(); }, t),
       goto: (n) => page.evaluate((x) => window.mm.goto(x), n),
@@ -212,8 +216,8 @@ export async function openPiece(dir, { format, render = true, browser, server, q
   }
 }
 
-/** Seeks to `t` (film seconds or deck fractional press) and returns the frame as PNG bytes. */
-export async function framePng(page, t) {
+/** Seeks to `t` (film seconds or deck fractional press) and returns the frame as PNG bytes; `alpha` keeps the page's transparency (a page opened with `alpha`). */
+export async function framePng(page, t, { alpha = false } = {}) {
   await page.evaluate(async (x) => { window.mm.seek(x); await window.mm.settle?.(); }, t);   // pixels wait for decodes
-  return page.screenshot({ type: 'png', animations: 'disabled', caret: 'hide' });
+  return page.screenshot({ type: 'png', animations: 'disabled', caret: 'hide', ...(alpha ? { omitBackground: true } : {}) });
 }

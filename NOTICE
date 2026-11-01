@@ -12,6 +12,16 @@ Copyright (c) 2010-2024 three.js authors.
 Vendored at runtime/vendor/three/0.170.0/: three.module.min.js, and the addons RoundedBoxGeometry.js
 and RoomEnvironment.js, of which only the `three` import is rewritten to a relative path. The licence
 text travels beside them (runtime/vendor/three/0.170.0/LICENSE).
+Also ported there, from the three.js r187 examples (Copyright (c) 2010-2026 three.js authors, the same
+MIT licence), each file marked in its header and adapted to the 0.170.0 core: the post-processing
+composer and its passes (postprocessing/: Pass, ShaderPass, RenderPass, EffectComposer without its
+clock or masks, SSAARenderPass with a per-sample hook, UnrealBloomPass with an input and a mask,
+GTAOPass with a seeded noise source, OutputPass with premultiplied alpha), their shaders (shaders/:
+Copy, LuminosityHighPass, GTAO, PoissonDenoise, Output), SimplexNoise in 2D with a required random
+source (math/), the Reflector with a hide list and a freeze (objects/), and RectAreaLightUniformsLib
+with its LTC table (lights/; the table is the fit of Heitz, Dupuy, Hill and Neubelt,
+github.com/selfshadow/ltc_code). The depth-of-field pass, the contact shadow and the mirror's shader
+in runtime/kit/ are our own.
 
 ------------------------------------------------------------------------------------------------
 drawably (https://github.com/danielwh2/drawably), MIT License.
@@ -100,6 +110,284 @@ dashed guides behind opaque plates) are restated in patterns/3d/phone's drawn mo
 MIT License
 
 Copyright (c) 2026 Lucas Marques
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+------------------------------------------------------------------------------------------------
+Earshot (https://github.com/Leonxlnx/earshot), MIT License.
+The licence rules for found sounds in scripts/lib/sound-licence.mjs restate its licence classifier and
+audit (scripts/licences.py, audit.py, credits.py and references/licences.md of its real-sound skill): CC0,
+public domain and CC BY 2.0 to 4.0 are allowed; NonCommercial, NoDerivatives, ShareAlike, Sampling+, custom
+and unverified licences are refused; a licence is read on the item's own page and never taken from a search
+result; one recording carries one licence; the downloaded bytes are hashed (sha1) and compared again; a
+credit line names the title, the author, the source and the licence. The code is rewritten in JavaScript
+for Openverse's licence codes; no audio, model or measurement from it is used.
+
+Rewritten in JavaScript (not copied) in scripts/lib/sound-place.mjs, scripts/lib/sound-mix.mjs,
+scripts/lib/sound-audible.mjs, scripts/lib/beat-kick.mjs and scripts/check/W-AUDIBLE.mjs: the way its
+real-sound mixer aligns a sound by attack, peak or end measured on the sound, its QA's sync, audibility and
+harshness measures, the provenance trace of every add, the flux search that puts a beat grid on the measured
+attacks, and the traps of its level model. No audio, model, measurement of third-party films or realness
+scorer is taken.
+
+scripts/lib/sound-ab.mjs rewrites the fairness steps of its blind-test builder in JavaScript: both
+sounds trimmed at one decay level with a 4 ms fade-in, matched on the K-weighted loudest 100 ms or 400 ms
+by one common gain that keeps the true peak at -1 dBTP or under, the limits that refuse a pair, the
+randomised sides with the first sound on exactly half of the trials and the one-sided binomial score.
+No code, sound or model of the upstream project is shipped beyond that.
+
+Ported into JavaScript, in our own idiom, from the model-free parts of its sound forge: the 28-band
+third-octave profile and the third-octave x 10 ms bandgram (scripts/lib/audio-measure.mjs), the
+bed-subtracted measurement of an event and its decay-shape and stutter reading, the damped-sinusoid
+(ESPRIT) modal fit with its least-squares amplitudes (scripts/lib/modal-fit.mjs, with the small
+linear algebra in scripts/lib/linalg.mjs), the fit-quality score (a multi-resolution log-mel, an
+envelope correlation, an onset sharpness, a tone distance and excess and missing energy over
+third-octave x 10 ms cells: scripts/lib/sound-score.mjs), the evolution strategy with its model-free
+prescreen (scripts/lib/sound-search.mjs) and the artifact detectors (clicks, DC, clipping, a
+truncated tail, a comb ring, a tail that rises again, stacked attacks, the rising glide:
+scripts/lib/sound-artifacts.mjs). None of its models, trained weights, measurements or audio is
+used.
+
+Re-implemented in our own JavaScript in runtime/kit/synth.js, runtime/kit/modes.js and runtime/kit/aim.js, and
+in the recipes under patterns/sound/ (whoosh, downlifter, pop-in, key, counter, ding, click, sub-drop, cut-hit,
+sting): the whoosh pass engine, the accelerating stutter gate, breakpoint envelopes in dB, a hard-end gate,
+tremolo, soft saturation, sweeping filters, the modal tables of bells, bars and materials, and the aim knobs
+that land a cue's duration, apex and pitch through its own fields. No audio, no model and no data is taken.
+
+MIT License
+
+Copyright (c) 2026 Leon Lin
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+------------------------------------------------------------------------------------------------
+anime.js (https://github.com/juliangarnier/anime), MIT License.
+runtime/kit/split.js and runtime/kit/scramble.js port its text tools, rewritten in our own ES modules for
+plain text and as pure functions of progress: the text splitter's word and grapheme segmentation (words from
+the platform's segmenter with closing punctuation glued to the word before and opening punctuation to the
+word after, characters kept whole), the space kept as a no-break space, the line rule (a word lower than
+the one before by more than half its height starts a line), the clip box around a unit, the twin of a unit
+for a slot-roll, and the hidden copy of the original text; and the scramble's reveal schedule (each glyph's
+window ranked by position, spaced by the settle share, ending on a step boundary, with a jitter on both ends,
+a direction that follows the text's length, the extra glyphs of a shorter text held to go first, and the
+named glyph pools with their x-y ranges). Its stateful random stream, its timers and its HTML strings are not
+used: noise is a hash of the glyph's place and step, and every unit is built with DOM calls.
+
+The ease families and their in / out / inOut / outIn derivations, the elastic and bounce forms, steps, the piecewise
+linear stops and the irregular ease (runtime/kit/ease.js; irregular is seeded), the spring's initial-velocity
+equation (checked against its settle times), and the stagger geometry, with its grid, ratio and 3D origins, `use`,
+`total`, jitter ramp and order of operations (runtime/kit/stagger.js; the shuffle is seeded) are adapted from its
+easings and stagger modules. Its spring is adapted from Apple's WebKit spring demo and its Penner forms from Robert
+Penner's easing equations; its bezier from BezierEasing by Gaetan Renaudeau.
+
+MIT License
+
+Copyright (c) 2025 Julian Garnier
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+------------------------------------------------------------------------------------------------
+Motion Canvas (https://github.com/motion-canvas/motion-canvas), MIT License.
+runtime/kit/code.js and patterns/text/code port the model of its code component, rewritten in our own ES
+module as pure functions of time: a block of code as fragments that change at the middle of a morph, the
+windows of that morph (the old text out over the first 0.4, nothing from 0.4 to 0.6, the new text in over the
+last 0.4) and its vertical drift, the running cursor that slides the tokens that stay, the selection that
+dims everything else to 0.2, the ranges (half open, 0-based, found by exact text) with one box per line, the
+edit vocabulary, the grid with tabs expanded, and the eight syntax roles. Its highlighter, its theme (a fixed
+colour palette) and its patience diff (adapted there from another author's code) are not used: tokens come
+from a small lexer written here, the diff is written from its description, and every colour is a palette role.
+
+The mass, stiffness, damping and initial velocity of the seven named spring feels (beat, plop, bounce, swing, jump,
+strike, smooth) in runtime/kit/springs.js, from packages/core/src/tweening/spring.ts.
+
+MIT License
+
+Copyright (c) 2022 motion-canvas
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+------------------------------------------------------------------------------------------------
+OpenScreen (https://github.com/siddharthvaddem/openscreen), MIT License.
+runtime/kit/cursor.js, runtime/kit/camera.js and runtime/kit/demoframe.js adapt its maths for recorded
+product demos: the pointer sidecar shape and the offline 240 Hz spring path of the cursor, the click bounce
+and the cursor blur, the zoom timing profile (lead-in, overlap, lead-out and their curve), connected pans, the
+focus bounds with their soft edge, the distance-adaptive follow, the ranking and spacing of zoom suggestions,
+the camera's spring constants and motion blur, the padding law, the three-layer shadow and the tilt presets;
+scripts/lib/webm.mjs restates its distrust of a recording's container duration and its black-first-frame
+test. The code is rewritten in our own ES modules: the follow and the chase are computed once or in closed
+form so every frame is a function of t, and the cursor art is our own and carries no colour. None of its
+cursor packs, wallpapers, gradients, logo or fonts is taken.
+
+MIT License
+
+Copyright (c) 2025 Siddharth Vaddem
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+------------------------------------------------------------------------------------------------
+presenter (https://github.com/bisque-cloud/presenter), MIT License.
+Copyright (c) 2026 Nick Siderakis
+The retry and refusal rules in scripts/lib/http.mjs are restated in our own JavaScript from its SDK client
+and its provider-refusal classifier: a 429 or a 5xx retried twice, Retry-After honoured up to 30 s, a
+250 x 2^n ms backoff, one idempotency key for each POST and its retries, and a refusal sorted into
+the key being refused, the account being out of credit or the rate limit being reached, from the status
+and the first words of the body, with the body never printed. No other code is taken.
+
+Rewritten in our own JavaScript for `mm share` (scripts/lib/share.mjs): the share block that sits between
+marker lines and is replaced, not added to, when it is pasted again (`upsertShareBlock`, from the presenter's
+`appendLine` and its release-notes marker); a listing title that is one line of at most 200 characters; a poster
+image that links to the watch page, with the link in text beneath it. scripts/lib/path-safe.mjs states the
+presenter's file-safety idea (a read or a write only inside the folder it was named against, never through a
+symbolic link) in our own code. None of its hosted service, its binaries, its page format or its API is used:
+`mm share` writes a folder and uploads nothing.
+
+MIT License
+
+Copyright (c) 2026 Nick Siderakis
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+------------------------------------------------------------------------------------------------
+Motion (https://github.com/motiondivision/motion), MIT License.
+The spring solver's initial-velocity forms and its soft landing for a negative bounce (the over-damped
+frequency rescale, solved by Newton) in runtime/kit/springs.js, the exponential-friction throw with its bound
+hand-off in runtime/kit/inertia.js, the edges distance and the order of delay and ease in runtime/kit/stagger.js,
+and the anticipate and reverse / mirror eases in runtime/kit/ease.js are adapted from motion-dom and
+motion-utils, rewritten as closed forms in t (the bound crossing is solved, not detected, and the shuffle is
+seeded). The cubic bezier solver of motion-utils is itself modified from BezierEasing by Gaetan Renaudeau (MIT);
+MM's own bezier solver is unchanged.
+
+MIT License
+
+Copyright (c) 2024 Motion B.V.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+------------------------------------------------------------------------------------------------
+howler.js (https://github.com/goldfire/howler.js), MIT License.
+The deck player (scripts/lib/deck-player.js) and the deck sprite (scripts/lib/deck-sound.mjs) restate its
+approach in a few lines of our own code: audio unlocked by the first gesture (capture-phase touchstart, touchend,
+click and keydown, a one-sample buffer played, the context resumed, the listeners removed once it has ended),
+a base64 data URI decoded with atob and decodeAudioData and no request, so a standalone deck plays from file://,
+and a sprite as a map of names to [offset, duration] played with start(0, offset, duration). None of its code is
+copied and none of its files is shipped.
+
+MIT License
+
+Copyright (c) 2013-2020 James Simpson and GoldFire Studios, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

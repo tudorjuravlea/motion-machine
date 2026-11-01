@@ -4,6 +4,7 @@
 // A node is { d, f }: a measured duration and a function of local time u, clamped outside [0, d].
 
 import { spring } from './springs.js';
+import { staggerOffsets } from './stagger.js';
 
 const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
 // Schedule times are rounded to the millisecond, so 3.5 + 0.52 − 0.52 is 3.5 and a film's
@@ -23,18 +24,11 @@ export const par = (...n) => ({ d: Math.max(0, ...n.map((c) => c.d)), f: (u) => 
 
 export const delay = (x, n) => ({ d: x + n.d, f: (u) => n.f(u - x) });
 
-// Children in turn. from: 'first' | 'center' | 'last' | 'index' (with opts.index); opts.ease
-// (a function of 0..1) bends the spacing; opts.cap bounds the whole cascade (style.motion.stagger.capS).
-export const stagger = (each, items, { from = 'first', index = 0, ease = null, cap = null } = {}) => {
-  const n = items.length;
-  const rank = items.map((_, i) =>
-    from === 'last' ? n - 1 - i
-      : from === 'center' ? Math.abs(i - (n - 1) / 2)
-        : from === 'index' ? Math.abs(i - index)
-          : i);
-  const top = Math.max(0, ...rank);
-  const step = cap != null && top * each > cap ? cap / top : each;
-  const offsets = rank.map((r) => (ease && top > 0 ? ease(r / top) * top * step : r * step));
+// Children in turn. Options are stagger.js's (SPEC §6): from 'first' | 'center' | 'last' | 'edges' | 'random' | 'index'
+// (with opts.index) | an item index | a ratio pair; grid, axis, ease (a function of 0..1 or an ease string) to bend the
+// spacing, reverse, seed, jitter, use, total; opts.cap bounds the whole cascade (style.motion.stagger.capS).
+export const stagger = (each, items, { from = 'first', ease = null, ...rest } = {}) => {
+  const offsets = staggerOffsets(items.length, { ...rest, each, from, ease });
   const node = par(...items.map((c, i) => delay(offsets[i], c)));
   node.offsets = offsets;
   return node;
@@ -113,7 +107,7 @@ function roleSeconds(role, style) {
 }
 
 function springParams(sp, style) {
-  const p = typeof sp === 'string' ? style.motion.spring[sp] : sp;
+  const p = typeof sp === 'string' ? (style.motion.spring[sp] ?? spring.presets[sp]) : sp;
   if (!p) throw new RangeError(`schedule: unknown spring "${sp}"`);
   return p;
 }
@@ -137,20 +131,32 @@ export const eachParts = (text, sep = '|') => String(text ?? '').split(String(se
 
 // A data-each cascade (SPEC §6): children in turn, spaced by params.stagger (else the kit's
 // data-stagger, else style.motion.stagger.eachS), the spread of starts capped at stagger.capS.
+// params.stagger is a number of seconds (the gap), or an object { each | amount, from, ease, grid, axis, reverse,
+// seed, jitter, use, total } (stagger.js); a brand's order for every cascade is style.motion.stagger.from / .ease.
 // An instant beat does not cascade: it is there, whole.
 function cascade(beat, style, d, given, warn) {
   const prm = beat.params || {};
   if ((!prm.each && !given) || d === 0) return null;
   const n = given?.n ?? eachParts(beat.text, prm.sep).length;
   if (!(n > 0)) return null;
-  let each = Number(prm.stagger ?? given?.stagger ?? style.motion.stagger.eachS);
+  const sty = style.motion.stagger;
+  const spec = prm.stagger !== null && typeof prm.stagger === 'object' && !Array.isArray(prm.stagger) ? prm.stagger : null;
+  const asked = spec ? (spec.each ?? given?.stagger ?? sty.eachS) : (prm.stagger ?? given?.stagger ?? sty.eachS);
+  let each = Number(asked);
   if (!(each >= 0 && each < Infinity)) {
-    warn?.(`params.stagger ${JSON.stringify(prm.stagger ?? given?.stagger)} is not a number of seconds >= 0; using the style's ${style.motion.stagger.eachS} s`);
-    each = style.motion.stagger.eachS;
+    warn?.(`params.stagger ${JSON.stringify(asked)} is not a number of seconds >= 0; using the style's ${sty.eachS} s`);
+    each = sty.eachS;
   }
-  const node = stagger(each, Array.from({ length: n }, () => clip(d)), { cap: style.motion.stagger.capS });
-  const offsets = node.offsets.map(ms);
-  return { n, step: n > 1 ? offsets[n - 1] / (n - 1) : each, offsets, d, total: ms(offsets[n - 1] + d) };
+  const { each: _each, ...order } = spec ?? {};
+  const base = { cap: sty.capS, ...(sty.from != null ? { from: sty.from } : {}), ...(sty.ease != null ? { ease: sty.ease } : {}), ...order };
+  let offsets;
+  try { offsets = staggerOffsets(n, { ...base, each }); } catch (e) {
+    warn?.(`params.stagger: ${e.message.replace(/^(stagger|ease): /, '')}; the children come in order, linear`);
+    offsets = staggerOffsets(n, { cap: sty.capS, each });
+  }
+  offsets = offsets.map(ms);
+  const span = Math.max(...offsets);
+  return { n, step: n > 1 ? span / (n - 1) : each, offsets, d, total: ms(span + d) };
 }
 
 // A cut module may size itself by its params: `durOf(cutParams)` (seconds) wins over its `dur`.

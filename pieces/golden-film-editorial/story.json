@@ -16,7 +16,7 @@
     },
     {
       "id": "f2",
-      "text": "The gate checks 53 rules: 14 errors and 39 warnings.",
+      "text": "The gate checks 59 rules: 14 errors and 45 warnings.",
       "source": "SPEC §7"
     },
     {
@@ -188,7 +188,7 @@
           "at": 0.483,
           "slot": "figure",
           "fx": "data/counter",
-          "value": 53,
+          "value": 59,
           "fact": "f2",
           "params": {
             "suffix": " rules",

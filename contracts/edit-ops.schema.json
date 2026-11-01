@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:motion-machine:contracts:edit-ops",
   "title": "Motion Machine edit ops: typed edits to a story, spoken by the studio, mm timeline and agents",
-  "description": "A batch of edits applied in order. Scenes are addressed by id (story.formats addresses the story itself), beats by index in the scene's beats array (the variant's beats when `format` names a variant that has beats). Every time a forward op writes is rounded to 0.01 s; an inverse (applied with ctx.inverse) writes back the exact old value. `before` (optional, on ops that may create a member) names the sibling key the created member goes in front of; inverses use it to put a removed key back where it was (on beat.param it names a key of params when the beat has params, else a key of the beat). `raw` (optional, on ops that write a value) is that value's JSON text and must parse to it; inverses carry it so that undo restores the original bytes. Rules this schema cannot express are the ops' (scripts/studio/ops.js): times inside the scene, beats and indexes in range, facts and patterns that exist, raw matching its value. A refused edit names one code: generated, deck, unknown-scene, ambiguous-scene, unknown-beat, out-of-range, bad-type, unknown-param, bad-value, schema.",
+  "description": "A batch of edits applied in order. Scenes are addressed by id (story.formats and audio.sample address the story itself), beats by index in the scene's beats array (the variant's beats when `format` names a variant that has beats). Every time a forward op writes is rounded to 0.01 s; an inverse (applied with ctx.inverse) writes back the exact old value. `before` (optional, on ops that may create a member) names the sibling key the created member goes in front of; inverses use it to put a removed key back where it was (on beat.param it names a key of params when the beat has params, else a key of the beat). `raw` (optional, on ops that write a value) is that value's JSON text and must parse to it; inverses carry it so that undo restores the original bytes. Rules this schema cannot express are the ops' (scripts/studio/ops.js): times inside the scene, beats and indexes in range, facts and patterns that exist, raw matching its value. A refused edit names one code: generated, deck, unknown-scene, ambiguous-scene, unknown-beat, out-of-range, bad-type, unknown-param, bad-value, schema.",
   "type": "array",
   "items": { "$ref": "#/$defs/editOp" },
   "$defs": {
@@ -19,7 +19,8 @@
         { "$ref": "#/$defs/beatParam" },
         { "$ref": "#/$defs/beatAdd" },
         { "$ref": "#/$defs/beatRemove" },
-        { "$ref": "#/$defs/storyFormats" }
+        { "$ref": "#/$defs/storyFormats" },
+        { "$ref": "#/$defs/audioSample" }
       ]
     },
     "scene": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,40}$" },
@@ -129,6 +130,16 @@
     "beatRemove": {
       "type": "object", "additionalProperties": false, "required": ["op", "scene", "beat"],
       "properties": { "op": { "const": "beat.remove" }, "scene": { "$ref": "#/$defs/scene" }, "beat": { "$ref": "#/$defs/beat" }, "format": { "$ref": "#/$defs/format" } }
+    },
+    "audioSample": {
+      "description": "maps a cue to a sound file of the piece in the story's `audio.samples` (the file needs its record beside it, W-SAMPLE-LICENSE); null unmaps the cue, and the last file unmapped takes the empty `samples` object with it. Addresses the story itself, so it takes no scene",
+      "type": "object", "additionalProperties": false, "required": ["op", "cue", "value"],
+      "properties": {
+        "op": { "const": "audio.sample" },
+        "cue": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,30}$" },
+        "value": { "oneOf": [{ "type": "null" }, { "type": "string", "pattern": "^(?!https?:)[^\\s]+\\.(wav|mp3|m4a|flac|ogg)$" }] },
+        "raw": { "$ref": "#/$defs/raw" }
+      }
     },
     "storyFormats": {
       "description": "sets the formats the piece ships: a forward op writes them in the order 9x16, 1x1, 4x5, 16x9 whatever order it lists them in; its inverse writes the exact old list. Removing a format leaves the scenes' variants for it in place",

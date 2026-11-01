@@ -1,5 +1,9 @@
 #!/usr/bin/env node
-// `mm sound-listen [--out dir] [--cues a,b] [--profiles glass,soft-ui] [--calibrate]` (SPEC §9).
+// `mm sound-listen [--out dir] [--cues a,b] [--profiles glass,soft-ui] [--calibrate]` (SPEC §9), or
+// `mm sound-listen --ab <a.wav|cue> <b.wav|cue> [--trials 20] [--seed 1] [--profile soft-ui] [--out dir]`: a blind A/B page
+// (scripts/lib/sound-ab.mjs) in <out>/ab.html (default out/sound-ab): both sounds loudness-matched and trimmed alike, the
+// sides randomised with A holding the first sound on half of the trials, each verdict kept in the page's local storage and
+// exported as verdicts.json; a pair that cannot be compared fairly is refused with the reason (exit 1).
 //
 //   every recipe cue under patterns/sound/ ──► rendered offline (Chromium OfflineAudioContext, stereo,
 //   48 kHz) under each sound profile and each emphasis ──► measured (scripts/lib/audio-measure.mjs) ──►
@@ -20,7 +24,8 @@ import { ROOT } from './lib/browser.mjs';
 import { measure } from './lib/audio-measure.mjs';
 import { openRenderer } from './lib/cue-render.mjs';
 import { loadProfile, loadRecipe } from './lib/sound-profile.mjs';
-import { NATIVE_LUFS, familyOf, renderRecipe } from '../runtime/kit/synth.js';
+import { AbRefused, buildAb } from './lib/sound-ab.mjs';
+import { NATIVE_LUFS, familyOf, recipeOpts, renderRecipe, resolveRecipe } from '../runtime/kit/synth.js';
 
 const SR = 48000;
 const SECONDS = 2.2;
@@ -38,9 +43,14 @@ export function recipeCues(patterns = join(ROOT, 'patterns')) {
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
-/** A recipe's masterGain that puts its loudest 100 ms, rendered as written at normal emphasis, on NATIVE_LUFS. */
-export function calibratedGain(recipe) {
-  const { channels, sampleRate } = renderRecipe({ ...recipe, masterGain: 1 }, { sampleRate: SR });
+/** The names a recipe plays under: its one version, or the base's name then each of its `variants`. */
+export const variantsOf = (recipe) => (recipe.variants ? [...new Set([recipe.variant ?? Object.keys(recipe.variants)[0], ...Object.keys(recipe.variants)])] : [null]);
+
+/** A recipe's masterGain that puts its loudest 100 ms, rendered as written at normal emphasis, on NATIVE_LUFS; `opts.variant` calibrates one version of a cue that has them. */
+export function calibratedGain(recipe, opts = {}) {
+  const bare = JSON.parse(JSON.stringify({ ...recipe, masterGain: 1 }));
+  for (const v of Object.values(bare.variants ?? {})) delete v.masterGain;
+  const { channels, sampleRate } = renderRecipe(bare, { sampleRate: SR, ...recipeOpts(opts) });
   return round(10 ** ((NATIVE_LUFS - measure(channels, sampleRate).lufs100ms) / 20), 4);
 }
 
@@ -108,13 +118,19 @@ export async function buildListen({ out, cues = null, profiles = ['glass', 'soft
   const list = recipeCues(patterns).filter((c) => !cues || cues.includes(c.name));
   const codeNames = code ? readdirSync(join(patterns, 'sound')).filter((n) => existsSync(join(patterns, 'sound', n, 'pattern.js')) && existsSync(join(patterns, 'sound', n, 'PATTERN.md'))).sort() : [];
   const records = [];
-  for (const c of list) for (const prof of profs) for (const emphasis of EMPHASES) {
-    const { channels, sampleRate } = renderRecipe(c.recipe, { sampleRate: SR, emphasis, profile: prof });
+  const items = list.flatMap((c) => variantsOf(c.recipe).map((variant) => {
+    const isBase = variant === null || variant === (c.recipe.variant ?? Object.keys(c.recipe.variants)[0]);
+    return { c, variant, label: variant === null ? c.name : `${c.name} (${variant})`, stem: isBase ? c.name : `${c.name}-${variant}` };
+  }));
+  for (const it of items) for (const prof of profs) for (const emphasis of EMPHASES) {
+    const { c, variant } = it;
+    const { channels, sampleRate } = renderRecipe(c.recipe, { sampleRate: SR, emphasis, profile: prof, ...(variant ? { variant } : {}) });
     const m = measure(channels, sampleRate);
     {
-      const file = `${c.name}-${prof.name}${emphasis === 'normal' ? '' : `-${emphasis}`}.wav`;
+      const file = `${it.stem}-${prof.name}${emphasis === 'normal' ? '' : `-${emphasis}`}.wav`;
       writeFileSync(join(wavDir, file), wavOf(channels, sampleRate));
-      records.push({ cue: c.name, profile: prof.name, emphasis, file: `wav/${file}`, ...m, verdict: verdicts(m, prof, c.recipe, emphasis) });
+      const voiced = resolveRecipe(c.recipe, variant ? { variant } : {});
+      records.push({ cue: it.stem, label: it.label, profile: prof.name, emphasis, file: `wav/${file}`, ...m, verdict: verdicts(m, prof, voiced, emphasis) });
       log(`${file}  ${round(m.lufs100ms)} LUFS  ${round(m.peakDbfs)} dBFS`);
     }
   }
@@ -129,14 +145,16 @@ export async function buildListen({ out, cues = null, profiles = ['glass', 'soft
     }
   } finally { await renderer?.close(); }
 
-  const rows = list.map((c) => {
+  const rows = items.map((it) => {
+    const { c } = it;
     const cells = profs.map((prof) => {
-      const rs = EMPHASES.map((e) => records.find((r) => r.cue === c.name && r.profile === prof.name && r.emphasis === e));
+      const rs = EMPHASES.map((e) => records.find((r) => r.cue === it.stem && r.profile === prof.name && r.emphasis === e));
       const n = rs[1];
       return `<td><div class="pn">${esc(prof.name)}</div><audio controls preload="none" src="${n.file}"></audio>${numbers(n, n.verdict)}
 <details><summary>subtle and strong</summary>${[0, 2].map((i) => `<div class="em"><label>${EMPHASES[i]}</label><audio controls preload="none" src="${rs[i].file}"></audio></div>`).join('')}</details></td>`;
     });
-    return `<tr><td class="name"><b>${esc(c.name)}</b><span>${esc(c.recipe.meaning)}</span><br><span>${familyOf(c.recipe.durationS)} · ${c.recipe.durationS} s</span></td>${cells.join('')}</tr>`;
+    const dur = resolveRecipe(c.recipe, it.variant ? { variant: it.variant } : {}).durationS;
+    return `<tr><td class="name"><b>${esc(it.label)}</b><span>${esc(c.recipe.meaning)}</span><br><span>${familyOf(dur)} · ${dur} s</span></td>${cells.join('')}</tr>`;
   });
   const codeRows = records.filter((r) => r.code).map((r) => `<tr><td class="name"><b>${esc(r.cue)}</b><span>code cue, soft-ui feel</span></td><td colspan="${profs.length}"><audio controls preload="none" src="${r.file}"></audio>${numbers(r, { level: true, peak: true, balance: true, centre: true })}</td></tr>`);
   const html = `<!doctype html>
@@ -156,24 +174,60 @@ ${codeRows.length ? `<h2>The code cues, for comparison</h2><p class="lead">The n
 
 export function calibrateAll({ patterns = join(ROOT, 'patterns'), cues = null, log = () => {} } = {}) {
   const done = [];
-  {
-    for (const c of recipeCues(patterns).filter((x) => !cues || cues.includes(x.name))) {
-      const masterGain = calibratedGain(c.recipe);
-      const text = readFileSync(c.file, 'utf8');
-      const next = /"masterGain"\s*:\s*[0-9.eE+-]+/.test(text) ? text.replace(/"masterGain"\s*:\s*[0-9.eE+-]+/, `"masterGain": ${masterGain}`) : text.replace(/\n\}\s*$/, `,\n  "masterGain": ${masterGain}\n}\n`);
-      writeFileSync(c.file, next);
-      done.push({ cue: c.name, masterGain });
-      log(`${c.name}: masterGain ${masterGain}`);
+  for (const c of recipeCues(patterns).filter((x) => !cues || cues.includes(x.name))) {
+    const masterGain = calibratedGain(c.recipe);
+    let next = readFileSync(c.file, 'utf8');
+    const top = /^  "masterGain"\s*:\s*[0-9.eE+-]+/m;           // the cue's own, at two spaces: a version's sits deeper
+    const any = /"masterGain"\s*:\s*[0-9.eE+-]+/;
+    next = top.test(next) ? next.replace(top, `  "masterGain": ${masterGain}`) : !c.recipe.variants && any.test(next) ? next.replace(any, `"masterGain": ${masterGain}`) : next.replace(/\n\}\s*$/, `,\n  "masterGain": ${masterGain}\n}\n`);
+    const gains = {};
+    if (c.recipe.variants) {
+      const at = next.indexOf('"variants"');
+      let head = next.slice(0, at), tail = next.slice(at);
+      for (const v of Object.keys(c.recipe.variants)) {
+        gains[v] = calibratedGain(c.recipe, { variant: v });
+        tail = tail.replace(new RegExp(`("${v}"\\s*:\\s*\\{)(\\s*"masterGain"\\s*:\\s*[0-9.eE+-]+,)?\\s*`), `$1\n      "masterGain": ${gains[v]},\n      `);
+      }
+      next = head + tail;
     }
+    writeFileSync(c.file, next);
+    done.push({ cue: c.name, masterGain, ...(c.recipe.variants ? { variants: gains } : {}) });
+    log(`${c.name}: masterGain ${masterGain}${c.recipe.variants ? ` (${Object.entries(gains).map(([k, g]) => `${k} ${g}`).join(', ')})` : ''}`);
   }
   return done;
 }
 
-export async function main(argv) {
-  let a;
+const USAGE_LINE = 'usage: mm sound-listen [--out dir] [--cues a,b] [--profiles glass,soft-ui] [--calibrate]  |  mm sound-listen --ab <a.wav|cue> <b.wav|cue> [--trials 20] [--seed 1] [--profile soft-ui] [--out dir]';
+
+async function mainAb(a, second) {
+  if (!second) { console.error(`sound-listen: --ab needs two sounds, an audio file or the name of a cue each\n${USAGE_LINE}`); return 2; }
+  const trials = Number(a.trials), seed = Number(a.seed);
+  if (!Number.isInteger(trials) || trials < 2 || trials > 200) { console.error(`sound-listen: --trials is a whole number from 2 to 200, not "${a.trials}"`); return 2; }
+  if (!Number.isInteger(seed)) { console.error(`sound-listen: --seed is a whole number, not "${a.seed}"`); return 2; }
+  let renderer = null;
   try {
-    a = parseArgs({ args: argv, options: { out: { type: 'string', default: 'out/sound-listen' }, cues: { type: 'string' }, profiles: { type: 'string', default: 'glass,soft-ui' }, calibrate: { type: 'boolean', default: false } }, strict: true }).values;
-  } catch (e) { console.error(`sound-listen: ${e.message}\nusage: mm sound-listen [--out dir] [--cues a,b] [--profiles glass,soft-ui] [--calibrate]`); return 2; }
+    const r = await buildAb({ a: a.ab, b: second, out: a.out === 'out/sound-listen' ? 'out/sound-ab' : a.out, trials, seed, profile: a.profile, renderer: async () => (renderer ??= await openRenderer()) });
+    console.log(`sound-listen: ${r.trials} trials of ${r.labels.a} against ${r.labels.b}, matched on the loudest ${r.window}, sound 1 on A in ${r.trials / 2 | 0} -> ${relative(process.cwd(), r.page)}`);
+    console.log(`  loudest moments ${r.facts.loudestLufs.join(' / ')} LUFS (${Math.abs(r.facts.loudDiffLu)} LU apart), true peak ${r.facts.truePeakDbtp} dBTP, floor margin ${r.facts.floorMarginDb} dB`);
+    return 0;
+  } catch (e) {
+    if (e instanceof AbRefused) { console.error(`sound-listen: ${e.message}`); return 1; }
+    console.error(`sound-listen: ${e.message}`);
+    return e.exitCode ?? (e.setup ? 2 : 1);
+  } finally { await renderer?.close(); }
+}
+
+export async function main(argv) {
+  let a, pos;
+  try {
+    ({ values: a, positionals: pos } = parseArgs({ args: argv, allowPositionals: true, options: { out: { type: 'string', default: 'out/sound-listen' }, cues: { type: 'string' }, profiles: { type: 'string', default: 'glass,soft-ui' }, calibrate: { type: 'boolean', default: false },
+      ab: { type: 'string' }, trials: { type: 'string', default: '20' }, seed: { type: 'string', default: '1' }, profile: { type: 'string', default: 'soft-ui' } }, strict: true }));
+  } catch (e) { console.error(`sound-listen: ${e.message}\n${USAGE_LINE}`); return 2; }
+  if (a.ab != null) {
+    if (pos.length > 1) { console.error(`sound-listen: --ab takes two sounds\n${USAGE_LINE}`); return 2; }
+    return mainAb(a, pos[0]);
+  }
+  if (pos.length) { console.error(`sound-listen: unexpected argument ${pos[0]}\n${USAGE_LINE}`); return 2; }
   try {
     const cues = a.cues ? a.cues.split(',').filter(Boolean) : null;
     if (a.calibrate) calibrateAll({ cues, log: console.log });

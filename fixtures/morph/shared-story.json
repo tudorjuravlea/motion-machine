@@ -1,0 +1,38 @@
+{
+  "id": "shared-card",
+  "kind": "film",
+  "formats": ["16x9", "9x16"],
+  "title": "Shared element demo",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "before",
+      "layout": "layouts/bento-3",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0, "slot": "headline", "fx": "entrances/fade", "text": "One card, then another", "params": { "instant": true } },
+        { "at": 0, "slot": "tile-1", "fx": "entrances/fade", "asset": "assets/mark-b.svg", "text": "Card", "params": { "instant": true, "shared": "card" } },
+        { "at": 0, "slot": "tile-2", "fx": "entrances/fade", "text": "Other", "params": { "instant": true } }
+      ],
+      "say": "The scene that leaves."
+    },
+    {
+      "id": "after",
+      "layout": "layouts/bento-3",
+      "duration": 3,
+      "cut": "transitions/shared-element",
+      "cutParams": { "fit": "stretch", "arc": 0.4 },
+      "move": null,
+      "beats": [
+        { "at": 0, "slot": "headline", "fx": "entrances/fade", "text": "Carried across", "params": { "instant": true } },
+        { "at": 0, "slot": "tile-3", "fx": "entrances/fade", "asset": "assets/mark-b.svg", "text": "Card", "params": { "instant": true, "shared": "card" } }
+      ],
+      "say": "The scene that arrives."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

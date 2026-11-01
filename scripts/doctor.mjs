@@ -1,9 +1,13 @@
 // mm doctor: verifies Node >= 22, Playwright's Chromium, ffmpeg >= 6 and ffprobe (on PATH, or at
 // MM_FFMPEG and MM_FFPROBE). Never installs
-// anything (SPEC §8). Exit 0 when all are present, 2 naming each missing tool.
+// anything (SPEC §8). Exit 0 when all are present, 2 naming each missing tool. It also looks at the keys file
+// `mm gen` reads ($HOME/.config/motion-machine/keys.env): readable by the group or by others is a WARNING (the
+// exit code stays 0) with the chmod that closes it; doctor never changes the mode, and never prints the file.
 import { existsSync } from 'node:fs';
 import { chromium } from 'playwright';
+import { homedir } from 'node:os';
 import { toolVersion } from './lib/ffmpeg.mjs';
+import { keysFileMode } from './lib/gen/keys.mjs';
 import { runMain } from './lib/cli.mjs';
 
 export async function doctor() {
@@ -21,6 +25,12 @@ export async function doctor() {
   rows.push({ tool: 'ffprobe', ok: fp.ok, detail: fp.ok ? fp.version : 'not found (PATH or MM_FFPROBE)', fix: 'ships with ffmpeg; install ffmpeg 6 or newer, or set MM_FFPROBE to its binary' });
 
   for (const r of rows) console.log(`${r.ok ? 'ok     ' : 'MISSING'}  ${r.tool.padEnd(9)} ${r.detail}${r.ok ? '' : `  → ${r.fix}`}`);
+  const keys = keysFileMode(process.env.HOME || homedir());
+  if (keys) {
+    const mode = keys.mode.toString(8).padStart(3, '0');
+    if (keys.loose) console.log(`WARNING  ${'keys'.padEnd(9)} ${keys.file} is mode ${mode}: other accounts on this machine can read your API keys  → chmod 600 ${keys.file}`);
+    else console.log(`ok       ${'keys'.padEnd(9)} ${keys.file} (mode ${mode})`);
+  }
   const missing = rows.filter((r) => !r.ok);
   if (missing.length) {
     console.error(`\nmm doctor: missing ${missing.map((r) => r.tool).join(', ')}`);

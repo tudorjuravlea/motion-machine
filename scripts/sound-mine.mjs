@@ -19,7 +19,7 @@ import { parseArgs } from 'node:util';
 import { UsageError, runMain, usageText } from './lib/cli.mjs';
 import { assertTools } from './lib/ffmpeg.mjs';
 import { decodeStereo } from './lib/audio-decode.mjs';
-import { analyseSound, findInputs, fitProfile, profileName, splitSounds } from './lib/sound-mine.mjs';
+import { analyseSound, contextOf, findInputs, fitProfile, profileName, splitSounds } from './lib/sound-mine.mjs';
 import { readRecord } from './lib/sound-sample.mjs';
 import { validators } from './lib/validate.mjs';
 import { CSS, esc, wavOf } from './sound-listen.mjs';
@@ -69,7 +69,9 @@ export async function mineSounds({ input, out, name, licence = null, source = nu
       used.add(id);
       const a = analyseSound(s.channels, SR);
       const p = prov.get(file);
-      const record = { id, file: rel.split('\\').join('/'), startS: round(s.from / SR, 3), endS: round(s.to / SR, 3), wav: `sounds/${id}.wav`, ...p, ...a };
+      const ctx = contextOf([L, R], SR, s);
+      const { ringFamily, ...rest } = ctx;
+      const record = { id, file: rel.split('\\').join('/'), startS: round(s.from / SR, 3), endS: round(s.to / SR, 3), wav: `sounds/${id}.wav`, ...p, ...a, ...rest, family: ctx.exposed ? (ringFamily ?? a.family) : null };
       writeFileSync(join(out, record.wav), wavOf(s.channels, SR));
       writeFileSync(join(out, 'records', `${id}.json`), `${JSON.stringify(record, null, 2)}\n`);
       records.push(record);
@@ -86,10 +88,10 @@ export async function mineSounds({ input, out, name, licence = null, source = nu
 }
 
 function minePage(records, p) {
-  const num = (r) => `<div class="nums">length <b>${round(r.lengthS, 2)}</b> s (${r.family}) · attack <b>${r.attackS == null ? 'n/a' : round(r.attackS * 1000)}</b> ms · T60 <b>${r.t60S == null ? 'n/a' : round(r.t60S, 2)}</b> s<br>
+  const num = (r) => `<div class="nums">length <b>${round(r.lengthS, 2)}</b> s (${r.family ?? `no family: only ${r.exposedDb} dB over the bed`}) · attack <b>${r.attackS == null ? 'n/a' : round(r.attackS * 1000)}</b> ms · T60 <b>${r.t60S == null ? 'n/a' : round(r.t60S, 2)}</b> s<br>
 loudest 100 ms <b>${r.lufs100ms}</b> LUFS · whole ${r.lufsIntegrated} LUFS · peak <b>${r.peakDbfs}</b> dBFS<br>
 centroid <b>${Math.round(r.centroidHz)}</b> Hz · roll-off ${Math.round(r.rolloffHz)} Hz · flatness ${r.flatness} · side/mid ${r.sideMidDb == null ? 'mono' : `${r.sideMidDb} dB`}<br>
-${r.tonal ? `tonal: pitch <b>${r.pitchHz} Hz</b> (${(r.pitchClasses ?? []).join(' ') || '–'}) · material ${r.mode} · partials ${r.partials.length ? r.partials.map((q) => `${q[0]}:${q[1]} dB`).join(' ') : 'none'}` : 'noise or knock: no pitch'}${r.room ? `<br>room tail: ${r.room.sizeS} s at ${r.room.send} dB` : ''}</div>`;
+${r.tonal ? `tonal: pitch <b>${r.pitchHz} Hz</b> (${(r.pitchClasses ?? []).join(' ') || '–'}) · material ${r.mode} · partials ${r.partials.length ? r.partials.map((q) => `${q[0]}:${q[1]} dB`).join(' ') : 'none'}` : 'noise or knock: no pitch'}${r.modal ? `<br>modes (fitted): ${r.modal.partials.map((q, i) => `${q[0] === 1 ? Math.round(r.modal.f0Hz) + ' Hz' : '×' + q[0]} ${q[1]} dB T60 ${r.modal.t60S[i]} s`).join(' · ')}` : ''}${r.room ? `<br>room tail: ${r.room.sizeS} s at ${r.room.send} dB` : ''}${r.bed ? `<br>bed ${r.bed.db} dB: the sound stands <b>${r.exposedDb}</b> dB over it, ${r.masked.length} bands masked${r.decay ? `, decay ${r.decay}` : ''}${r.stutterHz ? `, stutter ${r.stutterHz} Hz` : ''}` : ''}</div>`;
   const rows = records.map((r) => `<tr><td class="name"><b>${esc(r.id)}</b><span>${esc(r.file)} ${r.startS}-${r.endS} s</span><br><span>${esc(r.licence)}${r.author ? `, ${esc(r.author)}` : ''}</span></td><td><audio controls preload="none" src="${esc(r.wav)}"></audio>${num(r)}</td></tr>`);
   const fit = `<div class="nums">register: centre up to <b>${p.register.maxCentreHz}</b> Hz, floor <b>${p.register.minHz}</b> Hz, ${p.register.tones} tones · key ${p.key.length ? p.key.join(' ') : 'no constraint'} · material <b>${p.modes}</b><br>
 attack ${p.envelope.attackS.map((x) => round(x * 1000, 2)).join('-')} ms · T60 input ${p.envelope.t60.input.join('-')} s, surface ${p.envelope.t60.surface.join('-')} s, outcome ${p.envelope.t60.outcome.join('-')} s<br>

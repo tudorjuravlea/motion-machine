@@ -3,6 +3,7 @@
 // baseline. In a face with a width axis (`wdth`, Archivo in the kinetic preset) the letters really
 // widen through font-stretch; in a face without one they scale horizontally from the baseline, so
 // the line box never changes. Words never break mid-wave. At p = 1 the slot is its plain text.
+import { graphemesOf } from '../../../runtime/kit/split.js';
 const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
 
 const params = {
@@ -47,7 +48,7 @@ export default {
       if (i) { el.append(' '); letters.push(null); }
       const w = doc.createElement('span');
       w.className = 'mm-elastic__w';
-      for (const ch of word) {
+      for (const ch of graphemesOf(word)) {
         const l = doc.createElement('span');
         l.className = 'mm-elastic__l';
         l.textContent = ch;

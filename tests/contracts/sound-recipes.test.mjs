@@ -15,15 +15,18 @@ import { familyOf } from '../../runtime/kit/synth.js';
 const read = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
 const { soundRecipe, soundProfile, story, motion, brand } = validators();
 const explain = (v) => (v.errors ?? []).map((e) => `${e.instancePath || '/'} ${e.message}`).join('; ');
-const recipes = readdirSync(join(ROOT, 'patterns/sound')).filter((n) => existsSync(join(ROOT, 'patterns/sound', n, 'recipe.json'))).sort().map((n) => ({ n, r: read(`patterns/sound/${n}/recipe.json`) }));
+const PALETTE = ['ready', 'attention', 'success', 'warning', 'error', 'loading', 'tap', 'toggle-on', 'toggle-off', 'open', 'close'];
+// every recipe under patterns/sound/ validates; the rules below were written for the first data palette and are checked on it
+// (the cues the newer layers make are measured in tests/sound/engine-cues.test.mjs)
+const every = readdirSync(join(ROOT, 'patterns/sound')).filter((n) => existsSync(join(ROOT, 'patterns/sound', n, 'recipe.json'))).sort().map((n) => ({ n, r: read(`patterns/sound/${n}/recipe.json`) }));
+const recipes = every.filter(({ n }) => PALETTE.includes(n));
 const profiles = readdirSync(join(ROOT, 'styles/sound')).filter((f) => f.endsWith('.json')).sort().map((f) => read(`styles/sound/${f}`));
 const byName = Object.fromEntries(recipes.map(({ r }) => [r.name, r]));
-const PALETTE = ['ready', 'attention', 'success', 'warning', 'error', 'loading', 'tap', 'toggle-on', 'toggle-off', 'open', 'close'];
 const semis = (a, b) => 12 * Math.log2(a / b);
 
 test('the first data palette is all there, and every recipe and profile validates', () => {
   assert.deepEqual(recipes.map((x) => x.n), [...PALETTE].sort());
-  for (const { n, r } of recipes) { assert.ok(soundRecipe(r), `${n}: ${explain(soundRecipe)}`); assert.equal(r.name, n, `${n}: the name is the folder`); }
+  for (const { n, r } of every) { assert.ok(soundRecipe(r), `${n}: ${explain(soundRecipe)}`); assert.equal(r.name, n, `${n}: the name is the folder`); }
   assert.deepEqual(profiles.map((p) => p.name), ['glass', 'soft-ui']);
   for (const p of profiles) assert.ok(soundProfile(p), `${p.name}: ${explain(soundProfile)}`);
 });
@@ -34,7 +37,7 @@ test('the schema refuses a recipe that cannot be drawn', () => {
   assert.equal(bad((r) => { delete r.layers[0].f; }), false, 'a tone needs its f');
   assert.equal(bad((r) => { r.layers[0].kind = 'sample'; }), false);
   assert.equal(bad((r) => { r.layers[0].colour = 'red'; }), false, 'no stray fields');
-  assert.equal(bad((r) => { r.durationS = 2; }), false, 'a cue is a one-shot under 1.5 s');
+  assert.equal(bad((r) => { r.durationS = 5; }), false, 'a cue is at most 4.5 s');
   assert.equal(bad((r) => { r.layers[0].from = 3; }), false);
   assert.equal(bad((r) => { r.layers[0].partials = [[1]]; }), false);
   assert.equal(bad((r) => { r.layers[0].partials = [[1, 0, 5]]; }), false);

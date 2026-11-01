@@ -79,7 +79,7 @@ export default async function (ctx) {
     if (!bed) peaks = 'no bed in the mix: nothing to compare against';
     else {
       peaks = 'checked against the bed';
-      for (const c of list.filter((x) => x.name !== 'bed')) {
+      for (const c of list.filter((x) => x.name !== 'bed' && !x.bedFallback)) {      // a cue with no bed in the second before it plays at the profile's fixed level
         const d = c.peakDb - bed.peakDb;
         if (d < BED_BAND_DB[0] - 0.05 || d > BED_BAND_DB[1] + 0.05) push('peak', `${c.name} at ${c.at} s peaks ${d.toFixed(1)} dB over the bed, the band is ${BED_BAND_DB[0]}-${BED_BAND_DB[1]} dB`, { t: c.at, selector: c.name }, { measured: d });
       }

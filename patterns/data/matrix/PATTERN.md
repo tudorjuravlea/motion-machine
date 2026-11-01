@@ -39,6 +39,7 @@ Brand knobs: hero, shape, line, accent, face.
 - At p = 1 every cell, name, chip and axis is in place; nothing moves.
 - Names, items and axes are DOM text at `--mm-size-body`; items flow left to right inside a cell and wrap to the next line, so a long item wraps rather than overflowing, and a row of cells grows (with the stage) to hold the items it is given.
 - Phases: axes over the first 20 %, cells in reading order from 8 %, items dropping in reading order from 35 %.
+- Each axis is drawn on with its arrowhead riding the tip: the line stops half a head short of the tip, a head is never more than half the line drawn so far, and nothing is painted at 0, so a round cap leaves no dot.
 
 ## Provenance
 - nateherkai/herk-edit-kit, MIT: the idea of a 2x2 with axis labels whose items drop into quadrants and one hero quadrant; restated, no code taken.

@@ -3,7 +3,7 @@
 // No timers, no frame loop, no clock: the live play clock belongs to `mm serve`.
 
 import { spring } from './springs.js';
-import { ease } from './ease.js';
+import { ease, cssEasing } from './ease.js';
 import { random, hash } from './random.js';
 import { schedule as buildSchedule, resolveStory, forFormat, selectorOf, eachParts, addImplicitPlays, screenIssues } from './schedule.js';
 import { initialState, fold, locate, mountLayer, paint } from './screen.js';
@@ -18,9 +18,12 @@ import { surfaceVars, shinePosition } from './surface.js';
 import { recipeModule } from './synth.js';
 import { fxFilter, needsFx, overTextShares, grainSeed } from './finish.js';
 import { rampUrl, warmRamp } from './lens.js';
+import { readTrack } from './cursor.js';
+import { nextRest, pressFromLocation, prevRest, reducedMotion } from './press.js';
 
 export { spring, track } from './springs.js';
 export { ease } from './ease.js';
+const cssOf = (e) => { try { return cssEasing(e).css; } catch { return e; } };   // W-EASE names an ease that does not parse
 export { random } from './random.js';
 export { fit } from './fit.js';
 export { count } from './count.js';
@@ -271,7 +274,7 @@ async function mountInner({ story, style, root, patternsBase }) {
   });
 
   for (const x of screens) x.item = items.find((it) => !it.parent && it.scene === x.scene && it.beat?.slot === x.slot) ?? null;
-  Object.assign(S, { story, style, sched, format, spec, stage, scenes, items, keeps, modules, snapshots, warnings, fonts, screens, footage, cur: 0, t: 0, state: new Map(), vis: [], speaker: null, face: null });
+  Object.assign(S, { story, style, sched, format, spec, stage, scenes, items, keeps, modules, snapshots, warnings, fonts, screens, footage, cur: 0, t: 0, state: new Map(), vis: [], speaker: null, face: null, reduced: false });
   S.speaker = mountSpeaker(S, warnings);   // where the speaker stands scene by scene (scene.frame), read once the layouts have their boxes
   // a bloom ground rises over each scene's first beat (at least a standard duration); graph-paper drifts with the piece
   S.ground = style.ground ? groundSpec(style.ground) : null;
@@ -289,7 +292,11 @@ async function mountInner({ story, style, root, patternsBase }) {
     api.presses = sched.presses;
     window.addEventListener('keydown', onKey);
     window.addEventListener('click', onClick);
-    window.addEventListener('hashchange', () => { const n = hashPress(); if (n != null) goto(n); });
+    window.addEventListener('hashchange', () => { const n = pressFromLocation('', location.hash, S.sched.presses); if (n != null) goto(n); });
+    // reduced motion (SPEC §10): the reader's preference, read once and again when it changes, or the style's own
+    const prefers = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    S.reduced = reducedMotion(style, prefers?.matches);
+    prefers?.addEventListener?.('change', () => { const now = reducedMotion(S.style, prefers.matches); if (now !== S.reduced) { S.reduced = now; seek(S.cur); } });
   } else {
     api.duration = sched.duration;
   }
@@ -299,8 +306,8 @@ async function mountInner({ story, style, root, patternsBase }) {
 
   // Initial instant: ?t= (film), ?press= (deck), the hash (deck), else the start.
   if (story.kind === 'deck') {
-    const n = q.has('press') ? Number(q.get('press')) : hashPress();
-    if (n != null && Number.isFinite(n)) goto(n); else seek(0);
+    const n = pressFromLocation(location.search, location.hash, sched.presses);
+    if (n != null) goto(n); else seek(0);
   } else {
     seek(q.has('t') ? Number(q.get('t')) : 0);
   }
@@ -624,7 +631,7 @@ function setVariables(style, spec) {
   style.space.forEach((v, i) => set(`--mm-space-${i}`, px(v)));
   style.radius.forEach((v, i) => set(`--mm-radius-${i}`, px(v)));
   for (const [name, ms] of Object.entries(style.motion.durations)) set(`--mm-dur-${name}`, `${ms}ms`);
-  for (const [name, e] of Object.entries(style.motion.easings)) set(`--mm-ease-${name}`, e);
+  for (const [name, e] of Object.entries(style.motion.easings)) set(`--mm-ease-${name}`, cssOf(e));   // a CSS-valid easing: the string itself for a keyword or cubic-bezier, else a sampled linear()
   set('--mm-travel', style.motion.travel);
   // the brand's composition. Layouts read these for their default alignment, headline size
   // and spacing; a style with no composition reads as left, 1, airy.
@@ -765,7 +772,7 @@ function restore() {
 function hide(el) { el.style.opacity = '0'; el.style.visibility = 'hidden'; }
 
 function springCtx(style) {
-  const resolve = (p) => (typeof p === 'string' ? style.motion.spring[p] : p);
+  const resolve = (p) => (typeof p === 'string' ? (style.motion.spring[p] ?? spring.presets[p]) : p);
   return Object.assign((t, p = 'ui') => spring(t, resolve(p)), {
     settle: (p = 'ui') => spring.settle(resolve(p)),
     overshoot: (p = 'ui', t) => spring.overshoot(resolve(p), t),
@@ -847,6 +854,13 @@ function overshootOf(it, u) {
 function runFx(it, p, u) {
   const mod = S.modules[it.fx] || fallbackFx;
   it.el.style.visibility = '';
+  // reduced motion: an entrance still under way is the finished element fading in, nothing travelling, scaling or revealing
+  if (S.reduced && u < it.d - TOL) {
+    mod.at(it.el, 1, ctxFor(it.selector, { params: paramsOf(mod, shared(it.beat)), u: it.d, d: it.d, scene: it.scene }));
+    const rest = it.el.style.opacity === '' ? 1 : Number(it.el.style.opacity);
+    it.el.style.opacity = String(rest * clamp01(p));
+    return;
+  }
   // finished from TOL before the end, as entrance() and progressOf() count it: a pattern reading u / d sees exactly 1
   // there; past the end u runs on (a 3D device keeps turning after its entrance)
   mod.at(it.el, p, ctxFor(it.selector, { params: paramsOf(mod, shared(it.beat)), u: u >= it.d - TOL && u < it.d ? it.d : u, d: it.d, scene: it.scene }));
@@ -865,11 +879,13 @@ function shineGlass(el, q) {
 function runExit(it, q) {
   const mod = it.exit.pattern && S.modules[it.exit.pattern];
   if (q >= 1) return hide(it.el);
+  if (S.reduced) { it.el.style.opacity = String(1 - q); return; }   // reduced motion: it fades out where it stands
   if (mod) mod.at(it.el, q, ctxFor(it.selector, { params: paramsOf(mod, bagFor(it.beat, 'exit')), d: it.exit.d, scene: it.scene }));
   else it.el.style.opacity = String(1 - q);
 }
 
 function runEmphasis(it, q) {
+  if (S.reduced) return;   // an emphasis is movement (a pulse, a scale, a nudge); a rest is the same without it
   const mod = S.modules[it.emphasis.pattern];
   if (mod) mod.at(it.el, ease('move', q, S.style), ctxFor(it.selector, { params: paramsOf(mod, bagFor(it.beat, 'emphasis')), d: it.emphasis.d, u: q * it.emphasis.d, scene: it.scene }));
 }
@@ -879,6 +895,11 @@ function runTransition(i, u, d) {
   const mod = S.modules[sc.cut];
   if (!mod) return;
   const from = S.scenes[i - 1].el, to = S.scenes[i].el;
+  if (S.reduced) {   // reduced motion: every cut is a cross-fade
+    const k = ease('move', clamp01(u / d), S.style);
+    from.style.opacity = String(1 - k); to.style.opacity = String(k);
+    return;
+  }
   mod.at(to, ease('move', clamp01(u / d), S.style), ctxFor(`[data-scene="${sc.id}"]`, {
     params: paramsOf(mod, sc.cutParams), policy: S.style.transitions?.policy, from, to, u, d, scene: sc.id,
   }));
@@ -886,6 +907,7 @@ function runTransition(i, u, d) {
 
 // A scene's camera move at progress p (film: through its seconds; deck: through its presses).
 function runMove(i, p, extra) {
+  if (S.reduced) return;   // a camera move is movement; reduced motion leaves the camera still
   const sc = S.story.scenes[i];
   const mod = sc.move && S.modules[sc.move];
   if (!mod) return;
@@ -940,8 +962,15 @@ async function implicitPlays(story, style) {
 }
 async function fetchMeta(asset) {
   const r = await fetch(new URL(`${asset}media.json`, location.href));   // kind: sequence or page
-  if (r.ok) return r.json();
-  throw new Error(`asset ${asset} holds no media.json (mm media prep, mm capture site)`);
+  if (!r.ok) throw new Error(`asset ${asset} holds no media.json (mm media prep, mm capture site)`);
+  const meta = await r.json();
+  // a recording's pointer track (media.json `cursor`, written by mm capture site --script or carried over by mm media prep) is read with it
+  if (typeof meta.cursor === 'string') {
+    const c = await fetch(new URL(`${asset}${meta.cursor}`, location.href));
+    const track = c.ok ? readTrack(await c.json().catch(() => null)) : null;
+    if (track) meta.track = track;
+  }
+  return meta;
 }
 
 async function mountScreen({ sc, b, slot }, warnings) {
@@ -953,6 +982,8 @@ async function mountScreen({ sc, b, slot }, warnings) {
     const swaps = new Map();
     for (const a of b.screen ?? []) if (BRINGS.has(a.do) && a.params?.to) swaps.set(a.params.to, await metaOf(a.params.to));
     const actions = b.screen ?? [];
+    // the screen actions that read the recording's pointer track say so when it has none
+    for (const a of actions) if ((a.do === 'screen/pointer' || (a.do === 'screen/zoom-to' && a.params?.mode === 'auto')) && !initial.content.meta?.track) warnings.push(`${where}: ${a.do} reads a pointer track, and ${b.asset ?? 'the bare screen'} has none (mm capture site --script writes one; media.json names it in "cursor")`);
     const layer = mountLayer(screenEl, initial, swaps, actions);
     // pictures that do not change with t are decoded before the first seek, like any asset
     await Promise.all([...layer.querySelectorAll('img[src]')].map((img) => img.decode().catch(() => warnings.push(`${where}: ${img.getAttribute('src')} did not load`))));
@@ -1121,11 +1152,6 @@ function seekDeck(x) {
 // ---------------------------------------------------------------------------------------------
 // deck navigation (SPEC §10): presses are input, not time; the hash carries the press.
 
-function hashPress() {
-  const m = /^#(\d+)$/.exec(location.hash);
-  return m ? Number(m[1]) : null;
-}
-
 function land(n) {
   seek(n);
   if (S.story.kind === 'deck') history.replaceState(null, '', `${location.pathname}${location.search}#${S.cur}`);
@@ -1136,20 +1162,20 @@ export function goto(n) {
   land(Math.min(S.sched.presses, Math.max(0, Math.round(Number(n) || 0))));
 }
 
-// Next: a mid-press snaps to the end of that press; the final press does nothing. A live host
-// (mm serve) may animate the press itself by cancelling the `mm:press` event and driving seek.
+// Next (press.js): a mid-press snaps to the end of that press; the final press does nothing. A live host
+// (mm serve, the standalone deck's player) may animate the press itself by cancelling the `mm:press` event
+// and driving seek. Only that animated press plays sound; a jump (goto, a hash, ?press=) is silent.
 export function next() {
-  const x = S.cur;
-  if (!Number.isInteger(x)) return land(Math.ceil(x));
-  if (x >= S.sched.presses) return;
-  const ev = new CustomEvent('mm:press', { cancelable: true, detail: { from: x, to: x + 1 } });
-  if (window.dispatchEvent(ev)) land(x + 1);
+  const x = S.cur, to = nextRest(x, S.sched.presses);
+  if (to == null) return;
+  if (!Number.isInteger(x)) return land(to);
+  const ev = new CustomEvent('mm:press', { cancelable: true, detail: { from: x, to } });
+  if (window.dispatchEvent(ev)) land(to);
 }
 
-// Previous: always a rest, never a mid-entrance.
+// Back (press.js): mid-step it restarts the step, at a rest it goes to the rest before; always a rest, never a mid-entrance.
 export function prev() {
-  const x = S.cur;
-  land(Number.isInteger(x) ? Math.max(0, x - 1) : Math.floor(x));
+  land(prevRest(S.cur));
 }
 
 const NEXT = new Set([' ', 'Spacebar', 'ArrowRight', 'PageDown', 'Enter']);
@@ -1157,6 +1183,8 @@ const PREV = new Set(['ArrowLeft', 'PageUp', 'Backspace']);
 
 function onKey(e) {
   if (e.altKey || e.ctrlKey || e.metaKey) return;
+  // Enter and Space are a focused control's own (a link, a button, a field); on the deck they advance
+  if ((e.key === ' ' || e.key === 'Spacebar' || e.key === 'Enter') && e.target?.closest?.(CONTROLS)) return;
   if (NEXT.has(e.key)) { e.preventDefault(); next(); } else if (PREV.has(e.key)) { e.preventDefault(); prev(); }
 }
 

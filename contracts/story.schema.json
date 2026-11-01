@@ -74,6 +74,11 @@
       "minLength": 1,
       "maxLength": 120
     },
+    "date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "the film's date of record, YYYY-MM-DD: mm export writes it as the media's creation time, so two exports of the piece are the same bytes; without it the file carries no creation time"
+    },
     "language": {
       "type": "string",
       "pattern": "^[a-z]{2}(-[A-Z]{2})?$"
@@ -146,6 +151,13 @@
           "propertyNames": { "pattern": "^[a-z][a-z0-9-]{0,30}$" },
           "additionalProperties": { "type": "string", "pattern": "^(?!https?:)[^\\s]+\\.(wav|mp3|m4a|flac|ogg)$" },
           "description": "cue name -> a sound file in the piece (assets/sounds/x.wav) that `mm sound` mixes in place of the cue's synthesis, trimmed and gain-matched to the style's sound profile; wins over the style's `sound.samples`. Every file needs a record beside it (assets/sounds/x.json: source, licence, author): W-SAMPLE-LICENSE"
+        },
+        "acceptLicences": {
+          "type": "array",
+          "maxItems": 10,
+          "uniqueItems": true,
+          "items": { "enum": ["cc0", "pdm", "by", "by-sa", "by-nd", "by-nc", "by-nc-sa", "by-nc-nd", "sampling+", "nc-sampling+"] },
+          "description": "Openverse licence codes the person accepts for the sounds of this piece beyond the free ones (CC0, public domain, CC BY 2.0 to 4.0): `mm sound find` offers them and `mm sound fetch` and W-SAMPLE-LICENSE allow them. A licence is accepted only by being named here; the style's `sound.licences` can narrow the free ones"
         }
       }
     },
@@ -353,11 +365,33 @@
                     },
                     "cue": {
                       "$ref": "#/$defs/paramBag",
-                      "description": "the cue's own params: gain, seed and, for a recipe cue, emphasis (subtle, normal or strong: which layers play)"
+                      "description": "the cue's own params: gain, seed and, for a recipe cue, emphasis (subtle, normal or strong: which layers play); and three that are not the sound's own: offsetMs (move the cue's anchor from its role's offset, ms), soundOk (a reason that acknowledges a sync or audibility warning for this cue) and big (true on a whoosh that should stop the bed down like a hit)"
                     },
                     "instant": {
                       "type": "boolean",
                       "description": "the kit's: true = the entrance takes 0 s, so the beat is finished from its at (a film's first frame shows the hook)"
+                    },
+                    "stagger": {
+                      "description": "a cascade's spacing: seconds between children, or { each | amount, from, ease, grid, axis, reverse, seed, jitter, use, total } (SPEC §6): `each` seconds a step or `amount` seconds for the whole spread; `from` first, last, center, edges, random, an item index or a ratio pair; `grid` [cols, rows] or [cols, rows, layers]; `axis` x, y or z; `ease` any ease; `jitter` seconds or [start, end]; `use` one number per child to rank them by; `seed` for random and jitter",
+                      "oneOf": [
+                        { "type": ["number", "string", "boolean"], "description": "anything else than seconds falls back to the style's spacing, with a warning" },
+                        {
+                          "type": "object", "additionalProperties": false,
+                          "properties": {
+                            "each": { "type": "number", "minimum": 0 },
+                            "amount": { "type": "number", "minimum": 0 },
+                            "from": { "oneOf": [{ "enum": ["first", "last", "center", "edges", "random"] }, { "type": "integer", "minimum": 0 }, { "type": "array", "minItems": 2, "maxItems": 3, "items": { "type": "number", "minimum": 0, "maximum": 1 } }] },
+                            "ease": { "type": "string", "minLength": 1, "maxLength": 600 },
+                            "grid": { "type": "array", "minItems": 2, "maxItems": 3, "items": { "type": "integer", "minimum": 1 } },
+                            "axis": { "enum": ["x", "y", "z"] },
+                            "reverse": { "type": "boolean" },
+                            "seed": { "type": ["number", "string"] },
+                            "jitter": { "oneOf": [{ "type": "number", "minimum": 0 }, { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number", "minimum": 0 } }] },
+                            "use": { "type": "array", "items": { "type": "number" } },
+                            "total": { "type": "integer", "minimum": 1 }
+                          }
+                        }
+                      ]
                     }
                   },
                   "additionalProperties": {

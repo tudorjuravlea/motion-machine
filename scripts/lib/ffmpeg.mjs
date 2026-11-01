@@ -6,6 +6,7 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { MissingToolError, UsageError } from './cli.mjs';
+import { exactFps } from './frame-rate.mjs';
 
 /** The binary to run for `ffmpeg` or `ffprobe`: the path in MM_FFMPEG or MM_FFPROBE when set, else the name (found on PATH). */
 export function bin(name, env = process.env) {
@@ -70,21 +71,50 @@ export function chooseEncoder(requested = 'software', { prove = false, list = en
   return { requested, used: 'videotoolbox', reason: null };
 }
 
-export function encodeArgs({ out, fps = 30, sub = 1, comment, encoder = 'software', width, height } = {}) {
+/** The rate as ffmpeg takes it, times `mult`: "30000/1001" stays a fraction, so 29.97 is never written as 2997/100. */
+export function rateArg(fps, mult = 1) {
+  const { arg } = exactFps(fps);
+  const m = /^(\d+)\/(\d+)$/.exec(arg);
+  return m ? `${Number(m[1]) * mult}/${m[2]}` : String(fps * mult);
+}
+
+/** The file's own tags: a title, a description (piece, version, the provenance of generated media) and a fixed creation time, all from the story, never from now. */
+export const metaArgs = ({ comment, meta = {} } = {}) => [
+  ...(meta.title ? ['-metadata', `title=${meta.title}`] : []),
+  ...(meta.description ? ['-metadata', `description=${meta.description}`] : []),
+  ...(meta.createdAt ? ['-metadata', `creation_time=${meta.createdAt}`] : []),
+  ...(comment ? ['-metadata', `comment=${comment}`] : []),
+];
+
+/** The formats with a transparent channel: VP9 in WebM (the web, a browser or a video editor) and ProRes 4444 in a .mov (an editor). */
+export const ALPHA_KINDS = { webm: { ext: 'webm', pixFmt: 'yuva420p' }, mov: { ext: 'mov', pixFmt: 'yuva444p10le' } };
+const alphaFilter = (pixFmt) => `scale=w=trunc(iw/2)*2:h=trunc(ih/2)*2:in_range=pc:out_range=tv:out_color_matrix=bt709,format=${pixFmt},setparams=range=tv:colorspace=bt709:color_primaries=bt709:color_trc=bt709`;
+
+export function encodeArgs({ out, fps = 30, sub = 1, comment, encoder = 'software', width, height, kind = 'mp4', meta } = {}) {
+  if (kind !== 'mp4') {
+    // transparent: RGBA PNGs to a codec with an alpha channel, no sound track, nothing in the container that varies between runs
+    const { pixFmt } = ALPHA_KINDS[kind];
+    const video = kind === 'webm'
+      ? ['-c:v', 'libvpx-vp9', '-pix_fmt', pixFmt, '-b:v', '0', '-crf', '24', '-deadline', 'good', '-cpu-used', '2', '-auto-alt-ref', '0', '-threads', '1', '-row-mt', '0']
+      : ['-c:v', 'prores_ks', '-profile:v', '4444', '-vendor', 'apl0', '-pix_fmt', pixFmt];
+    return ['-y', '-hide_banner', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', rateArg(fps, sub), '-c:v', 'png', '-i', '-',
+      '-vf', subFilter(sub) + alphaFilter(pixFmt), ...video, ...COLOR_TAGS, '-r', rateArg(fps), '-fflags', '+bitexact', '-flags:v', '+bitexact',
+      ...metaArgs({ comment, meta }), out];
+  }
   const video = encoder === 'videotoolbox'
-    ? ['-c:v', 'h264_videotoolbox', '-b:v', String(Math.round((width ?? 1080) * (height ?? 1920) * fps * HW_BITS_PER_PIXEL)), '-profile:v', 'high', '-allow_sw', '0', '-tag:v', 'avc1']
+    ? ['-c:v', 'h264_videotoolbox', '-b:v', String(Math.round((width ?? 1080) * (height ?? 1920) * exactFps(fps).value * HW_BITS_PER_PIXEL)), '-profile:v', 'high', '-allow_sw', '0', '-tag:v', 'avc1']
     : ['-c:v', 'libx264', '-preset', 'slow', '-crf', '16', '-tune', 'animation'];
   // a silent stereo AAC track, its handler named `silent`, so the apps accept the file before `mm sound`
   // muxes the real mix (which replaces it); G-PEAK and W-LOUDNESS do not take it for sound (sound.mjs hasAudio)
-  return ['-y', '-hide_banner', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps * sub), '-c:v', 'png', '-i', '-',
+  return ['-y', '-hide_banner', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', rateArg(fps, sub), '-c:v', 'png', '-i', '-',
     '-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=stereo', '-map', '0:v', '-map', '1:a', '-c:a', 'aac', '-b:a', '128k', '-shortest', '-metadata:s:a:0', 'handler_name=silent',
     '-vf', subFilter(sub) + COLOR_FILTER,
-    ...video, ...COLOR_TAGS, '-movflags', '+faststart', '-r', String(fps),
+    ...video, ...COLOR_TAGS, '-movflags', '+faststart', '-r', rateArg(fps),
     // the muxer waits for a packet of every stream before it writes, instead of flushing when the
     // silent audio runs 10 s ahead of x264's lookahead. Without it the mov chunk tables (stsc/stco)
     // follow when frames arrived, so the same frames gave different MP4 bytes. The streams are unchanged.
     '-max_interleave_delta', '0',
-    ...(comment ? ['-metadata', `comment=${comment}`] : []), out];
+    ...metaArgs({ comment, meta }), out];
 }
 
 function waitFor(proc, label) {

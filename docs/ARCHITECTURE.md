@@ -151,8 +151,9 @@ in the browser by `runtime/kit/synth.js`), voiced by the style's sound profile (
 is stereo; a style or story may map a cue to a sound file with a licence record beside it
 (`scripts/lib/sound-sample.mjs`). `sound-listen` renders every recipe under each profile into a page of
 players and measured numbers. `sound mine` cuts a recording into its sounds and fits a profile to the
-set (`scripts/lib/sound-mine.mjs`), `sound clone` finds a new recipe in a profile's style by seeded search
-(`scripts/lib/sound-clone.mjs`), and W-PALETTE measures a piece's cues against its profile. `review` builds a single page from the direction log and the stills.
+set (`scripts/lib/sound-mine.mjs`), `sound clone` finds a new recipe in a profile's style by a seeded evolution-strategy search scored by
+`scripts/lib/sound-score.mjs` (`scripts/lib/sound-clone.mjs`, `sound-search.mjs`), W-PALETTE measures a piece's cues against its
+profile, and W-SOUND-ARTIFACT checks them for clicks, clipping, cut tails and the like (`scripts/lib/sound-artifacts.mjs`). `sound find` and `sound fetch` bring a real sound in from Openverse (`scripts/lib/openverse.mjs`, `scripts/lib/sound-licence.mjs`): the licence is judged on the item's detail, a download waits for `--yes`, and the record beside the file is judged again by W-SAMPLE-LICENSE. `mm sound` places each cue by its role (`scripts/lib/sound-place.mjs`: the measured onset, apex or end meets the picture event plus an offset) and writes a sync lock that W-CUE judges, shapes the mix with a stop-down, voice ducking and a tonal fit (`scripts/lib/sound-mix.mjs`), and records each cue's audibility for W-AUDIBLE (`scripts/lib/sound-audible.mjs`). `sound suggest` weighs the moments of a film's schedule and proposes cues under a budget (`scripts/lib/sound-suggest.mjs`), W-SOUND-SHAPE hears the shape of the cues (a hook, a spread, no machine-gun), and `sound-listen --ab` builds a blind A/B page of two sounds made equally loud and trimmed alike (`scripts/lib/sound-ab.mjs`). `review` builds a single page from the direction log and the stills.
 
 ### Capture and embed
 

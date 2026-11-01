@@ -5,6 +5,7 @@
 // say. Never a transient CDN link as the only source: the provider page and the date go in the record.
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { dirname, join, posix } from 'node:path';
+import { recordClass } from './sound-licence.mjs';
 
 /** Where each `mm gen` provider is found (a record names the page, never a temporary result link). */
 export const PROVIDER_PAGES = { kie: 'https://kie.ai', elevenlabs: 'https://elevenlabs.io', higgsfield: 'https://higgsfield.ai' };
@@ -14,9 +15,10 @@ export const CAPTURED_LICENCE = 'third-party, ask';
 const FIELDS = ['source', 'licence', 'licenceUrl', 'author', 'credit', 'providerPage', 'retrieved', 'provider', 'model'];
 // own, generated, public domain, CC0 and attribution-only Creative Commons (CC-BY-<version>); share-alike,
 // non-commercial and no-derivatives variants are outside it (a person accepts them in the story's licences.accepted)
-const ALLOWED = [/^own$/, /^generated$/, /^public[ -]domain$/, /^cc0(-1\.0)?$/, /^cc-by-\d(\.\d)?$/];
+const ALLOWED = [/^own( recording)?$/, /^generated$/, /^public[ -]domain$/, /^cc0(-1\.0)?$/, /^cc-by-\d(\.\d)?$/];
 const ATTRIBUTION = /^cc-by-\d(\.\d)?$/i;
 const MEDIA = /\.(png|jpe?g|webp|gif|avif|svg|mp4|mov|webm|mp3|wav|m4a|ogg|flac|aac|opus)$/i;
+const SOUND = /\.(wav|mp3|m4a|flac|ogg)$/i;
 
 /** True for a licence on the allowlist (case does not matter). */
 export const allowedLicence = (licence) => typeof licence === 'string' && ALLOWED.some((re) => re.test(licence.trim().toLowerCase()));
@@ -72,7 +74,9 @@ export function recordPaths(ref) {
 
 /** { path, record } | { path, error } for the first record that exists among a reference's places; null when there is none. */
 function lookup(dir, ref) {
-  for (const path of recordPaths(ref)) {
+  // a sound file a style or story maps to a cue has the sample record beside it (assets/sounds/x.json, contracts/sound-sample.schema.json)
+  const paths = [...recordPaths(ref), ...(SOUND.test(ref) ? [ref.replace(/\.[^.]+$/, '.json')] : [])];
+  for (const path of paths) {
     const file = join(dir, path);
     if (!existsSync(file)) continue;
     try {
@@ -87,6 +91,9 @@ function lookup(dir, ref) {
 const exists = (dir, ref) => existsSync(join(dir, ref));
 const norm = (s) => String(s).trim().replace(/\/$/, '').toLowerCase();
 
+/** A sound record whose licence the story names in `audio.acceptLicences` (an Openverse code, like by-sa). */
+const namedBySound = (story, record) => (story?.audio?.acceptLicences ?? []).includes(recordClass(record).code);
+
 /**
  * [{ asset, problem, detail }] for every used asset that is on disk and has no record ('missing'), a record
  * that cannot be read ('unreadable') or a licence outside the allowlist ('licence') that the story does not
@@ -100,24 +107,29 @@ export function auditAssets({ dir, story }) {
     const got = lookup(dir, asset);
     if (!got) found.push({ asset, problem: 'missing', detail: `no record: write ${recordPaths(asset)[0]}` });
     else if (got.error) found.push({ asset, problem: 'unreadable', detail: `${got.path} ${got.error}` });
-    else if (!allowedLicence(got.record.licence) && !accepted.has(norm(got.record.licence ?? ''))) {
+    else if (!allowedLicence(got.record.licence) && !accepted.has(norm(got.record.licence ?? '')) && !namedBySound(story, got.record)) {
       found.push({ asset, problem: 'licence', detail: `${got.path} says ${got.record.licence ? `"${got.record.licence}"` : 'no licence'}, outside own, generated, CC0, CC-BY and public domain` });
     }
   }
   return found;
 }
 
-/** [{ asset, text, record }] for the used assets whose record asks for a credit (CC-BY, or a `credit` line), once each. */
-export function creditsFor({ dir, story }) {
+/**
+ * [{ asset, text, record }] for the used assets whose record asks for a credit (CC-BY, a `credit` line, or a sound
+ * found on Openverse, whose record keeps Openverse's own `attribution` line), once each. `style` adds the sounds it maps.
+ */
+export function creditsFor({ dir, story, style = null }) {
   const out = [];
-  for (const asset of assetsIn(story)) {
+  const styled = Object.values(style?.sound?.samples ?? {}).filter((r) => typeof r === 'string' && /^assets\/[^\s]+$/.test(r));
+  for (const asset of [...new Set([...assetsIn(story), ...styled])].sort()) {
     if (!exists(dir, asset)) continue;
     const got = lookup(dir, asset);
     const r = got?.record;
     if (!r) continue;
-    const needed = ATTRIBUTION.test(String(r.licence ?? '').trim()) || (typeof r.credit === 'string' && r.credit.trim());
+    const said = [r.credit, r.attribution].find((t) => typeof t === 'string' && t.trim());
+    const needed = ATTRIBUTION.test(String(r.licence ?? '').trim()) || (typeof r.credit === 'string' && r.credit.trim()) || r.source === 'openverse';
     if (!needed) continue;
-    const text = (typeof r.credit === 'string' && r.credit.trim()) || [r.author, r.licence, r.source].filter(Boolean).join(', ');
+    const text = said?.trim() || [r.author, r.licence, r.source].filter(Boolean).join(', ');
     if (!out.some((o) => o.text === text)) out.push({ asset, text, record: got.path });
   }
   return out;

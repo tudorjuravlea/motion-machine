@@ -6,7 +6,7 @@
 
 **Give your brand its own motion studio: eye-catching films and animated decks, made with an AI agent in your colours, your type and your design system, and still unmistakably yours.**
 
-motion-machine is an engine for building branded motion tools. Capture a brand once (its colours, faces, composition and the way it likes to move) and the engine becomes that brand's studio: anyone on the team asks for a reel, a launch film or an animated deck, and gets a 20 to 60 second piece in 9x16, 4x5, 1x1 and 16x9, built from 187 brand-neutral patterns worn in the brand. A gate of 53 rules keeps every piece showable without boxing in the craft: hard stops for what breaks a film or stops it looking like the brand, advice for everything that is a creative choice. Bold. On brand. Checked.
+motion-machine is an engine for building branded motion tools. Capture a brand once (its colours, faces, composition and the way it likes to move) and the engine becomes that brand's studio: anyone on the team asks for a reel, a launch film or an animated deck, and gets a 20 to 60 second piece in 9x16, 4x5, 1x1 and 16x9, built from 202 brand-neutral patterns worn in the brand. A gate of 59 rules keeps every piece showable without boxing in the craft: hard stops for what breaks a film or stops it looking like the brand, advice for everything that is a creative choice. Bold. On brand. Checked.
 
 New here? Take the 15-minute [guided tour](GUIDE.md): you make a piece, break it on purpose and watch the gate catch you. Want to see the parts? Read the [architecture tour](docs/ARCHITECTURE.md).
 
@@ -70,7 +70,7 @@ Most tools in the "AI + video" space are not competitors of this machine. They s
 | **Code-based video frameworks** | Render video from code, frame by frame, reproducibly | Hold a style or judge the result. They render what you wrote, legible or not |
 | **Prompt-to-video generators** | Make footage from a sentence | Keep your brand, your copy or your facts. Every frame is a new guess |
 | **Slide tools with animation** | Present a story one press at a time | Promise that a press lands on a finished picture, or turn the same story into a film |
-| **motion-machine** | Gives a brand its own motion studio: film and deck from one story, in the brand's identity, every frame checked against 53 rules | Shoot footage, compose music or generate imagery |
+| **motion-machine** | Gives a brand its own motion studio: film and deck from one story, in the brand's identity, every frame checked against 59 rules | Shoot footage, compose music or generate imagery |
 
 The relationship with the others is the one worth underlining: **bring a recording, a still or a track from anywhere. This is the stage it plays on and the gate the piece must pass.**
 

@@ -12,6 +12,10 @@
 //   QA-SILENCE   no silence longer than SILENCE_MAX_S inside a sounding piece
 //   QA-LEVEL     the encoded file's true peak and loudness are the style's targets (the MP4 is measured, not the WAV)
 //   QA-SEAM      every cut of a film: no black, duplicated or offset frame (./seams.mjs, with its evidence sheet)
+//   QA-FRAMES    the frames the decoder finds are exactly round(duration x fps), and the number the container declares
+//   QA-BITRATE   the video bitrate is sane for the picture's size: not starved, not runaway (BITRATE_BPP bits a pixel a frame)
+//   QA-DECODE    frames decoded from the file are the frames the page draws cold, within DECODE_MAE_MAX (a film, --sub 1)
+//   QA-ALPHA     (a transparent export, verifyAlphaFile) the alpha channel survives: a corner the page left clear is clear in the file, a pixel it drew solid is solid
 // `mm export` writes a silent placeholder track and `mm sound` muxes the mix afterwards, so in the
 // `export` phase the checks of the mix are SKIP and say which verb to run; `mm verify-export` is the `final` phase.
 import { spawn, spawnSync } from 'node:child_process';
@@ -22,6 +26,7 @@ import { TARGET_LUFS, TOLERANCE_LU, TRUE_PEAK_MAX } from '../check/_loudness.mjs
 import { patternsBaseOf } from './patterns-base.mjs';
 import { VIEWPORTS } from './browser.mjs';
 import { bin, probe } from './ffmpeg.mjs';
+import { detectRate, exactFps, fractionOf, nameOfRate, sameRate } from './frame-rate.mjs';
 import { rule } from './rule.mjs';
 import { filmSeams } from './seams.mjs';
 import { addImplicitPlays, forFormat, resolveStory, schedule as buildSchedule } from '../../runtime/kit/schedule.js';
@@ -38,6 +43,15 @@ export const FREEZE_CORE_S = 0.2;       // a frozen span is a fault when this mu
 export const SILENCE_MAX_S = 5;         // the longest silence inside a sounding piece
 export const SILENCE_DB = -50;          // silencedetect: quieter than this is silence
 export const MOTION_KINDS = ['arrive', 'depart', 'move', 'cut'];
+// Provisional, from the encodes MM makes (x264 CRF 16, flat graphics): bits a pixel a frame. Under the floor a
+// stream holds next to nothing (an encode that lost its picture); over the ceiling the encoder was not the one asked for.
+export const BITRATE_BPP = { lo: 0.0005, hi: 0.5 };
+export const DECODE_MAE_MAX = 3;        // a frame decoded from the file against the same frame drawn cold: the mean of |R, G, B differences|, 0..255
+export const DECODE_BIG = 48;           // a channel off by more than this is a "big" miss ...
+export const DECODE_BIG_SHARE = 0.01;   // ... and no more than this share of the samples may be
+export const DECODE_FRAMES = 3;         // frames sampled: the first, the middle, the last
+export const ALPHA_CLEAR_MAX = 8;       // alpha (0..255) of a corner the page left clear, as the file gives it back
+export const ALPHA_SOLID_MIN = 247;     // alpha of a pixel the page drew solid
 
 const r3 = (x) => Math.round(x * 1000) / 1000;
 const even = (n) => n - (n % 2);
@@ -174,8 +188,64 @@ export function lumaOfColor(css) {
 /** Whether the style's canvas is black enough that a black frame cannot be told from the stage. */
 export const canvasIsBlack = (style) => { const y = lumaOfColor(style?.color?.canvas); return y != null && y <= BLACK_PIX_TH + 0.01; };
 
-/** The format in a film's file name `<id>-<format>.mp4`, or null. */
-export const formatOfFile = (file) => /-(\d+x\d+)\.mp4$/.exec(basename(file))?.[1] ?? null;
+/** The format in a film's file name `<id>-<format>.mp4` (or .webm, .mov for a transparent export), or null. */
+export const formatOfFile = (file) => /-(\d+x\d+)\.(?:mp4|webm|mov)$/.exec(basename(file))?.[1] ?? null;
+
+/** The bitrate (bits a second) a picture of this size at this rate may have: { lo, hi }. */
+export function bitrateBand({ width, height, fps }) {
+  const pixelsPerSecond = width * height * fps;
+  return { lo: Math.round(pixelsPerSecond * BITRATE_BPP.lo), hi: Math.round(pixelsPerSecond * BITRATE_BPP.hi) };
+}
+
+/** { side: 'low' | 'high' | null } for a bitrate against its band. */
+export const bitrateVerdict = (bps, band) => ({ side: bps < band.lo ? 'low' : bps > band.hi ? 'high' : null });
+
+/** The presentation times (seconds) of every video packet of a file, in decode order as ffprobe lists them (a window cut in decode order would leave B-frames out near its end; detectRate sorts and takes the first 256). */
+export function packetTimes(file) {
+  const r = spawnSync(bin('ffprobe'), ['-v', 'error', '-select_streams', 'v:0', '-show_entries', 'packet=pts_time', '-of', 'csv=p=0', file], { encoding: 'utf8', maxBuffer: 4 << 20 });
+  return r.status === 0 ? r.stdout.split('\n').filter((l) => l.trim() !== '').map(Number).filter(Number.isFinite) : [];
+}
+
+/** Frame `k` of a file (by count, not by time) decoded to RGBA at its own size, as { width, height, data }; `decoder` names the decoder for a stream the native one drops the alpha of. */
+export function frameAt(file, k, width, height, { decoder } = {}) {
+  const r = spawnSync(bin('ffmpeg'), ['-v', 'error', ...(decoder ? ['-c:v', decoder] : []), '-i', file, '-vf', `select=eq(n\\,${k})`, '-fps_mode', 'passthrough', '-frames:v', '1', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-'], { maxBuffer: 1 << 30 });
+  return r.status === 0 && r.stdout.length >= width * height * 4 ? { width, height, data: r.stdout } : null;
+}
+
+/** { mae, big } of two RGBA frames of one size: the mean absolute difference over R, G and B (0..255), and the share of samples off by more than DECODE_BIG. */
+export function frameDifference(a, b) {
+  const n = Math.min(a.data.length, b.data.length) / 4;
+  let sum = 0, big = 0;
+  for (let i = 0; i < n; i++) {
+    const k = i * 4;
+    for (let c = 0; c < 3; c++) { const d = Math.abs(a.data[k + c] - b.data[k + c]); sum += d; if (d > DECODE_BIG) big++; }
+  }
+  return n ? { mae: sum / (n * 3), big: big / (n * 3) } : { mae: 0, big: 0 };
+}
+
+/** The `sub` an export was made with, from out/export.json (null when the piece has no manifest). */
+export function exportedSub(dir) {
+  try { const j = JSON.parse(readFileSync(join(dir, 'out', 'export.json'), 'utf8')); return Number.isInteger(j.sub) ? j.sub : null; } catch { return null; }
+}
+
+/** Whether a frame the page drew cold matches the same frame decoded from the file: one row of QA-DECODE's evidence per sampled frame. */
+async function decodeProof(file, { dir, format, browser, fps, frames, width, height }) {
+  const { openPiece, framePng } = await import('./browser.mjs');
+  const { decodePng } = await import('../check/_pixels.mjs');
+  const at = [...new Set([0, Math.floor((frames - 1) / 2), frames - 1])].slice(0, DECODE_FRAMES);
+  const opened = await openPiece(dir, { format, ...(browser ? { browser } : {}) });
+  try {
+    const out = [];
+    for (const k of at) {
+      const cold = decodePng(await framePng(opened.page, k / fps));
+      const got = frameAt(file, k, width, height);
+      if (!got || cold.width !== width || cold.height !== height) { out.push({ frame: k, t: r3(k / fps), mae: null, big: null }); continue; }
+      const d = frameDifference(cold, got);
+      out.push({ frame: k, t: r3(k / fps), mae: r3(d.mae), big: r3(d.big) });
+    }
+    return out;
+  } finally { await opened.close(); }
+}
 
 /** Frames of a deck's walkthrough: its first rest held, then each press plays its transition and holds its rest. */
 export function walkthroughFrames(sched, { fps, holdS }) {
@@ -194,6 +264,25 @@ export async function scheduleFor(dir, story, style, format) {
   return buildSchedule(s, style, { patterns: await loadPatterns(s, patternsBaseOf(dir)) });
 }
 
+/** The QA-FPS verdict for a video stream: { status, evidence }. The rate is the fraction the stream declares and the rate its packet times keep; 29.97 is 30000/1001, never 30. */
+function fpsCheck(file, video, fps) {
+  const frac = fractionOf(video.r_frame_rate);
+  const [num, den] = String(video.r_frame_rate).split('/').map(Number);
+  const rate = den ? num / den : num;
+  const exact = frac?.value ?? rate;
+  const detected = detectRate(packetTimes(file));
+  const [an, ad] = String(video.avg_frame_rate).split('/').map(Number);
+  const constant = detected ? detected.constant && Math.abs(detected.fps - exact) / exact < 1e-3 : Math.abs((ad ? an / ad : an) - rate) < 0.01;
+  const rateName = nameOfRate(exact) ?? (detected?.snapped?.name ?? null);
+  const evidence = { measured: r3(exact), rate: frac ? `${frac.num}/${frac.den}` : null, name: rateName, constant };
+  if (fps != null) {
+    const wantRate = exactFps(fps);
+    const ok = sameRate(exact, wantRate.value) && constant;
+    return { status: ok ? 'PASS' : 'FAIL', evidence: { ...evidence, expected: fps, expectedName: wantRate.name, ...(ok ? {} : { reason: `${rateName ?? r3(exact)} fps${frac ? ` (${frac.num}/${frac.den})` : ''}${constant ? '' : ' (not constant)'}, asked for ${wantRate.name}` }) } };
+  }
+  return { status: constant ? 'PASS' : 'FAIL', evidence: { ...evidence, note: 'the rate asked for is not known; checked for being constant', ...(constant ? {} : { reason: `average ${r3(ad ? an / ad : an)} fps against ${r3(rate)}: not constant` }) } };
+}
+
 /**
  * Checks one MP4. Returns { file, format, ok, checks: [rule rows] }.
  * @param {string} file
@@ -210,7 +299,7 @@ export async function verifyFile(file, o = {}) {
   const rows = [];
   const add = (id, status, evidence) => rows.push(rule(id, status, evidence));
   const skipRest = (reason, ids) => { for (const id of ids) add(id, 'SKIP', { reason }); };
-  const ALL = ['QA-DURATION', 'QA-SIZE', 'QA-FPS', 'QA-AUDIO', 'QA-BLACK', 'QA-FROZEN', 'QA-SILENCE', 'QA-LEVEL', 'QA-SEAM'];
+  const ALL = ['QA-DURATION', 'QA-FRAMES', 'QA-SIZE', 'QA-FPS', 'QA-BITRATE', 'QA-AUDIO', 'QA-BLACK', 'QA-FROZEN', 'QA-SILENCE', 'QA-LEVEL', 'QA-DECODE', 'QA-SEAM'];
 
   let info;
   try { info = probe(file); } catch (e) { add('QA-STREAM', 'FAIL', { reason: `the file cannot be read: ${e.message.split('\n')[0]}` }); skipRest('the file cannot be read', ALL); return finish(file, null, rows); }
@@ -237,12 +326,23 @@ export async function verifyFile(file, o = {}) {
   const fps = o.fps ?? null;
   const rest = (id, reason) => add(id, 'SKIP', { reason });
 
-  // QA-DURATION
+  // QA-DURATION and QA-FRAMES
+  const want = sched ? (walkthrough ? walkthroughFrames(sched, { fps: fps ?? rate, holdS: o.walkHoldS ?? 2 }) : Math.round(sched.duration * (fps ?? rate))) : null;
   if (sched) {
-    const want = walkthrough ? walkthroughFrames(sched, { fps: fps ?? rate, holdS: o.walkHoldS ?? 2 }) : Math.round(sched.duration * (fps ?? rate));
     const ok = frames === want;
     add('QA-DURATION', ok ? 'PASS' : 'FAIL', { measured: frames, expected: want, seconds: r3(frames / rate), ...(ok ? {} : { reason: `${frames} frames, the story makes ${want} (${r3(want / (fps ?? rate))} s at ${fps ?? rate} fps)` }) });
   } else rest('QA-DURATION', why);
+  {
+    // the decoder's count, not the container's: every frame is decoded and counted, then set beside what the tables declare and what the story makes
+    const declared = Number.isFinite(Number(video.nb_frames)) ? Number(video.nb_frames) : null;
+    const decoded = Number(video.nb_read_frames ?? NaN);
+    if (!Number.isFinite(decoded)) rest('QA-FRAMES', 'the decoder did not report a frame count');
+    else if (want == null && declared == null) rest('QA-FRAMES', `${why ?? 'the file declares no frame count'}: nothing to count against`);
+    else {
+      const bad = (want != null && decoded !== want) ? `decoded ${decoded} frames; round(duration x fps) is ${want}` : (declared != null && decoded !== declared) ? `the container declares ${declared} frames but ${decoded} decode` : null;
+      add('QA-FRAMES', bad ? 'FAIL' : 'PASS', { decoded, declared, expected: want, ...(bad ? { reason: bad } : {}) });
+    }
+  }
 
   // QA-SIZE
   if (format && VIEWPORTS[format]) {
@@ -251,13 +351,22 @@ export async function verifyFile(file, o = {}) {
     add('QA-SIZE', ok ? 'PASS' : 'FAIL', { measured: `${video.width}x${video.height}`, expected: `${want.width}x${want.height}`, format, ...(ok ? {} : { reason: `${video.width}x${video.height}, ${format} is ${want.width}x${want.height}` }) });
   } else rest('QA-SIZE', `the format of ${basename(file)} is not known`);
 
-  // QA-FPS
-  const [an, ad] = String(video.avg_frame_rate).split('/').map(Number);
-  const constant = Math.abs((ad ? an / ad : an) - rate) < 0.01;
-  if (fps != null) {
-    const ok = Math.abs(rate - fps) < 0.01 && constant;
-    add('QA-FPS', ok ? 'PASS' : 'FAIL', { measured: r3(rate), expected: fps, ...(ok ? {} : { reason: `${r3(rate)} fps${constant ? '' : ' (not constant)'}, asked for ${fps}` }) });
-  } else add('QA-FPS', constant ? 'PASS' : 'FAIL', { measured: r3(rate), note: 'the rate asked for is not known; checked for being constant', ...(constant ? {} : { reason: `average ${r3(ad ? an / ad : an)} fps against ${r3(rate)}: not constant` }) });
+  // QA-FPS: the rate is read as the fraction the stream declares and, from its packet times, as the rate it keeps; 29.97 is 30000/1001
+  { const f = fpsCheck(file, video, fps); add('QA-FPS', f.status, f.evidence); }
+
+  // QA-BITRATE: the video stream's bits a second against what a picture of this size at this rate may take
+  {
+    const dur = Number(video.duration ?? info.format?.duration);
+    const bps = Number(video.bit_rate) > 0 ? Number(video.bit_rate) : (Number(info.format?.size) > 0 && dur > 0 ? Math.round((Number(info.format.size) * 8) / dur) : NaN);
+    if (!Number.isFinite(bps)) rest('QA-BITRATE', 'the file does not say its video bitrate');
+    else {
+      const band = bitrateBand({ width: video.width, height: video.height, fps: rate });
+      const { side } = bitrateVerdict(bps, band);
+      const kbps = (x) => `${Math.round(x / 1000)} kbit/s`;
+      add('QA-BITRATE', side ? 'FAIL' : 'PASS', { measured: Math.round(bps), threshold: `${kbps(band.lo)} to ${kbps(band.hi)} (${BITRATE_BPP.lo} to ${BITRATE_BPP.hi} bits a pixel a frame)`, bitsPerPixel: Math.round((bps / (video.width * video.height * rate)) * 1e5) / 1e5,
+        ...(side ? { reason: `${kbps(bps)} is ${side === 'low' ? 'below' : 'above'} ${kbps(side === 'low' ? band.lo : band.hi)}, the ${side === 'low' ? 'least' : 'most'} a ${video.width}x${video.height} picture at ${r3(rate)} fps should take` } : {}) });
+    }
+  }
 
   // QA-AUDIO and the checks that need its sound
   const real = info.streams.find((s) => s.codec_type === 'audio' && s.tags?.handler_name !== 'silent');
@@ -307,6 +416,25 @@ export async function verifyFile(file, o = {}) {
     }
   }
 
+  // QA-DECODE: frames decoded from the file are the frames the page draws cold
+  {
+    const sub = o.sub ?? (dir ? exportedSub(dir) : null);
+    if (!sched || !dir) rest('QA-DECODE', why ?? 'no piece given: there is nothing to draw cold');
+    else if (walkthrough) rest('QA-DECODE', 'a walkthrough holds rests and plays transitions between presses: its frames are not instants of a clock');
+    else if (sub == null) rest('QA-DECODE', 'out/export.json is missing, so how the file was made (--sub) is not known');
+    else if (sub > 1) rest('QA-DECODE', `exported with --sub ${sub}: each frame blends ${sub} instants, so one cold frame is not its match`);
+    else {
+      try {
+        const got = await decodeProof(file, { dir, format, browser: o.browser, fps: fps ?? rate, frames, width: video.width, height: video.height });
+        const missing = got.find((g) => g.mae == null);
+        const off = got.find((g) => g.mae != null && (g.mae > DECODE_MAE_MAX || g.big > DECODE_BIG_SHARE));
+        const threshold = `mean difference at most ${DECODE_MAE_MAX} of 255, and at most ${DECODE_BIG_SHARE * 100}% of samples off by more than ${DECODE_BIG}`;
+        if (missing) add('QA-DECODE', 'FAIL', { frames: got, threshold, reason: `frame ${missing.frame} could not be decoded from the file at ${video.width}x${video.height}` });
+        else add('QA-DECODE', off ? 'FAIL' : 'PASS', { frames: got, threshold, ...(off ? { reason: `frame ${off.frame} decoded from the file differs from the frame drawn cold at ${off.t} s (mean difference ${off.mae} of 255, ${r3(off.big * 100)}% of samples far off)` } : {}) });
+      } catch (e) { rest('QA-DECODE', `the page could not be opened to draw the frames cold: ${e.message.split('\n')[0]}`); }
+    }
+  }
+
   // QA-SEAM
   if (!sched || walkthrough) rest('QA-SEAM', walkthrough ? 'a deck cuts on presses, not on a clock' : why);
   else if (sched.scenes.length < 2) rest('QA-SEAM', 'one scene: no cut');
@@ -318,6 +446,100 @@ export async function verifyFile(file, o = {}) {
       add('QA-SEAM', r.issues.length ? 'FAIL' : 'PASS', { seams: r.seams.length, sheets: r.sheets.map((f) => (dir ? relative(dir, f) : f)), issues: r.issues, rows: r.seams,
         ...(r.issues.length ? { reason: `${r.issues[0].scene}: ${r.issues[0].reason}${r.issues.length > 1 ? ` (and ${r.issues.length - 1} more)` : ''}` } : {}) });
     } catch (e) { add('QA-SEAM', 'SKIP', { reason: `the seams could not be read: ${e.message.split('\n')[0]}` }); }
+  }
+  return finish(file, format, rows);
+}
+
+/**
+ * The alpha channel of a transparent export, read back: for the sampled frame that has the most solid pixels, a corner
+ * the page left clear must be clear in the file, and a pixel the page drew solid (all nine around it) must be solid.
+ */
+async function alphaProof(file, { dir, format, browser, fps, frames, width, height, decoder }) {
+  const { openPiece, framePng } = await import('./browser.mjs');
+  const { decodePng } = await import('../check/_pixels.mjs');
+  const at = [...new Set([0, Math.floor((frames - 1) / 2), frames - 1])];
+  const opened = await openPiece(dir, { format, alpha: true, ...(browser ? { browser } : {}) });
+  try {
+    let best = null;
+    for (const k of at) {
+      const cold = decodePng(await framePng(opened.page, k / fps, { alpha: true }));
+      let solid = 0;
+      for (let i = 3; i < cold.data.length; i += 4) if (cold.data[i] === 255) solid++;
+      if (!best || solid > best.solid) best = { k, cold, solid };
+    }
+    const { k, cold } = best;
+    const a = (img, x, y) => img.data[(y * img.width + x) * 4 + 3];
+    const corners = [[2, 2], [cold.width - 3, 2], [2, cold.height - 3], [cold.width - 3, cold.height - 3]].filter(([x, y]) => a(cold, x, y) === 0);
+    // the solid pixel nearest the middle whose neighbours are solid too (an antialiased edge is neither)
+    let solid = null, bestD = Infinity;
+    const cx = cold.width / 2, cy = cold.height / 2;
+    for (let y = 1; y < cold.height - 1; y++) for (let x = 1; x < cold.width - 1; x++) {
+      if (a(cold, x, y) !== 255) continue;
+      const d = (x - cx) ** 2 + (y - cy) ** 2;
+      if (d >= bestD) continue;
+      let all = true;
+      for (let dy = -1; dy <= 1 && all; dy++) for (let dx = -1; dx <= 1; dx++) if (a(cold, x + dx, y + dy) !== 255) { all = false; break; }
+      if (all) { solid = [x, y]; bestD = d; }
+    }
+    const got = frameAt(file, k, width, height, { decoder });
+    return { frame: k, t: r3(k / fps), got: !!got, corners, solid, file: got ? { corner: corners.map(([x, y]) => a(got, x, y)), solid: solid ? a(got, solid[0], solid[1]) : null } : null };
+  } finally { await opened.close(); }
+}
+
+/**
+ * Checks one transparent export (<id>-<format>.webm or .mov): the stream, the decoded frame count, the size, the rate, and
+ * the alpha channel itself (QA-ALPHA). Returns { file, format, ok, checks }, as verifyFile does.
+ */
+export async function verifyAlphaFile(file, o = {}) {
+  const { dir = null } = o;
+  const rows = [];
+  const add = (id, status, evidence) => rows.push(rule(id, status, evidence));
+  const rest = (id, reason) => add(id, 'SKIP', { reason });
+  let info;
+  try { info = probe(file); } catch (e) { add('QA-STREAM', 'FAIL', { reason: `the file cannot be read: ${e.message.split('\n')[0]}` }); for (const id of ['QA-FRAMES', 'QA-SIZE', 'QA-FPS', 'QA-ALPHA']) rest(id, 'the file cannot be read'); return finish(file, null, rows); }
+  const video = info.streams.find((s) => s.codec_type === 'video');
+  if (!video) { add('QA-STREAM', 'FAIL', { reason: 'no video stream' }); for (const id of ['QA-FRAMES', 'QA-SIZE', 'QA-FPS', 'QA-ALPHA']) rest(id, 'no video stream'); return finish(file, null, rows); }
+  const frames = Number(video.nb_read_frames ?? video.nb_frames);
+  const rate = fractionOf(video.r_frame_rate)?.value ?? NaN;
+  add('QA-STREAM', frames > 0 ? 'PASS' : 'FAIL', { codec: video.codec_name, profile: video.profile ?? null, pixFmt: video.pix_fmt, frames, ...(frames > 0 ? {} : { reason: 'the video stream holds no frames' }) });
+  const format = formatOfFile(file);
+  let sched = null, why = null;
+  if (dir && format && VIEWPORTS[format]) {
+    try {
+      const story = JSON.parse(readFileSync(join(dir, 'story.json'), 'utf8')), style = JSON.parse(readFileSync(join(dir, 'style.json'), 'utf8'));
+      if (!story.formats.includes(format) || story.kind === 'deck') why = `the story does not ship ${format} as a film`; else sched = await scheduleFor(dir, story, style, format);
+    } catch (e) { why = `the piece could not be read: ${e.message.split('\n')[0]}`; }
+  } else why = dir ? `the format of ${basename(file)} is not known` : 'no piece given (--piece): the story is not known';
+  const fps = o.fps ?? null;
+  if (sched) {
+    const want = Math.round(sched.duration * (fps ?? rate));
+    const declared = Number.isFinite(Number(video.nb_frames)) ? Number(video.nb_frames) : null;
+    const bad = frames !== want ? `decoded ${frames} frames; round(duration x fps) is ${want}` : declared != null && declared !== frames ? `the container declares ${declared} frames but ${frames} decode` : null;
+    add('QA-FRAMES', bad ? 'FAIL' : 'PASS', { decoded: frames, declared, expected: want, ...(bad ? { reason: bad } : {}) });
+  } else rest('QA-FRAMES', why);
+  if (format && VIEWPORTS[format]) {
+    const want = { width: even(VIEWPORTS[format].width), height: even(VIEWPORTS[format].height) };
+    const ok = video.width === want.width && video.height === want.height;
+    add('QA-SIZE', ok ? 'PASS' : 'FAIL', { measured: `${video.width}x${video.height}`, expected: `${want.width}x${want.height}`, format, ...(ok ? {} : { reason: `${video.width}x${video.height}, ${format} is ${want.width}x${want.height}` }) });
+  } else rest('QA-SIZE', `the format of ${basename(file)} is not known`);
+  { const f = fpsCheck(file, video, fps); add('QA-FPS', f.status, f.evidence); }
+  if (!sched || !dir) rest('QA-ALPHA', why);
+  else {
+    try {
+      const decoder = video.codec_name === 'vp9' ? 'libvpx-vp9' : undefined;   // the native VP9 decoder drops the alpha plane
+      const p = await alphaProof(file, { dir, format, browser: o.browser, fps: fps ?? rate, frames, width: video.width, height: video.height, decoder });
+      const threshold = `a corner the page left clear reads at most ${ALPHA_CLEAR_MAX} of 255 in the file, a pixel it drew solid at least ${ALPHA_SOLID_MIN}`;
+      if (!p.got) add('QA-ALPHA', 'FAIL', { frame: p.frame, threshold, reason: `frame ${p.frame} could not be decoded from the file${decoder ? ` with ${decoder}` : ''}` });
+      else if (!p.corners.length) add('QA-ALPHA', 'FAIL', { frame: p.frame, threshold, reason: 'the page drew every corner opaque: --alpha asked for a transparent canvas and the piece paints over it (a layout or ground that fills the frame)' });
+      else {
+        const cornerBad = p.file.corner.find((v) => v > ALPHA_CLEAR_MAX);
+        const solidBad = p.solid && p.file.solid < ALPHA_SOLID_MIN;
+        const reason = cornerBad !== undefined ? `a corner the page left clear reads alpha ${cornerBad} in the file: the transparency was lost` : solidBad ? `a pixel the page drew solid reads alpha ${p.file.solid} in the file` : null;
+        if (reason) add('QA-ALPHA', 'FAIL', { frame: p.frame, threshold, corner: { page: 0, file: Math.max(...p.file.corner) }, solid: p.solid ? { at: p.solid, page: 255, file: p.file.solid } : null, reason });
+        else if (!p.solid) add('QA-ALPHA', 'SKIP', { frame: p.frame, threshold, reason: 'the page drew nothing solid in the sampled frames, so only the clear corner was read back', corner: { page: 0, file: Math.max(...p.file.corner) } });
+        else add('QA-ALPHA', 'PASS', { frame: p.frame, t: p.t, threshold, corner: { page: 0, file: Math.max(...p.file.corner) }, solid: { at: p.solid, page: 255, file: p.file.solid } });
+      }
+    } catch (e) { rest('QA-ALPHA', `the page could not be opened to draw the frame cold: ${e.message.split('\n')[0]}`); }
   }
   return finish(file, format, rows);
 }
@@ -351,7 +573,8 @@ export async function verifyExport(dir, files, o = {}) {
   const results = [];
   for (const f of files) {
     const sheetBase = join(outDir, `export-qa-seams-${formatOfFile(f) ?? basename(f).replace(/\.mp4$/i, '')}`);
-    results.push({ ...(await verifyFile(f, { ...o, dir: resolve(dir), sheetBase })), phase: o.phase ?? 'final' });
+    const check = /\.(webm|mov)$/i.test(f) ? verifyAlphaFile : verifyFile;
+    results.push({ ...(await check(f, { ...o, dir: resolve(dir), sheetBase })), phase: o.phase ?? 'final' });
   }
   let kept = [];
   if (o.merge && existsSync(file)) {

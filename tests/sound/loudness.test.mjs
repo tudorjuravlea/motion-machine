@@ -117,7 +117,7 @@ test('a piece with nothing to mix is left alone; a deck is not mixed; setup erro
   assert.ok(!existsSync(join(dir, 'out', 'mix.wav')));
   const deck = await buildSound(join(ROOT, 'fixtures/kit-smoke/deck'));
   assert.equal(deck.code, 0);
-  assert.match(deck.notes.join(' '), /decks are not mixed/);
+  assert.match(deck.notes.join(' '), /a deck is not mixed/);
   assert.equal(await main([join(dir, 'no-such-piece')]), 2);
   assert.equal(await main(['--nope']), 2);
 });

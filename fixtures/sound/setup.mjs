@@ -3,7 +3,7 @@
 // fixtures/sound/out/ (git-ignored) and, for the committed kit-smoke-cues piece, its assets/.
 //
 //   click-120.wav    120 BPM, first click at 0.25 s, accented downbeat every fourth beat, soft pad; 8 s
-//   music-120.wav    the same grid under a dense pad (the piece's track); quiet-m30.wav is it at -30 LUFS
+//   music-120-kick.wav  the same grid under a dense pad with a kick on every beat (the piece's track); quiet-m30.wav is the click track at -30 LUFS
 //   premix-m8.wav    a dense pre-mixed track at -8 LUFS (too loud to ship)
 //
 // Run `node fixtures/sound/setup.mjs` to (re)build them by hand.
@@ -50,13 +50,15 @@ function put(path, data) {
   renameSync(tmp, path);
 }
 
-const clickExpr = (offset, bpm, { accent = 0.9, plain = 0.5, pad = 'low' } = {}) => {
+const clickExpr = (offset, bpm, { accent = 0.9, plain = 0.5, pad = 'low', kick = false } = {}) => {
   const T = 60 / bpm;
   const k = `floor((t-${offset})/${T})`;
   const gain = `if(eq(mod(${k},4),0),${accent},${plain})`;
   const click = `if(gte(t,${offset}),exp(-mod(t-${offset},${T})*60)*sin(2*PI*1000*t)*${gain},0)`;
   const padExpr = pad === 'low' ? `0.06*(sin(2*PI*110*t)+0.7*sin(2*PI*165*t))` : `0.2*(sin(2*PI*440*t)+0.7*sin(2*PI*660*t))`;
-  return `${click}+${padExpr}`;
+  // a kick on every beat (a 60 Hz sine, 0.3 s), accented like the click: the grid of a track with kicks is usable (the kick check of `mm beats`)
+  const kickExpr = kick ? `+if(gte(t,${offset}),exp(-mod(t-${offset},${T})*14)*sin(2*PI*60*t)*${gain}*0.8,0)` : '';
+  return `${click}+${padExpr}${kickExpr}`;
 };
 
 export function ensureClick(path = join(OUT, 'click-120.wav')) {
@@ -71,7 +73,7 @@ async function scaleTo(src, dst, lufs) {
 
 /** A music-like 120 BPM track: a dense pad with softer clicks, loud enough to reach -14 LUFS linearly. Used as the piece's track. */
 export function ensureMusic() {
-  return atomic(join(OUT, 'music-120.wav'), (tmp) => ffmpegSync(['-f', 'lavfi', '-i', `aevalsrc='${clickExpr(CLICK_OFFSET, CLICK_BPM, { accent: 0.4, plain: 0.25, pad: 'high' })}':s=48000:d=${CLICK_SECONDS}`, '-c:a', 'pcm_s16le', tmp]));
+  return atomic(join(OUT, 'music-120-kick.wav'), (tmp) => ffmpegSync(['-f', 'lavfi', '-i', `aevalsrc='${clickExpr(CLICK_OFFSET, CLICK_BPM, { accent: 0.4, plain: 0.25, pad: 'high', kick: true })}':s=48000:d=${CLICK_SECONDS}`, '-c:a', 'pcm_s16le', tmp]));
 }
 
 /** A click track at another tempo (no accent pattern change), for the tempo estimator. */

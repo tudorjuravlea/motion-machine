@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // mm credits <piece> [--json]   (SPEC §8)
-// The credits the asset licence ledger asks the piece to carry (CC-BY assets, and any record with a `credit`
-// line), for an end card or a credits scene. Reads story.json and assets/<name>.licence.json; writes nothing.
+// The credits the asset licence ledger asks the piece to carry (CC-BY assets, any record with a `credit` line, and
+// every sound found on Openverse, with Openverse's own attribution line), for an end card or a credits scene. Reads
+// story.json, style.json (the sounds it maps), assets/<name>.licence.json and assets/sounds/<name>.json; writes nothing.
 // The words in a record came from outside, so the plain output fences them as material (scripts/lib/fence.mjs);
 // --json prints plain data. Assets the story uses that have no record are named on stderr.
 // Exit 0, 2 usage or no piece.
@@ -21,7 +22,9 @@ export async function main(argv, io = {}) {
     const dir = resolvePiece(p[0]);
     let story;
     try { story = JSON.parse(readFileSync(join(dir, 'story.json'), 'utf8')); } catch (e) { throw new UsageError(`story.json: ${e.message}`); }
-    const credits = creditsFor({ dir, story });
+    let style = null;
+    try { style = JSON.parse(readFileSync(join(dir, 'style.json'), 'utf8')); } catch { /* no style, or one that is not JSON: the story's sounds are still listed */ }
+    const credits = creditsFor({ dir, story, style });
     const unrecorded = auditAssets({ dir, story }).filter((f) => f.problem === 'missing').map((f) => f.asset);
     if (v.json) out(JSON.stringify({ credits, unrecorded }));
     else {

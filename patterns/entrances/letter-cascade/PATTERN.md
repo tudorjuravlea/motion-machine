@@ -31,7 +31,8 @@ At the end of the entrance the plain text is restored, so the face's own kerning
 
 ## Provenance
 - heygen-com/hyperframes, Apache-2.0: the stagger cap of 0.5 s (W-STAGGER). Idea only; code is original.
+- juliangarnier/anime, MIT: the text is split by the kit's splitter (`runtime/kit/split.js`): letters as whole graphemes (an accent, an emoji with a skin tone or a joined family is one letter), kept in a word that does not break.
 
 ## Known limits
 - while moving, letters are inline blocks and lose kerning with their neighbours; at rest the kerning returns, which can shift a pair by a pixel on the last frame
-- combining marks split from their base letter in some scripts
+- a letter is a whole grapheme: an accent stays with its letter, an emoji with its tone is one unit

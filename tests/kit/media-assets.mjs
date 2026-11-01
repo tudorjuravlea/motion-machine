@@ -1,6 +1,6 @@
 // The generated inputs of the tests/kit/media page (git-ignored, made by the media CLIs): `rec`, a
 // recording prepared from fixtures/media/clip-2s.mp4; `site`, a captured page with two marks;
-// `short`, a captured page shorter than the screen. A test file that opens a story reading one of
+// `short`, a captured page shorter than the screen; `ses`, a scripted session on a fictional app (a recording with its pointer track). A test file that opens a story reading one of
 // them asks for it here in before(), so no test depends on another file having run first (a fresh
 // checkout, a CI shard). Test files run side by side: one lock across processes, the first file
 // makes what is missing and the others find it made, never half-written or swapped out under them.
@@ -23,6 +23,8 @@ const MAKE = {
   },
   site: () => mm(site('index.html', 'site', ['Pricing=#pricing', 'Signup=.cta'])),
   short: () => mm(site('short.html', 'short')),
+  // a scripted session on a fictional app: its recording as frames, with the pointer track beside them
+  ses: () => mm(['capture', 'site', '--url', pathToFileURL(join(ROOT, 'fixtures/site/demo-session.html')).href, '--name', 'ses', '--piece', PAGE, '--device', 'laptop', '--script', join(ROOT, 'fixtures/site/demo-session.steps.json')]),
 };
 const ok = (r, what) => assert.equal(r.status, 0, `${what} failed: ${r.stdout ?? ''}${r.stderr ?? ''}`);
 const mm = (args) => ok(spawnSync(process.execPath, [join(ROOT, 'scripts/mm.mjs'), ...args], { encoding: 'utf8' }), `mm ${args.slice(0, 2).join(' ')}`);

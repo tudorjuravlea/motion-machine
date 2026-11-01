@@ -98,6 +98,12 @@ td { padding: 10px 16px 10px 0; border-top: 1px solid var(--line); vertical-alig
 figcaption { margin-top: 6px; font: 400 13px 'IBM Plex Mono', monospace; color: var(--quiet); }
 .tempo { display: flex; gap: 8px; }
 .tempo img { width: 158px; height: 89px; }
+.curves { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 8px; }
+.curves figure { margin: 0; width: 240px; }
+.curve { display: block; width: 240px; height: 120px; border-radius: 8px; background: var(--bg); box-shadow: 0 0 0 1px var(--line); }
+.curve .guide { stroke: var(--line); stroke-width: 1; stroke-dasharray: 3 3; }
+.curve .mark { stroke: var(--quiet); stroke-width: 1; }
+.curve .line { fill: none; stroke: var(--text); stroke-width: 2; stroke-linejoin: round; }
 .timing { width: auto; margin-bottom: 8px; }
 .timing td, .timing th { padding-right: 28px; }
 .q { padding: 18px 0; border-top: 1px solid var(--line); }
@@ -120,13 +126,31 @@ const SCRIPT = `document.addEventListener('click', (e) => {
 
 const faceCss = (faces) => faces.map((f) => `@font-face { font-family: '${f.family}'; font-weight: ${f.weight}; font-style: ${f.style ?? 'normal'}; src: url('${f.rel}') format('woff2');${f.unicodeRange ? ` unicode-range: ${f.unicodeRange};` : ''} }`).join('\n');
 
+// One plot per ease or spring (curvePlots in motion-tokens.mjs): the path is made of numbers only; the names and the
+// ease spelling go through esc/attr.
+const curveFigure = (c) => {
+  const caption = c.kind === 'spring' ? `settles in ${c.settle} ms` : esc(c.spec).slice(0, 60);
+  const over = `${c.overshoot > 0 ? `overshoots ${(c.overshoot * 100).toFixed(1)} %` : 'no overshoot'}`;
+  return `<figure><svg class="curve" viewBox="0 0 240 120" role="img" aria-label="${attr(`${c.name}: ${c.kind === 'spring' ? `settles in ${c.settle} ms, ` : ''}${over}`)}">
+<line class="guide" x1="10" x2="230" y1="${Number(c.targetY)}" y2="${Number(c.targetY)}"/>
+<line class="guide" x1="10" x2="230" y1="${Number(c.startY)}" y2="${Number(c.startY)}"/>${c.settleX != null ? `
+<line class="mark" x1="${Number(c.settleX)}" x2="${Number(c.settleX)}" y1="10" y2="110"/>` : ''}
+<path class="line" d="${attr(c.d)}"/>
+</svg><figcaption>${esc(c.name)} · ${caption} · ${over}</figcaption></figure>`;
+};
+const curvesHtml = (curves) => (curves?.length ? `<h3>Curves</h3>
+<div class="curves">
+${curves.map(curveFigure).join('\n')}
+</div>
+` : '');
+
 /**
  * @param {object} d
  *   name, folder (absolute), sources [{kind, from}], roles {role: {hex, confidence, evidence, fixed}}, accentText,
  *   pairs, warnings, ask, fonts [{role, family, weight, tracking, source, licence}],
  *   brandFaces [{family, weight, style, rel, unicodeRange}] (the alias families the strips are set in),
  *   chromeFaces [{family, weight, rel, unicodeRange}], logo (null or { canvas, accent, ink } frame files),
- *   motion { name, durations, enter }, frames { look: [{file, caption}], tempo: [{file, t}] }
+ *   motion { name, durations, enter, curves (curvePlots, optional) }, frames { look: [{file, caption}], tempo: [{file, t}] }
  */
 export function reviewPage(d) {
   const hex = (role) => hexOf(d.roles[role]?.hex);
@@ -243,7 +267,7 @@ ${[['canvas', 'on canvas'], ['accent', 'on accent'], ['ink', 'mono on ink']].map
 <thead><tr>${['quick', 'standard', 'slow', 'hold', 'enter easing'].map((h) => `<th>${h}</th>`).join('')}</tr></thead>
 <tbody><tr>${['quick', 'standard', 'slow', 'hold'].map((k) => `<td class="mono">${esc(m.durations?.[k] ?? '')} ms</td>`).join('')}<td class="mono">${esc(m.enter ?? '')}</td></tr></tbody>
 </table>
-<h3>Tempo</h3>
+${curvesHtml(m.curves)}<h3>Tempo</h3>
 <div class="tempo">
 ${d.frames.tempo.map((f) => `<figure style="margin:0"><img src="${attr(f.file)}" alt="${attr(`${f.t.toFixed(2)} s`)}" style="border-radius:8px;box-shadow:0 0 0 1px var(--line);display:block"><figcaption>${f.t.toFixed(2)} s</figcaption></figure>`).join('\n')}
 </div>

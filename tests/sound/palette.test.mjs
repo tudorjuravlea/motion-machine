@@ -17,7 +17,9 @@ const SR = 48000;
 const LIB = join(ROOT, 'patterns');
 const ctxFor = (dir, o = {}) => ctxIn(dir, { patternsBase: LIB, ...o });
 const glass = loadProfile('glass');
-const recipes = readdirSync(join(LIB, 'sound')).filter((n) => existsSync(join(LIB, 'sound', n, 'recipe.json'))).sort()
+// the first data palette; the cues the newer layers make are held to the profiles in tests/sound/engine-cues.test.mjs (two of them cannot be)
+const PALETTE = ['ready', 'attention', 'success', 'warning', 'error', 'loading', 'tap', 'toggle-on', 'toggle-off', 'open', 'close'];
+const recipes = readdirSync(join(LIB, 'sound')).filter((n) => PALETTE.includes(n) && existsSync(join(LIB, 'sound', n, 'recipe.json'))).sort()
   .map((n) => JSON.parse(readFileSync(join(LIB, 'sound', n, 'recipe.json'), 'utf8')));
 const kinds = (j) => misses(j).map((c) => c.check);
 

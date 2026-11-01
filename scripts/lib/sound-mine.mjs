@@ -5,13 +5,16 @@
 //   findInputs(path)                     the audio and video files under a file or a folder, sorted
 //   splitSounds(channels, sr)            [{ from, to }] sample ranges, one per sound (onsets by scripts/beats.mjs)
 //   analyseSound(channels, sr)           the record's numbers for one sound
+//   contextOf(full, sr, sound)           the bed under a sound in its recording and the sound measured with it taken away
 //   fitProfile(records, { name })        a sound profile (contracts/sound-profile.schema.json) summarising the set
+//   balanceOf(records)                   the set's third-octave balance: { medianDb[28], spreadDb[28] } or null
 //   modeOf(partials)                     'bar' | 'mallet' | 'string' | 'none' from a sound's partial ratios
 import { readdirSync, statSync } from 'node:fs';
 import { extname, join, resolve } from 'node:path';
 import { onsetEnvelope, pickOnsets } from '../beats.mjs';
 import { familyOf } from '../../runtime/kit/synth.js';
-import { envelope, measure, peaksOf, spectrum } from './audio-measure.mjs';
+import { bedOf, envelope, eventMeasure, measure, peaksOf, spectrum } from './audio-measure.mjs';
+import { fitModes, modalPartials } from './modal-fit.mjs';
 import { trimSample } from './sound-sample.mjs';
 
 export const AUDIO_EXT = new Set(['.wav', '.mp3', '.m4a', '.aac', '.flac', '.ogg', '.opus', '.aif', '.aiff', '.mp4', '.mov', '.m4v', '.webm', '.mkv']);
@@ -19,6 +22,7 @@ const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 
 const LADDER_T60 = { input: [0.005, 0.05], surface: [0.06, 0.3], outcome: [0.1, 0.5] };   // a family the set does not hold keeps the ladder's own band
 const RUNG_OUT_DB = 20;        // a new onset starts a new sound when the one before has fallen this far under its peak
 const PREROLL_S = 0.015;
+const MODAL_RESIDUAL_DB = -10;     // the modes are kept in the record when they explain the sound to this residual or better
 const MAX_SOUNDS = 2000;
 const round = (x, p = 3) => (Number.isFinite(x) ? Math.round(x * 10 ** p) / 10 ** p : x);
 const clamp = (x, lo, hi) => Math.min(hi, Math.max(lo, x));
@@ -145,7 +149,7 @@ export function analyseSound(channels, sr) {
   const tonal = m.flatness < 0.002 && share >= 0.45;
   let acc = 0, lowHz = 0;
   for (let k = 1; k < sp.p.length; k++) { acc += sp.p[k]; if (acc >= 0.02 * total) { lowHz = sp.f[k]; break; } }
-  let pitchHz = null, partials = [], mode = 'none', pitchClasses = [];
+  let pitchHz = null, partials = [], mode = 'none', pitchClasses = [], modal = null;
   if (tonal) {
     // the first note, from the first 80 ms under a Hann window (a later note of a phrase barely enters it, and the window keeps a
     // note's own side lobes under the strong peaks): lowest strong peak, partials as ratios to it
@@ -162,6 +166,12 @@ export function analyseSound(channels, sr) {
       mode = modeOf(partials.map((p) => p[0]));
     }
     if (share >= 0.8) pitchClasses = noteClasses(channels, sr);
+    // the modal fit: each mode's own frequency and decay, in a tone layer's shape. It sharpens the pitch the peak pick found
+    const fit = fitModes(channels, sr), shape = modalPartials(fit);
+    if (shape && fit.residualDb <= MODAL_RESIDUAL_DB) {
+      modal = { ...shape, residualDb: round(fit.residualDb, 1) };
+      if (pitchHz && Math.abs(shape.f0Hz / pitchHz - 1) <= 0.03) pitchHz = shape.f0Hz;
+    }
   }
   return {
     durationS: round(m.durationS), lengthS: round(lengthS), family: familyOf(lengthS), peakDbfs: round(m.peakDbfs, 1),
@@ -170,7 +180,7 @@ export function analyseSound(channels, sr) {
     centroidHz: round(m.centroidHz, 0), rolloffHz: round(m.rolloffHz, 0), lowHz: round(lowHz, 0), flatness: round(m.flatness, 6),
     sideMidDb: Number.isFinite(m.sideMidDb) ? round(m.sideMidDb, 1) : null,
     tonal, tonality: round(share, 2), pitchHz: pitchHz == null ? null : round(pitchHz, 2), pitchClasses,
-    partials, mode, room: roomOf(channels, sr),
+    partials, mode, modal, room: roomOf(channels, sr),
   };
 }
 
@@ -202,8 +212,11 @@ export const profileName = (s) => {
 };
 
 /** The profile that summarises a mined set: see the contract. `records` are analyseSound's numbers plus `source`, `licence`, `author`. */
-export function fitProfile(records, { name = 'mined', description = null } = {}) {
-  if (!records.length) throw new Error('no sound to fit a profile to');
+export function fitProfile(all, { name = 'mined', description = null } = {}) {
+  if (!all.length) throw new Error('no sound to fit a profile to');
+  // an event the music hides (exposed: false) says little about the sound itself: the set is fitted from those that stand clear
+  // of the bed, or from all of them when none does
+  const clear = all.filter((r) => r.exposed !== false), records = clear.length ? clear : all;
   const tonal = records.filter((r) => r.tonal && r.pitchHz);
   const struck = records.map((r) => r.attackS).filter((a) => a != null && a <= 0.01);
   const attackS = struck.length ? [clamp(round(0.8 * Math.min(...struck), 4), 0.0005, 0.01), clamp(round(1.25 * Math.max(...struck, 0.0008), 4), 0.001, 0.01)] : [0.001, 0.003];
@@ -222,7 +235,7 @@ export function fitProfile(records, { name = 'mined', description = null } = {})
   const rooms = records.map((r) => r.room).filter(Boolean);
   const wide = records.map((r) => r.sideMidDb).filter((x) => x != null);
   const harmonicEnough = tonal.length && tonal.every((r) => r.partials.every((p) => p[1] < -24));
-  const sources = [...new Map(records.map((r) => [`${r.source}|${r.licence}|${r.author ?? ''}`, { source: r.source, licence: r.licence, ...(r.author ? { author: r.author } : {}) }])).values()];
+  const sources = [...new Map(all.map((r) => [`${r.source}|${r.licence}|${r.author ?? ''}`, { source: r.source, licence: r.licence, ...(r.author ? { author: r.author } : {}) }])).values()];
   return {
     name,
     description: description ?? `Fitted from ${records.length} mined sound${records.length === 1 ? '' : 's'}: ${tonal.length} tonal, ${records.length - tonal.length} noise or knock; centre of sound up to ${Math.round(Math.max(...records.map((r) => r.centroidHz)))} Hz.`.slice(0, 300),
@@ -240,6 +253,42 @@ export function fitProfile(records, { name = 'mined', description = null } = {})
       ? { send: round(median(rooms.map((r) => r.send)), 1), predelayS: 0.008, sizeS: round(median(rooms.map((r) => r.sizeS))), lowpassHz: clamp(Math.round(median(records.map((r) => r.rolloffHz)) / 100) * 100, 1500, 12000) }
       : { send: -40, predelayS: 0.008, sizeS: 0.12, lowpassHz: clamp(Math.round(median(records.map((r) => r.rolloffHz)) / 100) * 100, 1500, 12000) },
     stereo: { sideMidDb: wide.length ? round(clamp(median(wide), -60, 0), 1) : -60 },
+    ...(balanceOf(records) ? { balance: balanceOf(records) } : {}),
     sources,
+  };
+}
+
+/** The set's third-octave balance: per band the median of the events' bed-subtracted profiles (a band the music masks in an event does not count for it) and the spread (median absolute deviation, at least 1.5 dB; 6 dB from a single event). Null when no record carries one. */
+export function balanceOf(records) {
+  const rows = records.filter((r) => Array.isArray(r.balance) && r.balance.length === 28);
+  if (!rows.length) return null;
+  const medianDb = [], spreadDb = [];
+  for (let b = 0; b < 28; b++) {
+    const v = rows.filter((r) => !(r.masked ?? []).includes(b)).map((r) => r.balance[b]);
+    if (!v.length) { medianDb.push(-60); spreadDb.push(6); continue; }
+    const m = median(v);
+    medianDb.push(round(m, 1));
+    spreadDb.push(v.length < 2 ? 6 : round(Math.max(1.5, 1.4826 * median(v.map((x) => Math.abs(x - m)))), 1));
+  }
+  return { medianDb, spreadDb };
+}
+
+/**
+ * What the recording around a sound says about it: the bed under it (the quietest 150 ms of the 0.6 s before it), how far the
+ * sound stands over it, its third-octave balance with the bed taken away and the bands the music masks, its decay shape and any
+ * stutter. `full` is the whole decoded recording, `sound` one entry of splitSounds. No bed to measure (the sound starts the
+ * recording) is exposed. The family is read only from a sound that stands 12 dB over the bed.
+ */
+export function contextOf(full, sr, sound) {
+  const onset = sound.from + Math.round(PREROLL_S * sr);
+  const bed = bedOf(full, sr, onset), ev = eventMeasure(sound.channels, sr, bed);
+  // with a bed the ring is read from the event's power with the bed taken away (the bed would hold it "audible" to the end)
+  const lengthS = ev.ringS == null ? null : round(Math.min(sound.channels[0].length / sr, ev.ringS * 1.5));
+  return {
+    ...(lengthS == null ? {} : { lengthS, ringFamily: familyOf(lengthS) }),
+    exposed: ev.exposed, exposedDb: ev.exposedDb,
+    bed: bed ? { db: round(bed.db, 1), fromS: round(bed.fromS, 3), toS: round(bed.toS, 3) } : null,
+    balance: Array.from(ev.balance, (v) => round(v, 1)), masked: ev.masked.flatMap((m, b) => (m ? [b] : [])),
+    decay: ev.decay?.shape ?? null, stutterHz: ev.stutterHz,
   };
 }

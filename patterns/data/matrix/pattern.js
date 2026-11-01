@@ -3,7 +3,7 @@
 // the slot is the still matrix. Names, items and axis labels are DOM text; the cells and the axis
 // arrows are SVG in the stage's own pixels. A row of cells grows to hold its items rather than
 // letting them spill.
-import { LOOK, svgEl, clock, drawn, f2, head, layer, node, path, place, pop, reveal, span, stage } from '../../../runtime/kit/diagram.js';
+import { LOOK, svgEl, clock, edge, f2, layer, node, place, pop, reveal, span, stage } from '../../../runtime/kit/diagram.js';
 
 const PARAMS = {
   nodes: { type: 'string', default: '', meaning: 'four quadrants in reading order (top left, top right, bottom left, bottom right) separated by `|`, each `Name>item,item` (up to three items)' },
@@ -74,15 +74,13 @@ export default {
     if (ay) {
       const len = ay.h * 0.9, cy = ay.h / 2;
       place(ay, len + pad + ay.w / 2, cy);
-      drawn(path(s, svg, `M ${f2(lw)} ${f2(cy + len / 2)} L ${f2(lw)} ${f2(cy - len / 2 + arrow * 0.6)}`, 'accent'), ctx.ease('move', axes));
-      if (axes > 0.5) head(s, svg, lw, cy - len / 2, -Math.PI / 2, arrow);
+      edge(s, svg, `M ${f2(lw)} ${f2(cy + len / 2)} L ${f2(lw)} ${f2(cy - len / 2)}`, ctx.ease('move', axes), { head: 'end', size: arrow, mod: 'accent' });
       reveal(ay, axes, ctx);
     }
     if (ax) {
       const len = ax.h * 1.6, cy = H - ax.h / 2;
       place(ax, W - len - pad - ax.w / 2, cy);
-      drawn(path(s, svg, `M ${f2(W - len)} ${f2(cy)} L ${f2(W - lw - arrow * 0.6)} ${f2(cy)}`, 'accent'), ctx.ease('move', axes));
-      if (axes > 0.5) head(s, svg, W - lw, cy, 0, arrow);
+      edge(s, svg, `M ${f2(W - len)} ${f2(cy)} L ${f2(W - lw)} ${f2(cy)}`, ctx.ease('move', axes), { head: 'end', size: arrow, mod: 'accent' });
       reveal(ax, axes, ctx);
     }
 

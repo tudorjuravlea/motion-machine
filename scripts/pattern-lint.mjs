@@ -21,6 +21,7 @@ import { fileURLToPath } from 'node:url';
 import { rule } from './lib/report.mjs';
 import { ROOT, contractError, cssLiterals, jsLiterals, refsOf, timeOffenders } from './check/_lib.mjs';
 import { validators } from './lib/validate.mjs';
+import { layerEndS, resolveRecipe } from '../runtime/kit/synth.js';
 
 export const GROUPS = ['entrances', 'exits', 'emphasis', 'transitions', 'layouts', 'moves', 'text', 'data', 'devices', 'sound', 'screen', '3d'];
 export const SECTIONS = ['Purpose', 'Use when / Do not use when', 'Params', 'Style variables consumed', 'Legibility and rest notes', 'Provenance', 'Known limits'];
@@ -95,8 +96,11 @@ export function lintPattern(dir, { provenance = join(ROOT, 'PROVENANCE.md') } = 
       if (!v(recipe)) card.push({ file: `${ref}/recipe.json`, reason: `recipe does not validate: ${(v.errors ?? []).map((e) => `${e.instancePath || '/'} ${e.message}`).join('; ')}` });
       else {
         if (recipe.name !== name) card.push({ file: `${ref}/recipe.json`, reason: `recipe name "${recipe.name}" should be "${name}", the folder` });
-        const ends = recipe.layers.map((l) => (l.offsetS ?? 0) + (l.attackS ?? 0.002) + l.t60);
-        if (recipe.durationS < Math.max(...ends) - 0.011) card.push({ file: `${ref}/recipe.json`, reason: `durationS ${recipe.durationS} ends before its layers do (${Math.max(...ends).toFixed(3)} s)` });
+        for (const v of recipe.variants ? [null, ...Object.keys(recipe.variants)] : [null]) {      // the base and each version
+          const r = resolveRecipe(recipe, v ? { variant: v } : {});
+          const ends = r.layers.filter((l) => (l.peak ?? 1) > 0).map(layerEndS);
+          if (r.durationS < Math.max(...ends) - 0.011) card.push({ file: `${ref}/recipe.json`, reason: `${v ? `version ${v}: ` : ''}durationS ${r.durationS} ends before its layers do (${Math.max(...ends).toFixed(3)} s)` });
+        }
       }
     }
   }

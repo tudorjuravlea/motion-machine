@@ -56,12 +56,12 @@
     },
     {
       "id": "f10",
-      "text": "The gate checks 53 rules: 14 errors (G-) and 39 warnings (W-). On pieces/golden-film-kinetic: 40 PASS, 2 WARN, 11 SKIP.",
-      "source": "SPEC.md §7; scripts/check/ (14 G-*.mjs, 39 W-*.mjs); pieces/golden-film-kinetic/out/check.json"
+      "text": "The gate checks 59 rules: 14 errors (G-) and 45 warnings (W-). On pieces/golden-film-kinetic: 43 PASS, 3 WARN, 13 SKIP.",
+      "source": "SPEC.md §7; scripts/check/ (14 G-*.mjs, 45 W-*.mjs); pieces/golden-film-kinetic/out/check.json"
     },
     {
       "id": "f11",
-      "text": "187 patterns in 12 groups: 3d 4, data 23, devices 5, emphasis 16, entrances 26, exits 7, layouts 22, moves 15, screen 8, sound 19, text 16, transitions 26. None carries a brand. The wall shows each one's demo still in this film's style.",
+      "text": "202 patterns in 12 groups: 3d 4, data 23, devices 6, emphasis 16, entrances 27, exits 7, layouts 22, moves 16, screen 9, sound 29, text 17, transitions 26. None carries a brand. The wall shows each one's demo still in this film's style.",
       "source": "node scripts/mm.mjs pattern list; node scripts/pattern-lint.mjs; capture/assets.json library-wall"
     },
     {
@@ -470,7 +470,7 @@
           "at": 0.25,
           "slot": "headline",
           "fx": "style:headline",
-          "text": "53 rules, measured.",
+          "text": "59 rules, measured.",
           "fact": "f10"
         },
         {
@@ -485,7 +485,7 @@
           "at": 1,
           "slot": "caption",
           "fx": "style:body",
-          "text": "The golden film: 40 pass, 2 warn, 11 skip.",
+          "text": "The golden film: 43 pass, 3 warn, 13 skip.",
           "fact": "f10",
           "cue": "tick"
         }
@@ -517,7 +517,7 @@
           "at": 0.5,
           "slot": "headline",
           "fx": "style:headline",
-          "text": "187 patterns. None branded.",
+          "text": "202 patterns. None branded.",
           "fact": "f11",
           "cue": "hit"
         },
@@ -530,7 +530,7 @@
           "cue": "tick"
         }
       ],
-      "say": "187 patterns, every one in this film's brand because none carries its own."
+      "say": "202 patterns, every one in this film's brand because none carries its own."
     },
     {
       "id": "cta",

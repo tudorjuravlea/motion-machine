@@ -1,0 +1,52 @@
+<!doctype html>
+<!-- A small neutral desktop app for the session demos (patterns/screen/pointer/demo, patterns/devices/demo-frame/demo,
+     tests/kit/media): one screen at laptop width (1440 by 900), a task list, a "New task" button that opens
+     a panel with a field and an "Add" button, and a row that appears when it is added. Played by
+     fixtures/site/demo-session.steps.json and recorded by fixtures/site/make-session-assets.sh. No brand;
+     the colours are the page's own, nothing a film wears. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>week planner</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { font: 18px/1.45 -apple-system, system-ui, sans-serif; background: #F4F1EA; color: #22201C; display: flex; }
+  nav { width: 260px; padding: 32px 24px; background: #22201C; color: #F4F1EA; }
+  nav b { display: block; font-size: 22px; margin-bottom: 40px; }
+  nav a { display: block; padding: 12px 14px; margin-bottom: 6px; border-radius: 10px; color: #CFC9BB; cursor: pointer; text-decoration: none; }
+  nav a.on { background: #3A362F; color: #fff; }
+  main { flex: 1; padding: 48px 64px; position: relative; }
+  h1 { font-size: 40px; margin: 0 0 6px; letter-spacing: -0.01em; }
+  .sub { color: #7C766A; margin: 0 0 36px; }
+  .row { display: flex; align-items: center; gap: 16px; padding: 20px 24px; margin-bottom: 14px; background: #fff; border-radius: 14px; box-shadow: 0 1px 0 #DDD7C9; }
+  .row i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #BDB6A5; flex: none; }
+  .row.done i { background: #2F7D5B; border-color: #2F7D5B; }
+  .row span.t { flex: 1; }
+  .row small { color: #7C766A; }
+  .row.fresh { box-shadow: 0 0 0 3px #C2532B; }
+  #new { position: absolute; top: 48px; right: 64px; font: inherit; font-weight: 700; padding: 16px 30px; border: 0; border-radius: 12px; background: #C2532B; color: #fff; cursor: pointer; }
+  #panel { display: none; position: absolute; top: 120px; right: 64px; width: 460px; padding: 28px; background: #fff; border-radius: 18px; box-shadow: 0 20px 60px rgba(34, 32, 28, 0.25); }
+  #panel.open { display: block; }
+  #panel label { display: block; font-weight: 700; margin-bottom: 10px; }
+  #title { font: inherit; width: 100%; padding: 14px 16px; border: 2px solid #BDB6A5; border-radius: 10px; margin-bottom: 20px; }
+  #add { font: inherit; font-weight: 700; padding: 14px 28px; border: 0; border-radius: 10px; background: #22201C; color: #fff; cursor: pointer; }
+</style></head>
+<body>
+  <nav><b>Week planner</b><a class="on">Today</a><a>This week</a><a>Notes</a><a>Archive</a></nav>
+  <main>
+    <h1>Today</h1>
+    <p class="sub">Three things, one place.</p>
+    <button id="new" type="button">New task</button>
+    <div id="panel"><label for="title">Task name</label><input id="title" type="text" placeholder="What needs doing?"><button id="add" type="button">Add</button></div>
+    <div class="row done"><i></i><span class="t">Book the studio</span><small>9:00</small></div>
+    <div class="row"><i></i><span class="t">Review the brief</span><small>11:30</small></div>
+    <div id="list"></div>
+  </main>
+  <script>
+    document.getElementById('new').addEventListener('click', () => { document.getElementById('panel').classList.add('open'); });
+    document.getElementById('add').addEventListener('click', () => {
+      const text = document.getElementById('title').value.trim() || 'Untitled';
+      document.getElementById('list').insertAdjacentHTML('afterbegin', '<div class="row fresh"><i></i><span class="t"></span><small>14:00</small></div>');
+      document.querySelector('#list .t').textContent = text;
+      document.getElementById('panel').classList.remove('open');
+    });
+  </script>
+</body></html>

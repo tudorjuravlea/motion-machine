@@ -2,14 +2,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:motion-machine:contracts:sound-recipe",
   "title": "Motion Machine sound recipe (SPEC §9): one cue as data",
-  "description": "A cue written as layers, rendered by runtime/kit/synth.js `layers`. A tone layer is sine partials with a linear attack and an exponential decay set by its T60 (the time to fall 60 dB); partial n decays in t60 x ratio^-0.75, never faster than 28 ms. A noise layer is seeded white noise through one biquad. `from` is the emphasis rank a layer joins at (subtle 0, normal 1, strong 2 unless `emphasis` says otherwise); `offsetS` starts it later in the cue. For a noise layer `filter.f` is the filter's centre and `glideTo` sweeps it. `durationS` is the cue's length: the time by which every layer has ended (offsetS + attackS + t60), at most 1.5 s. The cue's family follows from it (familyOf in synth.js): input up to 0.06 s, surface up to 0.3 s, outcome up to 0.65 s, longer a swell.",
+  "description": "A cue written as layers, rendered by runtime/kit/synth.js `layers`. A tone layer is sine partials with a linear attack and an exponential decay set by its T60 (the time to fall 60 dB); partial n decays in t60 x ratio^-slope (0.75 unless the layer says), never faster than 28 ms. A noise layer is seeded white noise through one biquad. A pass layer is a whoosh (one level curve in dB rising into an apex, bands that move with it) and a gated layer a pulse train whose period shrinks and which ends open. Any layer may carry an envelope in dB (replacing attack and t60), a gate, a tremolo, a drive, a sweep and a chain of filters; a tone may name a table of modes and beat as a doublet. `from` is the emphasis rank a layer joins at (subtle 0, normal 1, strong 2 unless `emphasis` says otherwise); `offsetS` starts it later in the cue. For a noise layer `filter.f` is the filter's centre and `glideTo` sweeps it. `durationS` is the cue's length: the time by which every layer has ended (offsetS + attackS + t60, or offsetS + lengthS), at most 4.5 s. The cue's family follows from it (familyOf in synth.js): input up to 0.06 s, surface up to 0.3 s, outcome up to 0.65 s, longer a swell. `variants` are named edits of the base (the default version), `knobs` the params a beat may set.",
   "type": "object",
   "additionalProperties": false,
   "required": ["name", "meaning", "durationS", "layers"],
   "properties": {
     "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,30}$", "description": "the cue's name: the folder patterns/sound/<name>/ it lives in and the `cue` a beat names" },
     "meaning": { "type": "string", "minLength": 3, "maxLength": 200, "description": "the visible event the cue marks, in words" },
-    "durationS": { "type": "number", "exclusiveMinimum": 0, "maximum": 1.5 },
+    "durationS": { "type": "number", "exclusiveMinimum": 0, "maximum": 4.5 },
     "layers": {
       "type": "array", "minItems": 1, "maxItems": 12,
       "items": { "$ref": "#/$defs/layer" }
@@ -32,6 +32,39 @@
         "normal": { "type": "integer", "minimum": 0, "maximum": 2 },
         "strong": { "type": "integer", "minimum": 0, "maximum": 2 }
       }
+    },
+    "variant": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,30}$", "description": "the name of the version the base layers are (the default of the `variant` knob)" },
+    "variants": {
+      "type": "object", "minProperties": 1,
+      "description": "named versions of the cue, each an edit of the base: a new durationS, masterGain or finish, and a partial layer by layer index (a layer whose peak is 0 does not play, so a version can switch one on)",
+      "additionalProperties": {
+        "type": "object", "additionalProperties": false,
+        "properties": {
+          "durationS": { "type": "number", "exclusiveMinimum": 0, "maximum": 4.5 },
+          "masterGain": { "type": "number", "exclusiveMinimum": 0, "maximum": 8 },
+          "finish": { "$ref": "#/properties/finish" },
+          "layers": { "type": "object", "propertyNames": { "pattern": "^[0-9]{1,2}$" }, "additionalProperties": { "type": "object" } }
+        }
+      },
+      "propertyNames": { "pattern": "^[a-z][a-z0-9-]{0,30}$" }
+    },
+    "key": { "enum": ["C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#", "Ab", "A", "A#", "Bb", "B"], "description": "the pitch class the layers marked `keyed` are written in; the `key` knob moves them from it" },
+    "knobs": {
+      "type": "array", "uniqueItems": true, "items": { "enum": ["variant", "step", "key", "durS"] },
+      "description": "the params this cue adds to gain, seed and emphasis: variant (which version), step (semitones up, for a ladder of repeats), key (the pitch class), durS (aim the cue at a length, runtime/kit/aim.js)"
+    },
+    "finish": {
+      "type": "object", "additionalProperties": false,
+      "description": "what the whole cue goes through before its gain and room: a high-pass, a peaking dip, soft saturation that keeps the peak, a gate (the hard end of a click)",
+      "properties": {
+        "highpassHz": { "type": "number", "minimum": 20, "maximum": 8000, "description": "a second-order high-pass, fourth-order above 800 Hz" },
+        "dip": {
+          "type": "object", "additionalProperties": false, "required": ["f", "db"],
+          "properties": { "f": { "type": "number", "minimum": 100, "maximum": 16000 }, "db": { "type": "number", "minimum": -24, "maximum": 24 }, "q": { "type": "number", "minimum": 0.1, "maximum": 10 } }
+        },
+        "drive": { "type": "number", "minimum": 0, "maximum": 4 },
+        "gate": { "$ref": "#/$defs/gate" }
+      }
     }
   },
   "$defs": {
@@ -45,17 +78,40 @@
         "lowpassHz": { "type": "number", "minimum": 500, "maximum": 20000 }
       }
     },
+    "gate": {
+      "type": "object", "additionalProperties": false, "required": ["atS"],
+      "description": "from `atS` the level drops by `dropDb` over `releaseS`; 90 dB or more is a hard end",
+      "properties": {
+        "atS": { "type": "number", "minimum": 0.001, "maximum": 4.5 },
+        "dropDb": { "type": "number", "minimum": 1, "maximum": 120, "description": "90 by default: a hard end" },
+        "releaseS": { "type": "number", "minimum": 0.0005, "maximum": 0.1, "description": "the ramp of the drop, 0.004 by default" }
+      }
+    },
+    "points": { "type": "array", "minItems": 2, "maxItems": 24, "items": { "type": "array", "minItems": 2, "maxItems": 2, "prefixItems": [{ "type": "number", "minimum": 0, "maximum": 4.5 }, { "type": "number" }], "items": false } },
+    "subLayer": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "db": { "type": "number", "minimum": -60, "maximum": 12, "description": "the level against the air, dB" },
+        "f": { "type": "number", "minimum": 20, "maximum": 2000 },
+        "smoothS": { "type": "number", "minimum": 0.002, "maximum": 0.2 },
+        "glideOct": { "type": "number", "minimum": 0, "maximum": 2, "description": "sub: octaves it sinks after the apex" },
+        "drive": { "type": "number", "minimum": 0, "maximum": 4 },
+        "hpHz": { "type": "number", "minimum": 200, "maximum": 12000, "description": "hiss: its high-pass" },
+        "open": { "type": "number", "minimum": 0, "maximum": 3, "description": "hiss: octaves its low-pass opens with the motion" },
+        "pow": { "type": "number", "minimum": 0.5, "maximum": 4, "description": "hiss: its level curve is the pass's level to this power" }
+      }
+    },
     "layer": {
       "type": "object", "additionalProperties": false,
-      "required": ["kind", "t60"],
+      "required": ["kind"],
       "properties": {
-        "kind": { "enum": ["tone", "noise"] },
-        "f": { "type": "number", "minimum": 20, "maximum": 20000, "description": "tone: the fundamental in Hz" },
+        "kind": { "enum": ["tone", "noise", "pass", "gated"] },
+        "f": { "type": "number", "minimum": 20, "maximum": 20000, "description": "tone: the fundamental in Hz; pass: the centre of its air at the apex (420 Hz by default); gated: the pitch of a tone source" },
         "glideTo": { "type": ["number", "null"], "minimum": 20, "maximum": 20000, "description": "tone: the fundamental it glides to; noise: the filter centre it sweeps to; null for no glide" },
-        "glideS": { "type": "number", "minimum": 0, "maximum": 1.5, "description": "how long the glide takes, from the start of the layer (an exponential sweep)" },
+        "glideS": { "type": "number", "minimum": 0, "maximum": 4.5, "description": "how long the glide takes, from the start of the layer (an exponential sweep)" },
         "attackS": { "type": "number", "minimum": 0.0005, "maximum": 0.6, "description": "linear rise to the peak; 0.001 to 0.003 for a struck sound, longer for a swell" },
-        "t60": { "type": "number", "minimum": 0.005, "maximum": 1.5, "description": "seconds for the layer to fall 60 dB after its peak" },
-        "peak": { "type": "number", "minimum": 0, "maximum": 4, "description": "the layer's linear level before the cue's gain; 1 by default" },
+        "t60": { "type": "number", "minimum": 0.001, "maximum": 4.5, "description": "seconds for the layer to fall 60 dB after its peak" },
+        "peak": { "type": "number", "minimum": 0, "maximum": 4, "description": "the layer's linear level before the cue's gain; 1 by default; 0 switches a layer off (a variant can switch it on)" },
         "partials": {
           "type": "array", "maxItems": 12,
           "description": "tone: [ratio to the fundamental, level in dB] pairs, the fundamental included; [[1, 0]] by default",
@@ -70,10 +126,65 @@
           }
         },
         "from": { "type": "integer", "minimum": 0, "maximum": 2, "description": "the emphasis rank the layer joins at: 0 always, 1 from normal up (an ornament that subtle drops), 2 only at strong (the layer strong adds)" },
-        "offsetS": { "type": "number", "minimum": 0, "maximum": 1.4, "description": "when the layer starts, from the start of the cue" }
+        "offsetS": { "type": "number", "minimum": 0, "maximum": 4.4, "description": "when the layer starts, from the start of the cue" },
+        "lengthS": { "type": "number", "minimum": 0.01, "maximum": 4.5, "description": "pass and gated: how long the layer lasts" },
+        "envelope": { "$ref": "#/$defs/points", "description": "[[tS, dB], ...] breakpoints, straight in dB between them, silent outside; replaces attackS and t60 on a tone or noise layer and multiplies a pass or gated one; end it at -60 dB or lower" },
+        "gate": { "$ref": "#/$defs/gate" },
+        "tremolo": {
+          "type": "object", "additionalProperties": false, "required": ["hz", "depthDb"],
+          "properties": { "hz": { "type": "number", "minimum": 0.5, "maximum": 80 }, "depthDb": { "type": "number", "minimum": 0, "maximum": 40 } }
+        },
+        "drive": { "type": "number", "minimum": 0, "maximum": 4, "description": "soft saturation: tanh with gain 1 + 2 x drive on the oscillator or the filtered noise, level kept" },
+        "sweep": { "$ref": "#/$defs/points", "description": "[[tS, hz], ...]: the filter centre of a noise or gated layer, or the fundamental of a tone, moving exponentially between points" },
+        "chain": {
+          "type": "array", "maxItems": 6,
+          "description": "filters run over the layer after its envelope, each repeated `stages` times",
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["type", "f"],
+            "properties": {
+              "type": { "enum": ["lowpass", "highpass", "bandpass", "notch", "peaking", "lowshelf", "highshelf"] },
+              "f": { "type": "number", "minimum": 20, "maximum": 20000 },
+              "q": { "type": "number", "minimum": 0.1, "maximum": 30 },
+              "db": { "type": "number", "minimum": -24, "maximum": 24, "description": "peaking and shelves: the gain" },
+              "stages": { "type": "integer", "minimum": 1, "maximum": 6 }
+            }
+          }
+        },
+        "modes": { "enum": ["tubular", "church", "glass", "bowl", "glock", "bar", "celesta", "metal", "marimba", "tine", "block", "shell", "tok", "desk"], "description": "tone: the partials of a table of modes (runtime/kit/modes.js), unless `partials` is given" },
+        "slope": { "type": "number", "minimum": 0, "maximum": 2, "description": "tone: a partial decays in t60 x ratio^-slope; 0.75 by default" },
+        "beatHz": { "type": "number", "minimum": 0.05, "maximum": 12, "description": "tone: every partial is a doublet beating at about this rate, each its own seeded share of it" },
+        "keyed": { "type": "boolean", "description": "tone: the `key` knob moves this layer from the recipe's key" },
+        "source": { "enum": ["noise", "tone"], "description": "gated: what is chopped" },
+        "periodS": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number", "minimum": 0.004, "maximum": 1 }, "description": "gated: [start, end] period of the pulses; the train is laid out from the end so the last pulse is open" },
+        "duty": { "type": "number", "minimum": 0.1, "maximum": 0.9 },
+        "depth": { "type": "number", "minimum": 0, "maximum": 1, "description": "gated: how far the gate closes between pulses" },
+        "openS": { "type": "number", "minimum": 0, "maximum": 1, "description": "gated: the gate opens over the last stretch of the layer" },
+        "rampS": { "type": "number", "minimum": 0.0002, "maximum": 0.02, "description": "gated: the edge of a pulse" },
+        "riseDb": { "type": "number", "minimum": 0, "maximum": 60, "description": "gated: the level rises by this many dB over the layer" },
+        "curve": { "type": "number", "minimum": 0.5, "maximum": 6, "description": "gated: the rise follows u^curve" },
+        "periodCurve": { "type": "number", "minimum": 0.5, "maximum": 4, "description": "gated: the period shrinks along u^periodCurve" },
+        "endFadeS": { "type": "number", "minimum": 0.001, "maximum": 0.05 },
+        "apexAt": { "type": "number", "minimum": 0.05, "maximum": 0.95, "description": "pass: where the loudest moment sits, as a share of the length (0.5 to 0.7 for a whoosh that reads as a pass)" },
+        "riseK": { "type": "number", "minimum": 0.3, "maximum": 2, "description": "pass: below 1 the level accelerates into the apex" },
+        "fallK": { "type": "number", "minimum": 0.3, "maximum": 3, "description": "pass: above 1 the level holds, then drops" },
+        "startDb": { "type": "number", "minimum": -80, "maximum": -6 },
+        "endDb": { "type": "number", "minimum": -90, "maximum": -20 },
+        "upOct": { "type": "number", "minimum": 0, "maximum": 4, "description": "pass: octaves the air sits under its centre at the start" },
+        "downOct": { "type": "number", "minimum": 0, "maximum": 4, "description": "pass: octaves it sinks to by the end" },
+        "track": { "type": "number", "minimum": 0.1, "maximum": 1.5, "description": "pass: the motion is the level to this power" },
+        "qAir": { "type": "number", "minimum": 0.3, "maximum": 8 },
+        "lpRatio": { "type": "number", "minimum": 1, "maximum": 10, "description": "pass: a low-pass at this multiple of the air centre" },
+        "doppler": { "type": "number", "minimum": 0, "maximum": 12, "description": "pass: semitones the bands glide, high before the apex and low after" },
+        "dopplerS": { "type": "number", "minimum": 0.005, "maximum": 0.5 },
+        "low": { "$ref": "#/$defs/subLayer", "description": "pass: a band of brown noise under the air" },
+        "sub": { "$ref": "#/$defs/subLayer", "description": "pass: a soft-saturated sine that sinks after the apex" },
+        "hiss": { "$ref": "#/$defs/subLayer", "description": "pass: high-passed noise whose top opens with the motion" }
       },
       "allOf": [
-        { "if": { "properties": { "kind": { "const": "tone" } } }, "then": { "required": ["f"], "properties": { "f": { "type": "number" } } } }
+        { "if": { "properties": { "kind": { "const": "tone" } } }, "then": { "required": ["f"], "properties": { "f": { "type": "number" } } } },
+        { "if": { "properties": { "kind": { "enum": ["tone", "noise"] } } }, "then": { "anyOf": [{ "required": ["t60"], "properties": { "t60": { "type": "number" } } }, { "required": ["envelope"], "properties": { "envelope": { "type": "array" } } }] } },
+        { "if": { "properties": { "kind": { "enum": ["pass", "gated"] } } }, "then": { "required": ["lengthS"], "properties": { "lengthS": { "type": "number" } } } },
+        { "if": { "properties": { "kind": { "const": "gated" } } }, "then": { "required": ["periodS"], "properties": { "periodS": { "type": "array" } } } }
       ]
     }
   }

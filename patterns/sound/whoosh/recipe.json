@@ -1,0 +1,30 @@
+{
+  "name": "whoosh",
+  "meaning": "something moves across the frame or the view changes: a slide, a swipe, a push, a cut",
+  "durationS": 0.5,
+  "variant": "medium",
+  "knobs": ["variant", "durS"],
+  "variants": {
+    "short": {
+      "masterGain": 0.1363,
+      "durationS": 0.2,
+      "layers": { "0": { "lengthS": 0.18, "apexAt": 0.6, "f": 700, "downOct": 1.8, "lpRatio": 3, "low": { "db": -14, "f": 150 }, "sub": { "db": -30, "f": 60 }, "hiss": { "db": -18, "hpHz": 2600, "open": 1 } } }
+    },
+    "long": {
+      "masterGain": 0.0797,
+      "durationS": 1.18,
+      "layers": { "0": { "lengthS": 1.15, "apexAt": 0.65, "f": 300, "upOct": 1.6, "downOct": 2.6, "low": { "db": -4, "f": 110 }, "sub": { "db": -8, "f": 50, "glideOct": 0.6 }, "hiss": { "db": -26, "hpHz": 2200, "open": 1.4 } } }
+    }
+  },
+  "layers": [
+    {
+      "kind": "pass", "lengthS": 0.48, "apexAt": 0.6, "riseK": 0.9, "fallK": 1.0, "startDb": -36, "endDb": -60,
+      "f": 420, "upOct": 1.4, "downOct": 2.1, "track": 0.5, "qAir": 1.1, "lpRatio": 3.5, "doppler": 2, "dopplerS": 0.03,
+      "low": { "db": -8, "f": 180 },
+      "sub": { "db": -16, "f": 80, "glideOct": 0.4, "drive": 0.8 },
+      "hiss": { "db": -12, "hpHz": 2400, "open": 1.1 }
+    }
+  ],
+  "room": { "send": -22, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "masterGain": 0.0883
+}

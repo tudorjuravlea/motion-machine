@@ -59,6 +59,14 @@
       "type": "object", "additionalProperties": false, "required": ["sideMidDb"],
       "properties": { "sideMidDb": { "type": "number", "minimum": -60, "maximum": 0, "description": "the side signal's level under the mid, dB: a cue is nearly centred, with a little width" } }
     },
+    "balance": {
+      "type": "object", "additionalProperties": false, "required": ["medianDb", "spreadDb"],
+      "description": "the tonal balance of a mined set: the 28 third-octave bands from 31.5 Hz to 16 kHz (centres 1000 x 2^(k/3), k = -15..12), each the median over the set's sounds of the band's power in dB under the sound's total (bed taken away where the recording had music under it; a band the music masked in a sound does not count for it) and the spread across them (the median absolute deviation, at least 1.5 dB; 6 dB where one sound or none gave the band). `mm sound clone` scores a candidate's balance against it. Absent for a profile written by hand",
+      "properties": {
+        "medianDb": { "type": "array", "minItems": 28, "maxItems": 28, "items": { "type": "number", "minimum": -60, "maximum": 0 } },
+        "spreadDb": { "type": "array", "minItems": 28, "maxItems": 28, "items": { "type": "number", "minimum": 0, "maximum": 60 } }
+      }
+    },
     "sources": {
       "type": "array", "maxItems": 200,
       "description": "where a mined profile's sounds came from; a cue cloned from it carries them. Absent for a profile written by hand",

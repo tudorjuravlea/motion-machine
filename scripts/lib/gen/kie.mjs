@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs';
 import { basename } from 'node:path';
 import { UsageError } from '../cli.mjs';
 import { ProviderError, errorText, guarded, pickUrl, poll, sleepMs } from './common.mjs';
+import { HttpFailure, describeFailure } from '../http.mjs';
 
 export const name = 'kie';
 export const hosts = ['api.kie.ai', 'kieai.redpandaai.co'];
@@ -53,9 +54,17 @@ export function prepare(req) {
 }
 
 async function json(res, what) {
-  let body = null;
-  try { body = await res.json(); } catch { /* not JSON */ }
-  if (!res.ok || !body || (body.code != null && body.code !== 200) || body.success === false) throw new ProviderError(`kie: ${what} failed (${body?.code ?? res.status}): ${errorText(body, res.statusText || 'no answer')}`);
+  let text = '', body = null;
+  try { text = await res.text(); body = JSON.parse(text); } catch { /* not JSON */ }
+  if (!res.ok || !body || (body.code != null && body.code !== 200) || body.success === false) {
+    // kie answers a spent balance as HTTP 200 with the status in the body's `code`
+    const status = !res.ok ? res.status : Number(body?.code) >= 400 ? Number(body.code) : 0;
+    if (status >= 400) {
+      const f = describeFailure({ provider: 'kie', status, body: text, keyName: 'KIE_API_KEY', what });
+      throw new HttpFailure(f.message, { ...f, status });
+    }
+    throw new ProviderError(`kie: ${what} failed (${body?.code ?? res.status}): ${errorText(body, res.statusText || 'no answer')}`);
+  }
   return body;
 }
 

@@ -3,6 +3,7 @@
 // timer, and it is gone at rest. The untyped rest of the text stays in the flow, hidden, so the
 // line breaks never move. Writes markup inside the slot, which a seek restores, and opacity on a slot that paints its own
 // box (it fades in over the first character).
+import { graphemesOf } from '../../../runtime/kit/split.js';
 const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
 
 // A slot that paints its own box (a fill or a border) fades with its first piece, so the box never
@@ -35,7 +36,7 @@ export default {
     const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
     const lin = linear(ctx, p);
     if (lin >= 1) { el.textContent = text; return; }
-    const chars = Array.from(text);
+    const chars = graphemesOf(text);
     const shown = Math.floor(lin * chars.length);
     if (painted(el)) el.style.opacity = String(clamp01(lin * chars.length));
     const doc = el.ownerDocument;

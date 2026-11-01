@@ -4,6 +4,7 @@
 // changing at the thin point. The tiles share one width, the widest letter's. At rest the tiles
 // stay as the look of the line: nothing is mid-flip, every tile shows its own letter. Writes
 // text, width and scale on spans it creates; flips are seeded by the kit's random().
+import { graphemesOf } from '../../../runtime/kit/split.js';
 const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
 
 const params = {
@@ -29,8 +30,8 @@ export default {
     const lin = linear(ctx, p);
     const doc = el.ownerDocument;
     const flips = Math.max(2, Math.round(Number(prm.flips)));
-    const own = Array.from(new Set(Array.from(text).filter((c) => c !== ' ')));
-    const chars = Array.from(text);
+    const chars = graphemesOf(text);
+    const own = Array.from(new Set(chars.filter((c) => c !== ' ')));
     const letters = chars.filter((c) => c !== ' ').length;
     const rnd = ctx.random;
     const noise = Array.from({ length: letters * (flips + 1) }, () => rnd());

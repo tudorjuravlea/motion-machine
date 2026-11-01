@@ -32,7 +32,7 @@ At the end of the entrance the plain text is restored, so kerning and the DOM ar
 - When the slot paints its own box (a fill or a border, as a tile or a plate does), the slot's own opacity follows the first piece, so the box fades in with its first text and never shows empty; a plain text slot gets no opacity of its own.
 
 ## Provenance
-original
+- juliangarnier/anime, MIT: the text is split by the kit's splitter (`runtime/kit/split.js`): pieces are words or whole graphemes.
 
 ## Known limits
 - the scatter is seeded by the slot's selector, so two slots with the same text scatter differently but each always the same

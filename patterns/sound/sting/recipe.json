@@ -1,0 +1,19 @@
+{
+  "name": "sting",
+  "meaning": "a logo or a title lands: a short build, a stop, the hit and a tonal bloom that rings out",
+  "durationS": 3.1,
+  "key": "C",
+  "knobs": ["key", "durS"],
+  "layers": [
+    { "kind": "gated", "lengthS": 0.36, "periodS": [0.024, 0.02], "filter": { "type": "bandpass", "f": 900, "q": 1.2 }, "sweep": [[0, 900], [0.36, 7000]], "riseDb": 28, "curve": 2.2, "openS": 0.03, "peak": 1, "from": 1 },
+    { "kind": "tone", "f": 220, "glideTo": 1100, "glideS": 0.36, "envelope": [[0, -50], [0.34, -8], [0.36, -40], [0.37, -60]], "peak": 0.3, "from": 1 },
+    { "kind": "tone", "f": 130, "glideTo": 52, "glideS": 0.12, "envelope": [[0, -60], [0.012, 0], [0.15, -14], [0.6, -50], [0.9, -70]], "partials": [[1, 0], [2, -12]], "peak": 1, "offsetS": 0.42 },
+    { "kind": "noise", "filter": { "type": "bandpass", "f": 3500, "q": 1 }, "attackS": 0.0005, "t60": 0.02, "peak": 0.5, "offsetS": 0.42 },
+    { "kind": "tone", "f": 261.63, "attackS": 0.02, "t60": 2.6, "modes": "glass", "slope": 0.5, "beatHz": 0.8, "peak": 1, "offsetS": 0.43, "keyed": true },
+    { "kind": "tone", "f": 392, "attackS": 0.02, "t60": 2.6, "modes": "glass", "slope": 0.5, "beatHz": 0.8, "peak": 0.7, "offsetS": 0.442, "keyed": true },
+    { "kind": "tone", "f": 659.26, "attackS": 0.02, "t60": 2.6, "modes": "glass", "slope": 0.5, "beatHz": 0.8, "peak": 0.5, "offsetS": 0.455, "keyed": true },
+    { "kind": "tone", "f": 1046.5, "attackS": 0.02, "t60": 1.8, "peak": 0.2, "offsetS": 0.45, "keyed": true, "from": 2 }
+  ],
+  "room": { "send": -22, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "masterGain": 0.0247
+}

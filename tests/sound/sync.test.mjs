@@ -13,10 +13,12 @@ import { exportPiece } from '../../scripts/export.mjs';
 import { buildSound, probe } from '../../scripts/sound.mjs';
 import { verifyFile } from '../../scripts/lib/export-qa.mjs';
 import { PATTERNS, ensurePiece, variant } from '../../fixtures/sound/setup.mjs';
+import { roleOf } from '../../scripts/lib/sound-roles.mjs';
 
 const SR = 48000;
 const CLICK_AT = 1.25;
 const ONE_MS = 0.001;
+const PLAYED_AT = CLICK_AT + roleOf('click').offsetMs / 1000;       // a click leads its picture by its role's offset (SPEC §9)
 let dir, mp4;
 
 /** Mono float samples of the first audio stream of `file`, 48 kHz, as a player decodes it (edit list applied). */
@@ -57,7 +59,7 @@ test('the cue sits at its time in the mix, and the mix in the MP4 sits at the sa
   const cues = JSON.parse(readFileSync(join(dir, 'out', 'cues.json'), 'utf8')).cues;
   assert.deepEqual(cues.map((c) => [c.name, c.at]), [['click', CLICK_AT]]);
   const mix = clickAt(decode(join(dir, 'out', 'mix.wav')));
-  assert.ok(Math.abs(mix - CLICK_AT) < 0.002, `the click is at ${mix} s in the mix, its cue says ${CLICK_AT} s`);
+  assert.ok(Math.abs(mix - PLAYED_AT) < 0.002, `the click is at ${mix} s in the mix, its picture event is ${CLICK_AT} s and its role leads by ${roleOf('click').offsetMs} ms`);
   const shipped = clickAt(decode(mp4));
   const off = shipped - mix;
   assert.ok(Math.abs(off) <= ONE_MS, `the click lands ${(off * 1000).toFixed(3)} ms from its place in the mix (an AAC priming offset would be about 43 ms late)`);

@@ -35,6 +35,8 @@ const SAMPLES = [
   { op: 'beat.remove', scene: 'hook', beat: 2 },
   { op: 'story.formats', value: ['9x16', '1x1', '4x5', '16x9'] },
   { op: 'story.formats', value: ['16x9'], raw: '[ "16x9" ]' },
+  { op: 'audio.sample', cue: 'tick', value: 'assets/sounds/door-slam.wav' },
+  { op: 'audio.sample', cue: 'tick', value: null },
 ];
 
 test('the edit-ops schema accepts every op shape, alone and as a batch', () => {
@@ -89,6 +91,7 @@ test('the edit-ops schema and ops.js accept and refuse the same edits', () => {
     add({}, { raw: '{ "at": 1, "slot": "x", "fx": "entrances/fade" }' }), B({ op: 'beat.at', value: 1, raw: '1.0' }),
     B({ op: 'beat.remove' }), B({ op: 'beat.remove', format: '16x9' }),
     { op: 'story.formats', value: ['9x16'] }, { op: 'story.formats', value: ['16x9', '4x5', '1x1', '9x16'] }, { op: 'story.formats', value: ['4x5', '16x9'], raw: '["4x5","16x9"]' },
+    { op: 'audio.sample', cue: 'tick', value: 'assets/sounds/a.wav' }, { op: 'audio.sample', cue: 'tick', value: 'assets/sounds/a.ogg' }, { op: 'audio.sample', cue: 'tick', value: null },
   ];
   const refuse = [
     H({ op: 'scene.rename' }), H({ op: 'scene.say', value: 'x', foo: 1 }), B({ op: 'beat.at', value: 1, formats: '9x16' }),
@@ -110,6 +113,9 @@ test('the edit-ops schema and ops.js accept and refuse the same edits', () => {
     add({}, { raw: 5 }), B({ op: 'beat.remove', before: 'x' }),
     { op: 'story.formats', value: [] }, { op: 'story.formats', value: ['9x16', '9x16'] }, { op: 'story.formats', value: ['3x2'] }, { op: 'story.formats', value: '9x16' },
     { op: 'story.formats' }, { op: 'story.formats', value: ['9x16'], scene: 'hook' }, { op: 'story.formats', value: ['9x16'], format: '9x16' }, { op: 'story.formats', value: ['9x16'], raw: 5 },
+    { op: 'audio.sample', cue: 'Tick!', value: 'assets/sounds/a.wav' }, { op: 'audio.sample', value: 'assets/sounds/a.wav' }, { op: 'audio.sample', cue: 'tick', value: 'https://x.org/a.wav' },
+    { op: 'audio.sample', cue: 'tick', value: 'assets/sounds/a.txt' }, { op: 'audio.sample', cue: 'tick', value: 5 }, { op: 'audio.sample', cue: 'tick' },
+    { op: 'audio.sample', cue: 'tick', value: 'assets/sounds/a.wav', scene: 'hook' },
   ];
   for (const [edits, want] of [[accept, true], [refuse, false]]) {
     for (const e of edits) {

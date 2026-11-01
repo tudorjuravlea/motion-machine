@@ -3,6 +3,8 @@
 // push-apart. Nothing here keeps time: every function is a closed form of the progress it is given.
 // The grammar extends data/flow's (`source|a,b,c|sink`): `|` separates items, `,` lists siblings,
 // `>` goes deeper (a tree's depth, an item's detail), a newline is `|`.
+import { parse, measure } from './pathkit.js';
+import { windowAt, dashOf, setDash, headsOf } from './dash.js';
 /** An SVG element made by the HTML parser, so the kit needs no namespace string (runtime/ carries no URL, SPEC 2.6). */
 export function svgEl(doc, tag) {
   const t = doc.createElement('template');
@@ -190,12 +192,37 @@ export function path(s, svg, d, mod = '') {
   return e;
 }
 
-/** Draws a path u of the way (0..1): nothing at 0, the whole stroke, with no dash left over, at 1. */
-export function drawn(e, u) {
-  e.style.visibility = u <= 0 ? 'hidden' : '';
-  if (u >= 1) return;
-  e.style.strokeDasharray = '1 1';
-  e.style.strokeDashoffset = f2(1 - clamp01(u));
+/**
+ * Draws a path u of the way (0..1): nothing at 0 (so a round cap leaves no dot), the whole stroke, with no
+ * dash left over, at 1. `comet` (a share of the path) draws a segment of that length sliding along instead.
+ */
+export function drawn(e, u, { comet = 0 } = {}) {
+  if (u >= 1 && !(comet > 0)) { e.style.visibility = ''; return; }
+  setDash(e, windowAt(u, { comet }));
+}
+
+/**
+ * An edge drawn u of the way with arrowheads, as numbers: { window, hidden, heads: [{ at, x, y, angle, size }] }.
+ * `head` is `end`, `start`, `both` or `none`; `size` is the head's depth in px. The line is trimmed by half a
+ * head where it carries one, and a head is never more than half the line drawn so far. Pure.
+ */
+export function edgePlan(d, u, { head: kind = 'none', size = 0, comet = 0 } = {}) {
+  const m = measure(parse(d));
+  const h = headsOf(windowAt(u, { comet }), { len: m.length, size, head: kind });
+  const heads = h.heads.map(({ at, t }) => {
+    const p = m.at(t);
+    return { at, x: p.x, y: p.y, angle: at === 'start' ? p.angle + Math.PI : p.angle, size: h.size };
+  });
+  return { window: h.window, hidden: dashOf(h.window).hidden, heads };
+}
+
+/** A path drawn u of the way with its arrowheads (see edgePlan); returns the path element. */
+export function edge(s, svg, d, u, { head: kind = 'none', size = 0, comet = 0, mod = '' } = {}) {
+  const e = path(s, svg, d, mod);
+  const plan = edgePlan(d, u, { head: kind, size, comet });
+  setDash(e, plan.window);
+  for (const h of plan.heads) if (h.size > 0.01) head(s, svg, h.x, h.y, h.angle, h.size);
+  return e;
 }
 
 /** An arrow head (a small filled triangle) with its tip at (x, y) pointing along angle `a` radians. */

@@ -2,6 +2,7 @@
 // whole cascade: eachS per letter, capped by capS and by 60 % of the entrance, so a long line
 // ripples faster rather than longer (W-STAGGER). Words stay whole: each is a no-wrap unit. Letters
 // ease on the type spring. Writes translate and opacity on spans it creates, and opacity on a slot that paints its own box (it fades with the first letter).
+import { splitText, unitsOf, plainOf } from '../../../runtime/kit/split.js';
 const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
 
 // A slot that paints its own box (a fill or a border) fades with its first piece, so the box never
@@ -32,29 +33,8 @@ function shape(ctx, x) {
   return sp && sp.settle ? Math.min(1, sp(x * sp.settle('type'), 'type')) : x;
 }
 
-function split(el) {
-  const found = el.querySelectorAll('[data-mm-c]');
-  if (found.length) return [...found];
-  const words = (el.textContent || '').split(/\s+/).filter(Boolean);
-  el.textContent = '';
-  const doc = el.ownerDocument;
-  const out = [];
-  words.forEach((w, i) => {
-    const unit = doc.createElement('span');
-    unit.className = 'mm-letter-cascade__word';
-    for (const ch of Array.from(w)) {
-      const s = doc.createElement('span');
-      s.className = 'mm-letter-cascade__c';
-      s.setAttribute('data-mm-c', '');
-      s.textContent = ch;
-      unit.append(s);
-      out.push(s);
-    }
-    if (i) el.append(' ');
-    el.append(unit);
-  });
-  return out;
-}
+// a deck keeps the original text beside the units, for a screen reader
+const split = (el, ctx) => (unitsOf(el) ?? splitText(el, { chars: true, accessible: !!ctx.deck })).chars;
 
 export default {
   name: 'letter-cascade',
@@ -65,8 +45,8 @@ export default {
     const prm = { ...DEFAULTS, ...ctx.params };
     const { u, d } = clock(ctx, p);
     // at rest the plain text returns, so the face's own kerning is back between letters
-    if (u >= d) { el.textContent = (el.textContent || '').split(/\s+/).filter(Boolean).join(' '); return; }
-    const spans = split(el);
+    if (u >= d) { el.textContent = plainOf(el.textContent); return; }
+    const spans = split(el, ctx);
     const n = spans.length;
     if (!n) return;
     const { eachS, capS } = ctx.style.motion.stagger;

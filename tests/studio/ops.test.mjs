@@ -477,6 +477,47 @@ test('removing a format leaves its variants in place, and the story stays valid'
   assert.ok(storyValid(r.story), explain(storyValid));
 });
 
+// ---- audio.sample: a cue mapped to a sound file in the piece (what `mm sound fetch --cue` writes) ----
+test('audio.sample maps a cue to a sound file, replaces and removes it; the inverse restores the bytes, and the last removal takes the empty samples object with it', () => {
+  const smoke = text('fixtures/kit-smoke/film/story.json');   // "audio": { "track": null, "bpm": null, "beats": null }
+  const a = apply(smoke, [{ op: 'audio.sample', cue: 'tick', value: 'assets/sounds/door.wav' }], {});
+  assert.deepEqual(a.story.audio.samples, { tick: 'assets/sounds/door.wav' });
+  assert.deepEqual(a.story.scenes, JSON.parse(smoke).scenes, 'only the audio changed');
+  assert.equal(apply(a.text, a.inverse, { inverse: true }).text, smoke, 'undo restores the bytes, with no empty samples left');
+
+  const b = apply(a.text, [{ op: 'audio.sample', cue: 'hit', value: 'assets/sounds/knock.mp3' }], {});
+  assert.deepEqual(b.story.audio.samples, { tick: 'assets/sounds/door.wav', hit: 'assets/sounds/knock.mp3' });
+  assert.equal(apply(b.text, b.inverse, { inverse: true }).text, a.text);
+
+  const c = apply(b.text, [{ op: 'audio.sample', cue: 'tick', value: 'assets/sounds/other.ogg' }], {});
+  assert.deepEqual(c.story.audio.samples, { tick: 'assets/sounds/other.ogg', hit: 'assets/sounds/knock.mp3' });
+  assert.deepEqual(c.inverse, [{ op: 'audio.sample', cue: 'tick', value: 'assets/sounds/door.wav' }]);
+  assert.equal(apply(c.text, c.inverse, { inverse: true }).text, b.text);
+
+  const d = apply(b.text, [{ op: 'audio.sample', cue: 'tick', value: null }], {});
+  assert.deepEqual(d.story.audio.samples, { hit: 'assets/sounds/knock.mp3' });
+  assert.deepEqual(apply(d.text, d.inverse, { inverse: true }).story.audio.samples, { hit: 'assets/sounds/knock.mp3', tick: 'assets/sounds/door.wav' }, 'undo puts the cue back (at the end: an object\'s key order carries no meaning)');
+  const e = apply(a.text, [{ op: 'audio.sample', cue: 'tick', value: null }], {});
+  assert.equal(e.text, smoke, 'the last sample removed takes the samples object with it');
+  assert.equal(apply(smoke, [{ op: 'audio.sample', cue: 'tick', value: null }], {}).text, smoke, 'removing what is not there changes nothing');
+  assert.equal(apply(a.text, [{ op: 'audio.sample', cue: 'tick', value: 'assets/sounds/door.wav' }], {}).text, a.text, 'the same file changes nothing');
+  const ctx = { validate: (s) => (storyValid(s) ? null : storyValid.errors) };
+  assert.ok(storyValid(apply(smoke, [{ op: 'audio.sample', cue: 'tick', value: 'assets/sounds/door.wav' }], ctx).story));
+});
+
+test('audio.sample refuses a bad cue, a path that is not a sound file in the piece, a scene, and generated stories and decks, each with a hint', () => {
+  const st = kinetic();
+  refused(st, { op: 'audio.sample', cue: 'Tick!', value: 'assets/sounds/a.wav' }, {}, 'bad-value', /cue/);
+  refused(st, { op: 'audio.sample', value: 'assets/sounds/a.wav' }, {}, 'bad-type', /cue/);
+  refused(st, { op: 'audio.sample', cue: 'tick', value: 'https://x.org/a.wav' }, {}, 'bad-value', /sound file/);
+  refused(st, { op: 'audio.sample', cue: 'tick', value: 'assets/sounds/a.txt' }, {}, 'bad-value', /wav, mp3, m4a, flac or ogg/);
+  refused(st, { op: 'audio.sample', cue: 'tick', value: 5 }, {}, 'bad-type', /sound file/);
+  refused(st, { op: 'audio.sample', cue: 'tick' }, {}, 'bad-type', /sound file/);
+  refused(st, { op: 'audio.sample', cue: 'tick', value: 'assets/sounds/a.wav', scene: 'hook' }, {}, 'bad-value', /audio\.sample takes/);
+  refused(JSON.parse(text('pieces/demo-film/story.json')), { op: 'audio.sample', cue: 'tick', value: 'assets/sounds/a.wav' }, {}, 'generated', /build-story/);
+  refused(JSON.parse(text('pieces/golden-deck-kinetic/story.json')), { op: 'audio.sample', cue: 'tick', value: 'assets/sounds/a.wav' }, { allowGenerated: true }, 'deck', /read-only|deck/);
+});
+
 test('every op and inverse used in these tests validates against the edit-ops schema', () => {
   assert.ok(used.length > 100, `${used.length} ops`);
   for (const op of used) assert.ok(editOps([op]), `${JSON.stringify(op)}: ${explain(editOps)}`);

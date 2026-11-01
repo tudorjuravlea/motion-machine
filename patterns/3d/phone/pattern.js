@@ -6,7 +6,7 @@
 // screen ([data-screen]) that the kit's screen fold drives exactly like a flat device. The pose is a
 // pure function of p and u; the renderer is cached per slot and holds GPU resources only, never
 // visible state. A deck rest faces the viewer. No clock, no animation loop.
-import { THREE, clamp01, smoothstep01, cssText, cssColour, stage, slab, plate, disc, sheen, sweep, lightAll, phoneBar, alloy, metal, glass, glossy, turn, cross, fitCanvas, mark, draw } from '../../../runtime/kit/device3d.js';
+import { THREE, clamp01, smoothstep01, cssText, cssColour, stage, slab, plate, disc, sheen, sweep, lightAll, phoneBar, alloy, metal, glass, glossy, turn, cross, fitCanvas, mark, draw, LOOK_PARAMS, lookOf } from '../../../runtime/kit/device3d.js';
 import { RoundedBoxGeometry } from '../../../runtime/vendor/three/0.170.0/RoundedBoxGeometry.js';
 import { DRAWN, phases, stroke, linesCanvas, paintLines } from '../../../runtime/kit/drawn.js';
 import { rrect as ring, circ, solid, extremes } from '../../../runtime/kit/hairline.js';
@@ -54,7 +54,7 @@ function drawnPose(c, u, q, ctx) {
   if (c.camera.fov !== fov || c.camera.far !== dist + 30) { c.camera.fov = fov; c.camera.near = Math.max(0.5, dist - 6); c.camera.far = dist + 30; c.camera.updateProjectionMatrix(); }
   c.camera.position.set(0, 0.05 * e, dist);
   c.camera.lookAt(0, -0.05 * e, 0);
-  c.floor.material.opacity = 0.28 * Math.min(1, Math.max(0, (e - 0.4) / 0.6));
+  c.floor.userData.cast = 0.28 * Math.min(1, Math.max(0, (e - 0.4) / 0.6));
   c.glow.material.opacity = 0.75 * e;
   const base = -0.9 + 1.64 * ph.reveal;   // the sheen crosses the glass with the band, then rests as the hero's
   c.shine.material.map.offset.x = base + (0.74 + ry * 1.15 - base) * e;
@@ -197,12 +197,12 @@ function camera(model, m) {
   return g;
 }
 
-function build(el, holder, model, kind) {
-  const c = stage(el);
+function build(el, holder, model, kind, look) {
+  const c = stage(el, look);
   c.canvas.className = 'phone3d__canvas';
   const col = (v) => cssColour(holder, v);
   const m = {
-    rim: alloy(kind, col('--mm-device-body').lerp(col('--mm-device-rim-light'), 0.7)),   // satin metal: soft highlights where the softboxes fall
+    rim: alloy(kind, col('--mm-device-body').lerp(col('--mm-device-rim-light'), 0.7), undefined, look.brushed),   // satin metal: soft highlights where the softboxes fall
     back: glass(col('--mm-device-body'), 0.16, 0.5),   // dark glass: the sheen does the flashing
     glass: glass(col('--mm-device-glass')),
     lens: glass(col('--mm-device-lens'), 0.02),
@@ -247,11 +247,11 @@ function build(el, holder, model, kind) {
   phone.add(shine, backShine);
   phone.add(camera(model, m));
   c.scene.add(phone);
-  lightAll(c);
+  lightAll(c, { body: phone, focus: new THREE.Vector3(0, 0, 0), reach: 1.6, height: H + 0.4 });
   c.floor.position.y = -H / 2 - 0.18;
   c.glow.position.set(0, 0.05, -1.6); c.glow.scale.set(2.3, 2.6, 1);
   const ink = Object.fromEntries(['hi', 'edge', 'mid', 'lo', 'plate'].map((r) => [r, cssText(holder, `--hl-${r}`)]));
-  Object.assign(c, { kind, phone, shine, backShine, cutout, model, ink, surface: cssText(holder, '--mm-color-surface'), accent: cssText(holder, '--mm-color-accent') });
+  Object.assign(c, { kind, brushed: look.brushed, phone, shine, backShine, cutout, model, ink, surface: cssText(holder, '--mm-color-surface'), accent: cssText(holder, '--mm-color-accent') });
   cache.set(el, c);
   return c;
 }
@@ -272,6 +272,7 @@ export default {
     status: { type: 'enum(auto|true|false)', default: 'auto', meaning: 'the status bar (time, signal, network, battery) drawn into the screen: auto shows it on a bare screen and a captured page, and leaves it to a recording or a still, which carry their own' },
     statusTime: { type: 'string', default: '10:00', meaning: 'the time in the status bar' },
     metal: { type: 'enum(aluminium|titanium)', default: 'aluminium', meaning: 'the frame: satin aluminium in a neutral, faintly cool grey; or titanium, darker and faintly warm with a finer brushed sheen' },
+    ...LOOK_PARAMS,
     model: { type: 'enum(island|punch|plain)', default: 'island', meaning: 'the cutout on the front and the camera on the back: an island and a camera plateau; a punch-hole camera and a visor; or none and a small camera block' },
   },
   at(el, p, ctx) {
@@ -279,10 +280,11 @@ export default {
     if (!holder) return;
     const model = ctx.params?.model ?? 'island';
     const kind = ctx.params?.metal ?? 'aluminium';
+    const look = lookOf(ctx.params);
     let c = cache.get(el);
-    if (!c || c.model !== model || c.kind !== kind) c = ctx.seeded(() => build(el, holder, model, kind));   // Three.js names objects with Math.random: seeded here
+    if (!c || c.model !== model || c.kind !== kind || c.studio !== look.studio || c.brushed !== look.brushed) c = ctx.seeded(() => build(el, holder, model, kind, look));   // Three.js names objects with Math.random: seeded here
     if (c.canvas.parentElement !== holder) holder.prepend(c.canvas);   // the seek's restore rebuilt the markup
-    fitCanvas(c, holder);
+    fitCanvas(c, holder, ctx.params);
     c.bar = { ...phoneBar(model, String(ctx.params?.statusTime ?? '10:00'), getComputedStyle(holder).getPropertyValue('--mm-font-text').trim() || 'sans-serif', say), status: String(ctx.params?.status ?? 'auto') };
     const q = clamp01(p), u = Math.max(0, Number(ctx.u) || 0);
     if (ctx.params?.move === 'drawn') {

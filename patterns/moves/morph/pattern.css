@@ -3,3 +3,18 @@
 .mm-morph__ghost, .mm-morph__box { position: absolute; box-sizing: border-box; border-radius: var(--mm-radius-3); }
 .mm-morph__ghost { border: calc(var(--mm-space-1) * 0.35) dashed var(--mm-color-ink); }
 .mm-morph__box { background: var(--mm-color-surface); }
+
+/* path mode: the shape in one palette role, filled or as an outline */
+.mm-morph__shape { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.mm-morph[data-ink="ink"] .mm-morph__shape path { --mm-morph-ink: var(--mm-color-ink); }
+.mm-morph[data-ink="accent"] .mm-morph__shape path { --mm-morph-ink: var(--mm-color-accent); }
+.mm-morph[data-ink="muted"] .mm-morph__shape path { --mm-morph-ink: var(--mm-color-muted); }
+.mm-morph[data-ink="surface"] .mm-morph__shape path { --mm-morph-ink: var(--mm-color-surface); }
+.mm-morph[data-render="fill"] .mm-morph__shape path { fill: var(--mm-morph-ink); stroke: none; }
+.mm-morph[data-render="outline"] .mm-morph__shape path {
+  fill: none;
+  stroke: var(--mm-morph-ink);
+  stroke-width: calc(min(var(--mm-frame-w), var(--mm-frame-h)) * var(--mm-morph-weight));
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+}

@@ -1,2 +1,1 @@
-.mm-letter-cascade__word { display: inline-block; white-space: nowrap; }
-.mm-letter-cascade__c { display: inline-block; }
+@import url('../../../runtime/kit/split.css');

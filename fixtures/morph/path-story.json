@@ -1,0 +1,26 @@
+{
+  "id": "morph-path",
+  "kind": "film",
+  "formats": ["16x9", "9x16"],
+  "title": "Morph demo",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "marks",
+      "layout": "layouts/comparison",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": "moves/morph",
+      "moveParams": { "mode": "path", "from": "left", "to": "right", "start": 1.2, "dur": 1.6, "ink": "accent", "fillRule": "evenodd" },
+      "beats": [
+        { "at": 0, "slot": "headline", "fx": "entrances/fade", "text": "One mark becomes the next", "params": { "instant": true } },
+        { "at": 0, "slot": "left", "fx": "entrances/fade", "asset": "assets/mark-a.svg", "params": { "instant": true } },
+        { "at": 0, "slot": "right", "fx": "entrances/fade", "asset": "assets/mark-b.svg", "params": { "instant": true } }
+      ],
+      "say": "A ring becomes a block."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

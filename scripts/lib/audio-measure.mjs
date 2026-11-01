@@ -14,6 +14,10 @@
 //   centroidHz(sp) · rolloffHz(sp, share=0.85) · peaksOf(sp, { max, floorDb, minHz }) · flatness(sp)
 //   balanceDb(channels, sr)            left minus right, K-weighted energy, dB
 //   sideMidDb(channels)                energy of (L-R)/2 against (L+R)/2, dB
+//   THIRD_OCTAVE_HZ · thirdOctaveProfile(channels, sr)   the 28 third-octave centres (31.5 Hz to 16 kHz) and the sound's power in each, dB under the total, floored at -60
+//   bandgram(channels, sr, { hopS })   { db: [frame][28], hopS }  third-octave band power in 10 ms cells, dB
+//   bedOf(channels, sr, onsetSample)   the bed under an event: the quietest 150 ms of the 0.6 s before it (15 ms away), or null
+//   eventMeasure(event, sr, bed)       the event with the bed taken away: bands, masked bands, exposure over the bed, decay shape, stutter
 //   measure(channels, sr)              all of the above in one record
 
 const db10 = (x) => (x > 0 ? 10 * Math.log10(x) : -Infinity);
@@ -120,7 +124,7 @@ export function t60S(env) {
   return slope < 0 ? -60 / slope : null;
 }
 
-function fft(re, im) {
+export function fft(re, im) {
   const n = re.length;
   for (let i = 1, j = 0; i < n; i++) {
     let bit = n >> 1;
@@ -225,6 +229,219 @@ export function sideMidDb(channels) {
   return m > 0 ? db10(s / m) : -Infinity;
 }
 
+// ---------------------------------------------------------------------------------------------------------------
+// Third-octave measures and the bed-subtracted measurement of an event on music (SPEC §9). The band edges are
+// c / 2^(1/6) to c * 2^(1/6) around the 28 centres 1000 * 2^(k/3), k = -15..12.
+
+export const THIRD_OCTAVE_HZ = Array.from({ length: 28 }, (_, i) => 1000 * 2 ** ((i - 15) / 3));
+const EDGE = 2 ** (1 / 6);
+const PROFILE_FLOOR_DB = -60;
+
+/** The power of a spectrum in each third-octave band, summed over the bins: Float64Array(28). */
+function bandSums(f, p) {
+  const out = new Float64Array(28);
+  for (let b = 0; b < 28; b++) {
+    const lo = THIRD_OCTAVE_HZ[b] / EDGE, hi = THIRD_OCTAVE_HZ[b] * EDGE;
+    for (let k = 1; k < f.length; k++) if (f[k] >= lo && f[k] < hi) out[b] += p[k];
+  }
+  return out;
+}
+
+/** Band powers as dB under the total of the bands, floored at -60: the level of the sound never decides. */
+function toProfile(sums) {
+  let total = 0;
+  for (const v of sums) total += v;
+  return Float64Array.from(sums, (v) => Math.max(PROFILE_FLOOR_DB, db10((v + 1e-20) / (total + 28e-20))));
+}
+
+const profileOfSpectrum = (sp) => toProfile(bandSums(sp.f, sp.p));
+
+/** The sound's power in the 28 third-octave bands, dB under the total power (the same spectrum as `spectrum`). */
+export function thirdOctaveProfile(channels, sr) { return profileOfSpectrum(spectrum(channels, sr)); }
+
+const monoOf = (channels) => {
+  const n = channels[0].length, m = new Float64Array(n);
+  for (const c of channels) for (let i = 0; i < n; i++) m[i] += c[i] / channels.length;
+  return m;
+};
+
+/** Mean-square power per third-octave band of a short stretch of mono samples, under a Hann window: Float64Array(28). */
+function bandPowers(x, sr) {
+  const len = x.length;
+  let n = 4096;
+  while (n < len) n <<= 1;
+  const re = new Float64Array(n), im = new Float64Array(n);
+  let wsum = 0;
+  for (let i = 0; i < len; i++) { const w = 0.5 - 0.5 * Math.cos((2 * Math.PI * (i + 0.5)) / len); re[i] = x[i] * w; wsum += w * w; }
+  fft(re, im);
+  const out = new Float64Array(28);
+  for (let b = 0; b < 28; b++) {
+    const lo = Math.ceil(((THIRD_OCTAVE_HZ[b] / EDGE) * n) / sr), hi = Math.ceil(((THIRD_OCTAVE_HZ[b] * EDGE) * n) / sr);
+    let s = 0;
+    for (let k = Math.max(1, lo); k < Math.min(hi, n / 2); k++) s += re[k] * re[k] + im[k] * im[k];
+    out[b] = (2 * s) / (n * wsum);
+  }
+  return out;
+}
+
+/**
+ * Third-octave band power over time: { db: Float64Array(28)[frames], hopS }. Frames are `hopS` (10 ms) apart, a Hann window of
+ * `nfft` samples centred on each. At 1024 points the three lowest bands hold under one bin each, so they are measured as one
+ * band (22 to 112 Hz) and the two lowest repeat it.
+ */
+export function bandgram(channels, sr, { hopS = 0.01, nfft = 1024 } = {}) {
+  const x = monoOf(channels), hop = Math.max(1, Math.round(sr * hopS)), T = Math.max(1, Math.ceil(x.length / hop));
+  const win = Float64Array.from({ length: nfft }, (_, i) => 0.5 - 0.5 * Math.cos((2 * Math.PI * (i + 1)) / (nfft + 2)));
+  const binHz = sr / nfft, half = nfft / 2;
+  const bandOfBin = new Int16Array(half + 1).fill(-1);
+  for (let k = 1; k <= half; k++) {
+    const f = k * binHz;
+    if (f >= 22 && f < 112) bandOfBin[k] = 2;
+    else for (let b = 3; b < 28; b++) if (f >= THIRD_OCTAVE_HZ[b] / EDGE && f < THIRD_OCTAVE_HZ[b] * EDGE) { bandOfBin[k] = b; break; }
+  }
+  const db = [];
+  const re = new Float64Array(nfft), im = new Float64Array(nfft);
+  for (let t = 0; t < T; t++) {
+    const start = t * hop - half;
+    for (let i = 0; i < nfft; i++) { const j = start + i; re[i] = j >= 0 && j < x.length ? x[j] * win[i] : 0; im[i] = 0; }
+    fft(re, im);
+    const sums = new Float64Array(28);
+    for (let k = 1; k <= half; k++) if (bandOfBin[k] >= 0) sums[bandOfBin[k]] += re[k] * re[k] + im[k] * im[k];
+    const row = Float64Array.from(sums, (v) => db10(v + 1e-20));
+    row[0] = row[1] = row[2];
+    db.push(row);
+  }
+  return { db, hopS: hop / sr };
+}
+
+/**
+ * The bed under an event that starts at sample `onset`: the quietest `quietS` (150 ms) stretch inside the `windowS` (0.6 s)
+ * that ends `gapS` (15 ms) before it, found at a 10 ms hop. { fromS, toS, db (mean power, dB), bands (mean-square power in each
+ * third octave) }, or null when there are not 150 ms before the event to look in.
+ */
+export function bedOf(channels, sr, onset, { windowS = 0.6, quietS = 0.15, gapS = 0.015 } = {}) {
+  const m = monoOf(channels), end = onset - Math.round(gapS * sr), start = Math.max(0, end - Math.round(windowS * sr)), win = Math.round(quietS * sr);
+  if (end - start < win) return null;
+  const hop = Math.round(sr * 0.01), cum = new Float64Array(m.length + 1);
+  for (let i = 0; i < m.length; i++) cum[i + 1] = cum[i] + m[i] * m[i];
+  let best = -1, bestP = Infinity;
+  for (let s = start; s + win <= end; s += hop) { const p = (cum[s + win] - cum[s]) / win; if (p < bestP) { bestP = p; best = s; } }
+  return { fromS: best / sr, toS: (best + win) / sr, db: db10(bestP), bands: bandPowers(m.subarray(best, best + win), sr) };
+}
+
+const DECAY_SPAN_DB = 40;        // a decay is read from the peak down to this far, or to 6 dB over the bed
+const SHAPE_TOL_DB = 2.5;
+const STUTTER_HZ = [4, 60];
+
+/** convex (holds, then falls away), exponential (a straight line in dB), concave (falls fast, then lingers); by the mid-point's deviation from the chord, +-2.5 dB. */
+function decayOf(event, sr, bed) {
+  const env = envelope(event, sr, 0.005, 0.0025);
+  const bedP = bed ? 10 ** (bed.db / 10) : 0;
+  const p = Float64Array.from(env.db, (d) => Math.max(10 ** (d / 10) - bedP, 1e-12));
+  let ip = 0;
+  for (let i = 0; i < p.length; i++) if (p[i] > p[ip]) ip = i;
+  const d = Float64Array.from(p, (v) => db10(v / p[ip]));
+  const stop = bed ? Math.max(-DECAY_SPAN_DB, bed.db + 6 - db10(p[ip] + bedP)) : -DECAY_SPAN_DB;
+  let ie = d.length - 1;
+  for (let i = ip; i < d.length; i++) if (d[i] < stop) { ie = i; break; }
+  if (ie - ip < 8 || d[ie] > -10) return null;
+  const mid = (ip + ie) >> 1, dev = d[mid] - d[ie] / 2;
+  return { shape: dev > SHAPE_TOL_DB ? 'convex' : dev < -SHAPE_TOL_DB ? 'concave' : 'exponential', deviationDb: Math.round(dev * 10) / 10, spanDb: Math.round(-d[ie] * 10) / 10 };
+}
+
+/** Seconds from the start of the event to where it has fallen 40 dB under its peak, the bed's power taken away (for 8 frames of 2.5 ms running), or null without a bed: the ring a bed does not lengthen. */
+function ringOf(event, sr, bed) {
+  if (!bed) return null;
+  const env = envelope(event, sr, 0.005, 0.0025), bedP = 10 ** (bed.db / 10);
+  const p = Float64Array.from(env.db, (d) => 10 ** (d / 10) - bedP);
+  let ip = 0;
+  for (let i = 0; i < p.length; i++) if (p[i] > p[ip]) ip = i;
+  const floor = Math.max(p[ip] * 1e-4, bedP * 0.25);
+  let run = 0;
+  for (let i = ip; i < p.length; i++) {
+    run = p[i] < floor ? run + 1 : 0;
+    if (run >= 8) return (i - 7) * env.hopS;
+  }
+  return env.db.length * env.hopS;
+}
+
+/** The rate (Hz) of a 4 to 60 Hz amplitude modulation of the event's level, or null: the dB envelope with its trend removed, its strongest line in that range against the rest. */
+function stutterOf(event, sr) {
+  const env = envelope(event, sr, 0.002, 0.001), fs = 1 / env.hopS;
+  let ip = 0;
+  env.db.forEach((d, i) => { if (d > env.db[ip]) ip = i; });
+  let ie = ip;
+  for (let i = ip; i < Math.min(env.db.length, ip + Math.round(fs)); i++) if (env.db[i] >= env.db[ip] - 30) ie = i;      // the last frame still within 30 dB, in the first second
+  const len = ie - ip;
+  if (len < 0.15 * fs) return null;
+  const y = Float64Array.from({ length: len }, (_, i) => Math.max(env.db[ip + i], env.db[ip] - 40));
+  const mx = (len - 1) / 2;
+  let my = 0;
+  for (const v of y) my += v / len;
+  let sxy = 0, sxx = 0;
+  for (let i = 0; i < len; i++) { sxy += (i - mx) * (y[i] - my); sxx += (i - mx) ** 2; }
+  const slope = sxx > 0 ? sxy / sxx : 0;
+  let n = 1024;
+  while (n < len * 4) n <<= 1;
+  const re = new Float64Array(n), im = new Float64Array(n);
+  for (let i = 0; i < len; i++) re[i] = (y[i] - my - slope * (i - mx)) * (0.5 - 0.5 * Math.cos((2 * Math.PI * (i + 0.5)) / len));
+  fft(re, im);
+  const amp = (k) => (2 * Math.hypot(re[k], im[k])) / (len / 2);
+  const lo = Math.ceil((STUTTER_HZ[0] * n) / fs), hi = Math.floor((STUTTER_HZ[1] * n) / fs);
+  let best = lo;
+  for (let k = lo; k <= hi; k++) if (amp(k) > amp(best)) best = k;
+  const ref = [];
+  for (let k = Math.ceil((2 * n) / fs); k <= Math.floor((100 * n) / fs); k++) ref.push(amp(k));
+  ref.sort((a, b) => a - b);
+  const med = ref[ref.length >> 1] || 1e-9;
+  return amp(best) >= 1.5 && amp(best) >= 8 * med ? Math.round(((best * fs) / n) * 10) / 10 : null;
+}
+
+/** The start and length (samples) of the loudest 100 ms of a mono signal (a 10 ms hop; the whole of a shorter sound). */
+function loudestWindow(m, sr) {
+  const win = Math.min(m.length, Math.round(0.1 * sr)), hop = Math.round(sr * 0.01);
+  const cum = new Float64Array(m.length + 1);
+  for (let i = 0; i < m.length; i++) cum[i + 1] = cum[i] + m[i] * m[i];
+  let best = 0, bestP = -1;
+  for (let s = 0; s + win <= m.length; s += hop) { const p = cum[s + win] - cum[s]; if (p > bestP) { bestP = p; best = s; } }
+  return { best, win };
+}
+
+/** The third-octave profile of the sound's loudest 100 ms, dB under the total: what a mined event's `balance` is without a bed. */
+export function loudestBalance(channels, sr) {
+  const m = monoOf(channels), { best, win } = loudestWindow(m, sr);
+  return toProfile(bandPowers(m.subarray(best, best + win), sr));
+}
+
+/**
+ * An event measured with its bed taken away. `event` is the event's own channels (cut out of the recording), `bed` from `bedOf`
+ * (null when the recording gives none). Over the event's loudest 100 ms: `addedDb` per third-octave band (event plus bed over
+ * bed), `masked` where the event adds under 1 dB (the music hides it), `balance` the event's profile with the bed subtracted
+ * (-60 in a masked band), `exposedDb` how far the loudest 100 ms stands over the bed (null without one) and `exposed` (at least
+ * 12 dB over it, or no bed): below that, what is read from the event (its family) is a guess. Also the `decay` shape and the
+ * `stutterHz` (4 to 60 Hz amplitude modulation), and `ringS`, the time until the event has fallen 40 dB with the bed's power taken
+ * away (null without a bed), which is the ring a bed does not lengthen.
+ */
+export function eventMeasure(event, sr, bed) {
+  const m = monoOf(event), { best, win } = loudestWindow(m, sr);
+  const on = bandPowers(m.subarray(best, best + win), sr);
+  const addedDb = new Array(28).fill(null), masked = new Array(28).fill(false), sub = new Float64Array(28);
+  for (let b = 0; b < 28; b++) {
+    if (!bed) { sub[b] = on[b]; continue; }
+    addedDb[b] = Math.round(db10((on[b] + 1e-20) / (bed.bands[b] + 1e-20)) * 10) / 10;
+    masked[b] = addedDb[b] < 1;
+    sub[b] = masked[b] ? 0 : Math.max(on[b] - bed.bands[b], 0);
+  }
+  let total = 0;
+  for (const v of sub) total += v;
+  const balance = total > 0 ? toProfile(sub) : new Float64Array(28).fill(PROFILE_FLOOR_DB);
+  if (bed) for (let b = 0; b < 28; b++) if (masked[b]) balance[b] = PROFILE_FLOOR_DB;
+  let power = 0;
+  for (const v of on) power += v;
+  const exposedDb = bed ? Math.round((db10(power + 1e-20) - bed.db) * 10) / 10 : null;
+  return { exposedDb, exposed: exposedDb === null || exposedDb >= 12, addedDb, masked, balance, ringS: ringOf(event, sr, bed), decay: decayOf(event, sr, bed), stutterHz: stutterOf(event, sr) };
+}
+
 /** Everything a palette asks of a cue, in one record. */
 export function measure(channels, sr) {
   const env = envelope(channels, sr);
@@ -245,5 +462,6 @@ export function measure(channels, sr) {
     balanceDb: balanceDb(channels, sr),
     sideMidDb: sideMidDb(channels),
     peaks: peaksOf(sp),
+    bandsDb: Array.from(profileOfSpectrum(sp)),
   };
 }

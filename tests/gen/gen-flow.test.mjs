@@ -72,7 +72,8 @@ test('keys are never printed: not in a plan, not in a provider\'s error that ech
   assert.equal(r.code, 1);
   assert.match(r.err, /401/);
   assert.ok(!(r.out + r.err).includes(KEYS.ELEVENLABS_API_KEY), r.err);
-  assert.match(r.err, /…4321/);
+  assert.ok(!r.err.includes('invalid key'), 'a refusal says what to do, not what the body said');
+  assert.match(r.err, /ELEVENLABS_API_KEY/);
 });
 
 test('a missing key exits 2 before anything is sent, naming the variable and the keys file; the keys file is read, never written', async () => {

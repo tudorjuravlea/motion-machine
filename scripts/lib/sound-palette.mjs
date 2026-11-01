@@ -39,8 +39,8 @@ export function powerUnder(channels, sr, hz) {
  * `durationS`: the cue's own length when it has one (a recipe's, a sample's trimmed length); without it the family follows
  * from the measured ring (1.5 times the time to fall 40 dB is the time to fall 60).
  */
-export function judgeCue(channels, sr, profile, { durationS = null, emphasis = 'normal' } = {}) {
-  const m = measure(channels, sr);
+export function judgeCue(channels, sr, profile, { durationS = null, emphasis = 'normal', measured = null } = {}) {
+  const m = measured ?? measure(channels, sr);                       // `measured`: the caller's own measure(channels, sr), when it has one
   const family = familyOf(Number.isFinite(durationS) && durationS > 0 ? durationS : m.audibleS * 1.5);
   const out = [];
   const add = (check, ok, measured, band, message) => out.push({ check, ok, measured, band, message });

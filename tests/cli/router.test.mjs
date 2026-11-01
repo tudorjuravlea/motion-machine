@@ -31,6 +31,12 @@ test('mm sound routes mine and clone to their scripts and leaves `mm sound <piec
   const { plan } = await import('../../scripts/mm.mjs');
   assert.deepEqual(plan(['sound', 'mine', 'in', '--out', 'o', '--own']), { script: 'sound-mine.mjs', args: ['in', '--out', 'o', '--own'], label: 'sound mine' });
   assert.deepEqual(plan(['sound', 'clone', '--profile', 'glass']), { script: 'sound-clone.mjs', args: ['--profile', 'glass'], label: 'sound clone' });
+  assert.deepEqual(plan(['sound', 'find', 'door', 'slam', '--license', 'cc0']), { script: 'sound-find.mjs', args: ['door', 'slam', '--license', 'cc0'], label: 'sound find' });
+  assert.deepEqual(plan(['sound', 'fetch', 'abc', '--piece', 'p', '--name', 'n']), { script: 'sound-fetch.mjs', args: ['abc', '--piece', 'p', '--name', 'n'], label: 'sound fetch' });
+  assert.match(plan(['sound', 'find', '--help']).help, /--length/);
+  assert.match(plan(['sound', 'fetch', '-h']).help, /--yes/);
+  assert.equal(plan(['sound', 'find', 'door', '--wobble']).code, 2);
+  assert.deepEqual(plan(['sound', './find']), { script: 'sound.mjs', args: ['./find'], label: 'sound' }, 'a piece named find is reached by path');
   assert.deepEqual(plan(['sound', 'pieces/demo-film', '--formats', '16x9']), { script: 'sound.mjs', args: ['pieces/demo-film', '--formats', '16x9'], label: 'sound' });
   assert.deepEqual(plan(['sound']), { script: 'sound.mjs', args: [], label: 'sound' });
   assert.deepEqual(plan(['sound', './mine']), { script: 'sound.mjs', args: ['./mine'], label: 'sound' }, 'a piece named mine is reached by path');

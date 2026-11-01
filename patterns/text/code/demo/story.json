@@ -1,0 +1,38 @@
+{
+  "id": "demo-text-code",
+  "kind": "film",
+  "formats": ["16x9", "9x16", "1x1"],
+  "title": "text/code demo",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "api-change",
+      "layout": "layouts/caption-bar",
+      "duration": 12.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "text/code",
+          "text": "const res = await get(url);\nconst data = await res.json();\nreturn data;",
+          "params": {
+            "dur": 10,
+            "steps": "select \"get(url)\"\n---\ncall \"get(url)\" | One attempt, then it fails\n---\nreplace \"get(url);\"\nget(url, {\n  retry: 3,\n});\n---\nselect \"retry: 3\"\n---\ncall \"retry: 3\" | Retries three times\n---\nselect none\n---\ncall none"
+          }
+        },
+        {
+          "at": 1.2,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "A small API change, read in the order it happens"
+        }
+      ],
+      "say": "A single scene that shows text/code: a call is dimmed to, replaced, and its new part pointed at."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

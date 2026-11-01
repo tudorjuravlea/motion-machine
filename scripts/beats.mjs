@@ -12,6 +12,7 @@ import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { usageText } from './lib/cli.mjs';
 import { bin, inputOf } from './lib/ffmpeg.mjs';
+import { fluxSnap, kickCheck } from './lib/beat-kick.mjs';
 
 export const SAMPLE_RATE = 48000;
 const N = 512;                 // FFT frame: 10.7 ms
@@ -102,6 +103,7 @@ export function pickOnsets(nov, { minGapS = 0.08, rel = 0.35 } = {}) {
 // 0.18 s keep the stronger; scores under 0.45 are dropped; at most 64 are kept. Onset and contrast
 // are normalised over the candidates, not over every hop as brag does, so a click track's accents
 // still stand out instead of tying at 1.
+const SNAP_MIN_RATIO = 1.2;
 const CUE_MIN = 0.45, CUE_GAP_S = 0.18, CUE_MAX = 64, BASS_HZ = 180, CONTRAST_S = 0.5;
 
 const p98 = (vals) => {
@@ -252,8 +254,13 @@ export function analyse(pcm, { bpm = null, sampleRate = SAMPLE_RATE } = {}) {
   const first = (kept[0] ?? onsets[0]).t;
   let t0 = phase + Math.round((first - phase) / T) * T;
   while (t0 < 0) t0 += T;
-  const beats = [];
-  for (let k = 0, t = t0; t < durationS; k++, t = t0 + k * T) beats.push(round3(t));
+  const gridFrom = (start) => { const out = []; for (let k = 0, t = start; t < durationS; k++, t = start + k * T) out.push(t); return out; };
+  // The grid is then moved onto the measured attacks (a 23 ms-window flux searched within ± min(100 ms, 0.3 beat)): the onset envelope above lags real attacks on music.
+  const snap = fluxSnap(pcm, gridFrom(t0), T, sampleRate);
+  const snapped = snap.ratio >= SNAP_MIN_RATIO ? snap.shiftS : 0;
+  t0 += snapped;
+  while (t0 < 0) t0 += T;
+  const beats = gridFrom(t0).map(round3);
 
   // The downbeat is the beat of each four whose onsets carry the most energy; ties keep the first.
   const energy = [0, 0, 0, 0];
@@ -262,8 +269,11 @@ export function analyse(pcm, { bpm = null, sampleRate = SAMPLE_RATE } = {}) {
   for (let p = 1; p < 4; p++) if (energy[p] > energy[bar] * 1.15) bar = p;
   const downbeats = beats.filter((_, i) => i % 4 === bar);
 
+  // Does the grid sit on the kicks? Under half its beats on a kick, and `usable` is false: `mm sound` and W-CUE do not snap cues to it.
+  const kick = kickCheck(pcm, beats, sampleRate);
   return {
     bpm: declared ? bpm : Math.round((60 / T) * 100) / 100,
+    usable: kick.usable, kickCheck: kick, snapMs: Math.round(snapped * 1000),
     beats, downbeats,
     hits: onsets.map((o) => ({ t: round3(o.t), strength: Math.round(o.strength * 1000) / 1000 })),
     strong: strongCues(pcm, nov, beats, onsets, { sampleRate }),

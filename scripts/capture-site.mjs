@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 // mm capture site --url <url> --name <n> [--piece <dir>] [--device phone|laptop|browser]
-//   [--mark "<Label>=<selector>"]… [--hide <selector>]… [--wait <selector>] [--quality 90]
+//   [--mark "<Label>=<selector>"]… [--hide <selector>]… [--wait <selector>] [--quality 90] [--script <steps.json>]
 // A website is captured once, at the device's viewport, as a tall page cut into
 // JPEG tiles of at most 16,000 device px (the browser's texture limit) plus media.json: viewport,
 // page height, tiles and the page-relative box of every mark, so screen patterns can scroll to,
 // tap and point at named things; media.json also holds the wire, the outline of every visible box,
 // dot and text line, for patterns that redraw the page as a thin-line drawing. Cookie banners and
 // --hide selectors are hidden; lazy images are loaded by scrolling the page once before the
-// capture. Only the URL given is opened.
+// capture. Only the URL given is opened. With --script the page is not captured as a picture but played:
+// the steps (goto, wait, move, click, hover, type, scroll) run in a recording Chromium, the pointer's
+// journey is written beside the video as <name>.cursor.json, and the recording is cut into a frame
+// sequence (scripts/lib/session.mjs).
 // Exit 0 written, 1 the page could not be captured, 2 usage or a mark that matches nothing.
 import { mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve, sep } from 'node:path';
@@ -216,8 +219,18 @@ export async function main(argv) {
   try {
     const { values: v } = parseArgs({ args: argv, strict: true, options: {
       url: { type: 'string' }, name: { type: 'string' }, piece: { type: 'string' }, device: { type: 'string' },
-      mark: { type: 'string', multiple: true }, hide: { type: 'string', multiple: true }, wait: { type: 'string' }, quality: { type: 'string' }, 'max-height': { type: 'string' } } });
+      mark: { type: 'string', multiple: true }, hide: { type: 'string', multiple: true }, wait: { type: 'string' }, quality: { type: 'string' }, 'max-height': { type: 'string' }, script: { type: 'string' } } });
     if (!v.url || !v.name) throw fail(usageText('capture site'), 2);
+    if (v.script) {
+      if (v.mark?.length) throw fail('--mark names a place on a page capture; a scripted session writes the boxes of what it clicked into <name>.cursor.json instead', 2);
+      if (!/^(https?|file):\/\//.test(v.url)) throw fail('--url must be an http(s):// or file:// address', 2);
+      if (!/^[a-z0-9][a-z0-9-]*$/.test(v.name)) throw fail('--name must be lowercase letters, digits and hyphens', 2);
+      const device = v.device ?? 'phone';
+      if (!DEVICES[device]) throw fail(`--device must be phone, laptop or browser, not ${device}`, 2);
+      const { captureSession } = await import('./lib/session.mjs');
+      await captureSession({ url: v.url, name: v.name, piece: v.piece, device, viewport: DEVICES[device], hide: v.hide ?? [], wait: v.wait, scriptFile: resolve(v.script), quality: v.quality ? Number(v.quality) : 90, log: (m) => console.log(m) });
+      return 0;
+    }
     const { dir, meta } = await capture({ url: v.url, name: v.name, piece: v.piece, device: v.device ?? 'phone', marks: v.mark ?? [], hide: v.hide ?? [], wait: v.wait, quality: v.quality ? Number(v.quality) : 90, maxHeight: v['max-height'] ? Number(v['max-height']) : MAX_HEIGHT });
     for (const [label, m] of Object.entries(meta.marks)) {
       if (m.fixed && m.overlay != null) console.error(`mark "${label}" is inside a sticky or fixed element: captured as overlay ${m.overlay + 1}, pinned to the screen`);
