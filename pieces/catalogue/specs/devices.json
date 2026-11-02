@@ -218,7 +218,7 @@
        "at": 0.2,
        "slot": "stage",
        "fx": "devices/screen-zoom",
-       "text": "screen-zoom: the screen grows until it fills the frame."
+       "text": "screen-zoom: the device comes closer until it fills the frame."
       }
      ]
     }

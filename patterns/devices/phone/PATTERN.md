@@ -10,7 +10,7 @@ A generic handset that rises into frame with a settling tilt.
 - the `stage` slot of caption-bar
 
 **Do not use when**
-- the content is a recording at full size (use screen-zoom)
+- the content is a recording to be read close up (bring the device closer: `screen/zoom-to`)
 
 ## Params
 | name | type | default | meaning |

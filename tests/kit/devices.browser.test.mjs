@@ -258,3 +258,28 @@ test('model chin: the lid is 0.814 of the base wide, with thin side bezels, a de
     assert.ok(r.cam, 'a small round camera dot in the top bezel');
   } finally { await o.close(); }
 });
+
+test('devices/screen-zoom brings the device closer, bezel and all, until it fills the safe box; the screen is never shown alone', async () => {
+  const o = await openPiece(PAGE, { server, browser, format: '16x9', query: { story: 'devices' } });   // wide: the device has room to come closer
+  try {
+    const sc = (await o.mm.meta()).schedule.scenes.find((x) => x.id === 'screen-zoom');
+    const read = () => o.page.evaluate(() => {
+      const el = document.querySelector('[data-scene="screen-zoom"] [data-device="screen-zoom"]');
+      const stage = el.closest('.mm-stage'), sr = stage.getBoundingClientRect();
+      const safe = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mm-safe')) || 0;
+      const k = sr.width / stage.offsetWidth;
+      const f = el.querySelector('.screen-zoom__frame').getBoundingClientRect(), b = el.querySelector('.screen-zoom__bezel');
+      return { stage: { x: sr.x, y: sr.y, w: sr.width, h: sr.height }, safe: safe * k, frame: { x: f.x, y: f.y, w: f.width, h: f.height }, bezel: Number(getComputedStyle(b).opacity) };
+    });
+    await o.mm.seek(sc.start + 0.3);
+    const rest = await read();
+    await o.mm.seek(sc.end - 0.05);
+    const z = await read();
+    assert.equal(z.bezel, 1, 'the bezel stays: the device is never taken away from its screen');
+    assert.ok(z.frame.w > rest.frame.w * 1.1, `the device comes closer: ${rest.frame.w} to ${z.frame.w}`);
+    const inside = z.frame.x >= z.stage.x + z.safe - 1 && z.frame.y >= z.stage.y + z.safe - 1
+      && z.frame.x + z.frame.w <= z.stage.x + z.stage.w - z.safe + 1 && z.frame.y + z.frame.h <= z.stage.y + z.stage.h - z.safe + 1;
+    assert.ok(inside, `the whole device stays inside the safe box: ${JSON.stringify(z)}`);
+    assert.ok(near(z.frame.w, z.stage.w - 2 * z.safe, 2) || near(z.frame.h, z.stage.h - 2 * z.safe, 2), `and fills it one way: ${JSON.stringify(z)}`);
+  } finally { await o.close(); }
+});

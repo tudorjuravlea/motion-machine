@@ -298,6 +298,7 @@ export function paintScreen(c, scr) {
   const win = !!c.bar?.browser && (c.bar.browser === 'true' || (c.bar.browser !== 'false' && page));
   const inset = Math.round(c.bar ? c.bar.inset(bar && !own, win) * h : 0);   // a page starts below the bars, as on a real screen
   g.translate(0, inset);
+  c.inset = inset / h;                                    // where the hidden screen's top sits on the glass (aimCamera)
   let frame = null;
   for (const content of shown) {
     g.globalAlpha = content.style.opacity === '' ? 1 : Number(content.style.opacity);
@@ -515,12 +516,40 @@ export function mark(c, ry, extra = {}) {
   for (const [k, v] of Object.entries(extra)) d[k] = String(v);
 }
 
+// The zoom of screen/zoom-to as a camera on the device (the 2D devices get the same from screen.js aimDevice):
+// the frame is cropped by s round the zoom's point on the glass, so that point lands where the screen's centre
+// is drawn, at s times the size, rendered at full resolution; the screen's own picture is never magnified.
+// `zoom` is the hidden screen's data-zoom ("x y s", fractions of the screen), absent when there is none.
+function aimCamera(c, zoom) {
+  const cam = c.camera;
+  cam.clearViewOffset();
+  const [x, y, s] = (zoom ?? '').split(' ').map(Number);
+  if (!(s > 1)) { delete c.canvas.dataset.view; delete c.canvas.dataset.focus; return; }
+  c.screenMesh ??= (() => { let m = null; c.scene.traverse((o) => { if (!m && o.isMesh && o.material?.map === c.tex) m = o; }); return m; })();
+  if (!c.screenMesh) return;
+  const g = c.screenMesh.geometry;
+  if (!g.boundingBox) g.computeBoundingBox();
+  const b = g.boundingBox, W = c.canvas.width, H = c.canvas.height, inset = c.inset ?? 0;
+  c.scene.updateMatrixWorld(); cam.updateMatrixWorld();
+  const at = (u, v) => {   // a point of the hidden screen (fractions) on the canvas, in px
+    const p = new THREE.Vector3(b.min.x + u * (b.max.x - b.min.x), b.max.y - (v + inset) * (b.max.y - b.min.y), 0);
+    c.screenMesh.localToWorld(p).project(cam);
+    return { x: ((p.x + 1) / 2) * W, y: ((1 - p.y) / 2) * H };
+  };
+  const F = at(x, y), C = at(0.5, 0.5);
+  cam.setViewOffset(W, H, F.x - C.x / s, F.y - C.y / s, W / s, H / s);
+  const r = (n) => Math.round(n * 10) / 10;
+  c.canvas.dataset.view = `${r(F.x - C.x / s)} ${r(F.y - C.y / s)} ${r(W / s)} ${r(H / s)}`;
+  c.canvas.dataset.focus = `${r(F.x)} ${r(F.y)} ${r(C.x)} ${r(C.y)}`;
+}
+
 // render after the seek's decodes, with the screen copied for this t
 export function draw(c, holder, ctx) {
   const scr = holder.querySelector('[data-screen]');
   ctx.afterSettle(() => ctx.seeded(() => {   // a first render compiles programs, and Three.js names them randomly: seeded here
     const frame = scr ? paintScreen(c, scr) : null;
     if (frame) c.canvas.dataset.frame = frame; else delete c.canvas.dataset.frame;
+    aimCamera(c, scr?.dataset.zoom);
     if (c.look) c.look.render(); else c.renderer.render(c.scene, c.camera);
   }));
 }

@@ -8,6 +8,7 @@ A phone in real 3D rises into frame and turns, its screen playing a recording or
 - a hero moment for an app: the phone turns from edge-on to face the viewer
 - a slow turntable while the screen scrolls or plays
 - a showcase: the phone shows its back, then makes a slow half-turn to face the viewer
+- an illustration's angle with a real phone (`iso`), or one that rises off the floor to face the viewer (`rise`)
 - a product shown from idea to real (`drawn`): the phone and its page are drawn in thin lines, then become the real phone
 
 **Do not use when**
@@ -17,11 +18,14 @@ A phone in real 3D rises into frame and turns, its screen playing a recording or
 ## Params
 | name | type | default | meaning |
 |---|---|---|---|
-| `move` | enum(hero|turntable|still|showcase|cross|drawn) | `hero` | `hero` turns from edge-on to facing over the entrance, then sways slowly; `turntable` turns about 20° a second; `still` holds a slight angle; `showcase` starts with the back to the viewer and turns half a turn to face it over 3.2 s, then holds still; `cross` faces the viewer at `from`, then travels to `to` making one full turn, its back to the viewer half-way. `drawn` draws the phone lying in the hairline view (from 30° up, turned 45°, nearly orthographic): the body, its keys and its crease, the glass lifted off it on dashed guides with the island, the status bar and the page's wire (`mm capture site` records it) spreading out from the island; the glass settles (0.7 s ease-out), a band with one bright edge sweeps along the phone and turns the lines into the real phone, then it stands up into the hero's camera as the field widens, about 6.5 s after it arrives; give screen actions after that. In a deck every rest faces the viewer (a `cross` rests at `to`) |
+| `move` | enum(hero|turntable|still|showcase|cross|drawn|iso|rise) | `hero` | `hero` turns from edge-on to facing over the entrance, then sways slowly; `turntable` turns about 20° a second; `still` holds a slight angle; `showcase` starts with the back to the viewer and turns half a turn to face it over 3.2 s, then holds still; `cross` faces the viewer at `from`, then travels to `to` making one full turn, its back to the viewer half-way. `drawn` draws the phone lying in the hairline view (from 30° up, turned 45°, nearly orthographic): the body, its keys and its crease, the glass lifted off it on dashed guides with the island, the status bar and the page's wire (`mm capture site` records it) spreading out from the island; the glass settles (0.7 s ease-out), a band with one bright edge sweeps along the phone and turns the lines into the real phone, then it stands up into the hero's camera as the field widens, about 6.5 s after it arrives; give screen actions after that. `iso` lies the real phone in that same view (from 30° up, turned 45°, nearly orthographic), turning slowly a few degrees about the vertical: an illustration's angle with the real slab, rim and glass. `rise` starts there, turning the same way, and stands the phone up into the hero's camera, the field widening into perspective as it comes up, from `riseAt` over `riseFor`, then sways like `hero`. In a deck every rest faces the viewer (a `cross` rests at `to`; an `iso` lies) |
 | `from` | number | -0.28 | `cross`: where the phone starts, as a fraction of its slot's width from the centre (negative is left) |
 | `to` | number | 0.28 | `cross`: where it ends, the same way |
 | `crossAt` | number | 2 | `cross`: seconds after the phone arrives that the cross begins |
 | `crossFor` | number | 2.4 | `cross`: seconds the cross takes; the back faces the viewer at its middle, so a `screen/swap` with `how: cut` at `crossAt + crossFor / 2` changes the screen unseen |
+| `side` | enum(left|right) | `left` | `iso` and `rise`: which way the lying phone is turned; `right` mirrors the 45° |
+| `riseAt` | number | 1.2 | `rise`: seconds after the phone arrives that it starts to stand up |
+| `riseFor` | number | 1.8 | `rise`: seconds it takes to stand up |
 | `metal` | enum(aluminium|titanium) | `aluminium` | the frame: satin aluminium in a neutral, faintly cool grey; or titanium, darker and faintly warm with a finer brushed sheen |
 | `status` | enum(auto|true|false) | `auto` | the top bar drawn into the screen: `auto` shows it on a bare screen and a captured page (the page starts below it, as on a real screen) and leaves it to a recording or a still, which carry their own; its text goes dark or light with the content underneath |
 | `statusTime` | string | `10:00` | the time in the top bar |

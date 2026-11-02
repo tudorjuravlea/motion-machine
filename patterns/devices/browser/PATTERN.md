@@ -10,7 +10,7 @@ A generic browser window with a toolbar that settles in with a small scale and l
 - the `stage` slot of caption-bar
 
 **Do not use when**
-- the viewer should read the page contents (use screen-zoom)
+- the viewer should read the page contents (bring the device closer: `screen/zoom-to`)
 
 ## Params
 | name | type | default | meaning |

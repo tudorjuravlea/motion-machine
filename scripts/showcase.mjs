@@ -6,8 +6,9 @@
 // (the device from the content's shape, the whole recording as the length, the format nearest the device's screen),
 // writes a generated piece (story.json stamped `generator`, so the studio reads it as written by this script) with
 // the recording prepared (`mm media prep`) or the still copied, runs the gate and exports the MP4. The looks are the
-// device's own moves. Nothing zooms unless --zoom asks: then `screen/zoom-to` zooms on the clicks and taps of the
-// recording's pointer track, or, with no track, where the recording moves (scripts/lib/activity.mjs).
+// device's own moves. Nothing zooms unless --zoom asks: then `screen/zoom-to` brings the whole device closer on the
+// clicks and taps of the recording's pointer track, or, with no track, where the recording moves (scripts/lib/activity.mjs);
+// the picture is never magnified inside the device.
 // --check prints the plan and writes nothing. --html also writes out/hero.html, one self-contained page that plays
 // the film once and then idles with a float that follows the pointer. --stills writes a contact sheet instead of
 // the film. --audio lays a finished track under the MP4. The piece is pieces/showcase-<name>/ unless --piece says;

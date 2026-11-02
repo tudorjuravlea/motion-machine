@@ -11,7 +11,7 @@ Puts a recording on the brand's ground with no device around it: a rounded plane
 
 **Do not use when**
 - the viewer should see a device (use `devices/phone`, `devices/laptop` or `devices/browser`)
-- the recording is to be read full frame (use `devices/screen-zoom`)
+- the recording is to be read close up (bring the device closer: `screen/zoom-to`)
 
 ## Params
 | name | type | default | meaning |

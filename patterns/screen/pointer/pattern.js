@@ -40,7 +40,8 @@ export default {
     const { x, y } = ctx.at(`${(pos.cx * 100).toFixed(4)}%,${(pos.cy * 100).toFixed(4)}%`);
     const zoom = view(ctx.state.zoom).s, box = ctx.box;
     const shape = shapeOf(typeAt(track, t));
-    const px = box.w * num(prm.size, 0.045) * (1 + (zoom - 1) * Math.min(1, Math.max(0, num(prm.grow, 0.6))));
+    // the zoom brings the device closer, cursor and all, so the cursor is drawn smaller by it to grow by only `grow` of it
+    const px = (box.w * num(prm.size, 0.045) * (1 + (zoom - 1) * Math.min(1, Math.max(0, num(prm.grow, 0.6))))) / zoom;
     const k = px / shape.h;
     const look = LOOKS[prm.look] ?? LOOKS.classic;
     const path = svg.firstElementChild;
@@ -54,7 +55,7 @@ export default {
     svg.style.transform = `scale(${round(bounceScale(clickBounce(track, t), num(prm.bounce, 2.5)))})`;
     // the cursor's speed on the screen: the path's, in surface fractions a second, times the screen's size and the camera's zoom
     const speed = Math.hypot(pos.vx * box.w, pos.vy * box.h) * zoom;
-    const b = blurPx(speed, num(prm.blur, 0.35));
+    const b = blurPx(speed, num(prm.blur, 0.35)) / zoom;   // drawn on the screen, which the zoom magnifies
     svg.style.filter = b > 0.05 ? `blur(${round(b, 100)}px)` : 'none';
     path.setAttribute('d', shape.d);
     path.style.fill = `var(--mm-color-${role(prm.fill, 'ink')})`;

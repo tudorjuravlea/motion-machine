@@ -46,9 +46,9 @@ plan, the piece, the gate and the export); this skill finds the file, settles th
 `--contained` `--html` `--stills N|s1,s2` `--audio <file>` `--piece <dir>` `--out <file>` `--check`
 
 - **No zooms unless asked.** Pass `--zoom` only when the user asks for zooms on taps, clicks or the
-  action: it zooms on the clicks and taps of the recording's pointer track (a recording made with
-  `mm capture site --script`, or one with a `.cursor.json` beside it), or, with no track, where the
-  recording moves.
+  action: it brings the whole device closer, bezel and all, on the clicks and taps of the recording's
+  pointer track (a recording made with `mm capture site --script`, or one with a `.cursor.json` beside
+  it), or, with no track, where the recording moves. The app is never zoomed inside the device.
 - `--contained` keeps the whole device inside the safe margin: for a slide, a deck or a column.
 - `--html` also writes a hero page: one file that plays the film once, then floats and tilts toward
   the pointer.

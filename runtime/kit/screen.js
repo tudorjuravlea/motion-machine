@@ -61,8 +61,9 @@ export function overlayY(o, scrollY) {
 }
 
 /**
- * The zoom as drawn: a push-in on the screen's own picture, so its centre is clamped to keep the view
- * inside the screen (what lay above the visible page, or behind a pinned header, never shows).
+ * The zoom as drawn: the camera brings the whole device closer (aimDevice), never magnifies the picture
+ * inside the screen; its centre is clamped so the screen still covers the screen's rest box (what lay
+ * above the visible page, or behind a pinned header, never shows there).
  */
 export function view(z) {
   const s = Math.max(1, z.s), m = 0.5 / s;
@@ -72,7 +73,8 @@ export function view(z) {
 
 /**
  * Where a target sits on the screen, as fractions of the screen box (0..1 each way), under the
- * current scroll and zoom. A target is a mark label from media.json or "x%,y%" of the screen.
+ * current scroll. The zoom moves the device, screen and all, so it does not move a point on the screen.
+ * A target is a mark label from media.json or "x%,y%" of the screen.
  */
 export function locate(state, target, box) {
   let x, y;
@@ -86,8 +88,7 @@ export function locate(state, target, box) {
     x = ((m.x + m.w / 2) * k) / box.w;
     y = ((o ? overlayY(o, state.scrollY) + m.y - o.y : m.y - state.scrollY) + m.h / 2) * k / box.h;
   }
-  const z = view(state.zoom);
-  return { x: 0.5 + z.s * (x - z.x), y: 0.5 + z.s * (y - z.y) };
+  return { x, y };
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -187,15 +188,13 @@ function placeContent(el, content, state, box, track, warn) {
 }
 
 /**
- * Draws the state: the current content (scrolled, at its frame, zoomed) and, during a screen/swap,
+ * Draws the state: the current content (scrolled, at its frame) and, during a screen/swap,
  * the incoming content sliding or fading in over it. Swaps that overlap stack in start order:
  * each later one arrives over the earlier ones, and a sliding one pushes the layer under it left. Overlays are hidden here; the kit then calls
  * each active action's draw() on its overlay.
  * @param {HTMLElement} layer @param {object} state @param {{ track: Function, box: { w: number, h: number }, swaps: Map, warn?: (src: string) => void }} o
  */
 export function paint(layer, state, { track, box, swaps, warn }) {
-  const z = view(state.zoom);
-  const zoom = `translate(${box.w / 2 - z.s * z.x * box.w}px, ${box.h / 2 - z.s * z.y * box.h}px) scale(${z.s})`;
   const cur = state.content.base ?? '';
   const sw = (state.swapping ?? []).filter((x) => x.p > 0 && x.p < 1);
   const push = (k) => (sw[k]?.how === 'slide' ? `translateX(${-0.3 * sw[k].p * box.w}px) ` : '');   // the layer under a sliding swap
@@ -203,7 +202,7 @@ export function paint(layer, state, { track, box, swaps, warn }) {
     const asset = el.dataset.asset;
     const k = sw.findLastIndex((x) => x.to === asset);
     if (asset === cur && k < 0) {
-      el.style.cssText = `transform:${push(0)}${zoom};`;
+      el.style.cssText = push(0) ? `transform:${push(0).trim()};` : '';
       placeContent(el, state.content, state, box, track, warn);
     } else if (k >= 0) {
       const x = sw[k], under = push(k + 1);
@@ -223,4 +222,31 @@ export function paint(layer, state, { track, box, swaps, warn }) {
     delete el.dataset.clip;
   }
   for (const fx of layer.querySelectorAll(':scope > .mm-screen-fx')) fx.style.cssText = 'display:none;';
+}
+
+/**
+ * The zoom as a camera on the device: `item` (the beat's element, device and all) is moved so the zoom's
+ * point on the screen lands where the screen's centre was, at s times the size; the picture on the screen
+ * keeps its own scale. Composed in front of whatever transform the item already has this seek. A 3D device
+ * draws the camera itself (device3d.js reads `data-zoom` off its hidden screen), so it only gets the attribute.
+ * @param {HTMLElement} item @param {HTMLElement} screenEl @param {{ x: number, y: number, s: number }} zoom
+ */
+export function aimDevice(item, screenEl, zoom) {
+  const z = view(zoom);
+  if (z.s === 1) { delete screenEl.dataset.zoom; return; }
+  screenEl.dataset.zoom = `${z.x} ${z.y} ${z.s}`;
+  if (item.querySelector('canvas[data-3d]')) return;
+  const r = screenEl.getBoundingClientRect();
+  const F = { x: r.left + z.x * r.width, y: r.top + z.y * r.height }, C = { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  const cs = getComputedStyle(item);
+  const own = cs.transform === 'none' ? '' : cs.transform;
+  const [ox, oy] = cs.transformOrigin.split(' ').map(parseFloat);
+  const keep = item.style.transform;
+  item.style.transform = 'none';
+  const b = item.getBoundingClientRect();
+  item.style.transform = keep;
+  const k = item.offsetWidth ? b.width / item.offsetWidth : 1;   // a preview may show the stage scaled
+  const O = { x: b.left + ox * k, y: b.top + oy * k };
+  const tx = (C.x - O.x - z.s * (F.x - O.x)) / k, ty = (C.y - O.y - z.s * (F.y - O.y)) / k;
+  item.style.transform = `translate(${tx.toFixed(3)}px, ${ty.toFixed(3)}px) scale(${z.s.toFixed(5)}) ${own}`.trim();
 }

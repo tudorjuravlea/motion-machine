@@ -43,6 +43,25 @@ test('the same t gives the same pixels in any seek order', async () => {
   } finally { await o.close(); await f.close(); }
 });
 
+test('screen/zoom-to brings the 3D phone closer: the camera crops the frame by s round the point, the screen texture is not magnified', async () => {
+  const o = await open();
+  try {
+    const t0 = startOf((await o.mm.meta()).schedule, 'zoom');
+    const read = () => o.page.evaluate(() => { const c = document.querySelector('[data-scene="zoom"] canvas[data-3d]'); return { w: c.width, h: c.height, view: c.dataset.view ?? null, focus: c.dataset.focus ?? null }; });
+    await framePng(o.page, t0 + 0.5);
+    assert.equal((await read()).view, null, 'no crop before the zoom');
+    await framePng(o.page, t0 + 1.6);
+    const z = await read();
+    assert.ok(z.view, 'the camera crops the frame');
+    const [x, y, w, h] = z.view.split(' ').map(Number);
+    assert.ok(Math.abs(w - z.w / 2) < 0.6 && Math.abs(h - z.h / 2) < 0.6, `a crop of half the frame each way: ${z.view}`);
+    // the point lands where the screen's centre is drawn without the crop
+    const [fx, fy, cx, cy] = z.focus.split(' ').map(Number);
+    assert.ok(Math.abs(x + cx / 2 - fx) < 0.6 && Math.abs(y + cy / 2 - fy) < 0.6, JSON.stringify(z));
+    assert.ok(fy < cy, 'a point in the upper half of the screen sits above its centre');
+  } finally { await o.close(); }
+});
+
 test('a deck rest shows the phone facing the viewer', async () => {
   const o = await open('phone3d-deck', '16x9');
   try {

@@ -24,15 +24,19 @@ const SECOND = JSON.parse(readFileSync(join(PAGE, 'session.json'), 'utf8')).scen
 const at = (r, scene = 0) => scene * SECOND + 0.2 + r;
 const click = (selector) => track.targets.find((g) => g.selector === selector);
 
-/** Where the screen layer draws the recording (from its content's transform) and the pointer's tip, in screen px. */
+/**
+ * The camera as a transform of the recording in the screen's own px (x, y, s: where the device's zoom puts it, read
+ * from the screen's data-zoom; the picture itself is never magnified) and the pointer's tip, in the screen's px.
+ */
 const geometry = (page, scene) => page.evaluate((id) => {
   const layer = document.querySelector(`[data-scene="${id}"] .mm-screen`);
   const content = layer.querySelector('.mm-screen__content');
-  const m = /translate\(([-\d.e]+)px, ([-\d.e]+)px\) scale\(([-\d.e]+)\)/.exec(content.style.transform);
+  const [zx, zy, s] = (layer.parentElement.dataset.zoom ?? '0.5 0.5 1').split(' ').map(Number);
+  const W = layer.clientWidth, H = layer.clientHeight;
   const svg = layer.querySelector('.mm-screen-fx .pointer');
   return {
-    box: { w: layer.clientWidth, h: layer.clientHeight },
-    x: Number(m[1]), y: Number(m[2]), s: Number(m[3]),
+    box: { w: W, h: H }, unscaled: !content.style.transform.includes('scale'),
+    x: W / 2 - s * zx * W, y: H / 2 - s * zy * H, s,
     pointer: svg && svg.style.display !== 'none' ? { left: parseFloat(svg.style.left), top: parseFloat(svg.style.top), h: parseFloat(svg.style.height), scale: svg.style.transform } : null,
     filter: content.style.filter,
   };
@@ -56,7 +60,9 @@ test('the cursor is drawn with its tip on the clicked element, under the camera 
       assert.ok(geo.pointer, `${sel}: a cursor is drawn at the click`);
       const shape = shapeOf(sel === '#title' ? 'text' : 'pointer');
       const k = geo.pointer.h / shape.h;
-      const tip = { x: geo.pointer.left + shape.hot[0] * k, y: geo.pointer.top + shape.hot[1] * k };
+      assert.ok(geo.unscaled, `${sel}: the recording is not magnified inside the screen`);
+      // the tip on the screen, then under the camera that brings the device closer
+      const tip = { x: geo.x + geo.s * (geo.pointer.left + shape.hot[0] * k), y: geo.y + geo.s * (geo.pointer.top + shape.hot[1] * k) };
       // the box of the target, in the screen's px under the camera's transform
       const b = g.box, W = geo.box.w, H = geo.box.h;
       const r = { l: b.x * W * geo.s + geo.x, r: (b.x + b.w) * W * geo.s + geo.x, t: b.y * H * geo.s + geo.y, b: (b.y + b.h) * H * geo.s + geo.y };

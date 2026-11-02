@@ -108,7 +108,7 @@ const screenAt = (page, scene) => page.evaluate((id) => {
   const dr = dot?.getBoundingClientRect();
   const lab = out?.querySelector('.callout__label')?.getBoundingClientRect();
   const content = shown[0];
-  return { box: { x: r.x, y: r.y, w: s.clientWidth, h: s.clientHeight }, shown: shown.map((c) => c.dataset.asset), tiles,
+  return { box: { x: r.x, y: r.y, w: s.clientWidth, h: s.clientHeight }, rect: { x: r.x, y: r.y, w: r.width, h: r.height }, shown: shown.map((c) => c.dataset.asset), tiles,
     transform: content ? getComputedStyle(content).transform : null,
     ring: rr && { cx: rr.x + rr.width / 2, cy: rr.y + rr.height / 2 }, dot: dr && { cx: dr.x + dr.width / 2, cy: dr.y + dr.height / 2 },
     label: lab && { x: lab.x, w: lab.width, text: out.querySelector('.callout__label').textContent } };
@@ -203,16 +203,23 @@ test('screen/swap at p = 1 shows only the new asset', async () => {
   } finally { await o.close(); }
 });
 
-test('screen/zoom-to at p = 1 has the point at the screen centre at scale s', async () => {
+test('screen/zoom-to brings the whole device closer: the app keeps its scale on the screen, the device grows by s with the point at the screen\'s rest centre', async () => {
   const o = await openActions();
   try {
     const t0 = startOf((await o.mm.meta()).schedule, 'zoom');
+    await o.mm.seek(t0 + 0.5);   // the zoom starts here, the device has arrived
+    const rest = await screenAt(o.page, 'zoom');
     await o.mm.seek(t0 + 1.6);
     const s = await screenAt(o.page, 'zoom');
-    const [a, , , d, e, f] = s.transform.match(/matrix\(([^)]+)\)/)[1].split(',').map(Number);
-    assert.equal(a, 2); assert.equal(d, 2);
-    // the content point (0.5, 0.25) of the screen maps to its centre
-    assert.ok(Math.abs(e + 2 * 0.5 * s.box.w - s.box.w / 2) <= 2 && Math.abs(f + 2 * 0.25 * s.box.h - s.box.h / 2) <= 2, s.transform);
+    const scaleOf = (tr) => (tr && tr !== 'none' ? Number(tr.match(/matrix\(([^)]+)\)/)[1].split(',')[0]) : 1);
+    assert.equal(scaleOf(s.transform), 1, `the app is not magnified inside the screen: ${s.transform}`);
+    const k = rest.box.w ? s.rect.w / rest.rect.w : 0;
+    assert.ok(Math.abs(k - 2) < 0.02, `the device is twice as large: ${k}`);
+    // the screen point (0.5, 0.25) sits where the screen's centre was before the zoom
+    const px = s.rect.x + 0.5 * s.rect.w, py = s.rect.y + 0.25 * s.rect.h;
+    assert.ok(Math.abs(px - (rest.rect.x + rest.rect.w / 2)) <= 2 && Math.abs(py - (rest.rect.y + rest.rect.h / 2)) <= 2, JSON.stringify({ px, py, rest: rest.rect }));
+    const bezel = await o.page.evaluate(() => { const d = document.querySelector('[data-scene="zoom"] [data-device]'); const r = d.getBoundingClientRect(); return { w: r.width }; });
+    assert.ok(bezel.w > s.rect.w, 'the bezel comes with it');
   } finally { await o.close(); }
 });
 

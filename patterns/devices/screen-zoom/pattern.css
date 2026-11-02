@@ -1,5 +1,5 @@
-/* devices/screen-zoom: a framed screen that grows until the screen alone fills the safe box.
-   The bezel fades out as the zoom ends, so the last rest is a clean full-frame screen. */
+/* devices/screen-zoom: a framed screen that comes closer, bezel and all, until the whole device fills
+   the safe box. */
 .screen-zoom {
   position: relative;
   width: min(calc(var(--mm-frame-w) * 0.7), calc(var(--mm-frame-h) * 0.5 * 800 / 520));

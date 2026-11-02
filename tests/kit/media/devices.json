@@ -302,6 +302,22 @@
         }
       ],
       "say": ""
+    },
+    {
+      "id": "screen-zoom",
+      "layout": "layouts/stage",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/screen-zoom",
+          "text": "Everything on one screen."
+        }
+      ],
+      "say": ""
     }
   ]
 }

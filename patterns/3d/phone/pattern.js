@@ -27,6 +27,8 @@ const cache = new WeakMap();
 const GAP = 0.3, GLASS = 0.012, FOV0 = 2.5, FOV1 = 28;
 const axis = (x, y, z, a) => new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(x, y, z), a);
 const ISO = axis(1, 0, 0, Math.PI / 6).multiply(axis(0, 1, 0, Math.PI / 4)).multiply(axis(1, 0, 0, -Math.PI / 2));
+// the same lying view turned the other way (side right) and turned a little more (spin, radians)
+const isoOf = (sign, spin = 0) => axis(1, 0, 0, Math.PI / 6).multiply(axis(0, 1, 0, sign * (Math.PI / 4 + spin))).multiply(axis(1, 0, 0, -Math.PI / 2));
 const ISO_BOX = (() => {   // the lying phone's box on screen at its most open (rule 03: fit the extreme pose)
   const v = new THREE.Vector3(), xs = [], ys = [];
   for (const x of [-W / 2, W / 2]) for (const y of [-H / 2, H / 2]) for (const z of [-D / 2, D / 2 + GAP + GLASS]) { v.set(x, y, z).applyQuaternion(ISO); xs.push(v.x); ys.push(v.y); }
@@ -46,8 +48,19 @@ function drawnPose(c, u, q, ctx) {
   const ph = phases(u, { deck: !!ctx.deck, rest: q >= 1 }), e = ph.rise;
   const settled = Math.max(0, u - DRAWN.rise[0] - DRAWN.rise[1]);
   const ry = ctx.deck ? 0 : -0.16 + 0.05 * Math.sin(settled * 0.8);
-  c.phone.quaternion.slerpQuaternions(ISO, new THREE.Quaternion().setFromEuler(new THREE.Euler(0.04, ry, 0)), e);
-  c.phone.position.set(-ISO_BOX.cx * (1 - e), -ISO_BOX.cy * (1 - e), 0);
+  liePose(c, ISO, 1, e, ry);
+  c.glow.material.opacity = 0.75 * e;
+  const base = -0.9 + 1.64 * ph.reveal;   // the sheen crosses the glass with the band, then rests as the hero's
+  c.shine.material.map.offset.x = base + (0.74 + ry * 1.15 - base) * e;
+  return { ph, ry, gap: GAP * (1 - ph.gather) };
+}
+
+// the lying phone (quaternion `lie`, its box mirrored by `sign`) turning up into the hero's pose at e
+// = 1 (turned ry), the field widening from nearly orthographic to the hero's as the camera comes in
+// so the phone keeps its size on screen
+function liePose(c, lie, sign, e, ry) {
+  c.phone.quaternion.slerpQuaternions(lie, new THREE.Quaternion().setFromEuler(new THREE.Euler(0.04, ry, 0)), e);
+  c.phone.position.set(-sign * ISO_BOX.cx * (1 - e), -ISO_BOX.cy * (1 - e), 0);
   const a = c.camera.aspect, vIso = Math.max(ISO_BOX.h / 0.8, ISO_BOX.w / (0.86 * a)), vHero = (H * 1.08) / Math.min(1, a / 0.62);
   const fov = Math.exp(Math.log(FOV0) + (Math.log(FOV1) - Math.log(FOV0)) * e);
   const dist = ((vIso + (vHero - vIso) * e) / 2) / Math.tan((fov * Math.PI) / 360);
@@ -55,10 +68,20 @@ function drawnPose(c, u, q, ctx) {
   c.camera.position.set(0, 0.05 * e, dist);
   c.camera.lookAt(0, -0.05 * e, 0);
   c.floor.userData.cast = 0.28 * Math.min(1, Math.max(0, (e - 0.4) / 0.6));
+}
+
+// iso and rise: the real phone lying in the hairline view, turning slowly about the vertical (iso
+// stays there; rise stands it up into the hero's camera over riseFor seconds from riseAt)
+function isoPose(c, u, q, ctx) {
+  const prm = ctx.params ?? {}, sign = prm.side === 'right' ? -1 : 1;
+  const at = Number(prm.riseAt ?? 1.2), dur = Math.max(0.1, Number(prm.riseFor ?? 1.8));
+  const e = prm.move === 'iso' ? 0 : ctx.deck ? (q >= 1 ? 1 : 0) : smoothstep01((u - at) / dur);
+  const spin = ctx.deck ? 0 : 0.06 * Math.sin(u * 0.5) * (1 - e);   // lying, it never holds frozen
+  const ry = ctx.deck ? 0 : -0.16 + 0.05 * Math.sin(Math.max(0, u - at - dur) * 0.8);
+  liePose(c, isoOf(sign, spin), sign, e, ry);
   c.glow.material.opacity = 0.75 * e;
-  const base = -0.9 + 1.64 * ph.reveal;   // the sheen crosses the glass with the band, then rests as the hero's
-  c.shine.material.map.offset.x = base + (0.74 + ry * 1.15 - base) * e;
-  return { ph, ry, gap: GAP * (1 - ph.gather) };
+  sweep(c.shine, ry, 0.74);
+  return { ry };
 }
 
 // the wire of the page on the screen, as screen-plane shapes in css px of the hidden screen
@@ -264,7 +287,10 @@ export default {
   canvasText: true,   // the top bar's time, network and menu words are drawn into the screen texture
   ambient: true,   // it keeps turning after it arrives: a move until the scene ends (schedule)
   params: {
-    move: { type: 'enum(hero|turntable|still|showcase|cross|drawn)', default: 'hero', meaning: 'hero turns from edge-on to facing and sways; turntable turns slowly the whole time; still holds a slight angle; showcase starts with the back to the viewer and makes a slow half-turn to face it, then holds; cross faces the viewer at `from`, then travels to `to` making one full turn (its back shows half-way); drawn draws the phone lying in thin lines, its glass and the page\'s wire lifted on dashed guides, settles the glass, sweeps a band along it that turns the lines into the real phone, then stands it up into the camera (about 6.5 s; screen actions after that)' },
+    move: { type: 'enum(hero|turntable|still|showcase|cross|drawn|iso|rise)', default: 'hero', meaning: 'hero turns from edge-on to facing and sways; turntable turns slowly the whole time; still holds a slight angle; showcase starts with the back to the viewer and makes a slow half-turn to face it, then holds; cross faces the viewer at `from`, then travels to `to` making one full turn (its back shows half-way); drawn draws the phone lying in thin lines, its glass and the page\'s wire lifted on dashed guides, settles the glass, sweeps a band along it that turns the lines into the real phone, then stands it up into the camera (about 6.5 s; screen actions after that); iso lies the real phone in that view (from 30° up, turned 45°, nearly orthographic) and turns it slowly; rise starts it there and stands it up into the hero\'s camera at riseAt over riseFor' },
+    side: { type: 'enum(left|right)', default: 'left', meaning: 'iso and rise: which way the lying phone is turned (right mirrors the 45°)' },
+    riseAt: { type: 'number', default: 1.2, meaning: 'rise: seconds after the phone arrives that it starts to stand up' },
+    riseFor: { type: 'number', default: 1.8, meaning: 'rise: seconds it takes to stand up' },
     from: { type: 'number', default: -0.28, meaning: 'cross: where the phone starts, as a fraction of its slot\'s width from the centre (negative is left)' },
     to: { type: 'number', default: 0.28, meaning: 'cross: where it ends, the same way' },
     crossAt: { type: 'number', default: 2, meaning: 'cross: seconds after the phone arrives that the cross begins' },
@@ -295,6 +321,16 @@ export default {
       mark(c, dp.ry, { cutout: c.cutout });
       ctx.afterSettle(() => drawnLines(c, holder, u, dp));
       if (dp.ph.reveal > 0) draw(c, holder, ctx);
+      return;
+    }
+    if (ctx.params?.move === 'iso' || ctx.params?.move === 'rise') {
+      const ip = isoPose(c, u, q, ctx);
+      c.canvas.style.visibility = '';
+      holder.querySelector(':scope > canvas.drawn__lines')?.style.setProperty('display', 'none');
+      holder.style.opacity = String(Math.round(clamp01(q / 0.4) * 1000) / 1000);
+      sweep(c.backShine, ip.ry + Math.PI, 0.18);
+      mark(c, ip.ry, { cutout: c.cutout });
+      draw(c, holder, ctx);
       return;
     }
     if (c.camera.fov !== FOV1) { c.camera.fov = FOV1; c.camera.near = 0.5; c.camera.far = 60; c.camera.updateProjectionMatrix(); }

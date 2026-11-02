@@ -1,6 +1,7 @@
-// screen/zoom-to: the camera of a screen. Mode `mark` pushes in on a mark or a percent point until it sits
-// at the screen's centre at scale `s`, from wherever the screen's zoom was; the device stays where it is,
-// only its picture is magnified, clipped by the screen. Mode `auto` reads the pointer track of the
+// screen/zoom-to: the camera on a device. Mode `mark` brings the whole device closer until a mark or a percent
+// point of its screen sits where the screen's centre was, at `s` times the size, from wherever the zoom was;
+// the picture is never magnified inside the screen (the kit draws the zoom on the device: aimDevice in
+// runtime/kit/screen.js, and a 3D device's own camera in device3d.js). Mode `auto` reads the pointer track of the
 // recording on the screen (mm capture site --script) and zooms where the pointer clicked, with the
 // camera's own timing (runtime/kit/camera.js): it has started about a second before the click, joins
 // zooms that are close, follows the cursor a little, and has weight. The recording's own time is the
@@ -80,7 +81,7 @@ export default {
   dur: 'slow',
   params: {
     at: { type: 'string', default: '50%,50%', meaning: 'mark: a mark label from media.json, or "x%,y%" of the screen' },
-    s: { type: 'number', default: 1.6, meaning: 'mark: the magnification at p = 1 (1 to 4)' },
+    s: { type: 'number', default: 1.6, meaning: 'mark: how much larger the device is at p = 1 (1 to 4)' },
     mode: { type: 'enum(mark|auto)', default: 'mark', meaning: 'mark: push in on `at`; auto: zoom where the recording\'s pointer clicked (it needs a pointer track), or only where `regions` say on a recording without one' },
     depth: { type: 'string', default: 'medium', meaning: 'auto: how far, a step of the ladder (gentle 1.25, soft 1.5, medium 1.8, close 2.2, tight 3.5, macro 5), a number 1 to 5, or fit (the deepest step that shows the clicked box with room round it)' },
     follow: { type: 'number', default: 0.35, meaning: 'auto: how much of the cursor\'s follow the view takes while zoomed (0 sits on the click target, 1 follows the cursor)' },

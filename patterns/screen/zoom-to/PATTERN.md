@@ -1,7 +1,7 @@
 # screen/zoom-to
 
 ## Purpose
-The camera of a device screen: pushes in on a mark or a point until it fills the centre of the screen, or (mode `auto`) zooms by itself where a recorded session's pointer clicked.
+The camera on a device: brings the whole device closer, centred on a mark or a point of its screen, or (mode `auto`) by itself where a recorded session's pointer clicked. The picture is never magnified inside the screen.
 
 ## Use when / Do not use when
 **Use when**
@@ -18,7 +18,7 @@ The camera of a device screen: pushes in on a mark or a point until it fills the
 | name | type | default | meaning |
 |---|---|---|---|
 | `at` | string | 50%,50% | mark: a mark label from media.json, or "x%,y%" of the screen |
-| `s` | number | 1.6 | mark: the magnification at p = 1, 1 to 4 |
+| `s` | number | 1.6 | mark: how much larger the device is at p = 1, 1 to 4 |
 | `mode` | enum(mark\|auto) | `mark` | `mark`: push in on `at`; `auto`: zoom where the recording's pointer clicked (needs a pointer track), or only where `regions` say on a recording without one |
 | `depth` | string | medium | auto: how far, a step of the ladder (gentle 1.25, soft 1.5, medium 1.8, close 2.2, tight 3.5, macro 5), a number 1 to 5, or `fit` (the deepest step that shows the clicked box with room round it) |
 | `follow` | number | 0.35 | auto: how much of the cursor's follow the view takes while zoomed (0 sits on the click target, 1 follows the cursor) |
@@ -46,7 +46,7 @@ Zooms the camera makes by itself are tagged `auto` (in `cameraOf(...).regions`, 
 
 ## Legibility and rest notes
 - The zoom starts from the screen's current zoom, so zooms compose.
-- The picture is magnified inside the screen and clipped by it; the device does not move (unless it leans: `tilt`).
+- The whole device comes closer, bezel and all, and the zoom's point lands where the screen's centre was; the picture keeps its own scale on the screen. A flat device is moved by a transform on the beat's element (`aimDevice`, `runtime/kit/screen.js`); a 3D device's camera crops its frame round the point instead, so it is rendered sharp at every depth (`device3d.js`). The device may cross the frame's edges when it comes close.
 - Mode `auto`: the camera lands on the click target about a second after it has started (lead-in 1.52 s with 0.5 s overlap, out in 1.02 s, on `cubic-bezier(0.16, 1, 0.3, 1)`; the zoom has landed, at 0.994 of its strength, at the click); the view never leaves the recording (the focus is held in bounds with a soft edge); the camera is a function of the recording's time, so the same instant gives the same pixels in any seek order.
 - A tilt leans only while a zoom is on and is flat again after; the leaning plane is scaled so it stays inside the rectangle it started in.
 
@@ -54,6 +54,6 @@ Zooms the camera makes by itself are tagged `auto` (in `cameraOf(...).regions`, 
 siddharthvaddem/openscreen, MIT: the zoom timing profile, connected pans, the depth ladder, the focus bounds with their soft edge, the stage-normalised zoom transform, the distance-adaptive cursor follow, the ranking and spacing of suggestions, the camera's spring constants and motion blur law, the per-zoom tilt presets and the perspective (`runtime/kit/camera.js`, `runtime/kit/demoframe.js`, see NOTICE); the follow is computed once over a fixed grid and the chase is a closed-form overdamped response so every frame is a function of t, and the suggestions come from click targets, not a dwell guess. The push-in on a mark (mode `mark`) is original.
 
 ## Known limits
-- Magnifying a capture beyond its device pixels softens it: captures are at 3x for phones, 2x for laptops, and a recorded session is at 1x css pixels (a laptop session is 1440 px wide), so go no deeper than `close` unless the recording was made large.
+- Bringing a device closer than its capture's pixels allow softens it: captures are at 3x for phones, 2x for laptops, and a recorded session is at 1x css pixels (a laptop session is 1440 px wide), so go no deeper than `close` unless the recording was made large.
 - The camera blur is a Gaussian along the two axes by the share of the velocity on each: it softens along the move, not along a diagonal's exact line.
 - A 3D device draws its screen into a texture: the blur and the tilt do not reach it.

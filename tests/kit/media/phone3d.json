@@ -65,6 +65,36 @@
         }
       ],
       "say": ""
+    },
+    {
+      "id": "zoom",
+      "layout": "layouts/caption-bar",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/site/",
+          "params": {
+            "move": "still"
+          },
+          "screen": [
+            {
+              "do": "screen/zoom-to",
+              "at": 0.5,
+              "d": 1,
+              "params": {
+                "at": "50%,25%",
+                "s": 2
+              }
+            }
+          ]
+        }
+      ],
+      "say": ""
     }
   ]
 }

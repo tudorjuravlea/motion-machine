@@ -418,7 +418,7 @@ and `screen/zoom-to` with `mode: auto` read it, at the recording's time `frameTi
 | `ctx.params` | defaults ∪ the action's `params` |
 | `ctx.d` | the action's length in seconds (a deck: the press length) |
 | `ctx.box` | the screen's `{ w, h }` in px |
-| `ctx.locate(state, target)` | where a mark label or `"x%,y%"` sits on the screen, as `{ x, y }` fractions, under the state's scroll and zoom |
+| `ctx.locate(state, target)` | where a mark label or `"x%,y%"` sits on the screen, as `{ x, y }` fractions, under the state's scroll (the zoom moves the device, not the picture) |
 | `ctx.metaOf(asset)` | the `media.json` of a swap target, or `null` |
 | `ctx.kindOf(asset)` | `'still'`, `'sequence'` or `'page'` for a swap target |
 | `ctx.islandRest` | the phone island's resting size as fractions of the screen `{ w, h }`, or `null` |
@@ -744,8 +744,9 @@ The pure half runs in Node; the DOM half draws one layer the kit owns. See [Scre
 | `fold` | `fold(initial, timed, t, ctxOf)` | `{ state, active }` | folds the actions started by `t` over the initial state; `active` lists those still under way, each with its `p` |
 | `frameIndex` | `frameIndex(state)` | 1-based frame | the sequence frame at `state.frameTime`, held at the first and last |
 | `overlayY` | `overlayY(overlay, scrollY)` | css px | where a captured page's fixed or sticky overlay sits at a scroll |
-| `view` | `view(zoom)` | `{ x, y, s }` | the zoom as drawn, its centre clamped to keep the view inside the screen |
-| `locate` | `locate(state, target, box)` | `{ x, y }` | where a mark label or `"x%,y%"` sits on the screen, as fractions, under the state's scroll and zoom |
+| `view` | `view(zoom)` | `{ x, y, s }` | the zoom as drawn, its centre clamped so the screen still covers its rest box |
+| `aimDevice` | `aimDevice(item, screenEl, zoom)` | none | the zoom as a camera on the device: moves the beat's element so the zoom's point lands where the screen's centre was, at s times the size; on a 3D device it only sets `data-zoom` for its own camera |
+| `locate` | `locate(state, target, box)` | `{ x, y }` | where a mark label or `"x%,y%"` sits on the screen, as fractions, under the state's scroll (the zoom moves the device, not the picture) |
 | `mountLayer` | `mountLayer(screenEl, initial, swaps, actions)` | the layer element | builds the layer (`data-mm-own`) inside the screen: the content, one per swap target, one overlay per action |
 | `contentMeta` | `contentMeta.get(contentEl)` | `media.json` or `null` | each content element's media.json; a 3D device draws a captured page's `wire` from it |
 | `paint` | `paint(layer, state, { track, box, swaps, warn })` | nothing | draws the content, scrolled, at its frame and zoomed; `track` registers decodes, `warn(src)` names one that failed |

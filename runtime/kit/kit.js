@@ -6,7 +6,7 @@ import { spring } from './springs.js';
 import { ease, cssEasing } from './ease.js';
 import { random, hash } from './random.js';
 import { schedule as buildSchedule, resolveStory, forFormat, selectorOf, eachParts, addImplicitPlays, screenIssues } from './schedule.js';
-import { initialState, fold, locate, mountLayer, paint } from './screen.js';
+import { initialState, fold, locate, mountLayer, paint, aimDevice } from './screen.js';
 import { footageCtx, mountFootage, paintFootage } from './footage.js';
 import { mountSpeaker, applySpeaker, placeFaceSafe } from './speaker-layer.js';
 import { seeded, seededImport } from './seeded.js';
@@ -1018,6 +1018,7 @@ function runScreens() {
       locate: (state, target) => locate(state, target, box), metaOf, kindOf: (asset) => initialState(asset, metaOf(asset)).content.kind, deck, islandRest: s.islandRest });
     const { state, active } = fold(initial, timed, S.t, ctxOf);
     paint(s.layer, state, { track: trackDecode, box, swaps: s.swaps, warn: decodeWarning });
+    aimDevice(it.el, screenEl, state.zoom);   // the zoom is a camera on the device, never a magnified picture
     // a deck rest shows the finished drawing of an action that holds (screen/callout): at the
     // rest its press ends on, p = 1; after the next press it is gone
     if (deck) for (const e of timed) if (e.module.holds && Math.abs(S.t - (e.start + e.d)) < 1e-9) active.push({ ...e, p: 1 });
@@ -1037,8 +1038,9 @@ function runScreens() {
         fx.dataset.do = e.action.do;
         it.el.append(fx);
         const o = fx.getBoundingClientRect(), r = screenEl.getBoundingClientRect();
-        extra.host = () => ({ w: o.width, h: o.height, screen: { x: r.left - o.left, y: r.top - o.top, w: r.width, h: r.height } });
-        extra.toHost = ({ x, y }) => ({ x: r.left - o.left + x * r.width, y: r.top - o.top + y * r.height });
+        const q = fx.offsetWidth ? o.width / fx.offsetWidth : 1;   // the overlay's own px: the device's zoom scales it with the device
+        extra.host = () => ({ w: o.width / q, h: o.height / q, screen: { x: (r.left - o.left) / q, y: (r.top - o.top) / q, w: r.width / q, h: r.height / q } });
+        extra.toHost = ({ x, y }) => ({ x: (r.left - o.left + x * r.width) / q, y: (r.top - o.top + y * r.height) / q });
       } else {
         fx = s.layer.querySelector(`:scope > .mm-screen-fx[data-i="${e.i}"]`);
         fx.style.cssText = '';
