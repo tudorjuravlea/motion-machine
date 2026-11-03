@@ -10,7 +10,9 @@ import { ROOT, mm } from './cli-helpers.mjs';
 
 const work = join(ROOT, `.tmp-cli-showcase-run-${process.pid}`);
 const clip = join(work, 'app.mp4'), piece = join(work, 'film');
-const TIMEOUT = 900_000;
+// A slow CI runner takes several times as long as a fast one for the same film: half an hour leaves it
+// room, and a hung command still fails well inside the job's limit.
+const TIMEOUT = 1_800_000;
 
 before(() => {
   rmSync(work, { recursive: true, force: true }); mkdirSync(work, { recursive: true });
