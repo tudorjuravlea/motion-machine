@@ -203,5 +203,68 @@
       10
     ],
     "energy": "high"
+  },
+  "essence": {
+    "traits": [
+      "Headlines slam into place with a visible overshoot, and a figure punches in rather than counting up.",
+      "A new element arrives about every second; no scene holds longer than a beat or two.",
+      "Body text arrives word by word, a few hundredths of a second apart.",
+      "Cuts are hard, or a push or whip-pan that carries the speed of the move into the next scene."
+    ],
+    "notLike": [
+      {
+        "style": "stop-motion",
+        "line": "stop-motion also slams, but it animates on threes so each move steps in visible frames; kinetic is fluid at full frame rate."
+      },
+      {
+        "style": "proof",
+        "line": "proof reuses kinetic's entrances but has no overshoot and cuts hard everywhere; kinetic bounces and lets a whip-pan carry a scene out."
+      }
+    ]
+  },
+  "nativeMoves": [
+    {
+      "move": "The whip-pan climax: the camera streaks out of one scene at the speed the last move had, and the next lands already moving.",
+      "transfer": "A trailer for a product drop where the last feature whips off to the price."
+    },
+    {
+      "move": "Word-by-word body copy over a slammed headline, so the sentence is read at the speed it is shown.",
+      "transfer": "A recruitment film where each line of the pitch lands one word at a time under a one-word headline."
+    },
+    {
+      "move": "A figure punched in at oversize and settling to its size.",
+      "transfer": "A fundraising film where the total raised hits the frame, then shrinks to sit in the line."
+    }
+  ],
+  "pitfalls": [
+    {
+      "mistake": "Holding scenes for two seconds or more.",
+      "mechanism": "The hold floor is under a second, so a long still frame breaks the pulse and the film drags between slams.",
+      "fix": "Split the scene into two or three beats, or add a camera move."
+    },
+    {
+      "mistake": "Slamming every element in the scene.",
+      "mechanism": "With all elements overshooting at once nothing stands out, and the overshoot reads as shake.",
+      "fix": "Slam the headline only; let body words and plates take the quieter entrances."
+    },
+    {
+      "mistake": "Mixing a push or whip-pan with a crossfade in the same film.",
+      "mechanism": "Velocity-matched cuts rely on the next scene starting at the speed the last ended; a dissolve resets that to zero.",
+      "fix": "Stay with hard cuts, push and whip-pan."
+    }
+  ],
+  "variation": {
+    "free": [
+      "Which scene takes the whip-pan, within the climax role.",
+      "How many words arrive per group in the body copy.",
+      "Which figure is punched and which counts up.",
+      "Scene length from 0.8 seconds upward."
+    ],
+    "invariants": [
+      "Overshoot stays at or below 0.2.",
+      "Policy stays velocity-matched.",
+      "No crossfade or dip between scenes.",
+      "Arrivals stay between five and ten per ten seconds."
+    ]
   }
 }

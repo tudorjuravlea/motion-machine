@@ -98,24 +98,24 @@ after the last arrival (W-QUIET). The gate does it: `mm new` (above), the beat s
 tempo sheet: `mm pattern stills layouts/title-stack --style <piece>/style.json`, the same for
 `layouts/stat-hero` and for the style's `entrances.headline` id (e.g. `entrances/rise`); copy each
 sheet into `<piece>/out/gate3/` before the next run (where they land: `references/gates.md`). Music: `mm beats <track.wav>
-[--bpm N] --out <piece>/assets/beats.json`, set `audio.beats`, show the section map. Approval of
-style and grid. The brand half sets the composition (align, headline scale, density),
+[--bpm N] --out <piece>/assets/beats.json`, set `audio.beats`, show the section map. Play one sound sample (the track, or the hook's cues): a cue plan on paper cannot be judged. Approval of
+style, grid and sound. The brand half sets the composition (align, headline scale, density),
 and may add a `finish` (grain, vignette, paper edge, scanlines, chroma, bloom, a named `look`), a `ground` kind and a glass `surface`, and `motion.frameHold: 2` (on twos). **Style
 audition:** for a new look, render the first 10 s in two or three styles and ask the director to choose between them.
 
-**Gate 4 · Style frames.** Finish `story.json` (roles above), building the strongest scene first.
-`mm stills <piece>` (every rest, mid-entrance, a strip per move, `out/contact.png`, `out/phone.png`),
-then `mm review <piece>`; ask the stills questions (below). Animate only stills the director approved.
+**Gate 4 · Style frames.** Finish `story.json` (roles above), hardest frame first. One still of it, final, critiqued in writing: the director
+approves the look once on that frame. `mm stills <piece>` and the contact sheet are your reference; ask yourself the stills questions (below). A still
+judges a look, never timing, flow or sound, and a mid-entrance frame cannot be judged: nothing waits for still-by-still signing.
 
-**Gate 5 · Animatic.** Real timing: `mm check <piece>`, then `mm export <piece> --formats 16x9 --fps 15` (it refuses a
-gate report of an older story or other formats; `--force` stamps the MP4 `UNCHECKED`, never delivered). Pacing is judged
-from the export, never stills; show motion decisions as options. **Then** start `mm studio <piece> --open` once, in the
+**Gate 5 · Animatic.** Real timing: `mm check <piece>`, `mm export <piece> --formats 16x9 --fps 15` (it refuses a
+gate report of an older story or other formats; `--force` stamps the MP4 `UNCHECKED`, never delivered), `mm sound <piece> --no-verify`. Pacing is judged
+from the whole film with its sound, never stills; show motion decisions as options. **Then** start `mm studio <piece> --open` once, in the
 background; give the director its URL and reuse it to gate 7 (restart only if it died). Each round read the new
 `who: "studio"` receipts of `<piece>/out/studio/journal.jsonl`, the director's direction: log, never undo (`references/gates.md`).
 
 **Gate 6 · Cut.** Until **lock**, never while the studio exports: `mm check <piece>` (exit 0, or fix or ask the
-director) → `mm export <piece> --prove` (it reads each MP4 back) → `mm sound <piece>` (cues, bed, loudness, muxed) →
-`mm check <piece>` again (G-PEAK and W-LOUDNESS run on the mux) → `mm verify-export <mp4>` per format → `mm review <piece>`. Export is `--sub 1` by
+director) → `mm export <piece> --prove` (it reads each MP4 back) → `mm sound <piece>` (cues, bed, loudness, muxed, each file read back) →
+`mm check <piece>` again (G-PEAK and W-LOUDNESS run on the mux) → `mm review <piece>`. Answer "would I post this", yes or no with one reason, on this output alone; a no holds it. Name every default used anyway (`references/gates.md`). Export is `--sub 1` by
 default; above 1 it blends instants into ghosts of fast text and W-SUB warns, so leave it unless the
 story's text barely travels. Every WARN is read; the director accepts it or asks for a fix, in one line in
 the log. Timecoded notes go into the ledger first; each cut is checked against the whole ledger.

@@ -110,9 +110,10 @@ test('mm export reads the finished MP4 back: every check passes or says why it s
   assert.equal(report.ok, true);
   const f = report.files[0];
   assert.equal(f.phase, 'export');
-  assert.deepEqual(f.checks.map((c) => c.id), ['QA-STREAM', 'QA-DURATION', 'QA-FRAMES', 'QA-SIZE', 'QA-FPS', 'QA-BITRATE', 'QA-AUDIO', 'QA-SILENCE', 'QA-LEVEL', 'QA-BLACK', 'QA-FROZEN', 'QA-DECODE', 'QA-SEAM']);
-  for (const id of ['QA-STREAM', 'QA-DURATION', 'QA-FRAMES', 'QA-SIZE', 'QA-FPS', 'QA-BITRATE', 'QA-AUDIO', 'QA-BLACK', 'QA-FROZEN', 'QA-DECODE', 'QA-SEAM']) assert.equal(row(f, id).status, 'PASS', `${id}: ${JSON.stringify(row(f, id).evidence)}`);
-  for (const id of ['QA-SILENCE', 'QA-LEVEL']) assert.equal(row(f, id).status, 'SKIP', id);
+  assert.deepEqual(f.checks.map((c) => c.id), ['QA-STREAM', 'QA-DURATION', 'QA-FRAMES', 'QA-SIZE', 'QA-FPS', 'QA-COLOUR', 'QA-BITRATE', 'QA-AUDIO', 'QA-SILENCE', 'QA-LEVEL', 'QA-SYNC', 'QA-MONO', 'QA-END', 'QA-PHONE', 'QA-QUIET', 'QA-BLACK', 'QA-FROZEN', 'QA-FLASH', 'QA-STILL', 'QA-SLIDESHOW', 'QA-DECODE', 'QA-SEAM']);
+  for (const id of ['QA-STREAM', 'QA-DURATION', 'QA-FRAMES', 'QA-SIZE', 'QA-FPS', 'QA-COLOUR', 'QA-BITRATE', 'QA-BLACK', 'QA-FROZEN', 'QA-FLASH', 'QA-DECODE', 'QA-SEAM']) assert.equal(row(f, id).status, 'PASS', `${id}: ${JSON.stringify(row(f, id).evidence)}`);
+  for (const id of ['QA-AUDIO', 'QA-SILENCE', 'QA-LEVEL']) assert.equal(row(f, id).status, 'SKIP', id);
+  assert.equal(row(f, 'QA-AUDIO').evidence.unread, undefined);
   assert.match(row(f, 'QA-SILENCE').evidence.reason, /no sound/);
   assert.equal(row(f, 'QA-SEAM').evidence.seams, 1);
   assert.deepEqual(row(f, 'QA-SEAM').evidence.sheets, ['out/export-qa-seams-16x9.png']);
@@ -124,7 +125,7 @@ test('mm export reads the finished MP4 back: every check passes or says why it s
 test('a file nothing is wrong with passes with the piece, and the verdict lines say so', async () => {
   const f = await check(good);
   assert.equal(f.ok, true);
-  assert.match(verdictLines({ files: [f] }, { cwd: ROOT })[0], /^ok {2}.*kit-smoke-film-16x9\.mp4: 11 pass, 0 fail, 2 skipped$/);
+  assert.match(verdictLines({ files: [f] }, { cwd: ROOT })[0], /^ok {2}.*kit-smoke-film-16x9\.mp4: \d+ pass, 0 fail, \d+ skipped/);
 });
 
 test('a black stretch fails QA-BLACK and QA-SEAM when it sits on a cut', async () => {
@@ -164,6 +165,11 @@ test('a stall in the middle of an arrival fails QA-FROZEN; the rests of the film
   assert.ok(frozen.evidence.spans.length >= 2, 'the film\'s rests are frozen spans too, and are not faults');
 });
 
+test('with no browser handed in the file check still asks the page before it calls a freeze lost motion', async () => {
+  const f = await verifyFile(broken('stall-alone', 'loop=loop=5:size=1:start=3'), { dir: PIECE, fps: FPS, phase: 'final', sheetBase: join(tmp, 'sheet-alone') });
+  assert.ok(row(f, 'QA-FROZEN').evidence.faults[0].pageChange > PAGE_SHARE, 'the page was asked, not only the schedule');
+});
+
 test('the wrong size and the wrong frame rate fail QA-SIZE and QA-FPS', async () => {
   const small = await check(broken('small', 'scale=1280:720'));
   assert.equal(row(small, 'QA-SIZE').status, 'FAIL');
@@ -179,7 +185,7 @@ test('a file with no video stream fails QA-STREAM and every other check is skipp
   ff('-f', 'lavfi', '-i', 'sine=frequency=440:duration=1', '-c:a', 'aac', f);
   const r = await check(f);
   assert.equal(row(r, 'QA-STREAM').status, 'FAIL');
-  assert.deepEqual(r.checks.slice(1).map((c) => c.status), Array(12).fill('SKIP'));
+  assert.ok(r.checks.slice(1).every((c) => c.status === 'SKIP'));
 });
 
 test('without a piece only what the file alone says is checked, and the rest is skipped with the reason', async () => {
@@ -206,11 +212,11 @@ test('verify-export writes out/export-qa.json beside the others and keeps the ro
 test('mm verify-export: a clean file exits 0 and prints its verdict; a broken one exits 1 and names the check; no file is 2', () => {
   const clean = mm(['verify-export', good]);
   assert.equal(clean.status, 0, clean.out);
-  assert.match(clean.stdout, /^ok {2}.*kit-smoke-film-16x9\.mp4: 11 pass, 0 fail, 2 skipped/m);
+  assert.match(clean.stdout, /^ok {2}.*kit-smoke-film-16x9\.mp4: \d+ pass, 0 fail, \d+ skipped/m);
   assert.match(clean.stdout, /report: .*export-qa\.json/);
   const bad = mm(['verify-export', broken('verb-black', "drawbox=x=0:y=0:w=iw:h=ih:color=black:t=fill:enable='between(n,10,13)'"), '--piece', PIECE]);
   assert.equal(bad.status, 1, bad.out);
-  assert.match(bad.stdout, /^FAIL .*: .* 1 fail/m);
+  assert.match(bad.stdout, /^FAIL .*: .* [1-9] fail/m);
   assert.match(bad.stdout, /QA-BLACK: black from 1 to 1\.4 s/);
   const none = mm(['verify-export', join(tmp, 'no-such.mp4')]);
   assert.equal(none.status, 2);

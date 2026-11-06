@@ -177,5 +177,8 @@
     "vignette": 0.8,
     "edgeFringe": 0.5,
     "paperEdge": 1
+  },
+  "gate": {
+    "rhythmRatio": 1
   }
 }

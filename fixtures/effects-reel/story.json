@@ -152,7 +152,7 @@
     {
       "id": "odd",
       "layout": "layouts/grid-break",
-      "duration": 3.6,
+      "duration": 4,
       "cut": "transitions/hard-cut",
       "move": null,
       "beats": [
@@ -163,37 +163,37 @@
           "text": "Your week"
         },
         {
-          "at": 0.30000000000000004,
+          "at": 0.15,
           "slot": "tile-1",
           "fx": "entrances/pop",
           "text": "Meeting"
         },
         {
-          "at": 0.4,
+          "at": 0.3,
           "slot": "tile-2",
           "fx": "entrances/pop",
           "text": "Meeting"
         },
         {
-          "at": 0.5,
+          "at": 0.45,
           "slot": "tile-3",
           "fx": "entrances/pop",
           "text": "Meeting"
         },
         {
-          "at": 0.6000000000000001,
+          "at": 0.6,
           "slot": "tile-4",
           "fx": "entrances/pop",
           "text": "Meeting"
         },
         {
-          "at": 0.7,
+          "at": 1.35,
           "slot": "tile-5",
           "fx": "entrances/pop",
           "text": "Meeting"
         },
         {
-          "at": 1.1,
+          "at": 1.5,
           "slot": "odd",
           "fx": "entrances/punch",
           "text": "Focus"

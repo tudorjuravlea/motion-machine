@@ -211,5 +211,68 @@
       6
     ],
     "energy": "medium"
+  },
+  "essence": {
+    "traits": [
+      "Headlines come into focus out of a soft blur while they fade in, rather than moving across the frame.",
+      "Springs settle with a faint bounce that is only just visible, never more than a tenth of the move.",
+      "Scenes blend by a blur crossfade, a push or a zoom-through; a hard cut never appears.",
+      "The pace is unhurried: an arrival about every two seconds, on long eases."
+    ],
+    "notLike": [
+      {
+        "style": "calm",
+        "line": "calm rises and fades without any blur or bounce and keeps a longer hold; premium pulls focus out of a blur and lets a spring settle with a slight give."
+      },
+      {
+        "style": "kinetic",
+        "line": "kinetic is fast and slams; premium never snaps and keeps every entrance soft."
+      }
+    ]
+  },
+  "nativeMoves": [
+    {
+      "move": "Blur-fade headline: type sharpens out of a defocus as it fades in.",
+      "transfer": "A watch maker's film, the model name coming into focus over a dark ground."
+    },
+    {
+      "move": "Mask-reveal plates, so a product card is uncovered along an edge as if lit.",
+      "transfer": "A hotel film where each room card is revealed edge-first over the previous photo."
+    },
+    {
+      "move": "Opening on a blur-crossfade from the ground into the first scene, as if the lens finds the subject.",
+      "transfer": "A gallery opening film that starts on a soft wash and resolves into the artist's name."
+    }
+  ],
+  "pitfalls": [
+    {
+      "mistake": "Stacking blur-fade on every element.",
+      "mechanism": "Several defocused items at once look like a rendering fault, and nothing reads as the first thing to see.",
+      "fix": "Use blur-fade on the headline only; give body and plates fade or mask-reveal."
+    },
+    {
+      "mistake": "Raising the spring bounce for energy.",
+      "mechanism": "Past about a tenth the settle becomes visible wobble, which reads as playful, not premium.",
+      "fix": "Keep bounce at or under 0.12 and add energy through the music instead."
+    },
+    {
+      "mistake": "Cutting hard between scenes.",
+      "mechanism": "Without a blend, the film loses the continuous, lens-like quality and looks like a slideshow.",
+      "fix": "Use blur-crossfade, crossfade, push or zoom-through."
+    }
+  ],
+  "variation": {
+    "free": [
+      "Which scene takes the push and which the crossfade.",
+      "Whether a plate uses mask-reveal or fade.",
+      "Scene length from 1.2 seconds upward.",
+      "The ground and lighting the brand sets under the motion."
+    ],
+    "invariants": [
+      "Overshoot at or below 0.1.",
+      "No hard cut.",
+      "Blur only on the headline entrance and the opening blend.",
+      "Durations stay at 200, 420 and 900 ms."
+    ]
   }
 }

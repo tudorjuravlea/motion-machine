@@ -4,17 +4,22 @@
 //   leading by more than 45 ms reads early, a struck peak more than 75 ms late reads late, a whoosh apex stays within 45 ms of
 //   its cut, a riser ends 250 ms before to 30 ms after its hit and rings no more than 30 ms past its peak. A deviation that one
 //   role offset explains is deliberate and named; a beat's `params.cue.soundOk` acknowledges one.
+// With locks the evidence also carries `baseline` (./_cue-baseline.mjs): the share of picture events with a sound onset within
+// 100 ms beside the same share with the events shifted; evidence only, it warns nothing. A schedule with only a bed cue has no
+// cue to place and is a SKIP.
 // `getGrid()` returns the beat grid as scripts/sound.mjs loadGrid gives it ({ beats: number[] | null, declared, missing?, unusable?,
 // kickShare? }); `getLocks()` the `cues` of out/cues.json or null. Both are called only once the schedule has cues.
 // W-CUE.mjs (mm check) passes what it reads from disk; timing.mjs passes ctx.grid.
 import { rule } from '../lib/rule.mjs';
 import { DRIFT_S, cueEvents, nearest } from '../lib/cues.mjs';
 import { judgeLock } from '../lib/sound-place.mjs';
+import { baselineOf } from './_cue-baseline.mjs';
 
 export function cueVerdict(schedule, getGrid, getLocks = () => null) {
   if (schedule?.kind === 'deck') return rule('W-CUE', 'SKIP', { reason: 'deck cues sit on presses, not on a clock with a beat grid' });
   const cues = cueEvents(schedule).filter((c) => c.name !== 'bed');
   if (!cues.length && !cueEvents(schedule).length) return rule('W-CUE', 'SKIP', { reason: 'the schedule has no cues' });
+  if (!cues.length) return rule('W-CUE', 'SKIP', { reason: 'the schedule has only a bed cue: no cue to place against the picture or the beat grid' });
   const grid = getGrid();
   if (grid.missing) return rule('W-CUE', 'WARN', { reason: `audio.beats names a file that does not exist: ${grid.missing}`, file: grid.missing });
   const locks = getLocks?.() ?? null;
@@ -53,7 +58,10 @@ export function cueVerdict(schedule, getGrid, getLocks = () => null) {
       ? `the beat grid is marked usable: false by the kick check (${grid.kickShare != null ? `${Math.round(grid.kickShare * 100)} %` : 'under half'} of its beats land on a kick): cues are not snapped to it`
       : 'no beat grid (audio.beats is null): cues are not snapped' });
   }
-  const extra = { ...(deliberate.length ? { deliberate } : {}), ...(acknowledged.length ? { acknowledged } : {}) };
+  const locked = pairs.filter((p) => p.l && Number.isFinite(p.l.lock?.onsetS));
+  const baseline = baselineOf(locked.map((p) => p.pictureS), locked.map((p) => p.l.lock.onsetS))
+    ?? { status: 'SKIP', reason: 'no sync locks (run `mm sound`): the sound onsets are not known, so no chance baseline' };
+  const extra = { cues: pairs.length, ...(judged ? { judged } : {}), baseline, ...(deliberate.length ? { deliberate } : {}), ...(acknowledged.length ? { acknowledged } : {}) };
   if (!bad.length && !sync.length) {
     return rule('W-CUE', 'PASS', { measured: Math.max(0, ...rows.map((r) => Math.abs(r.driftMs))), threshold: DRIFT_S * 1000, ...extra });
   }

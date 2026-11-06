@@ -208,5 +208,68 @@
       9
     ],
     "energy": "medium"
+  },
+  "essence": {
+    "traits": [
+      "Every cut is a hard cut: scenes change in a single frame, with no dissolve, wipe or push.",
+      "Nothing overshoots or bounces; elements arrive crisp and stop on their mark.",
+      "Text is revealed by mask or word-by-word, and a number counts up to its value.",
+      "Scenes rest for more than a second after the last arrival, so a claim sits still beside its evidence."
+    ],
+    "notLike": [
+      {
+        "style": "kinetic",
+        "line": "kinetic shares the entrances but bounces and uses push and whip-pan; proof stays flat and hard-cuts every scene."
+      },
+      {
+        "style": "calm",
+        "line": "calm is as still but dissolves between scenes; proof cuts."
+      }
+    ]
+  },
+  "nativeMoves": [
+    {
+      "move": "Claim, then evidence on the next hard cut: a statement holds, the frame cuts, and the number or screenshot that backs it fills the frame.",
+      "transfer": "A security audit film where each finding is stated, then cut to the log line that shows it."
+    },
+    {
+      "move": "A counting figure that lands without overshoot, so the final number is the exact value on screen.",
+      "transfer": "A clinical results film where the response rate counts up and stops on the reported figure."
+    },
+    {
+      "move": "Mask-reveal on a caption so a source line is uncovered beneath a figure.",
+      "transfer": "A budget walkthrough where each line item is followed by its source document title."
+    }
+  ],
+  "pitfalls": [
+    {
+      "mistake": "Adding a transition effect to soften a cut.",
+      "mechanism": "The hard cut is the register of the style; a dissolve says presentation, not evidence.",
+      "fix": "Leave every cut hard; shorten the preceding hold if it feels abrupt."
+    },
+    {
+      "mistake": "Letting a figure overshoot its value.",
+      "mechanism": "A counter that passes the number and returns shows a wrong value for a moment, which undermines a proof.",
+      "fix": "Keep overshoot at zero and the count ease monotonic."
+    },
+    {
+      "mistake": "Filling a scene with six arrivals at once.",
+      "mechanism": "The claim and its evidence compete, and the viewer cannot tell which is which.",
+      "fix": "One claim and one piece of evidence per scene."
+    }
+  ],
+  "variation": {
+    "free": [
+      "Which entrance carries each text role (mask-reveal, words or rise).",
+      "How long a claim holds before the cut, from 1.2 seconds up.",
+      "Which evidence form follows the claim: figure, screenshot or quote.",
+      "Whether the sound bed is soft or silent."
+    ],
+    "invariants": [
+      "Every transition is a hard cut.",
+      "Overshoot is zero.",
+      "Counted figures stop on their exact value.",
+      "Arrivals stay between three and nine per ten seconds."
+    ]
   }
 }

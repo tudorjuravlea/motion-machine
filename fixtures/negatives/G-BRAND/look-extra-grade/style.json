@@ -1,4 +1,5 @@
 {
+  "gate": { "rhythmRatio": 1 },
   "name": "gate-base",
   "version": 1,
   "fictional": true,

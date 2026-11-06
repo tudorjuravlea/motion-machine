@@ -10,7 +10,11 @@
 // the analysis reads them at 160 px, the entrance signatures at 320 px.
 //   1. Global pass at 10 fps (every n-th frame). D[k] = mean |F[k] − F[k−1]|; activity floor =
 //      median(D) + 6·1.4826·MAD(D), at least 0.02 grey levels. Runs of active frames (one still
-//      frame bridged) are the candidate events.
+//      frame bridged) are the candidate events. A run of the most active block of a 4 × 3 grid (floor from the
+//      same rule) that lies 0.5 s or more from every such run is a candidate event too: a small mover in a
+//      mostly still frame does not lift the whole-frame mean. Cells that hold content in the first frame and
+//      never move from it (a burned-in logo or bar) are set aside before a shift, a growth or a replacement is
+//      measured, so a static overlay does not vote the camera still.
 //   2. Each event is re-read at the source rate. Its active stretches are split again; a stretch is
 //      a cut when it *replaces* the picture (at least half the 10×10 px cells that held content
 //      before it have changed after it), else an arrival. Cuts closer than 0.4 s are one cut.
@@ -25,7 +29,8 @@
 //   4. The stretch after a cut's last transition frame, and every stretch that is not a cut, are
 //      arrivals (a new one wherever a new region starts to change 0.15 s or more after the last
 //      onset). An arrival is timed on its progress curve (distance to the settled frame on an 8 px
-//      grid) under the enter easing of the energy preset; push, whip-pan, wipe and iris cuts are
+//      grid) under the enter easing of the energy preset (arrivals that came from several onsets in one stretch are
+//      a staggered group: marked, and no ease is reported for them, it is not recoverable from their sum); push, whip-pan, wipe and iris cuts are
 //      timed the same way under the move easing.
 //   5. Energy comes from measured quantities (median shot, arrivals per 10 s, share of hard cuts,
 //      median cut length) scored against anchors calibrated on labelled films
@@ -68,6 +73,12 @@ const BLUR_GAIN = 0.15;                // an entrance frame is blurred when blur
 const BLEND_MAX = 0.25;                // mean blend residual (share of the span change) for a fade
 const ARRIVAL_MIN = 0.05;              // an arrival changes the picture by at least this, grey levels
 const COARSE = 8;                      // box size (px at analysis width) for timing arrivals
+const ACT_COLS = 4, ACT_ROWS = 3;      // activity is read in a 4 × 3 grid of blocks: the most active block speaks for the frame
+const ARRIVAL_LOCAL_MIN = 0.3;         // an arrival changes its most active block by at least this, grey levels
+export const NOT_RECOVERABLE = 'not recoverable';
+const LOCAL_APART_S = 0.5;             // a run of block activity is its own event when no run of the whole frame lies within this
+const STATIC_TOL = 2;                  // a cell is static when it never moves from its first frame by more than this, grey levels
+const STATIC_EVERY = 3;                // ... judged on every third frame
 const FINISHED_MIN = 0.5;              // a film opens finished when frame 0 holds half its first settled content
 
 export const PRESET_OF = { calm: 'calm', medium: 'premium', high: 'kinetic' };
@@ -214,6 +225,25 @@ function meanAbs(a, b) {
   return s / a.length;
 }
 
+/**
+ * The most active part of the frame: the largest mean |a − b| over a grid of ACT_COLS × ACT_ROWS blocks.
+ * A whole-frame mean buries a small mover in a mostly still frame; the block it moves in does not.
+ */
+function activity(a, b, w, h) {
+  let best = 0;
+  for (let j = 0; j < ACT_ROWS; j++) {
+    const y0 = Math.floor((j * h) / ACT_ROWS), y1 = Math.floor(((j + 1) * h) / ACT_ROWS);
+    for (let i = 0; i < ACT_COLS; i++) {
+      const x0 = Math.floor((i * w) / ACT_COLS), x1 = Math.floor(((i + 1) * w) / ACT_COLS);
+      let s = 0;
+      for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) s += Math.abs(a[y * w + x] - b[y * w + x]);
+      const m = s / ((y1 - y0) * (x1 - x0));
+      if (m > best) best = m;
+    }
+  }
+  return best;
+}
+
 function frameMedian(f) {
   const hist = new Uint32Array(256);
   for (let i = 0; i < f.length; i++) hist[clamp(Math.round(f[i]), 0, 255)]++;
@@ -269,11 +299,14 @@ function changedCells(a, b, w, h) {
   return out;
 }
 
-/** Share of the cells that held content in `a` which have changed in `b` (0 when `a` is empty). */
-export function replacement(a, b, w, h) {
+/**
+ * Share of the cells that held content in `a` which have changed in `b` (0 when `a` is empty). `skip` is a cell mask
+ * (staticCells): cells set in it hold a burned-in overlay and count for nothing.
+ */
+export function replacement(a, b, w, h, skip = null) {
   const content = contentCells(a, w, h), changed = changedCells(a, b, w, h);
   let n = 0, c = 0;
-  for (let i = 0; i < content.length; i++) if (content[i]) { n++; c += changed[i]; }
+  for (let i = 0; i < content.length; i++) if (content[i] && !skip?.[i]) { n++; c += changed[i]; }
   return n < 3 ? 0 : c / n;
 }
 
@@ -297,32 +330,56 @@ function contentChange(a, b, w, h, content = contentCells(a, w, h)) {
   return n ? s / n : 0;
 }
 
+/**
+ * The burned-in overlay: cells that hold content in the first frame and never move from it, in any frame of the
+ * film (a logo, a caption bar, a watermark). Set aside before a shift, a growth or a replacement is measured, a
+ * static overlay over a moving picture would otherwise outvote the camera: nothing it shows moves, so the picture
+ * seems to hold still. Returns { cells, px } (a cell mask and the same as a pixel mask), or null when there is none.
+ */
+export function staticCells(F, w, h) {
+  const { cx, cy } = cellGrid(w, h), first = F[0];
+  const still = contentCells(first, w, h);
+  for (let k = STATIC_EVERY; k < F.length; k += STATIC_EVERY) {
+    const f = F[k];
+    for (let j = 0; j < cy; j++) for (let i = 0; i < cx; i++) {
+      if (!still[j * cx + i]) continue;
+      let s = 0;
+      for (let y = j * CELL; y < (j + 1) * CELL; y++) for (let x = i * CELL; x < (i + 1) * CELL; x++) s += Math.abs(f[y * w + x] - first[y * w + x]);
+      if (s / (CELL * CELL) > STATIC_TOL) still[j * cx + i] = 0;
+    }
+  }
+  if (!still.some(Boolean)) return null;
+  const px = new Uint8Array(w * h);
+  for (let j = 0; j < cy; j++) for (let i = 0; i < cx; i++) if (still[j * cx + i]) for (let y = j * CELL; y < (j + 1) * CELL; y++) for (let x = i * CELL; x < (i + 1) * CELL; x++) px[y * w + x] = 1;
+  return { cells: still, px };
+}
+
 // ---------------------------------------------------------------------------------------------
 // Transition signatures, read at the source frame rate.
 
 // Best displacement of `b` relative to `a` along one axis: b(x) ≈ a(x − d).
-function shiftAlong(a, b, w, h, axis) {
+function shiftAlong(a, b, w, h, axis, mask = null) {
   const max = Math.floor((axis === 'x' ? w : h) * 0.45);
   let best = { d: 0, err: Infinity }, e0 = Infinity;
   for (let d = -max; d <= max; d++) {
     let s = 0, n = 0;
     if (axis === 'x') {
       const x0 = Math.max(0, d), x1 = Math.min(w, w + d);
-      for (let y = 0; y < h; y++) for (let x = x0; x < x1; x++) { s += Math.abs(b[y * w + x] - a[y * w + x - d]); n++; }
+      for (let y = 0; y < h; y++) for (let x = x0; x < x1; x++) { if (mask && (mask[y * w + x] || mask[y * w + x - d])) continue; s += Math.abs(b[y * w + x] - a[y * w + x - d]); n++; }
     } else {
       const y0 = Math.max(0, d), y1 = Math.min(h, h + d);
-      for (let y = y0; y < y1; y++) for (let x = 0; x < w; x++) { s += Math.abs(b[y * w + x] - a[(y - d) * w + x]); n++; }
+      for (let y = y0; y < y1; y++) for (let x = 0; x < w; x++) { if (mask && (mask[y * w + x] || mask[(y - d) * w + x])) continue; s += Math.abs(b[y * w + x] - a[(y - d) * w + x]); n++; }
     }
-    const err = s / n;
+    const err = n ? s / n : 0;
     if (d === 0) e0 = err;
     if (err < best.err - 1e-9) best = { d, err };
   }
   return { ...best, e0 };
 }
 
-/** Best whole-picture shift from `a` to `b` on either axis, with the share of error it removes. */
-export function shiftOf(a, b, w, h) {
-  const sx = shiftAlong(a, b, w, h, 'x'), sy = shiftAlong(a, b, w, h, 'y');
+/** Best whole-picture shift from `a` to `b` on either axis, with the share of error it removes (`mask`: pixels set aside, see staticCells). */
+export function shiftOf(a, b, w, h, mask = null) {
+  const sx = shiftAlong(a, b, w, h, 'x', mask), sy = shiftAlong(a, b, w, h, 'y', mask);
   const s = sx.err <= sy.err ? { axis: 'x', ...sx } : { axis: 'y', ...sy };
   const gain = s.e0 > 0 ? 1 - s.err / s.e0 : 0;
   const dir = s.axis === 'x' ? (s.d < 0 ? 'left' : 'right') : (s.d < 0 ? 'up' : 'down');
@@ -392,12 +449,14 @@ function scaled(f, w, h, s, fill) {
 }
 
 /** Best growth of the picture about its centre from `a` to `b` (s in 1.01..1.3) and its gain. */
-export function zoomOf(a, b, w, h) {
-  const bg = frameMedian(a), e0 = meanAbs(a, b);
+export function zoomOf(a, b, w, h, mask = null) {
+  const bg = frameMedian(a);
+  const err = (x, y) => { if (!mask) return meanAbs(x, y); let s = 0, n = 0; for (let i = 0; i < x.length; i++) if (!mask[i]) { s += Math.abs(x[i] - y[i]); n++; } return n ? s / n : 0; };
+  const e0 = err(a, b);
   let best = { s: 1, err: e0 };
   for (let s = 1.01; s <= 1.3 + 1e-9; s += 0.01) {
-    const err = meanAbs(scaled(a, w, h, s, bg), b);
-    if (err < best.err) best = { s, err };
+    const e = err(scaled(a, w, h, s, bg), b);
+    if (e < best.err) best = { s, err: e };
   }
   return { s: round(best.s, 2), gain: e0 > 0 ? 1 - best.err / e0 : 0 };
 }
@@ -424,7 +483,7 @@ function blendResidual(frames, a, b, P, Q) {
  * frame) and may run to `s1`. Returns the cut (kind, direction, onset, last transition pair `e`,
  * confidence, evidence, and progress samples for timing where the kind gives them).
  */
-function classifyCut(F, w, h, fps, D, floor, s0, s1, limit = s1) {
+function classifyCut(F, w, h, fps, D, floor, s0, s1, limit = s1, still = null) {
   const P = F[s0 - 1], Q = F[s1];
   const spread = Math.max(stdOf(P), stdOf(Q));
   const flatMemo = new Map();
@@ -470,7 +529,7 @@ function classifyCut(F, w, h, fps, D, floor, s0, s1, limit = s1) {
 
   // 2. Push or whip-pan: consecutive pairs explained by one shift of the whole picture.
   const sh = new Map();
-  const shOf = (k) => { if (!sh.has(k)) sh.set(k, shiftOf(F[k - 1], F[k], w, h)); return sh.get(k); };
+  const shOf = (k) => { if (!sh.has(k)) sh.set(k, shiftOf(F[k - 1], F[k], w, h, still?.px)); return sh.get(k); };
   const shifted = (k) => !thin(k) && !thin(k - 1) && D[k] > floor && (() => { const s = shOf(k); return s.d !== 0 && s.gain >= SHIFT_GAIN; })();
   const runK = [];
   let misses = 0, blank = 0, cleared = null;
@@ -510,7 +569,7 @@ function classifyCut(F, w, h, fps, D, floor, s0, s1, limit = s1) {
 
   // 3. Hard: the first pair replaces the picture, and what follows is not more of the old one.
   // A picture that goes flat in one pair was cut (a fade to flat takes two pairs or more).
-  const rep0 = replacement(P, F[s0], w, h);
+  const rep0 = replacement(P, F[s0], w, h, still?.cells);
   const single = s0 === s1 || !(D[s0 + 1] > floor);
   if (rep0 >= REPLACE_MIN && (single || thin(s0) || shOf(s0).gain < 0.5)) {
     const content = contentCells(P, w, h);
@@ -524,7 +583,7 @@ function classifyCut(F, w, h, fps, D, floor, s0, s1, limit = s1) {
 
   // 4. Zoom: pairs explained by growth of the picture about its centre.
   const zm = new Map();
-  const zOf = (k) => { if (!zm.has(k)) zm.set(k, zoomOf(F[k - 1], F[k], w, h)); return zm.get(k); };
+  const zOf = (k) => { if (!zm.has(k)) zm.set(k, zoomOf(F[k - 1], F[k], w, h, still?.px)); return zm.get(k); };
   const early = active.slice(0, 8).filter((k) => !thin(k) && !thin(k - 1));
   const zoomed = early.filter((k) => { const z = zOf(k); return z.gain >= ZOOM_GAIN && z.s >= ZOOM_MIN; });
   if (zoomed.length >= 2) {
@@ -666,13 +725,13 @@ export function analyse(film, { globalFps = GLOBAL_FPS } = {}) {
   const gfps = fps / step;
 
   // Source-rate differences (used around events) and the global pass on every step-th frame.
-  const Ds = new Float64Array(N);
-  for (let k = 1; k < N; k++) Ds[k] = meanAbs(F[k - 1], F[k]);
-  const floorS = activityFloor(Ds);
+  const Ds = new Float64Array(N), Ls = new Float64Array(N);
+  for (let k = 1; k < N; k++) { Ds[k] = meanAbs(F[k - 1], F[k]); Ls[k] = activity(F[k - 1], F[k], w, h); }
+  const floorS = activityFloor(Ds), floorL = activityFloor(Ls);
   const G = Math.floor((N - 1) / step) + 1;
-  const Dg = new Float64Array(G);
-  for (let g = 1; g < G; g++) Dg[g] = meanAbs(F[(g - 1) * step], F[g * step]);
-  const floor = activityFloor(Dg);
+  const Dg = new Float64Array(G), Lg = new Float64Array(G);
+  for (let g = 1; g < G; g++) { Dg[g] = meanAbs(F[(g - 1) * step], F[g * step]); Lg[g] = activity(F[(g - 1) * step], F[g * step], w, h); }
+  const floor = activityFloor(Dg), floorLg = activityFloor(Lg);
 
   const runs = [];
   for (let g = 1; g < G; g++) {
@@ -680,16 +739,29 @@ export function analyse(film, { globalFps = GLOBAL_FPS } = {}) {
     const last = runs.at(-1);
     if (last && g - last[1] <= 2) last[1] = g; else runs.push([g, g]);
   }
+  // A small mover in a mostly still frame does not lift the frame as a whole over its floor, but its most active
+  // block lifts that block's floor: runs of such steps, apart from every run of the frame as a whole (LOCAL_APART_S),
+  // are events too, read from the block activity alone.
+  const local = [];
+  for (let g = 1; g < G; g++) {
+    if (Lg[g] <= floorLg) continue;
+    const last = local.at(-1);
+    if (last && g - last[1] <= 2) last[1] = g; else local.push([g, g]);
+  }
+  const apart = Math.ceil(LOCAL_APART_S * gfps);
+  for (const [ga, gb] of local) if (!runs.some(([a, b]) => ga <= b + apart && gb >= a - apart)) runs.push([ga, gb, true]);
+  runs.sort((x, y) => x[0] - y[0]);
 
+  const still = staticCells(F, w, h);   // a burned-in overlay is set aside before the camera is read
   const cuts = [], arrivals = [];
   const coarse = new Map();
   const coarseOf = (k) => { if (!coarse.has(k)) coarse.set(k, boxDown(F[k], w, h, COARSE)); return coarse.get(k); };
 
   // Active stretches of source pairs in (lo, hi], one still pair bridged.
-  const stretches = (lo, hi) => {
+  const stretches = (lo, hi, blocks = false) => {
     const out = [];
     for (let k = lo + 1; k <= hi; k++) {
-      if (Ds[k] <= floorS) continue;
+      if (Ds[k] <= floorS && !(blocks && Ls[k] > floorL)) continue;
       const last = out.at(-1);
       if (last && k - last[1] <= 2) last[1] = k; else out.push([k, k]);
     }
@@ -718,7 +790,7 @@ export function analyse(film, { globalFps = GLOBAL_FPS } = {}) {
   // One arrival from pair a to pair b, its progress read on `region` (a cell mask) when given.
   const arrival = (a, b, region = null) => {
     const P = F[a - 1], Q = F[b], span = meanAbs(P, Q);
-    if (span < ARRIVAL_MIN) return;
+    if (span < ARRIVAL_MIN && activity(P, Q, w, h) < ARRIVAL_LOCAL_MIN) return;
     // Progress = 1 − distance to the settled frame, read on a coarse grid where a small
     // displacement is a change of brightness rather than text failing to overlap its final place.
     const lo = Math.max(0, a - 1), hi = Math.min(N - 1, b + 1), samples = [];
@@ -749,34 +821,38 @@ export function analyse(film, { globalFps = GLOBAL_FPS } = {}) {
       sets.push(ch); recent.push(ch); if (recent.length > 3) recent.shift();
     }
     if (onsets.length === 1) return arrival(a, b);
+    const first = arrivals.length;
     onsets.forEach((o, i) => {
       const next = onsets[i + 1] ?? b + 1;
       const region = new Uint8Array(sets[0].length);
       for (let k = o; k < next; k++) { const s = sets[k - a]; for (let j = 0; j < s.length; j++) if (s[j]) region[j] = 1; }
       arrival(o, b, region);
     });
+    // Several elements arriving in turn: what is measured is their sum. Each element's easing, and so its own
+    // duration, cannot be told apart in it.
+    if (arrivals.length - first >= 2) for (const x of arrivals.slice(first)) Object.assign(x, { staggered: true, easing: NOT_RECOVERABLE });
   };
 
-  for (const [ga, gb] of runs) {
+  for (const [ga, gb, blocks] of runs) {
     const lo = (ga - 1) * step, hi = Math.min(N - 1, gb * step + step - 1);
     let cursor = lo, last = null;
     for (;;) {
-      const [st] = stretches(cursor, hi);
+      const [st] = stretches(cursor, hi, blocks);
       if (!st) break;
       const [a, b] = st;
       // What moves after a cut's last transition frame (within the refractory window) arrives in
       // the new shot. An arrival that runs on straight out of a gradual transition began under it,
       // so only its tail is seen.
       const afterCut = last && (a - last.e) / fps < REFRACTORY_S;
-      if (afterCut || replacement(F[a - 1], F[b], w, h) < REPLACE_MIN) {
+      if (afterCut || replacement(F[a - 1], F[b], w, h, still?.cells) < REPLACE_MIN) {
         const n = arrivals.length;
         arrivalsIn(a, b);
         if (afterCut && last.kind !== 'hard' && a <= last.e + 2 && arrivals[n]) arrivals[n].underCut = true;
         cursor = b;
         continue;
       }
-      last = classifyCut(F, w, h, fps, Ds, floorS, a, b, hi);
-      cuts.push({ ...last, replaced: round(replacement(F[a - 1], F[b], w, h)) });
+      last = classifyCut(F, w, h, fps, Ds, floorS, a, b, hi, still);
+      cuts.push({ ...last, replaced: round(replacement(F[a - 1], F[b], w, h, still?.cells)) });
       cursor = last.e;
     }
   }
@@ -1113,6 +1189,8 @@ export function deriveMotion(analysis, { name, source, calibration = ENERGY_CALI
   defaulted.push(`entrances.body, figure, plate: ${presetName} (only the headline family is read from frames)`);
 
   defaulted.push(`motion.easings: ${presetName} (curves are not measurable from frames; the enter and move curves were assumed to fit the durations)`);
+  const staggered = arrivals.filter((a) => a.staggered);
+  if (staggered.length) defaulted.push(`motion.easings for ${staggered.length} staggered arrivals (${staggered.map((a) => round(a.t)).join(', ')} s): each element's easing is ${NOT_RECOVERABLE} from the summed curve of a staggered group, so no ease is reported for them; their durations are fitted under the ${presetName} ease and are indicative only`);
   defaulted.push(`motion.spring: ${presetName} (spring constants are not measurable from frames)`);
   defaulted.push(`motion.travel, overshootMax, exitRatio, stagger: ${presetName} (not measured)`);
   defaulted.push(`sound: ${presetName} (frames only; the audio track is not read)`);
@@ -1146,7 +1224,7 @@ export function renderNotes({ name, video, analysis, facts }) {
   L.push('', 'A gradual cut starts at the last frame before the picture begins to change; a hard cut at its first new frame. The transition column is the visible change; the eased tails of a cut are timed under "cut timing" below.', '');
   L.push('## Arrivals', '');
   if (!facts.arrivals.length) L.push('- none observed');
-  for (const a of facts.arrivals) L.push(`- onset ${a.t0.toFixed(2)} s, about ${Math.round(a.d * 1000)} ms (visible burst ${a.burst} s, picture change ${a.span} grey levels)${a.headline ? `, opens its shot: ${a.family ?? 'family not distinguishable'}` : ''}${a.inFinishedShot ? ', added to a film that opens finished: no headline entrance read' : ''}`);
+  for (const a of facts.arrivals) L.push(`- onset ${a.t0.toFixed(2)} s, about ${Math.round(a.d * 1000)} ms (visible burst ${a.burst} s, picture change ${a.span} grey levels)${a.headline ? `, opens its shot: ${a.family ?? 'family not distinguishable'}` : ''}${a.inFinishedShot ? ', added to a film that opens finished: no headline entrance read' : ''}${a.staggered ? `, one of a staggered group: easing ${NOT_RECOVERABLE}` : ''}`);
   L.push('');
   L.push('## Derived', '');
   for (const d of facts.derived) L.push(`- ${d}`);
@@ -1163,11 +1241,12 @@ export function renderNotes({ name, video, analysis, facts }) {
   L.push(`- Cuts are read at ${round(analysis.fps)} fps: a transition shorter than two source frames (${round(2 / analysis.fps)} s) reads as a hard cut, and a push that clears the picture within ${WHIP_S} s reads as a whip-pan.`);
   L.push(`- A fade to a flat colour that comes back within ${DIP_HOLD_S} s is a dip; one that stays flat longer is a fade into a shot that is still empty. A crossfade between two shots that both carry text (owns-exit) is drawn through the canvas like a color-dip, so the two can trade names.`);
   L.push('- Arrivals that start within 0.15 s of each other, or in the region that is already moving, count as one; an arrival during a transition belongs to the cut, and one that runs on out of a gradual transition shows only its tail (its entrance is not read).');
-  L.push('- A camera move that shifts the whole picture reads as a push. Fine grain or noise raises the activity floor and can hide small arrivals.');
+  L.push('- A camera move that shifts the whole picture reads as a push; a static overlay burned into the film (a region that never changes in the whole film) is set aside first, so it does not hold the picture still. Activity is read from the most active block of a 4 × 3 grid, so a small mover in a mostly still frame is an arrival; heavy grain or noise still raises the floors and can hide a mover smaller than a block\'s noise.');
+  L.push('- A staggered group (several elements arriving in turn, read as arrivals that start 0.15 s or more apart in one stretch of change) is timed as the sum of its elements: each element\'s own easing and duration cannot be read from it, so no ease is reported, and a duration fitted to the group is indicative only.');
   L.push('- Entrance families: slam or punch (lands from above or shrinks onto its place; a drop reads here too), rise or fade (rises from below or fades in place), blur-fade, pop (grows onto its place). Members of one family are not told apart, nor are body, figure and plate entrances; a family must hold three quarters of the shot openings read. A film that opens finished (frame 0 already holds half the content its first arrival settles into, as an instant hook does) has no headline entrance in its first shot, which is left out.');
   L.push('- A spring-driven arrival (a plate dropped on a spring and stopped at its first crossing) can land in a duration role\'s basin and pull that derived role, although the kit times it by its spring, not by the role.');
   L.push('- Durations assume the preset\'s enter and move curves (a spring-shaped arrival is tried against its text spring); a duration role takes the arrivals in its basin and the cuts whose pattern takes it. The hold the style sets is a floor; the rests measured are the story\'s.');
-  L.push('- Thresholds are provisional (SPEC §12): activity floor median + 6·MAD, a cut replaces half the content cells, 0.4 s refractory window; energy anchors are calibrated on eight labelled films.');
+  L.push('- Thresholds are provisional (SPEC §12): activity floor median + 6·MAD, a cut replaces half the content cells, 0.4 s refractory window, a block of a 4 × 3 grid speaks for the frame (ARRIVAL_LOCAL_MIN 0.3 grey levels, LOCAL_APART_S 0.5 s), an overlay is static when its cell stays within STATIC_TOL 2 grey levels of the first frame; energy anchors are calibrated on eight labelled films.');
   return L.join('\n') + '\n';
 }
 

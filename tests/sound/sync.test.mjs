@@ -1,5 +1,5 @@
 // Audio sync proof: a click placed at a known time in the mix lands at that time in the MP4 that ships.
-// An AAC encoder adds priming samples (about 43 ms: 2048 at 48 kHz); without an edit list that
+// An AAC encoder adds priming samples (ffmpeg's: 1024 at 48 kHz, 21 ms); without an edit list that
 // tells the player to skip them, the sound plays that much late. The piece is the cue fixture with one
 // `click` cue at 1.25 s and no track; it is exported by `mm export`, mixed and muxed by `mm sound`, and
 // the MP4's audio is decoded the way a player decodes it. The click's place in the unencoded mix

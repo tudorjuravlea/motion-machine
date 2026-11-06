@@ -39,7 +39,7 @@ For this example the crew stood in for the director; rows marked *stand-in* are 
 | 3.1 | `style.json` | `mm new --kind film --style editorial --id golden-film-editorial`: paper × calm, copied from `styles/presets/editorial.json`; composition left, 1, airy | *stand-in:* "warm, quiet, legible; as composed" | applied |
 | 3.2 | Beat grid | `mm beats` needs a track and there is none | *stand-in:* "write the 120 BPM grid by arithmetic, k × 0.5 s" | `assets/beats.json`, 61 beats, `audio.beats` set |
 | 3.3 | Cues on the grid (W-CUE) and their density (W-MIX: editorial tops out at 4 per 10 s, kinetic needs at least 3 per 10 s overall) | A keep the fixture's cues and snap (drift up to 200 ms) · B move cued beats onto beats and redistribute | *stand-in:* "B: a cue 200 ms off its event is worse than a moved cue; one cue on the largest event of each scene" | 9 cues: hit 0.5, tick 1.0, tick 5.0, tick 8.5, tick 12.0, tick 12.5, tick 16.0, riser 20.0, complete 27.5 (seconds, film time); W-CUE, W-MIX structure PASS |
-| 3.4 | Riser lands on 37 | the counter on spring `heavy` (0.762 s calm, 0.673 s kinetic) arriving at 18.983 s, so the riser's start falls within 45 ms of the 18.5 s beat and the gate cut in both styles | *stand-in:* "the crest within two frames of the landing in both styles" | mixer plays the riser 18.5–19.7 s: crest 45 ms before the landing (19.745 s) |
+| 3.4 | Riser lands on the figure | the counter runs a fixed 0.517 s from 18.983 s, so it lands on the 19.5 s beat in both styles and the riser ends there | *stand-in:* "the crest within two frames of the landing in both styles" | mixer ends the riser 23 ms before the landing (19.5 s): crest 44 ms before it |
 
 ## Gate 4 · Style frames
 

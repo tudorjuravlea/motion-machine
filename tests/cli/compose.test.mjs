@@ -24,7 +24,7 @@ test('paper x kinetic validates, records from, and differs from editorial in the
   assert.deepEqual(got.from, { brand: 'styles/brands/paper.json', motion: 'styles/motion/kinetic.json' });
   const editorial = read('styles/presets/editorial.json');
   const differing = Object.keys(got).filter((k) => !['name', 'from'].includes(k) && JSON.stringify(got[k]) !== JSON.stringify(editorial[k])).sort();
-  assert.deepEqual(differing, ['entrances', 'motion', 'pacing', 'sound', 'transitions']);
+  assert.deepEqual(differing, ['entrances', 'essence', 'motion', 'nativeMoves', 'pacing', 'pitfalls', 'sound', 'transitions', 'variation']);
 });
 
 test('paper x calm named editorial is the shipped editorial preset', () => {

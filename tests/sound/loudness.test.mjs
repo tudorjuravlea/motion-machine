@@ -126,7 +126,8 @@ test('the CLI runs end to end (exit 0) and rewrites an already-muxed MP4 without
   const dir = await variant('cli', { cues: ['bed', 'hit', 'tick', 'tick'] });
   const mp4 = await withPicture(dir, PICTURE);
   for (let i = 0; i < 2; i++) {
-    const p = spawnSync('node', [join(ROOT, 'scripts/sound.mjs'), dir, '--patterns', PATTERNS, '--formats', '16x9'], { encoding: 'utf8' });
+    // --no-verify: the picture here is a small stand-in, not a render, so the file check would rightly fail it
+    const p = spawnSync('node', [join(ROOT, 'scripts/sound.mjs'), dir, '--patterns', PATTERNS, '--formats', '16x9', '--no-verify'], { encoding: 'utf8' });
     assert.equal(p.status, 0, p.stderr);
   }
   assert.equal((await probe(mp4)).streams.filter((s) => s.codec_type === 'audio').length, 1);

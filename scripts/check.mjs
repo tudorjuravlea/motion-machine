@@ -35,7 +35,8 @@ export const IDS = ['G-TIME', 'G-DETERMINISM', 'G-LOCAL', 'G-BRAND', 'G-PLACEHOL
   'W-HOOK', 'W-DEAD', 'W-QUIET', 'W-LENGTH', 'W-SCENE-END', 'W-LOUDNESS', 'W-LITERAL', 'W-PATTERN-CARD', 'W-PROVENANCE',
   'W-FADE-ONLY', 'W-READ', 'W-CUE', 'W-DUR-LITERAL', 'W-BAN', 'W-SUB', 'W-CONTRAST', 'W-PACE', 'W-HOLD', 'W-EMPTY', 'W-ENTRANCE',
   'W-STAGGER', 'W-AMBIENT', 'W-CAPTION', 'W-OVERSHOOT', 'W-MIX', 'W-ASK', 'W-FACE', 'W-GEN-BRAND',
-  'W-ANCHOR', 'W-POP', 'W-DEADSTOP', 'W-FOCUS', 'W-TOKENS', 'W-SEAM', 'W-LOOP', 'W-SAMEBOX', 'W-ASSET-LICENSE', 'W-PALETTE', 'W-SAMPLE-LICENSE', 'W-AUDIBLE', 'W-SOUND-SHAPE', 'W-SOUND-ARTIFACT', 'W-SAY', 'W-EASE', 'W-DECK-STEP'];
+  'W-ANCHOR', 'W-POP', 'W-DEADSTOP', 'W-FOCUS', 'W-TOKENS', 'W-SEAM', 'W-LOOP', 'W-SAMEBOX', 'W-ASSET-LICENSE', 'W-PALETTE', 'W-SAMPLE-LICENSE', 'W-AUDIBLE', 'W-SOUND-SHAPE', 'W-SOUND-ARTIFACT', 'W-SAY', 'W-EASE', 'W-DECK-STEP',
+  'W-RHYTHM', 'W-READS', 'W-DEVICES', 'W-SCREEN-IDLE', 'W-NUMBER', 'W-CASE', 'W-LOOP-SEAM'];
 
 export { patternsBaseOf };
 export class SetupError extends Error {}
@@ -89,7 +90,8 @@ function recording(browser, log) {
 const RANK = { FAIL: 3, WARN: 2, PASS: 1, SKIP: 0 };
 
 /** The warning rule each key of a style's `gate` block tunes. */
-export const TUNED_BY = { length: 'W-LENGTH', deadS: 'W-DEAD', quietS: 'W-QUIET', read: 'W-READ', liftBans: 'W-BAN', anchor: 'W-ANCHOR', tokens: 'W-TOKENS', seamPct: 'W-SEAM', sameBox: 'W-SAMEBOX' };
+export const TUNED_BY = { length: 'W-LENGTH', deadS: 'W-DEAD', quietS: 'W-QUIET', read: 'W-READ', liftBans: 'W-BAN', anchor: 'W-ANCHOR', tokens: 'W-TOKENS', seamPct: 'W-SEAM', sameBox: 'W-SAMEBOX',
+  rhythmRatio: 'W-RHYTHM', readsMax: 'W-READS', readsWindowS: 'W-READS', deviceMax: 'W-DEVICES', loopSeam: 'W-LOOP-SEAM', payoff: 'W-SOUND-SHAPE' };
 
 /**
  * Runs the gate over one piece. Returns { rules, code, crashed, schedule, version, journal, formats, tuned } (`tuned`: the warning rules the style's gate block tunes). Pass

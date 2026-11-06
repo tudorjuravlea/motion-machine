@@ -68,5 +68,68 @@
       7
     ],
     "energy": "medium"
+  },
+  "essence": {
+    "traits": [
+      "Every move uses one ease, steep at the start and level at the end, so entrances, exits and travels all feel cut from the same rule.",
+      "Nothing bounces: elements arrive on a mask and stop exactly on their mark.",
+      "Timings are multiples of one beat (125 ms), so arrivals line up with each other across the frame.",
+      "Scenes change by a wipe or a split along a straight edge, or by a hard cut."
+    ],
+    "notLike": [
+      {
+        "style": "proof",
+        "line": "proof also never bounces but its entrances are quick and varied and every cut is hard; grid keeps one ease throughout and lets a wipe or split edge cross the frame."
+      },
+      {
+        "style": "kinetic",
+        "line": "kinetic overshoots and slams; grid is rigid and stops on its mark with no overshoot at all."
+      }
+    ]
+  },
+  "nativeMoves": [
+    {
+      "move": "A mask reveal along a ruled edge: a headline or plate is uncovered by a straight line, as if drawn on a sheet.",
+      "transfer": "A site-survey film for a construction bid, each measured dimension uncovered along its own edge."
+    },
+    {
+      "move": "A split cut at the climax: the frame divides along a line and the next scene is already behind it.",
+      "transfer": "A before-and-after film for a clinic, the cut line running down the middle as the second state slides in."
+    },
+    {
+      "move": "Staggered arrivals on an even 62 ms step, so a row of items lands as a ruler of ticks.",
+      "transfer": "A timetable film where each departure appears in its column one tick after the last."
+    }
+  ],
+  "pitfalls": [
+    {
+      "mistake": "Adding a springy or overshooting entrance to a grid film.",
+      "mechanism": "Everything else sits on a straight edge and stops dead; one element that wobbles past its mark breaks the alignment the viewer is reading.",
+      "fix": "Keep overshoot at zero; use mask-reveal and rise, and move emphasis into the colour."
+    },
+    {
+      "mistake": "Holding scenes longer than about two seconds with no arrivals.",
+      "mechanism": "The style gets its tension from steady ticks; a long still frame reads as stalled, not as calm.",
+      "fix": "Add an arrival every second or so, or shorten the scene."
+    },
+    {
+      "mistake": "Mixing in curved eases for some elements.",
+      "mechanism": "The single shared ease is what makes the film feel rule-bound; a softer curve on one item reads as a mistake.",
+      "fix": "Use the style's enter, exit and move eases as given."
+    }
+  ],
+  "variation": {
+    "free": [
+      "Which entrance (mask-reveal or rise) carries each text role.",
+      "Which scene gets the split and which the wipe, within the topic and climax roles.",
+      "The column and row structure of the layouts.",
+      "Scene length around the 1 second hold floor."
+    ],
+    "invariants": [
+      "One ease for enter, exit and move.",
+      "No overshoot.",
+      "Durations stay on the 125 ms step.",
+      "Cuts are wipes, splits or hard cuts, never a dissolve."
+    ]
   }
 }

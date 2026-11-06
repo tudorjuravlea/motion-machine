@@ -16,7 +16,7 @@
     },
     {
       "id": "f2",
-      "text": "The gate checks 59 rules: 14 errors and 45 warnings.",
+      "text": "The gate checks 66 rules: 14 errors and 52 warnings.",
       "source": "SPEC §7"
     },
     {
@@ -188,11 +188,11 @@
           "at": 0.483,
           "slot": "figure",
           "fx": "data/counter",
-          "value": 59,
+          "value": 66,
           "fact": "f2",
           "params": {
             "suffix": " rules",
-            "spring": "heavy"
+            "dur": 0.517
           },
           "cue": "riser"
         },
@@ -203,7 +203,7 @@
           "text": "determinism, legibility, pacing, style, sound"
         }
       ],
-      "say": "A gate measures every result. Thirty-seven rules. Nothing ships on a feeling."
+      "say": "A gate measures every result. Sixty-six rules. Nothing ships on a feeling."
     },
     {
       "id": "both",

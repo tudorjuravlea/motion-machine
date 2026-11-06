@@ -186,5 +186,8 @@
       "width": 1.6,
       "alpha": 0.06
     }
+  },
+  "gate": {
+    "rhythmRatio": 1
   }
 }

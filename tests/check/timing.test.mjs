@@ -76,7 +76,8 @@ async function withDuration(rel, format, sceneId, duration) {
   sc.duration = duration;
   return (await prepare(rel, { story }))[format];
 }
-const readOf = async (ctx) => (await timingRules({ schedule: ctx.schedule, story: ctx.story, style: ctx.style, grid: { beats: null, declared: false } })).find((r) => r.id === 'W-READ');
+// the floors are the word rules, so the reading-rate ceiling is out of reach here
+const readOf = async (ctx) => (await timingRules({ schedule: ctx.schedule, story: ctx.story, style: { ...ctx.style, gate: { ...ctx.style.gate, read: { ...ctx.style.gate?.read, charsPerS: 1000 } } }, grid: { beats: null, declared: false } })).find((r) => r.id === 'W-READ');
 
 for (const [rel, format] of [['pieces/demo-film', '16x9'], ['pieces/golden-film-editorial', '9x16'], ['pieces/catalogue-text-1', '16x9']]) {
   test(`floors: ${rel} ${format}, every scene at minDuration passes W-READ and 0.01 s under it warns`, async () => {

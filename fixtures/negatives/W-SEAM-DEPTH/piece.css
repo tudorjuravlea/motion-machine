@@ -1,0 +1,2 @@
+/* The headline is centred, so scaling it about its box keeps the centre of its ink where it was: no lateral travel to read. */
+[data-slot="headline"] { text-align: center; }

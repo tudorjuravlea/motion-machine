@@ -10,7 +10,11 @@ Pick the archetype nearest the brief at gate 2 and change it: a treatment is thr
 two of them should depart from the table. Times are for a 9x16 film at the calm motion style; the
 gate's reading-time arithmetic (W-READ) decides the final seconds. Only the device showcase is
 built around a device: everywhere else a device appears only if the viewer must see the product in
-use (SKILL.md ground rule 9).
+use (SKILL.md ground rule 9). Change the rhythm too: vary scene lengths short, short, long, with the longest
+hold on the key message and the slowest scene about three times the fastest, or W-RHYTHM warns. Change the opening:
+`layouts/statement` is the default every film reaches for, so pick it only when nothing else carries the hook.
+These archetypes are worked examples, not shots to copy: write your treatment first and open one only after, and
+when a film is done compare it with the last ones (`mm distance <piece> --against <piece>`): at least four of six axes differ.
 
 ## Launch (30 to 40 s): a thing exists now
 

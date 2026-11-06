@@ -62,7 +62,7 @@ test('a shorter quiet tail passes W-QUIET and reports it', async () => {
 });
 
 test('a faster reading speed passes W-READ and reports the speed and floors it used', async () => {
-  const r = row(await run(tuned('W-READ', { read: { perWordS: 0.15 } }), only('W-READ')), 'W-READ');
+  const r = row(await run(tuned('W-READ', { read: { perWordS: 0.15, charsPerS: 40 } }), only('W-READ')), 'W-READ');
   assert.equal(r.status, 'PASS');
   assert.equal(r.evidence.perWord, 0.15);
   assert.equal(r.evidence.label, 0.8);
@@ -155,7 +155,7 @@ test('compose carries the motion half\'s gate block into the style; a half witho
 
 test('the live gate and its floors read the same tuned thresholds', async () => {
   const ctx = (await prepare('fixtures/negatives/W-READ'))['16x9'];
-  const fast = { ...ctx.style, gate: { read: { perWordS: 0.15 } } };
+  const fast = { ...ctx.style, gate: { read: { perWordS: 0.15, charsPerS: 40 } } };
   const slow = (rows) => rows.find((r) => r.id === 'W-READ');
   assert.equal(slow(await timingRules(ctx)).status, 'WARN');
   assert.equal(slow(await timingRules({ ...ctx, style: fast })).status, 'PASS');

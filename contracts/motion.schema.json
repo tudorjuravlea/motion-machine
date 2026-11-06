@@ -8,6 +8,53 @@
   "properties": {
     "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
     "version": { "type": "integer", "minimum": 1 },
+    "essence": {
+      "type": "object", "additionalProperties": false, "required": ["traits", "notLike"],
+      "description": "what this motion style is, for an agent that was not there when it was made",
+      "properties": {
+        "traits": { "type": "array", "minItems": 3, "maxItems": 5, "items": { "type": "string", "minLength": 12, "maxLength": 240 }, "description": "three to five things a viewer can see on screen; a trait that cannot be seen in a frame or a clip is not a trait" },
+        "notLike": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["style", "line"],
+            "properties": {
+              "style": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$", "description": "a neighbouring motion style, by name" },
+              "line": { "type": "string", "minLength": 12, "maxLength": 300, "description": "the visible line between this style and that one" }
+            }
+          }
+        }
+      }
+    },
+    "nativeMoves": {
+      "type": "array", "minItems": 1,
+      "description": "what only this motion style does; each with a transfer example, a use unlike any demo, so the move can be carried to a new subject",
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["move", "transfer"],
+        "properties": {
+          "move": { "type": "string", "minLength": 12, "maxLength": 300 },
+          "transfer": { "type": "string", "minLength": 12, "maxLength": 300 }
+        }
+      }
+    },
+    "pitfalls": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["mistake", "mechanism", "fix"],
+        "properties": {
+          "mistake": { "type": "string", "minLength": 8, "maxLength": 240 },
+          "mechanism": { "type": "string", "minLength": 12, "maxLength": 300, "description": "why it goes wrong, as seen on screen" },
+          "fix": { "type": "string", "minLength": 8, "maxLength": 300 }
+        }
+      }
+    },
+    "variation": {
+      "type": "object", "additionalProperties": false, "required": ["free", "invariants"],
+      "description": "the agent's degrees of freedom, kept apart from what must not change",
+      "properties": {
+        "free": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 8, "maxLength": 240 } },
+        "invariants": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 8, "maxLength": 240 } }
+      }
+    },
     "source": { "type": "string", "description": "for a captured motion style: what reference it was measured from (a description, never a path the piece loads)" },
     "motion": {
       "type": "object",
@@ -63,6 +110,13 @@
             "from":  { "description": "the order a cascade comes in, for every cascade (a beat's params.stagger.from wins): first (the default), last, center, edges, random, an item index, or a ratio pair [rx, ry] over a grid", "oneOf": [{ "enum": ["first", "last", "center", "edges", "random"] }, { "type": "integer", "minimum": 0 }, { "type": "array", "minItems": 2, "maxItems": 3, "items": { "type": "number", "minimum": 0, "maximum": 1 } }] },
             "ease":  { "$ref": "#/$defs/easing", "description": "bends the spacing of every cascade (a beat's params.stagger.ease wins): the last child still arrives at the full capped delay" }
           }
+        },
+        "captions": {
+          "type": "object", "additionalProperties": false,
+          "description": "how the style sets caption groups; W-CAPTION reads it",
+          "properties": {
+            "wordsPerGroup": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "integer", "minimum": 1, "maximum": 40 }, "description": "the fewest and the most words a caption group holds, [min, max]" }
+          }
         }
       }
     },
@@ -73,6 +127,7 @@
         "palette":      { "type": "string", "enum": ["soft-ui", "percussive", "cinematic", "none"] },
         "bpm":          { "type": "integer", "minimum": 50, "maximum": 200 },
         "loudnessLufs": { "type": "number", "minimum": -24, "maximum": -9 },
+        "sparse": { "type": "boolean", "description": "the film is mostly quiet on purpose: QA-QUIET does not warn" },
         "cuesPer10s":   { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "integer", "minimum": 0, "maximum": 12 } },
         "profile":      { "type": "string", "minLength": 1, "maxLength": 200, "description": "the sound profile (contracts/sound-profile.schema.json) the cues are voiced in and measured against: a name in styles/sound/ or a path to a profile file. The brand half may set it too, and then it wins, so a brand chooses its sound once" },
         "suggest":      { "type": "object", "additionalProperties": false, "description": "what `mm sound suggest` proposes, chosen once: `cues` names the cue each kind of moment takes (entrance, type, count, cut, hit, tap, click, settle, exit; the rest keep the defaults), `hitShare` is the share of sounding cuts, strongest first, that take the hit rather than the cut cue (default 0.33), `repeatGapMs` how soon one cue may sound again (default 350)", "properties": {
@@ -143,7 +198,8 @@
           "properties": {
             "perWordS": { "type": "number", "exclusiveMinimum": 0, "maximum": 2, "description": "seconds to read one word (a scene needs its words times this, plus its last arrival)" },
             "labelS":    { "type": "number", "exclusiveMinimum": 0, "maximum": 10, "description": "seconds a line of one to three words holds settled" },
-            "sentenceS": { "type": "number", "exclusiveMinimum": 0, "maximum": 10, "description": "the least seconds a longer line holds settled (it also needs perWordS per word)" }
+            "sentenceS": { "type": "number", "exclusiveMinimum": 0, "maximum": 10, "description": "the least seconds a longer line holds settled (it also needs perWordS per word)" },
+            "charsPerS": { "type": "number", "exclusiveMinimum": 0, "maximum": 100, "description": "the most characters a second a line may be read at: its characters over its entrance and its settled hold" }
           }
         },
         "anchor": {
@@ -170,6 +226,20 @@
             "share":     { "type": "number", "minimum": 0, "maximum": 1, "description": "the share of scenes that may carry one signature before the rule warns (more than this)" },
             "minScenes": { "type": "integer", "minimum": 2, "maximum": 40, "description": "the fewest scenes at a rest the rule reads" },
             "quant":     { "type": "number", "exclusiveMinimum": 0, "maximum": 0.5, "description": "the grid, as a share of the frame, that a box is snapped to" }
+          }
+        },
+        "rhythmRatio": { "type": "number", "minimum": 1, "maximum": 20, "description": "W-RHYTHM: the least ratio of the longest scene to the shortest, from four scenes" },
+        "readsMax":     { "type": "integer", "minimum": 1, "maximum": 40, "description": "W-READS: the most arrivals inside one window" },
+        "readsWindowS": { "type": "number", "exclusiveMinimum": 0, "maximum": 10, "description": "W-READS: the window, in seconds" },
+        "deviceMax":    { "type": "integer", "minimum": 0, "maximum": 40, "description": "W-DEVICES: the most scenes that may use one hero device kind (slam, crash-zoom, flash) in a film of 30 s or less" },
+        "loopSeam":     { "type": "number", "exclusiveMinimum": 0, "maximum": 4, "description": "W-LOOP-SEAM: the most the motion leaving a loop may differ from the motion entering it, as a share of the larger" },
+        "payoff": {
+          "type": "object", "additionalProperties": false,
+          "description": "W-SOUND-SHAPE's payoff check: the quiet a mix with a bed or track leaves before its loudest 100 ms",
+          "properties": {
+            "quietS":   { "type": "number", "exclusiveMinimum": 0, "maximum": 10, "description": "the least seconds at or under floorDb" },
+            "floorDb":  { "type": "number", "minimum": -120, "maximum": 0, "description": "dBFS that counts as quiet" },
+            "windowS":  { "type": "number", "exclusiveMinimum": 0, "maximum": 20, "description": "how far before the loudest 100 ms the quiet is looked for" }
           }
         },
         "seamPct": { "type": "number", "minimum": 0, "maximum": 100, "description": "W-SEAM: how far apart, in percent, an exit's speed and the next entrance's speed across a cut may be" },

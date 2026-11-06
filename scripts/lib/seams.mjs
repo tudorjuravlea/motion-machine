@@ -22,6 +22,7 @@ import { composeSheet } from './sheet.mjs';
 export const SEAM_BEFORE = 3;          // frames shown and read before a cut
 export const SEAM_AFTER = 3;           // frames shown after it (a transition reads on to its end)
 export const SEAM_MAX_FRAMES = 40;     // the most frames read around one cut
+const SELECT_MAX = 100;                // frames asked of ffmpeg in one go
 export const TILE_WIDTH = 240;         // px a frame is scaled to for reading and for the sheet
 export const SEAMS_PER_SHEET = 8;      // rows in one sheet file
 export const BLACK_LUMA = 0.02;        // mean luma (0..1) at or under which a frame is black
@@ -48,15 +49,19 @@ export async function tilesOf(video, indices) {
   const sorted = [...new Set(indices)].filter((n) => n >= 0).sort((a, b) => a - b);
   const out = new Map();
   if (!sorted.length) return out;
-  const dir = mkdtempSync(join(tmpdir(), 'mm-seams-'));
-  try {
-    const pick = sorted.map((n) => `eq(n\\,${n})`).join('+');
-    const r = await ff(['-i', video, '-an', '-vf', `select='${pick}',scale=${TILE_WIDTH}:-2:flags=area`, '-fps_mode', 'passthrough', '-f', 'image2', join(dir, 't%05d.png')]);
-    if (r.code !== 0) throw new Error(`ffmpeg could not read frames of ${video}: ${r.stderr.trim().split('\n').pop()}`);
-    const files = readdirSync(dir).filter((f) => /^t\d{5}\.png$/.test(f)).sort();
-    files.forEach((f, i) => { if (i < sorted.length) out.set(sorted[i], readFileSync(join(dir, f))); });
-    return out;
-  } finally { rmSync(dir, { recursive: true, force: true }); }
+  // one `select` expression fails past about 150 terms, so the frames are read in batches
+  for (let b = 0; b < sorted.length; b += SELECT_MAX) {
+    const batch = sorted.slice(b, b + SELECT_MAX);
+    const dir = mkdtempSync(join(tmpdir(), 'mm-seams-'));
+    try {
+      const pick = batch.map((n) => `eq(n\\,${n})`).join('+');
+      const r = await ff(['-i', video, '-an', '-vf', `select='${pick}',scale=${TILE_WIDTH}:-2:flags=area`, '-fps_mode', 'passthrough', '-f', 'image2', join(dir, 't%05d.png')]);
+      if (r.code !== 0) throw new Error(`ffmpeg could not read frames of ${video}: ${r.stderr.trim().split('\n').pop()}`);
+      const files = readdirSync(dir).filter((f) => /^t\d{5}\.png$/.test(f)).sort();
+      files.forEach((f, i) => { if (i < batch.length) out.set(batch[i], readFileSync(join(dir, f))); });
+    } finally { rmSync(dir, { recursive: true, force: true }); }
+  }
+  return out;
 }
 
 /** One image file (a JPEG or PNG) as a TILE_WIDTH-wide PNG. */

@@ -32,7 +32,7 @@ rm -rf tour/golden/out
 node scripts/mm.mjs check tour/golden
 ```
 
-The gate runs 59 rules and prints one line each: `PASS`, `FAIL`, `WARN` or `SKIP` (a rule that
+The gate runs 66 rules and prints one line each: `PASS`, `FAIL`, `WARN` or `SKIP` (a rule that
 could not run says so; it never passes silently). Fourteen rules are hard: they guard what breaks a
 piece or the brand, a `FAIL` makes the check exit 1, and `mm export` refuses the piece. The other
 45 advise on craft: a `WARN` never changes the exit code and never blocks an export. A report is

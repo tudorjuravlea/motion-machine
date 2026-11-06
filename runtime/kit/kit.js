@@ -931,12 +931,24 @@ export function seek(t) {
   late = [];
   if (S.story.kind === 'deck') seekDeck(t); else seekFilm(t);
   placeFaceSafe(S);   // after every entrance: what a layout marks data-face-safe stands clear of the face
-  if (S.style.finish?.grain > 0) finishSeed(t);
+  if (S.style.finish?.grain > 0) finishSeed(S.reduced ? Math.ceil(S.t) : t);   // reduced motion: the grain of the rest the press ends on, not a shimmer between rests
   if (S.ground && isAnimated(S.ground)) paintGrounds();
   if (S.style.finish?.misregister > 0) misregisterAt(S.t);
   runScreens();
   if (S.footage) paintFootage(S.footage, S.t, trackDecode, decodeWarning);
   if (late.length) settle();   // a live preview gets its renders too; the renderer awaits the same settle
+  freshLayers();
+}
+
+// The browser keeps raster state from transforms a frame before used, so a rest reached by playing an entrance could paint
+// different text pixels from the same rest reached cold. In render mode the stage's layers are rebuilt at every seek, so a
+// frame cannot depend on the path to it. Taking the stage out of layout and back is what rebuilds them; a style change alone does not.
+function freshLayers() {
+  if (!document.documentElement.hasAttribute('data-render')) return;
+  const { style } = S.stage, was = style.display;
+  style.display = 'none';
+  void S.stage.offsetHeight;
+  style.display = was;
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -996,6 +1008,8 @@ async function mountScreen({ sc, b, slot }, warnings) {
 
 const durSec = (d) => (typeof d === 'number' ? d : (S.style.motion.durations[d] ?? S.style.motion.durations.standard) / 1000);
 
+const SNAP_S = 1e-6;   // in presses: how far into its press a reduced-motion screen action is already done
+
 function runScreens() {
   if (!S.screens?.length) return;
   const deck = S.story.kind === 'deck';
@@ -1008,7 +1022,13 @@ function runScreens() {
     const timed = s.actions.map((action, i) => {
       const module = S.modules[action.do];
       if (!module?.reduce) return null;
-      if (deck) { const press = it.screenPresses?.[i] ?? it.press + (action.step ?? 0); return { action, module, i, start: press - 1, d: 1, sec: S.sched.pressLengths[press] ?? 1 }; }
+      if (deck) {
+        const press = it.screenPresses?.[i] ?? it.press + (action.step ?? 0), sec = S.sched.pressLengths[press] ?? 1;
+        // reduced motion: an action (a scroll, a zoom, a tap) is done the instant its press begins, never under way between rests;
+        // a recording keeps playing (SPEC §10's known limit)
+        if (S.reduced && action.do !== 'screen/play') return { action, module, i, start: press - 1 + SNAP_S, d: 0, end: press, sec };
+        return { action, module, i, start: press - 1, d: 1, sec };
+      }
       const d = action.d ?? durSec(module.dur);
       return { action, module, i, start: it.start + (action.at ?? 0), d, sec: d };
     }).filter(Boolean).sort((p, q) => p.start - q.start || p.i - q.i);
@@ -1021,7 +1041,7 @@ function runScreens() {
     aimDevice(it.el, screenEl, state.zoom);   // the zoom is a camera on the device, never a magnified picture
     // a deck rest shows the finished drawing of an action that holds (screen/callout): at the
     // rest its press ends on, p = 1; after the next press it is gone
-    if (deck) for (const e of timed) if (e.module.holds && Math.abs(S.t - (e.start + e.d)) < 1e-9) active.push({ ...e, p: 1 });
+    if (deck) for (const e of timed) if (e.module.holds && Math.abs(S.t - (e.end ?? e.start + e.d)) < 1e-9) active.push({ ...e, p: 1 });
     // state that outlives its action (an open island) is drawn on every seek by the module's paint()
     const painted = new Set();
     for (const e of timed) if (typeof e.module.paint === 'function' && !painted.has(e.module)) { painted.add(e.module); e.module.paint(screenEl, state, ctxOf(e)); }

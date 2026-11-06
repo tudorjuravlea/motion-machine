@@ -11,7 +11,7 @@
 // run (a second exporter exits 2), and the story it pinned must still be story.json when the
 // render ends, or nothing is renamed into out/ (exit 1). The poster and loop check are frames of the
 // story's first format, so they are written only when that format is in the run.
-// --prove renders every frame a second time in a fresh page, in reverse order, and exits 1 on any
+// --prove renders every frame again in a fresh page in reverse order, and again in one page in a shuffled order, and exits 1 on any
 // byte difference (order independence, SPEC §2.5).
 // --workers N (films; default max(1, min(4, floor(cpus / 2))), at most 16) draws frames in N pages and
 // feeds the one encoder in order (see renderFilm); decks draw in one page. out/export.json
@@ -109,8 +109,23 @@ export function shareCopy(story) {
 
 const even = (n) => n - (n % 2);
 
-/** Frame n of a film at `fps`, with `sub` instants ending on the frame itself (the last of each group is kept). */
-export const instantsOfFrame = (n, fps, sub) => Array.from({ length: sub }, (_, j) => Math.max(0, (n - (sub - 1 - j) / sub) / fps));
+/** The share of the frame interval the shutter is open: the instants of a frame lie in the half that ends on the frame (a 180 degree shutter). */
+export const SHUTTER = 0.5;
+
+/**
+ * Frame n of a film at `fps`, with `sub` instants spread over the last SHUTTER of the frame interval, the last
+ * of each group being the frame itself (the one that is kept). `cuts` are the times scenes start by a hard cut
+ * (no cut duration): an instant before a cut that falls inside the span moves to the cut, so no frame blends
+ * the outgoing scene into the incoming one.
+ */
+export const instantsOfFrame = (n, fps, sub, cuts = []) => {
+  const end = n / fps;
+  return Array.from({ length: sub }, (_, j) => {
+    let t = Math.max(0, (n - SHUTTER * (sub - 1 - j) / sub) / fps);
+    for (const c of cuts) if (t < c && c <= end) t = c;
+    return t;
+  });
+};
 
 /**
  * `--workers` when none is given: half the cores, at least 1, at most 4. `MM_WORKERS` (a positive whole
@@ -259,11 +274,13 @@ async function renderFilm({ dir, format, fps, sub, out, comment, meta, shared, w
     const onFailed = (r) => failedRequests.push(`${new URL(r.url()).pathname} (${r.failure()?.errorText ?? 'failed'})`);
     for (const o of opened) { o.page.on('response', onResponse); o.page.on('requestfailed', onFailed); }
 
+    // where a hard cut falls: a frame's instants never reach back across one (only a blended frame has any to cross)
+    const cuts = sub > 1 ? await lead.page.evaluate(() => window.mm.schedule.scenes.filter((s, i) => i > 0 && !(s.cut.d > 0)).map((s) => s.start)) : [];
     /** The `sub` instants of frame n, as PNGs, drawn on `page`. */
     const draw = async (page, n) => {
       if (n === failFrame) throw new Error(`MM_EXPORT_FAIL_FRAME: the page drawing frame ${n} of ${format} was told to throw`);
       const pngs = [];
-      for (const t of instantsOfFrame(n, fps, sub)) pngs.push(await framePng(page, t, { alpha: !!alpha }));
+      for (const t of instantsOfFrame(n, fps, sub, cuts)) pngs.push(await framePng(page, t, { alpha: !!alpha }));
       return pngs;
     };
     enc = alpha
@@ -303,10 +320,22 @@ async function renderFilm({ dir, format, fps, sub, out, comment, meta, shared, w
 }
 
 /** Hashes of `instants` (film seconds or deck presses), rendered in a fresh page, optionally last to first. */
-async function hashInstants({ dir, format, instants, reverse = false, shared, alpha = false }) {
+/** The indices 0..n-1 in a fixed shuffled order: a page that jumps about, the same way each run. */
+function shuffledOrder(n) {
+  const out = Array.from({ length: n }, (_, i) => i);
+  let s = n >>> 0;
+  for (let i = n - 1; i > 0; i--) {
+    s = (Math.imul(s, 1664525) + 1013904223) >>> 0;
+    const j = Math.floor((s / 2 ** 32) * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+async function hashInstants({ dir, format, instants, reverse = false, shuffle = false, shared, alpha = false }) {
   const opened = await openPiece(dir, { format, ...shared, alpha });
   try {
-    const order = instants.map((_, i) => i);
+    const order = shuffle ? shuffledOrder(instants.length) : instants.map((_, i) => i);
     if (reverse) order.reverse();
     const out = new Array(instants.length);
     for (const i of order) out[i] = sha(await framePng(opened.page, instants[i], { alpha }));
@@ -317,6 +346,12 @@ async function hashInstants({ dir, format, instants, reverse = false, shared, al
 }
 
 const mismatches = (a, b, label = (i) => i) => a.flatMap((h, i) => (h === b[i] ? [] : [label(i)]));
+
+/** --prove: the same instants in reverse in a fresh page, then shuffled in one page, against the first pass: a frame must not depend on how it was reached. */
+async function provePaths(first, { label, ...o }) {
+  const back = await hashInstants({ ...o, reverse: true }), jumped = await hashInstants({ ...o, shuffle: true });
+  return [...new Set([...mismatches(first, back, label), ...mismatches(first, jumped, label)])];
+}
 
 async function exportFilm(dir, story, o, shared, manifest) {
   const outDir = join(dir, 'out');
@@ -361,8 +396,7 @@ async function exportFilm(dir, story, o, shared, manifest) {
       }
       if (o.prove) {
         const instants = Array.from({ length: r.frames }, (_, n) => n / o.fps);
-        const again = await hashInstants({ dir, format, instants, reverse: true, shared });
-        const bad = mismatches(r.hashes, again, (n) => `${(n / o.fps).toFixed(3)}s`);
+        const bad = await provePaths(r.hashes, { dir, format, instants, shared, label: (n) => `${(n / o.fps).toFixed(3)}s` });
         (manifest.prove ??= []).push({ format, frames: r.frames, mismatches: bad });
       }
     }
@@ -392,8 +426,7 @@ async function exportAlphaFormat({ dir, story, o, shared, manifest, format, stag
   for (const e of [...r.errors, ...r.warnings]) log(`  warning: ${e}`);
   if (o.prove) {
     const instants = Array.from({ length: r.frames }, (_, n) => n / o.fps);
-    const again = await hashInstants({ dir, format, instants, reverse: true, shared, alpha: true });
-    (manifest.prove ??= []).push({ format, frames: r.frames, mismatches: mismatches(r.hashes, again, (n) => `${(n / o.fps).toFixed(3)}s`) });
+    (manifest.prove ??= []).push({ format, frames: r.frames, mismatches: await provePaths(r.hashes, { dir, format, instants, shared, alpha: true, label: (n) => `${(n / o.fps).toFixed(3)}s` }) });
   }
 }
 
@@ -465,8 +498,7 @@ async function exportDeck(dir, story, o, shared, manifest) {
       const { rests: r, mids } = momentsOf({ ...sched, kind: 'deck' });
       const instants = [...r, ...mids].map((m) => m.t);
       const a = await hashInstants({ dir, format, instants, shared });
-      const b = await hashInstants({ dir, format, instants, reverse: true, shared });
-      (manifest.prove ??= []).push({ format, frames: instants.length, mismatches: mismatches(a, b, (i) => `press ${instants[i]}`) });
+      (manifest.prove ??= []).push({ format, frames: instants.length, mismatches: await provePaths(a, { dir, format, instants, shared, label: (i) => `press ${instants[i]}` }) });
     }
   } finally {
     await opened.close();

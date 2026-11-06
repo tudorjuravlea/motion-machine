@@ -635,10 +635,10 @@ export async function buildSound(pieceDir, { formats = null, patterns = null, tr
 }
 
 function parseArgs(argv) {
-  const { values, positionals } = parseFlags({ args: argv, allowPositionals: true, options: { formats: { type: 'string' }, patterns: { type: 'string' }, trace: { type: 'boolean' }, sprite: { type: 'string' } } });
+  const { values, positionals } = parseFlags({ args: argv, allowPositionals: true, options: { formats: { type: 'string' }, patterns: { type: 'string' }, 'no-verify': { type: 'boolean' }, trace: { type: 'boolean' }, sprite: { type: 'string' } } });
   if (positionals.length > 1) throw new UsageError('at most one piece');
   if (values.sprite != null && !['wav', 'mp3', 'aac'].includes(values.sprite)) throw new UsageError(`--sprite takes wav, mp3 or aac, not ${values.sprite}`);
-  return { _: positionals, formats: values.formats?.split(',').filter(Boolean) ?? null, patterns: values.patterns ?? null, trace: Boolean(values.trace), sprite: values.sprite ?? 'wav' };
+  return { _: positionals, formats: values.formats?.split(',').filter(Boolean) ?? null, patterns: values.patterns ?? null, trace: Boolean(values.trace), sprite: values.sprite ?? 'wav', noVerify: Boolean(values['no-verify']) };
 }
 
 /** CLI entry: returns the exit code (0 done, 1 failed, 2 setup or usage). */
@@ -654,11 +654,22 @@ export async function main(argv) {
   try {
     const res = await buildSound(dir, { formats: a.formats, patterns: a.patterns, trace: a.trace, sprite: a.sprite, log: console.log });
     for (const n of res.notes) console.log(`sound: ${n}`);
-    return res.code;
+    if (res.code !== 0 || a.noVerify || !res.muxed?.length) return res.code;
+    // what was just muxed is what ships: read it back, and keep the report
+    const { recordedRate, verdictLines, verifyExport } = await import('./lib/export-qa.mjs');
+    let ok = true;
+    for (const mp4 of res.muxed) {
+      const { fps, walkHoldS } = recordedRate(dir, mp4);
+      const v = await verifyExport(dir, [mp4], { phase: 'final', fps, walkHoldS, merge: true });
+      for (const l of verdictLines(v.report)) console.log(l);
+      ok &&= v.ok;
+    }
+    return ok ? 0 : 1;
   } catch (e) {
     console.error(`sound: ${e.message}`);
     return e.setup ? 2 : 1;
   } finally { held.release(); }
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) process.exit(await main(process.argv.slice(2)));
+// not a top-level await: main imports the file check, which reaches this module through the rules, and a module still evaluating never resolves
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main(process.argv.slice(2)).then((code) => process.exit(code));

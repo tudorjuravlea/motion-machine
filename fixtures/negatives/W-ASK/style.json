@@ -172,5 +172,8 @@
   "ask": [
     "type.display",
     "type.text"
-  ]
+  ],
+  "gate": {
+    "rhythmRatio": 1
+  }
 }

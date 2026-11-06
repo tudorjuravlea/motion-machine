@@ -21,4 +21,7 @@ What every eval also checks, whatever the prompt:
 - The handover's "Unverified" section is present and not empty.
 - No threshold, pattern or kit file was edited to make a piece pass.
 
+- Run the same prompt once with a plain agent and no skill. A check the plain arm also passes cannot rank anything, so an
+  eval it clears on every line has tested nothing.
+
 An eval passes or fails on the artefacts; record results wherever your project tracks them.

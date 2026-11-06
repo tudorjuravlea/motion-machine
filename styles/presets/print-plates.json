@@ -210,5 +210,68 @@
       9
     ],
     "energy": "medium"
+  },
+  "essence": {
+    "traits": [
+      "Everything moves on threes: each element holds still for three frames and then steps, so motion looks like photographed paper.",
+      "Headlines slam and plates drop onto the frame with a hard thud rather than gliding.",
+      "Scenes change by a flip or a push, or by a hard cut; the camera never glides smoothly.",
+      "Plates land with a small visible overshoot of at most a tenth, as paper does when it is dropped on a table."
+    ],
+    "notLike": [
+      {
+        "style": "kinetic",
+        "line": "kinetic slams too but moves at full frame rate; stop-motion steps on threes, so each move shows its frames."
+      },
+      {
+        "style": "grid",
+        "line": "grid is rigid and stepless; stop-motion is stepped and hand-made, with a slight overshoot."
+      }
+    ]
+  },
+  "nativeMoves": [
+    {
+      "move": "A flip as the topic cut: the card turns over and the next scene is on its back.",
+      "transfer": "A children's museum film where each exhibit card flips to reveal the next room."
+    },
+    {
+      "move": "A slam on a stepped ease, so the headline lands in two or three visible positions rather than a smooth curve.",
+      "transfer": "A neighbourhood bakery film where the day's special lands on a chalkboard in three jerks."
+    },
+    {
+      "move": "A drop plate that falls onto the frame and rests a frame or two off true.",
+      "transfer": "A seed-library film where each packet drops on the table and settles slightly crooked."
+    }
+  ],
+  "pitfalls": [
+    {
+      "mistake": "Setting frameHold back to 1 to remove the stutter.",
+      "mechanism": "The whole look is the held frames; at 1 it becomes a kinetic piece with paper textures and loses its reason.",
+      "fix": "Keep it at 3; if a move feels choppy, shorten its duration to a whole number of threes."
+    },
+    {
+      "mistake": "Durations that are not a whole number of threes.",
+      "mechanism": "A move that ends mid-step lands on a half-held frame, which reads as a dropped frame rather than a deliberate step.",
+      "fix": "Pick durations of 3, 6, 9 frames and so on, as the shipped values are."
+    },
+    {
+      "mistake": "Using smooth camera moves like ken-burns.",
+      "mechanism": "A smooth glide over stepped elements shows two frame rates in one shot.",
+      "fix": "Use hold, or leave the camera still."
+    }
+  ],
+  "variation": {
+    "free": [
+      "Which entrance carries each text role (slam, words or drop).",
+      "Which scene takes the flip and which the push.",
+      "Which elements stay still in a scene while others step.",
+      "Scene length from one second upward."
+    ],
+    "invariants": [
+      "Frame hold stays at 3.",
+      "Every duration is a whole number of threes.",
+      "No smooth camera glide.",
+      "Overshoot stays at or below 0.1."
+    ]
   }
 }

@@ -57,7 +57,8 @@ test('W-CUE: cues on the grid pass; 39 ms passes and 41 ms warns; a bed is not s
   assert.equal((await wCue(at(1.25 + 0.039))).status, 'PASS');
   assert.equal((await wCue(at(1.25 + 0.041))).status, 'WARN');
   assert.equal((await wCue(at(1.25 - 0.041))).status, 'WARN');
-  assert.equal((await wCue({ ...ctx, schedule: sched([[1.4, 'bed']]) })).status, 'PASS');
+  const bed = await wCue({ ...ctx, schedule: sched([[1.4, 'bed']]) });
+  assert.equal(bed.status, 'SKIP'); assert.match(bed.evidence.reason, /only a bed cue/);
 });
 
 test('W-CUE: no grid, no cues, a deck, or a missing grid file each say why', async () => {

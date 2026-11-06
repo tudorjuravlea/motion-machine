@@ -8,6 +8,8 @@ import { ROOT } from '../../scripts/lib/browser.mjs';
 import { trackedPieces } from './_tracked.mjs';
 import { loadPatterns, loadRules, patternsBaseOf } from '../../scripts/check.mjs';
 import { floorsFor } from '../../scripts/check/_lib.mjs';
+import { cueVerdict } from '../../scripts/check/_cue.mjs';
+import { loadGrid } from '../../scripts/sound.mjs';
 import { resolveStory, forFormat, schedule as buildSchedule, addImplicitPlays } from '../../runtime/kit/schedule.js';
 
 export const SNAPSHOT_FILE = join(ROOT, 'tests', 'check', 'fixtures', 'timing-snapshot.json');
@@ -65,7 +67,8 @@ export async function snapshotFromRules(ids = SNAPSHOT_IDS) {
     out[rel] = {};
     for (const [f, ctx] of Object.entries(await prepare(rel))) {
       const rows = [];
-      for (const r of rules) for (const row of [await r.run(ctx)].flat().filter(Boolean)) rows.push(row);
+      // W-CUE also reads out/cues.json, a local build's output: the snapshot is the verdict from the schedule alone, on any checkout
+      for (const r of rules) for (const row of [r.id === 'W-CUE' ? cueVerdict(ctx.schedule, () => loadGrid(ctx.dir, ctx.story)) : await r.run(ctx)].flat().filter(Boolean)) rows.push(row);
       out[rel][f] = stripRoot(rows);
     }
   }

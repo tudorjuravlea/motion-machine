@@ -8,10 +8,10 @@ quoted in `direction-log.md`.
 |---|---|---|---|---|---|
 | 1 Brief | the user's message, files, references | a summary of the brief; questions only for what is missing | the summary and the questions | confirms the brief | purpose, formats, the one thing, three words, facts, faces, language |
 | 2 Treatment | the confirmed brief | two or three named directions that differ in impact as well as look, each a paragraph and a beat sheet; the one that would stop the scroll and the one you would take | the sheets next to each other, with the arithmetic per scene | names the direction to take, or asks for others | the direction, length, scene list, named gaps |
-| 3 Style | the chosen direction | a composed `style.json`; a swatch and tempo sheet; the beat grid | pattern stills of title-stack, stat-hero and the headline entrance; a section map when there is music | accepts the style and the grid | mode (preset, compose, capture), `from`, bpm |
-| 4 Style frames | the accepted style | `story.json`; the stills | `out/contact.png`, `out/phone.png`, `out/review.html` | signs or annotates each still | per still: signed, or the note |
-| 5 Animatic | the signed stills | a low-cost export on the grid | the MP4, and candidates for every motion call | judges the pacing | each motion call with its candidates |
-| 6 Cut | the accepted animatic | the full export, the sound mix, the check | MP4s, the check summary, the review page, each WARN | **lock** | each note as a ledger row; the lock |
+| 3 Style | the chosen direction | a composed `style.json`; the beat grid; one sound sample: the track or the cues on the hook scene, heard | the sound sample, and a section map when there is music | accepts the style and the grid | mode (preset, compose, capture), `from`, bpm |
+| 4 Look still | the accepted style | `story.json`; one still of the hardest frame, finished, critiqued in writing first | that still, and `out/contact.png` for reference | approves the look, once | the approval, or the note |
+| 5 Animatic | the approved look | the whole film, on the grid, with its sound | the MP4 with sound, and candidates for every motion call | judges pacing, flow and sound together | each motion call with its candidates |
+| 6 Cut | the accepted animatic | the full export, the sound mix, the check, and your own "would I post this" with one reason | MP4s, the check summary, the review page, each WARN | **lock** | each note as a ledger row; the lock |
 | 7 Deliver | the locked cut | every format; for a deck, its folder, handout and walkthrough; the handover | the handover with its unverified list | signs off the folder | the sign-off, and what is still open |
 
 ## Gate 1 · Brief
@@ -75,7 +75,9 @@ Record the mode (apply, capture or embed) and the `from` paths. For a captured h
 director through `<name>.capture-notes.md`; a half captured from stills lists its fonts in `ask`,
 and W-ASK warns until the director names them and they leave `ask`. For a new look, run
 the style audition: the first 10 s of the story in two or three styles side by side. Show the
-composed style on two layouts at rest and on its headline entrance:
+composed style on its own hook scene, and play one sound sample: the track, or the hook's cues
+rendered, because a cue plan on paper cannot be judged. Swatch sheets are for your own checking, not
+for approval; a layout with none of the film's content in it tells the director nothing:
 
 ```
 mm pattern stills layouts/title-stack --style pieces/<id>/style.json
@@ -105,14 +107,19 @@ warning after the fact.
 
 ## Gate 4 · Style frames
 
-`mm stills pieces/<id>` then `mm review pieces/<id>`. Build the strongest scene first and bring it
-to final quality before the others. Ask the seven stills questions (SKILL.md). Each scene is
-signed or gets a note in `defects.md`. Run `mm check pieces/<id>` too: G- failures found at
-stills are cheaper than at the cut.
+The look still. Build the hardest frame first, in its final medium and light, and write your
+critique of it before showing it. The director approves the look once, on that frame; `mm stills`
+and the contact sheet are there for reference and for the seven stills questions (SKILL.md), which
+you ask yourself. A frame caught in motion cannot be judged as a frame, so mid-entrance stills are
+never put up for approval, and nothing waits for still-by-still signing. A still judges a look; it
+does not judge timing, flow or sound. Run `mm check pieces/<id>` too: G- failures found here are
+cheaper than at the cut. Gates that cost attention go where a person can judge what is in front of
+them; mechanical checks run all the time and need no approval.
 
 ## Gate 5 · Animatic
 
-`mm check pieces/<id>`, then `mm export pieces/<id> --formats <one format> --fps 15 [--force]`.
+`mm check pieces/<id>`, then `mm export pieces/<id> --formats <one format> --fps 15 [--force]`, then
+`mm sound pieces/<id> --no-verify`, so the director judges pace with the sound in it.
 `mm export` trusts only a gate report of the story as it is now and of every format it renders:
 after any edit, or after `mm check --format F` (or the studio's Run gate, which checks one format),
 run `mm check pieces/<id>` again, or the export is refused (`--force` exports anyway, stamped
@@ -146,10 +153,9 @@ Not while the studio's Export runs (a second exporter is refused, exit 2).
 
 ```
 mm check pieces/<id>                      # exit 0, or fix and repeat
-mm export pieces/<id> --prove             # every format; --prove re-renders in reverse and compares bytes; each MP4 is read back (out/export-qa.json)
-mm sound pieces/<id>                      # cues + bed, loudnorm, muxed into the MP4s
+mm export pieces/<id> --prove             # every format; --prove re-renders in reverse and shuffled and compares bytes; each MP4 is read back (out/export-qa.json)
+mm sound pieces/<id>                      # cues + bed, loudnorm, muxed into the MP4s, and each file read back (sound against the mix, level, silence, black, frozen, flashes, every cut's seam)
 mm check pieces/<id>                      # again: G-PEAK and W-LOUDNESS now run on the muxed audio
-mm verify-export pieces/<id>/out/<id>-<format>.mp4   # per format: the muxed file read back (sound, level, silence, black, frozen, every cut's seam)
 mm review pieces/<id>                     # out/review.html, newest round first
 ```
 
@@ -159,12 +165,15 @@ into ghosts; `mm check <piece> --sub N` reports the same warning without exporti
 
 The export reads each finished MP4 back (SPEC §16.7) and a failed check exits 1: `out/export-qa.json` says which (QA-DURATION,
 QA-BLACK, QA-FROZEN, QA-SEAM …) and `out/export-qa-seams-<format>.png` shows the frames either side of every cut. Its checks of the
-mix (QA-AUDIO, QA-SILENCE, QA-LEVEL) are SKIP until `mm sound` has muxed it; `mm verify-export` runs them. Report its SKIPs, never as PASS.
+mix are SKIP until `mm sound` has muxed it, and `mm sound` then reads each file back; `mm verify-export` does the same for any file. Report its SKIPs, never as PASS. A row
+marked NOT READ should have read and could not, so the file is not ok until it does. A failed check does not yet say what is wrong: it says one of the file, the reference, the instrument or the expected value is off. Find which before you change anything.
 
 Edits and checks go in order. `mm check` records the last edit it saw (the `journal` of `out/check.json`, the
 last receipt of `out/studio/journal.jsonl`); `mm export` refuses a report older than the last edit, and `--force`
 stamps the media UNCHECKED. After any edit, studio drag or `mm timeline` receipt, run `mm check` again before the
 export or the handover.
+
+Before you show the cut, answer one question on this output alone, not against the last cut: would I post this, yes or no, with one reason. The bar is not cheap, broken or wrong; it is not flawless. A no holds the cut even when it beats the previous one. After the first full render, name every default that got used anyway and add it to the style's `bans` or say why it stays. When the brief asks for display ("go all out", "show off", "showreel"), state that the judgement switches to density, keeping the reading hold for the one line that must be read.
 
 Every WARN is read. Show each to the director with its evidence; the director accepts it or asks for a fix,
 in one line in the log, and an accepted warning travels to the handover with that line. A warning the

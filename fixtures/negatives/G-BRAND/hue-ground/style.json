@@ -197,5 +197,8 @@
       }
     ],
     "blur": 0.05
+  },
+  "gate": {
+    "rhythmRatio": 1
   }
 }

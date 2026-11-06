@@ -6,18 +6,30 @@
 //   QA-DURATION  the frame count is the story's duration at the frame rate (a film), or the walkthrough's holds and presses (a deck)
 //   QA-SIZE      the picture is the format's size (even sides)
 //   QA-FPS       the frame rate is the one asked for, and constant
-//   QA-AUDIO     a piece with sound has an audio stream that is not the placeholder, as long as the picture
+//   QA-COLOUR    the file carries the BT.709 tags the export writes
+//   QA-AUDIO     a piece with sound has an audio stream that is not the placeholder, as long as the picture to a frame
 //   QA-BLACK     no black frames (blackdetect), unless the brand's canvas is itself black
 //   QA-FROZEN    no frozen span while the schedule moves: a rest or a gap between motions is still on purpose
 //   QA-SILENCE   no silence longer than SILENCE_MAX_S inside a sounding piece
 //   QA-LEVEL     the encoded file's true peak and loudness are the style's targets (the MP4 is measured, not the WAV)
+//   QA-SYNC      the file's sound is the piece's mix: not late, not early, not another sound, nothing lost from it
+//   QA-MONO      folding the channels to one loses no more than MONO_MAX_LOSS_DB
+//   QA-END       nothing is still sounding in the last 50 ms
+//   QA-PHONE     (warns) the film stays audible with little under 300 Hz, as on a phone speaker
+//   QA-QUIET     (warns) most of the film is not quiet: integrated loudness gates quiet out and cannot say so; `sound.sparse` declares it
+//   QA-FLASH     a sweep of every frame: no frame stepping away and back (warns), none more than FLASH_RATE_MAX times in a second (fails)
+//   QA-STILL     (warns) no span of STILL_WARN_S or more where nothing changes, the ending aside
+//   QA-SLIDESHOW (warns) the picture is not nearly all held frames
 //   QA-SEAM      every cut of a film: no black, duplicated or offset frame (./seams.mjs, with its evidence sheet)
 //   QA-FRAMES    the frames the decoder finds are exactly round(duration x fps), and the number the container declares
 //   QA-BITRATE   the video bitrate is sane for the picture's size: not starved, not runaway (BITRATE_BPP bits a pixel a frame)
 //   QA-DECODE    frames decoded from the file are the frames the page draws cold, within DECODE_MAE_MAX (a film, --sub 1)
 //   QA-ALPHA     (a transparent export, verifyAlphaFile) the alpha channel survives: a corner the page left clear is clear in the file, a pixel it drew solid is solid
 // `mm export` writes a silent placeholder track and `mm sound` muxes the mix afterwards, so in the
-// `export` phase the checks of the mix are SKIP and say which verb to run; `mm verify-export` is the `final` phase.
+// `export` phase the checks of the mix are SKIP and say which verb to run; `mm sound` then runs the `final` phase on what
+// it muxed, and `mm verify-export` runs it on any file.
+// A SKIP is either a check with nothing to read (no sound in a silent piece) or a check that should have read and could
+// not: that one carries `unread: true`, and a file with an unread row is not ok.
 import { spawn, spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, relative, resolve } from 'node:path';
@@ -29,10 +41,23 @@ import { bin, probe } from './ffmpeg.mjs';
 import { detectRate, exactFps, fractionOf, nameOfRate, sameRate } from './frame-rate.mjs';
 import { rule } from './rule.mjs';
 import { filmSeams } from './seams.mjs';
+import { flashRate, flashes, lumaSweep, slideshowShare, stillSpans } from './file-picture.mjs';
+import { SYNC_RATE, decodePcm, monoLossDb, phoneGapLu, quietShare, syncReading, tailDb } from './file-sound.mjs';
 import { addImplicitPlays, forFormat, resolveStory, schedule as buildSchedule } from '../../runtime/kit/schedule.js';
 import { parseColor } from '../check/_lib.mjs';
 
-export const DURATION_TOL_S = 0.1;      // the audio may run this much longer or shorter than the picture
+export const DURATION_TOL_FRAMES = 1;   // the audio may end this many frames from the picture
+export const DURATION_MIN_TOL_S = 0.034; // and never tighter than an AAC packet and a rounding allow
+export const SYNC_MAX_LAG_MS = 5;       // measured: a clean film reads 0.00 ms through AAC
+export const SYNC_MIN_R = 0.995;        // measured: a clean film reads 0.9999, a 32 kbit/s encode 0.9926, another film's sound 0.06
+export const SYNC_MAX_DEFICIT_DB = 6;   // measured: a clean film falls short by 0.1 dB in its worst 50 ms, a dropout in a cue by 9.9
+export const MONO_MAX_LOSS_DB = 6;      // measured: a clean film loses 0.0 to 0.4, channels in antiphase 55.9
+export const TAIL_MAX_DB = -45;         // the last 50 ms stay under this
+export const PHONE_WARN_LU = 10;        // measured: films read -0.1 to 10.2
+export const QUIET_WARN_SHARE = 0.5;    // measured: films with a bed read 0, films of cues alone 0.65 to 0.82
+export const FLASH_RATE_MAX = 3;        // flashes in any one second, a safety line
+export const STILL_WARN_S = 4;          // measured: authored films reach 3.0 to 4.5 s
+export const SLIDESHOW_WARN = 0.97;     // measured: films with motion 0.83 to 0.96, a real slideshow 0.997
 export const BLACK_MIN_S = 0.1;         // a black span of at least this is a fault
 export const BLACK_PIC_TH = 0.98;       // blackdetect: the share of a frame's pixels that must be black
 export const BLACK_PIX_TH = 0.03;       // blackdetect: a pixel is black at or under this luma (0..1 of the video range)
@@ -49,7 +74,9 @@ export const BITRATE_BPP = { lo: 0.0005, hi: 0.5 };
 export const DECODE_MAE_MAX = 3;        // a frame decoded from the file against the same frame drawn cold: the mean of |R, G, B differences|, 0..255
 export const DECODE_BIG = 48;           // a channel off by more than this is a "big" miss ...
 export const DECODE_BIG_SHARE = 0.01;   // ... and no more than this share of the samples may be
-export const DECODE_FRAMES = 3;         // frames sampled: the first, the middle, the last
+export const DECODE_MAX_SAMPLES = 60;   // frames sampled: one a second, at most this many, and the last
+export const DECODE_GRID = 4;           // a mean over the frame hides one wrong part: the worst of a grid of this many a side is read too
+export const DECODE_CELL_MAX = 20;      // measured on two films: clean 2.8 and 10.1, a box over the picture 105.6
 export const ALPHA_CLEAR_MAX = 8;       // alpha (0..255) of a corner the page left clear, as the file gives it back
 export const ALPHA_SOLID_MIN = 247;     // alpha of a pixel the page drew solid
 
@@ -154,7 +181,7 @@ function fileFrame(file, t, width, height) {
 async function pageMovedSpans(spans, { dir, format, browser, file, width, height }) {
   const { openPiece, framePng } = await import('./browser.mjs');
   const { decodePng } = await import('../check/_pixels.mjs');
-  const opened = await openPiece(dir, { format, browser });
+  const opened = await openPiece(dir, { format, ...(browser ? { browser } : {}) });
   try {
     const out = [];
     for (const s of spans) {
@@ -228,20 +255,50 @@ export function exportedSub(dir) {
   try { const j = JSON.parse(readFileSync(join(dir, 'out', 'export.json'), 'utf8')); return Number.isInteger(j.sub) ? j.sub : null; } catch { return null; }
 }
 
-/** Whether a frame the page drew cold matches the same frame decoded from the file: one row of QA-DECODE's evidence per sampled frame. */
+/** The worst mean difference of any cell of a DECODE_GRID by DECODE_GRID grid (0..255): a mean over the frame hides one wrong part. */
+export function worstCell(a, b) {
+  const { width: w, height: h } = a, sum = new Float64Array(DECODE_GRID ** 2), count = new Float64Array(DECODE_GRID ** 2);
+  for (let y = 0; y < h; y += 2) for (let x = 0; x < w; x += 2) {
+    const i = (y * w + x) * 4, c = Math.min(DECODE_GRID - 1, Math.floor((y * DECODE_GRID) / h)) * DECODE_GRID + Math.min(DECODE_GRID - 1, Math.floor((x * DECODE_GRID) / w));
+    sum[c] += (Math.abs(a.data[i] - b.data[i]) + Math.abs(a.data[i + 1] - b.data[i + 1]) + Math.abs(a.data[i + 2] - b.data[i + 2])) / 3;
+    count[c]++;
+  }
+  return Math.max(...[...sum].map((v, i) => (count[i] ? v / count[i] : 0)));
+}
+
+/** The frames QA-DECODE reads: one a second, or fewer on a long film, and the last. */
+export function decodeSamples(frames, fps) {
+  const step = Math.max(1, Math.round(fps), Math.ceil(frames / DECODE_MAX_SAMPLES));
+  const at = [];
+  for (let k = 0; k < frames; k += step) at.push(k);
+  if (at.at(-1) !== frames - 1) at.push(frames - 1);
+  return { step, at };
+}
+
+/** Frames of a file every `step` frames, in one pass, as a Map frame → { width, height, data }. */
+function everyNth(file, step, width, height) {
+  const r = spawnSync(bin('ffmpeg'), ['-v', 'error', '-i', file, '-vf', `select=not(mod(n\\,${step}))`, '-fps_mode', 'passthrough', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-'], { maxBuffer: 2 ** 31 - 1 });
+  const out = new Map(), size = width * height * 4;
+  if (r.status !== 0) return out;
+  for (let i = 0; (i + 1) * size <= r.stdout.length; i++) out.set(i * step, { width, height, data: r.stdout.subarray(i * size, (i + 1) * size) });
+  return out;
+}
+
+/** Whether frames the page draws cold match the same frames decoded from the file: one row of QA-DECODE's evidence per sampled frame. */
 async function decodeProof(file, { dir, format, browser, fps, frames, width, height }) {
   const { openPiece, framePng } = await import('./browser.mjs');
   const { decodePng } = await import('../check/_pixels.mjs');
-  const at = [...new Set([0, Math.floor((frames - 1) / 2), frames - 1])].slice(0, DECODE_FRAMES);
+  const { step, at } = decodeSamples(frames, fps);
+  const decoded = everyNth(file, step, width, height);
   const opened = await openPiece(dir, { format, ...(browser ? { browser } : {}) });
   try {
     const out = [];
     for (const k of at) {
       const cold = decodePng(await framePng(opened.page, k / fps));
-      const got = frameAt(file, k, width, height);
+      const got = decoded.get(k) ?? frameAt(file, k, width, height);
       if (!got || cold.width !== width || cold.height !== height) { out.push({ frame: k, t: r3(k / fps), mae: null, big: null }); continue; }
       const d = frameDifference(cold, got);
-      out.push({ frame: k, t: r3(k / fps), mae: r3(d.mae), big: r3(d.big) });
+      out.push({ frame: k, t: r3(k / fps), mae: r3(d.mae), big: r3(d.big), cell: r3(worstCell(cold, got)) });
     }
     return out;
   } finally { await opened.close(); }
@@ -299,7 +356,8 @@ export async function verifyFile(file, o = {}) {
   const rows = [];
   const add = (id, status, evidence) => rows.push(rule(id, status, evidence));
   const skipRest = (reason, ids) => { for (const id of ids) add(id, 'SKIP', { reason }); };
-  const ALL = ['QA-DURATION', 'QA-FRAMES', 'QA-SIZE', 'QA-FPS', 'QA-BITRATE', 'QA-AUDIO', 'QA-BLACK', 'QA-FROZEN', 'QA-SILENCE', 'QA-LEVEL', 'QA-DECODE', 'QA-SEAM'];
+  const unread = (id, reason) => add(id, 'SKIP', { reason, unread: true });
+  const ALL = ['QA-DURATION', 'QA-FRAMES', 'QA-SIZE', 'QA-FPS', 'QA-COLOUR', 'QA-BITRATE', 'QA-AUDIO', 'QA-BLACK', 'QA-FROZEN', 'QA-FLASH', 'QA-STILL', 'QA-SLIDESHOW', 'QA-SILENCE', 'QA-LEVEL', 'QA-SYNC', 'QA-MONO', 'QA-END', 'QA-PHONE', 'QA-QUIET', 'QA-DECODE', 'QA-SEAM'];
 
   let info;
   try { info = probe(file); } catch (e) { add('QA-STREAM', 'FAIL', { reason: `the file cannot be read: ${e.message.split('\n')[0]}` }); skipRest('the file cannot be read', ALL); return finish(file, null, rows); }
@@ -354,6 +412,13 @@ export async function verifyFile(file, o = {}) {
   // QA-FPS: the rate is read as the fraction the stream declares and, from its packet times, as the rate it keeps; 29.97 is 30000/1001
   { const f = fpsCheck(file, video, fps); add('QA-FPS', f.status, f.evidence); }
 
+  // QA-COLOUR: the tags the export writes; an untagged file plays with the wrong matrix in some players
+  {
+    const tags = { space: video.color_space, primaries: video.color_primaries, transfer: video.color_transfer };
+    const off = Object.entries(tags).filter(([, v]) => v !== 'bt709').map(([k, v]) => `${k} ${v ?? 'unset'}`);
+    add('QA-COLOUR', off.length ? 'FAIL' : 'PASS', { ...tags, range: video.color_range ?? null, ...(off.length ? { reason: `not tagged BT.709: ${off.join(', ')}` } : {}) });
+  }
+
   // QA-BITRATE: the video stream's bits a second against what a picture of this size at this rate may take
   {
     const dur = Number(video.duration ?? info.format?.duration);
@@ -373,17 +438,19 @@ export async function verifyFile(file, o = {}) {
   const sounding = story ? story.kind !== 'deck' && mixable(story, style) : null;
   const videoS = Number(video.duration ?? info.format?.duration);
   const muxed = 'mm export writes a silent placeholder track; `mm sound` muxes the mix: run `mm verify-export` after it';
+  const MIX_ROWS = ['QA-SILENCE', 'QA-LEVEL', 'QA-SYNC', 'QA-MONO', 'QA-END', 'QA-PHONE', 'QA-QUIET'];
   if (phase === 'export' && sounding) {
-    for (const id of ['QA-AUDIO', 'QA-SILENCE', 'QA-LEVEL']) rest(id, muxed);
+    for (const id of ['QA-AUDIO', ...MIX_ROWS]) rest(id, muxed);
   } else {
-    if (sounding === false) add('QA-AUDIO', 'PASS', { reason: 'the piece has no sound', placeholderOnly: !real });
+    if (sounding === false) add('QA-AUDIO', 'SKIP', { reason: 'the piece has no sound: nothing to read', placeholderOnly: !real });
     else if (sounding === null) add('QA-AUDIO', real ? 'PASS' : 'SKIP', real ? { codec: real.codec_name } : { reason: `${why}: cannot tell whether it should sound` });
     else if (!real) add('QA-AUDIO', 'FAIL', { reason: 'the piece has sound but the MP4 has none (only the placeholder track): run `mm sound`' });
     else {
       const aS = Number(real.duration ?? info.format?.duration), off = Math.abs(aS - videoS);
-      add('QA-AUDIO', off <= DURATION_TOL_S ? 'PASS' : 'FAIL', { codec: real.codec_name, audioS: r3(aS), videoS: r3(videoS), ...(off <= DURATION_TOL_S ? {} : { reason: `the sound runs ${r3(aS)} s against a picture of ${r3(videoS)} s` }) });
+      const tol = Math.max(DURATION_TOL_FRAMES / rate, DURATION_MIN_TOL_S);
+      add('QA-AUDIO', off > tol ? 'FAIL' : 'PASS', { codec: real.codec_name, audioS: r3(aS), videoS: r3(videoS), ...(off > tol ? { reason: `the sound runs ${r3(aS)} s against a picture of ${r3(videoS)} s` } : {}) });
     }
-    if (!real) { rest('QA-SILENCE', 'no sound in the file'); rest('QA-LEVEL', 'no sound in the file'); }
+    if (!real) for (const id of MIX_ROWS) rest(id, 'no sound in the file');
     else {
       const sil = await ffmpeg(['-i', file, '-vn', '-af', `silencedetect=n=${SILENCE_DB}dB:d=${SILENCE_MAX_S}`, '-f', 'null', '-']);
       const spans = silentSpans(sil.stderr, Number(real.duration ?? info.format?.duration)).map((s) => ({ start: r3(s.start), end: r3(s.end) }));
@@ -392,7 +459,35 @@ export async function verifyFile(file, o = {}) {
       const m = await measureLoudness(file);
       const lufs = m ? r3(m.lufs) : null, peak = m ? r3(m.truePeak) : null;
       const bad = m && (!(m.truePeak <= TRUE_PEAK_MAX) || !(Math.abs(m.lufs - target) <= TOLERANCE_LU));
-      add('QA-LEVEL', !m ? 'SKIP' : bad ? 'FAIL' : 'PASS', m ? { lufs, truePeak: peak, threshold: `${target} LUFS ±${TOLERANCE_LU}, true peak ≤ ${TRUE_PEAK_MAX} dBTP`, ...(bad ? { reason: `${lufs} LUFS and ${peak} dBTP against ${target} LUFS ±${TOLERANCE_LU} and ${TRUE_PEAK_MAX} dBTP` } : {}) } : { reason: 'no sound to measure' });
+      if (!m) unread('QA-LEVEL', 'the loudness could not be measured');
+      else add('QA-LEVEL', bad ? 'FAIL' : 'PASS', { lufs, truePeak: peak, lra: m.lra ?? null, threshold: `${target} LUFS ±${TOLERANCE_LU}, true peak ≤ ${TRUE_PEAK_MAX} dBTP`, ...(bad ? { reason: `${lufs} LUFS and ${peak} dBTP against ${target} LUFS ±${TOLERANCE_LU} and ${TRUE_PEAK_MAX} dBTP` } : {}) });
+      // the sound against the mix it was made from, then the readings of the sound alone
+      let got = null;
+      try { got = decodePcm(file); } catch (e) { for (const id of ['QA-SYNC', 'QA-MONO', 'QA-END', 'QA-QUIET']) unread(id, e.message.split('\n')[0]); }
+      if (got) {
+        const mix = dir ? join(dir, 'out', 'mix.wav') : null;
+        if (!mix) rest('QA-SYNC', why ?? 'no piece given: there is no mix to compare with');
+        else if (!sounding) rest('QA-SYNC', 'the piece declares no sound to compare with');
+        else if (!existsSync(mix)) unread('QA-SYNC', 'out/mix.wav is missing, so the sound cannot be compared with what was made');
+        else {
+          const want = decodePcm(mix), r = syncReading(want.L, got.L, SYNC_RATE);
+          const threshold = `within ${SYNC_MAX_LAG_MS} ms, correlation at least ${SYNC_MIN_R}, no 50 ms window ${SYNC_MAX_DEFICIT_DB} dB short`;
+          const fault = r.r < 0.5 ? `the sound is not the mix: correlation ${r.r}`
+            : Math.abs(r.lagMs) > SYNC_MAX_LAG_MS ? `the sound runs ${Math.abs(r.lagMs)} ms ${r.lagMs > 0 ? 'late' : 'early'}`
+              : r.deficitDb > SYNC_MAX_DEFICIT_DB ? `${r.deficitDb} dB is missing from the mix at ${r.at} s`
+                : r.r < SYNC_MIN_R ? `the sound has lost quality against the mix: correlation ${r.r}` : null;
+          add('QA-SYNC', fault ? 'FAIL' : 'PASS', { ...r, threshold, ...(fault ? { reason: fault } : {}) });
+        }
+        const loss = monoLossDb(got.L, got.R);
+        add('QA-MONO', loss > MONO_MAX_LOSS_DB ? 'FAIL' : 'PASS', { lossDb: loss, threshold: `${MONO_MAX_LOSS_DB} dB`, ...(loss > MONO_MAX_LOSS_DB ? { reason: `folding the channels to one loses ${loss} dB: the film goes quiet on a phone speaker or one earbud` } : {}) });
+        const tail = r3(tailDb(got.L, got.R, SYNC_RATE));
+        add('QA-END', tail > TAIL_MAX_DB ? 'FAIL' : 'PASS', { tailDb: Math.max(tail, -120), threshold: `${TAIL_MAX_DB} dBFS in the last 50 ms`, ...(tail > TAIL_MAX_DB ? { reason: `the sound is still at ${tail} dBFS in the last 50 ms: it stops, it does not end` } : {}) });
+        const share = r3(quietShare(got.L, got.R, SYNC_RATE)), declared = Boolean(style?.sound?.sparse);
+        add('QA-QUIET', share > QUIET_WARN_SHARE && !declared ? 'WARN' : 'PASS', { share, threshold: QUIET_WARN_SHARE, declared, ...(share > QUIET_WARN_SHARE && !declared ? { reason: `${Math.round(share * 100)} % of the film is under -50 dB; loudness cannot see that. Add a bed, or declare sound.sparse` } : {}) });
+      }
+      const gap = phoneGapLu(file);
+      if (gap == null) unread('QA-PHONE', 'the loudness above 300 Hz could not be measured');
+      else add('QA-PHONE', gap > PHONE_WARN_LU ? 'WARN' : 'PASS', { gapLu: gap, threshold: PHONE_WARN_LU, ...(gap > PHONE_WARN_LU ? { reason: `the film is ${gap} LU quieter above 300 Hz: on a phone speaker most of it is gone` } : {}) });
     }
   }
 
@@ -400,7 +495,7 @@ export async function verifyFile(file, o = {}) {
   const det = await ffmpeg(['-i', file, '-an', '-vf', `blackdetect=d=${BLACK_MIN_S}:pic_th=${BLACK_PIC_TH}:pix_th=${BLACK_PIX_TH},freezedetect=n=${FREEZE_NOISE_DB}dB:d=${FREEZE_MIN_S}`, '-f', 'null', '-']);
   const blackOk = style ? canvasIsBlack(style) : false;
   const blacks = blackSpans(det.stderr).map((s) => ({ start: r3(s.start), end: r3(s.end) }));
-  if (det.code !== 0) { rest('QA-BLACK', 'ffmpeg could not run its detectors'); rest('QA-FROZEN', 'ffmpeg could not run its detectors'); } else {
+  if (det.code !== 0) { unread('QA-BLACK', 'ffmpeg could not run its detectors'); unread('QA-FROZEN', 'ffmpeg could not run its detectors'); } else {
     if (blackOk) add('QA-BLACK', 'SKIP', { reason: 'the style\'s canvas is itself black: a black frame cannot be told from the stage', spans: blacks });
     else add('QA-BLACK', blacks.length ? 'FAIL' : 'PASS', { threshold: `no black span of ${BLACK_MIN_S} s or more`, spans: blacks, ...(blacks.length ? { reason: `black from ${blacks[0].start} to ${blacks[0].end} s${blacks.length > 1 ? ` and ${blacks.length - 1} more` : ''}` } : {}) });
     const frozen = frozenSpans(det.stderr, videoS).map((s) => ({ start: r3(s.start), end: r3(s.end) }));
@@ -410,28 +505,41 @@ export async function verifyFile(file, o = {}) {
       let cand = frozenFaults(frozen, sched, fps ?? rate, o.drawn ?? drawnFrames(dir, format));
       // the page drew different frames there: whether it moved visibly is asked of the page itself, so a
       // change the encode could not show (antialiasing settling by a level) is not taken for lost motion
-      if (cand.length && o.browser && dir && format) cand = await pageMovedSpans(cand, { dir, format, browser: o.browser, file, width: video.width, height: video.height });
-      const faults = cand.map((s) => ({ start: r3(s.start), end: r3(s.end), inMotion: r3(s.inMotion) }));
+      if (cand.length && dir && format) cand = await pageMovedSpans(cand, { dir, format, browser: o.browser, file, width: video.width, height: video.height });
+      const faults = cand.map((s) => ({ start: r3(s.start), end: r3(s.end), inMotion: r3(s.inMotion), ...(s.pageChange != null ? { pageChange: r3(s.pageChange) } : {}) }));
       add('QA-FROZEN', faults.length ? 'FAIL' : 'PASS', { threshold: `no frozen span of ${FREEZE_MIN_S} s or more with ${FREEZE_CORE_S} s of it in the middle of a motion`, spans: frozen, faults, ...(faults.length ? { reason: `frozen from ${faults[0].start} to ${faults[0].end} s while the story moves (${faults[0].inMotion} s of it where an arrival, exit, move or cut is mid-motion)` } : {}) });
     }
   }
+
+  // QA-FLASH, QA-STILL and QA-SLIDESHOW, from one sweep of every frame
+  try {
+    const sweep = lumaSweep(file), f = flashes(sweep.mean), all = [...f.single, ...f.double].sort((a, b) => a - b);
+    const most = flashRate(all, rate), seconds = all.slice(0, 12).map((k) => r3(k / rate));
+    add('QA-FLASH', most > FLASH_RATE_MAX ? 'FAIL' : all.length ? 'WARN' : 'PASS', { framesRead: sweep.mean.length, flashes: all.length, perSecond: most, at: seconds, threshold: `no flash; never over ${FLASH_RATE_MAX} a second`, ...(all.length ? { reason: `${all.length} frame${all.length > 1 ? 's step' : ' steps'} away and straight back, first at ${seconds[0]} s, up to ${most} a second` } : {}) });
+    if (walkthrough) { rest('QA-STILL', 'a walkthrough holds every rest on purpose'); rest('QA-SLIDESHOW', 'a walkthrough holds every rest on purpose'); } else {
+      const longest = stillSpans(sweep.pair, rate)[0] ?? null, still = longest?.seconds ?? 0;
+      add('QA-STILL', still >= STILL_WARN_S ? 'WARN' : 'PASS', { framesRead: sweep.pair.length, measured: r3(still), threshold: STILL_WARN_S, ...(still >= STILL_WARN_S ? { instant: r3(longest.start), reason: `nothing changes for ${r3(still)} s from ${r3(longest.start)} s` } : {}) });
+      const held = r3(slideshowShare(sweep.pair));
+      add('QA-SLIDESHOW', held >= SLIDESHOW_WARN ? 'WARN' : 'PASS', { measured: held, threshold: SLIDESHOW_WARN, ...(held >= SLIDESHOW_WARN ? { reason: `${Math.round(held * 100)} % of the frames barely change: this reads as a slideshow` } : {}) });
+    }
+  } catch (e) { for (const id of ['QA-FLASH', 'QA-STILL', 'QA-SLIDESHOW']) unread(id, e.message.split('\n')[0]); }
 
   // QA-DECODE: frames decoded from the file are the frames the page draws cold
   {
     const sub = o.sub ?? (dir ? exportedSub(dir) : null);
     if (!sched || !dir) rest('QA-DECODE', why ?? 'no piece given: there is nothing to draw cold');
     else if (walkthrough) rest('QA-DECODE', 'a walkthrough holds rests and plays transitions between presses: its frames are not instants of a clock');
-    else if (sub == null) rest('QA-DECODE', 'out/export.json is missing, so how the file was made (--sub) is not known');
+    else if (sub == null) unread('QA-DECODE', 'out/export.json is missing, so how the file was made (--sub) is not known');
     else if (sub > 1) rest('QA-DECODE', `exported with --sub ${sub}: each frame blends ${sub} instants, so one cold frame is not its match`);
     else {
       try {
         const got = await decodeProof(file, { dir, format, browser: o.browser, fps: fps ?? rate, frames, width: video.width, height: video.height });
         const missing = got.find((g) => g.mae == null);
-        const off = got.find((g) => g.mae != null && (g.mae > DECODE_MAE_MAX || g.big > DECODE_BIG_SHARE));
-        const threshold = `mean difference at most ${DECODE_MAE_MAX} of 255, and at most ${DECODE_BIG_SHARE * 100}% of samples off by more than ${DECODE_BIG}`;
+        const off = got.find((g) => g.mae != null && (g.mae > DECODE_MAE_MAX || g.big > DECODE_BIG_SHARE || g.cell > DECODE_CELL_MAX));
+        const threshold = `mean difference at most ${DECODE_MAE_MAX} of 255, no cell of a ${DECODE_GRID} by ${DECODE_GRID} grid over ${DECODE_CELL_MAX}, and at most ${DECODE_BIG_SHARE * 100}% of samples off by more than ${DECODE_BIG}`;
         if (missing) add('QA-DECODE', 'FAIL', { frames: got, threshold, reason: `frame ${missing.frame} could not be decoded from the file at ${video.width}x${video.height}` });
-        else add('QA-DECODE', off ? 'FAIL' : 'PASS', { frames: got, threshold, ...(off ? { reason: `frame ${off.frame} decoded from the file differs from the frame drawn cold at ${off.t} s (mean difference ${off.mae} of 255, ${r3(off.big * 100)}% of samples far off)` } : {}) });
-      } catch (e) { rest('QA-DECODE', `the page could not be opened to draw the frames cold: ${e.message.split('\n')[0]}`); }
+        else add('QA-DECODE', off ? 'FAIL' : 'PASS', { frames: got, threshold, ...(off ? { reason: `frame ${off.frame} decoded from the file differs from the frame drawn cold at ${off.t} s (mean difference ${off.mae} of 255, worst cell ${off.cell}, ${r3(off.big * 100)}% of samples far off)` } : {}) });
+      } catch (e) { unread('QA-DECODE', `the page could not be opened to draw the frames cold: ${e.message.split('\n')[0]}`); }
     }
   }
 
@@ -445,7 +553,7 @@ export async function verifyFile(file, o = {}) {
       const r = await filmSeams(file, seams, { fps: fps ?? rate, frames, blackOk, browser: o.browser, sheetBase: o.sheetBase, events: sched.events });
       add('QA-SEAM', r.issues.length ? 'FAIL' : 'PASS', { seams: r.seams.length, sheets: r.sheets.map((f) => (dir ? relative(dir, f) : f)), issues: r.issues, rows: r.seams,
         ...(r.issues.length ? { reason: `${r.issues[0].scene}: ${r.issues[0].reason}${r.issues.length > 1 ? ` (and ${r.issues.length - 1} more)` : ''}` } : {}) });
-    } catch (e) { add('QA-SEAM', 'SKIP', { reason: `the seams could not be read: ${e.message.split('\n')[0]}` }); }
+    } catch (e) { unread('QA-SEAM', `the seams could not be read: ${e.message.split('\n')[0]}`); }
   }
   return finish(file, format, rows);
 }
@@ -544,8 +652,10 @@ export async function verifyAlphaFile(file, o = {}) {
   return finish(file, format, rows);
 }
 
+/** A file is ok when no row failed and no row that should have read could not; `unread` names those. */
 function finish(file, format, rows) {
-  return { file, format, ok: rows.every((r) => r.status !== 'FAIL'), checks: rows };
+  const unread = rows.filter((r) => r.evidence?.unread).map((r) => r.id);
+  return { file, format, ok: rows.every((r) => r.status !== 'FAIL') && !unread.length, unread, checks: rows };
 }
 
 /** One line per file and one per failed check, for the terminal. */
@@ -553,9 +663,11 @@ export function verdictLines(report, { cwd = process.cwd() } = {}) {
   const out = [];
   for (const f of report.files) {
     const tally = (s) => f.checks.filter((c) => c.status === s).length;
-    out.push(`${f.ok ? 'ok  ' : 'FAIL'} ${relative(cwd, f.file) || f.file}: ${tally('PASS')} pass, ${tally('FAIL')} fail, ${tally('SKIP')} skipped`);
+    out.push(`${f.ok ? 'ok  ' : 'FAIL'} ${relative(cwd, f.file) || f.file}: ${tally('PASS')} pass, ${tally('FAIL')} fail, ${tally('SKIP')} skipped${tally('WARN') ? `, ${tally('WARN')} warned` : ''}${f.unread?.length ? `, ${f.unread.length} unread` : ''}`);
     for (const c of f.checks) if (c.status === 'FAIL') out.push(`     ${c.id}: ${c.evidence.reason ?? 'failed'}`);
-    for (const c of f.checks) if (c.status === 'SKIP' && c.id !== 'QA-SEAM') out.push(`     ${c.id} skipped: ${c.evidence.reason}`);
+    for (const c of f.checks) if (c.status === 'WARN') out.push(`     ${c.id} warns: ${c.evidence.reason}`);
+    for (const c of f.checks) if (c.status === 'SKIP' && c.evidence.unread) out.push(`     ${c.id} NOT READ: ${c.evidence.reason}`);
+    for (const c of f.checks) if (c.status === 'SKIP' && !c.evidence.unread && c.id !== 'QA-SEAM') out.push(`     ${c.id} skipped: ${c.evidence.reason}`);
   }
   return out;
 }
@@ -584,6 +696,15 @@ export async function verifyExport(dir, files, o = {}) {
   const report = { version: 1, piece: resolve(dir), ok: all.every((r) => r.ok), files: all };
   writeFileSync(file, `${JSON.stringify(report, null, 2)}\n`);
   return { ok: results.every((r) => r.ok), file, report: { ...report, files: results } };
+}
+
+/** The frame rate and walkthrough hold `mm export` recorded for `mp4`, if out/export.json is there. */
+export function recordedRate(dir, mp4) {
+  try {
+    const m = JSON.parse(readFileSync(join(dir, 'out', 'export.json'), 'utf8'));
+    const f = (m.files ?? []).find((x) => resolve(x.file) === resolve(mp4));
+    return { fps: f?.fps ?? m.walkthrough?.fps ?? null, walkHoldS: m.walkthrough?.holdS ?? undefined };
+  } catch { return { fps: null }; }
 }
 
 /** The piece an MP4 in `<piece>/out/` belongs to, or null. */

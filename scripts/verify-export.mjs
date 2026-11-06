@@ -16,16 +16,7 @@ import { join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { UsageError, runMain, usageText } from './lib/cli.mjs';
 import { assertTools } from './lib/ffmpeg.mjs';
-import { pieceOf, verdictLines, verifyExport } from './lib/export-qa.mjs';
-
-/** The frame rate and walkthrough hold `mm export` recorded for `mp4`, if out/export.json is there. */
-function recorded(dir, mp4) {
-  try {
-    const m = JSON.parse(readFileSync(join(dir, 'out', 'export.json'), 'utf8'));
-    const f = (m.files ?? []).find((x) => resolve(x.file) === resolve(mp4));
-    return { fps: f?.fps ?? m.walkthrough?.fps ?? null, walkHoldS: m.walkthrough?.holdS ?? undefined };
-  } catch { return { fps: null }; }
-}
+import { pieceOf, recordedRate, verdictLines, verifyExport } from './lib/export-qa.mjs';
 
 runMain(import.meta, async () => {
   const { values, positionals } = parseArgs({ allowPositionals: true, options: { piece: { type: 'string' } } });
@@ -42,7 +33,7 @@ runMain(import.meta, async () => {
     for (const l of verdictLines({ files: [f] })) console.log(l);
     return f.ok ? 0 : 1;
   }
-  const { fps, walkHoldS } = recorded(dir, mp4);
+  const { fps, walkHoldS } = recordedRate(dir, mp4);
   const { ok, file, report } = await verifyExport(dir, [mp4], { phase: 'final', fps, walkHoldS, merge: true });
   for (const l of verdictLines(report)) console.log(l);
   console.log(`report: ${file}`);

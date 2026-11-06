@@ -11,7 +11,7 @@ import { ROOT } from '../../scripts/lib/browser.mjs';
 const PIECE = join(ROOT, 'pieces/demo-launch');
 // W-TOKENS counts the corner radii of the phone's frame, its screen and the plates around them: four values against three.
 // The device is the subject of the demo, so that one finding stands and nothing else may.
-const STANDS = ['W-TOKENS'];
+const STANDS = ['W-TOKENS', 'W-READS'];
 const mm = (args) => spawnSync(process.execPath, [join(ROOT, 'scripts/mm.mjs'), ...args], { encoding: 'utf8', timeout: 900_000, maxBuffer: 64 << 20 });
 
 for (const format of ['9x16', '16x9', '4x5']) {

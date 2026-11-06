@@ -168,5 +168,8 @@
       9
     ],
     "energy": "calm"
+  },
+  "gate": {
+    "rhythmRatio": 1
   }
 }

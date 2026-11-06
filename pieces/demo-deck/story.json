@@ -55,7 +55,7 @@
     },
     {
       "id": "f10",
-      "text": "The gate checks 59 rules: 14 errors (G-) and 45 warnings (W-). On pieces/golden-film-kinetic: 43 PASS, 3 WARN, 13 SKIP.",
+      "text": "The gate checks 66 rules: 14 errors (G-) and 52 warnings (W-). On pieces/golden-film-kinetic: 43 PASS, 5 WARN, 18 SKIP.",
       "source": "SPEC.md §7; scripts/check/ (14 G-*.mjs, 45 W-*.mjs); pieces/golden-film-kinetic/out/check.json"
     },
     {
@@ -488,7 +488,7 @@
           "at": 0.15,
           "slot": "headline",
           "fx": "style:headline",
-          "text": "59 rules, measured.",
+          "text": "66 rules, measured.",
           "fact": "f10",
           "step": 1
         },
@@ -511,7 +511,7 @@
           "cue": "tick"
         }
       ],
-      "say": "So the gate can measure instead of judge. 59 rules: 14 errors that stop an export, 45 warnings that advise. This is its real report on the golden film. Click for the totals.",
+      "say": "So the gate can measure instead of judge. 66 rules: 14 errors that stop an export, 52 warnings that advise. This is its real report on the golden film. Click for the totals.",
       "presses": 2
     },
     {
