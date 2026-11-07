@@ -1,0 +1,150 @@
+{
+  "kind": "edit",
+  "fps": 10,
+  "frames": 88,
+  "duration": 8.8,
+  "source": {
+    "file": "talk.mp4",
+    "sha1": "f0eb295a925a0f98d2f67634bfaeae8946e1d757"
+  },
+  "levels": {
+    "floorDb": -56.013,
+    "speechDb": -15.42,
+    "quietDb": -39.776
+  },
+  "settings": {
+    "maxPause": 0.5,
+    "lead": 0.12,
+    "tail": 0.2,
+    "join": 0.03
+  },
+  "picture": [
+    {
+      "start": 0,
+      "from": 3,
+      "length": 23
+    },
+    {
+      "start": 23,
+      "from": 35,
+      "length": 41
+    },
+    {
+      "start": 64,
+      "from": 93,
+      "length": 24
+    }
+  ],
+  "cuts": [
+    {
+      "at": 2.3,
+      "out": 2.6,
+      "in": 3.5
+    },
+    {
+      "at": 6.4,
+      "out": 7.6,
+      "in": 9.3
+    }
+  ],
+  "onSound": [],
+  "voice": {
+    "file": "voice.wav",
+    "target": -14,
+    "lufs": -19,
+    "gainDb": 5,
+    "peakLimited": false
+  },
+  "words": [
+    {
+      "text": "every",
+      "at": 0.1,
+      "end": 0.46
+    },
+    {
+      "text": "frame",
+      "at": 0.5,
+      "end": 0.86
+    },
+    {
+      "text": "comes",
+      "at": 0.9,
+      "end": 1.26
+    },
+    {
+      "text": "from",
+      "at": 1.3,
+      "end": 1.66
+    },
+    {
+      "text": "time",
+      "at": 1.7,
+      "end": 2.06
+    },
+    {
+      "text": "pauses",
+      "at": 2.4,
+      "end": 2.76
+    },
+    {
+      "text": "fall",
+      "at": 2.8,
+      "end": 3.16
+    },
+    {
+      "text": "away",
+      "at": 3.2,
+      "end": 3.56
+    },
+    {
+      "text": "between",
+      "at": 3.6,
+      "end": 3.96
+    },
+    {
+      "text": "lines",
+      "at": 4,
+      "end": 4.36
+    },
+    {
+      "text": "cuts",
+      "at": 4.7,
+      "end": 5.16
+    },
+    {
+      "text": "land",
+      "at": 5.2,
+      "end": 5.66
+    },
+    {
+      "text": "quietly",
+      "at": 5.7,
+      "end": 6.16
+    },
+    {
+      "text": "the",
+      "at": 6.5,
+      "end": 6.86
+    },
+    {
+      "text": "voice",
+      "at": 6.9,
+      "end": 7.26
+    },
+    {
+      "text": "carries",
+      "at": 7.3,
+      "end": 7.66
+    },
+    {
+      "text": "straight",
+      "at": 7.7,
+      "end": 8.06
+    },
+    {
+      "text": "through",
+      "at": 8.1,
+      "end": 8.46
+    }
+  ]
+}

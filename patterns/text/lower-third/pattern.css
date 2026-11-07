@@ -1,0 +1,155 @@
+/* text/lower-third: a name and a role line standing on the lower edge of its host, an overlay area.
+   Every part is always in the markup; the mechanism (data-mechanism on .mm-lt) decides which show.
+   The module writes only the amounts that move (clips, offsets, opacities); the look is here. */
+.mm-lt {
+  --mm-lt-tone: var(--mm-color-accent);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  box-sizing: border-box;
+  max-width: 82%;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  text-align: left;
+  color: var(--mm-color-ink);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+}
+.mm-lt[data-side="right"] { left: auto; right: 0; flex-direction: row-reverse; text-align: right; }
+.mm-lt[data-tone="ink"] { --mm-lt-tone: var(--mm-color-ink); }
+.mm-lt[data-tone="muted"] { --mm-lt-tone: var(--mm-color-muted); }
+.mm-lt[data-plate="true"] { color: var(--mm-color-surfaceInk); }
+
+.mm-lt__mark, .mm-lt__corner, .mm-lt__dot, .mm-lt__hair { display: none; }
+.mm-lt__plate {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.mm-lt[data-plate="true"] .mm-lt__plate {
+  padding: var(--mm-space-3) var(--mm-space-4);
+  background: var(--mm-color-surface);
+}
+.mm-lt__text { display: flex; flex-direction: column; min-width: 0; }
+.mm-lt__name {
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: var(--mm-size-h2);
+  line-height: 1.1;
+  text-wrap: balance;
+}
+.mm-lt__role {
+  margin-top: var(--mm-space-1);
+  font-size: var(--mm-size-body);
+  line-height: 1.2;
+  color: color-mix(in srgb, currentColor 78%, transparent);
+}
+.mm-lt__rest { visibility: hidden; }
+.mm-lt__caret {
+  display: inline-block;
+  inline-size: var(--mm-lt-stroke);
+  block-size: 0.85em;
+  margin-inline-start: var(--mm-lt-stroke);
+  vertical-align: -0.08em;
+  background: var(--mm-lt-tone);
+}
+.mm-lt__caret[hidden], .mm-lt__role[hidden] { display: none; }
+
+/* bar-wipe: a bar beside the plate, the plate rides out of it */
+.mm-lt[data-mechanism="bar-wipe"] .mm-lt__mark {
+  display: block;
+  flex: none;
+  inline-size: calc(var(--mm-lt-stroke) * 3);
+  background: var(--mm-lt-tone);
+}
+
+/* tab: a block at the edge of the plate that slides in from the frame edge */
+.mm-lt[data-mechanism="tab"] .mm-lt__mark {
+  display: block;
+  flex: none;
+  inline-size: calc(var(--mm-lt-stroke) * 9);
+  background: var(--mm-lt-tone);
+  border-radius: var(--mm-radius-1) 0 0 var(--mm-radius-1);
+}
+.mm-lt[data-mechanism="tab"][data-side="right"] .mm-lt__mark { border-radius: 0 var(--mm-radius-1) var(--mm-radius-1) 0; }
+
+/* bracket: four corners round the plate, drawn from each corner */
+.mm-lt[data-mechanism="bracket"] { padding: var(--mm-space-3); }
+.mm-lt[data-mechanism="bracket"] .mm-lt__corner {
+  display: block;
+  position: absolute;
+  box-sizing: border-box;
+  width: 0;
+  height: 0;
+  border: 0 solid var(--mm-lt-tone);
+  pointer-events: none;
+}
+.mm-lt[data-mechanism="bracket"] .mm-lt__corner--tl { top: 0; left: 0; border-top-width: var(--mm-lt-stroke); border-left-width: var(--mm-lt-stroke); }
+.mm-lt[data-mechanism="bracket"] .mm-lt__corner--tr { top: 0; right: 0; border-top-width: var(--mm-lt-stroke); border-right-width: var(--mm-lt-stroke); }
+.mm-lt[data-mechanism="bracket"] .mm-lt__corner--bl { bottom: 0; left: 0; border-bottom-width: var(--mm-lt-stroke); border-left-width: var(--mm-lt-stroke); }
+.mm-lt[data-mechanism="bracket"] .mm-lt__corner--br { bottom: 0; right: 0; border-bottom-width: var(--mm-lt-stroke); border-right-width: var(--mm-lt-stroke); }
+
+/* flip: the plate turns on its outer edge; an underline in the tone */
+.mm-lt[data-mechanism="flip"] .mm-lt__plate {
+  backface-visibility: hidden;
+  border-bottom: calc(var(--mm-lt-stroke) * 2) solid var(--mm-lt-tone);
+}
+
+/* stamp: an outlined plate that lands */
+.mm-lt[data-mechanism="stamp"] .mm-lt__plate {
+  border: calc(var(--mm-lt-stroke) * 2) solid var(--mm-lt-tone);
+  border-radius: var(--mm-radius-1);
+}
+
+/* typed: a plain plate; the caret and the untyped rest live in the name */
+.mm-lt[data-mechanism="typed"] .mm-lt__plate { border-inline-start: calc(var(--mm-lt-stroke) * 2) solid var(--mm-lt-tone); }
+
+/* strip: one thin row, name then role, a dot, and a progress hairline along the bottom edge */
+.mm-lt[data-mechanism="strip"] { width: 100%; max-width: 100%; }
+.mm-lt[data-mechanism="strip"] .mm-lt__plate {
+  flex: 1 1 auto;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--mm-space-3);
+  padding-block: var(--mm-space-2);
+}
+.mm-lt[data-mechanism="strip"][data-plate="true"] .mm-lt__plate { padding-block-end: calc(var(--mm-space-2) + var(--mm-lt-stroke)); }
+.mm-lt[data-mechanism="strip"] .mm-lt__dot {
+  display: block;
+  flex: none;
+  inline-size: var(--mm-space-3);
+  block-size: var(--mm-space-3);
+  border-radius: var(--mm-radius-4);
+  background: var(--mm-lt-tone);
+}
+.mm-lt[data-mechanism="strip"] .mm-lt__text { flex-direction: row; align-items: baseline; flex-wrap: nowrap; gap: var(--mm-space-3); white-space: nowrap; }
+.mm-lt[data-mechanism="strip"] .mm-lt__name { font-size: var(--mm-size-body); }
+.mm-lt[data-mechanism="strip"] .mm-lt__role { margin-top: 0; overflow: hidden; text-overflow: ellipsis; }
+.mm-lt[data-mechanism="strip"] .mm-lt__hair {
+  display: block;
+  position: absolute;
+  inset: auto 0 0 0;
+  block-size: var(--mm-lt-stroke);
+  background: linear-gradient(to right, var(--mm-lt-tone) var(--mm-lt-hair, 0%), var(--mm-color-line) 0);
+}
+.mm-lt[data-mechanism="strip"][data-side="right"] .mm-lt__hair {
+  background: linear-gradient(to left, var(--mm-lt-tone) var(--mm-lt-hair, 0%), var(--mm-color-line) 0);
+}
+
+/* pill: a capsule that grows from its dot; the plate is clipped to the capsule */
+.mm-lt[data-mechanism="pill"] .mm-lt__plate { flex-direction: row; align-items: center; gap: var(--mm-space-3); }
+.mm-lt[data-mechanism="pill"][data-side="right"] .mm-lt__plate { flex-direction: row-reverse; }
+.mm-lt[data-mechanism="pill"][data-plate="true"] .mm-lt__plate { padding-inline: var(--mm-space-4); }
+.mm-lt[data-mechanism="pill"] .mm-lt__dot {
+  display: block;
+  flex: none;
+  inline-size: var(--mm-space-3);
+  block-size: var(--mm-space-3);
+  border-radius: var(--mm-radius-4);
+  background: var(--mm-lt-tone);
+}

@@ -1,0 +1,39 @@
+# Source and documentation files use LF everywhere: the checks hash and diff file contents, and shell
+# scripts must run on Linux. Other text (the third-party font licences keep their CRLF) is left as is.
+* text=auto
+# The upstream font licences are byte-for-byte copies (CRLF): never converted.
+**/fonts/**/LICENSE.txt -text
+
+*.mjs text eol=lf
+*.js text eol=lf
+*.cjs text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.svg text eol=lf
+*.sh text eol=lf
+*.yml text eol=lf
+*.gltf text eol=lf
+
+# Binary files are never converted or diffed as text.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.mp4 binary
+*.mov binary
+*.webm binary
+*.wav binary
+*.mp3 binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.glb binary
+*.bin binary
+*.pdf binary
+*.zip binary
+*.tgz binary

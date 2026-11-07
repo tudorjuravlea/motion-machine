@@ -1,0 +1,2 @@
+/* moves/depth-parallax: the layer canvas sits exactly over the picture it moves, inside the picture's frame. */
+.mm-depth-parallax { position: absolute; display: block; pointer-events: none; }

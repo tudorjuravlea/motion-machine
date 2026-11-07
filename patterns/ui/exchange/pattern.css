@@ -1,0 +1,29 @@
+/* ui/exchange: two nodes with a lane between them for the request and the answer, and a strip under both for the stream. */
+@import url('../../../runtime/kit/ui.css');
+.mm-ui-exchange { display: grid; row-gap: var(--mm-space-4); }
+.mm-ui-exchange[data-layout='row'] { grid-template-columns: max-content minmax(max-content, 1fr) max-content; column-gap: var(--mm-space-3); }
+.mm-ui-exchange[data-layout='col'] { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+.mm-ui-exchange__node {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mm-space-3);
+  padding: var(--mm-space-4) var(--mm-space-3);
+  border: 1px solid color-mix(in srgb, var(--mm-color-accent) calc(var(--lit, 0) * 100%), var(--mm-color-line));
+  border-radius: var(--mm-radius-3);
+  background: color-mix(in srgb, var(--mm-color-accent) calc(var(--lit, 0) * 14%), transparent);
+}
+.mm-ui-exchange__label { font-weight: var(--mm-weight-display); white-space: nowrap; }
+.mm-ui-exchange__mid { display: flex; flex-direction: column; align-items: center; justify-content: space-between; min-width: 0; }
+.mm-ui-exchange__lane { align-self: stretch; height: 1.4em; }
+.mm-ui-exchange[data-layout='col'] .mm-ui-exchange__mid { flex-direction: row; align-items: center; justify-content: center; gap: 0.4em; min-height: 4.5em; }
+.mm-ui-exchange[data-layout='col'] .mm-ui-exchange__lane { align-self: stretch; height: auto; width: 1.4em; }
+.mm-ui-exchange__stream { grid-column: 1 / -1; justify-self: stretch; padding-top: 1.1em; text-align: center; }
+.mm-ui-exchange__mid .mm-ui__chip { flex: none; }
+[data-layout='col'][data-fit='tight'] .mm-ui-exchange__mid { display: grid; grid-template-columns: 1.4em 1.4em auto; grid-template-rows: auto auto; column-gap: 0.4em; row-gap: var(--mm-space-3); justify-content: center; }
+[data-fit='tight'] .mm-ui-exchange__mid > :nth-child(1) { grid-area: 1 / 3; justify-self: start; }
+[data-fit='tight'] .mm-ui-exchange__mid > :nth-child(2) { grid-area: 1 / 1 / 3 / 2; }
+[data-fit='tight'] .mm-ui-exchange__mid > :nth-child(3) { grid-area: 1 / 2 / 3 / 3; }
+[data-fit='tight'] .mm-ui-exchange__mid > :nth-child(4) { grid-area: 2 / 3; justify-self: start; }

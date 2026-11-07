@@ -1,0 +1,49 @@
+{
+  "id": "demo-text-date-flip",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: text/date-flip",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/date-flip",
+          "text": "March 2027",
+          "params": {
+            "from": "June 2026",
+            "dur": 2.2
+          }
+        },
+        {
+          "at": 2.6,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "The launch moved"
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

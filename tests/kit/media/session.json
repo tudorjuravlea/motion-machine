@@ -1,0 +1,18 @@
+{
+  "id": "kit-session", "kind": "film", "formats": ["16x9", "9x16"], "title": "Kit session", "language": "en", "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null }, "cta": { "text": "", "url": "" },
+  "scenes": [
+    { "id": "frame", "layout": "layouts/caption-bar", "duration": 10.4, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{ "at": 0.1, "slot": "stage", "fx": "devices/demo-frame", "asset": "assets/ses/",
+        "screen": [
+          { "do": "screen/play", "at": 0.1, "d": 9.5 },
+          { "do": "screen/zoom-to", "at": 0.1, "d": 9.5, "params": { "mode": "auto", "depth": "close", "follow": 0, "tilt": "iso" } },
+          { "do": "screen/pointer", "at": 0.1, "d": 9.5 }] }], "say": "" },
+    { "id": "plain", "layout": "layouts/caption-bar", "duration": 10.4, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{ "at": 0.1, "slot": "stage", "fx": "devices/browser", "asset": "assets/ses/", "params": { "size": "large" },
+        "screen": [
+          { "do": "screen/play", "at": 0.1, "d": 9.5 },
+          { "do": "screen/zoom-to", "at": 0.1, "d": 9.5, "params": { "mode": "auto", "depth": "fit", "blur": 1 } },
+          { "do": "screen/pointer", "at": 0.1, "d": 9.5 }] }], "say": "" }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "id": "demo-stat-hero",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: layouts/stat-hero",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo figure only.",
+      "source": "layout demo, not a claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/stat-hero",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "32",
+          "fact": "f1"
+        },
+        {
+          "at": 0.9,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Measured, not felt."
+        },
+        {
+          "at": 1.6,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "determinism, legibility, pacing"
+        }
+      ],
+      "say": "A demo of the pattern."
+    },
+    {
+      "id": "demo-align",
+      "layout": "layouts/stat-hero",
+      "duration": 4.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "figure",
+          "fx": "entrances/rise",
+          "text": "32",
+          "fact": "f1",
+          "params": {
+            "align": "left"
+          }
+        },
+        {
+          "at": 0.9,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Measured, not felt."
+        },
+        {
+          "at": 1.6,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "determinism, legibility, pacing"
+        }
+      ],
+      "say": "The same layout with align set to left."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

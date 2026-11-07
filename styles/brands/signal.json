@@ -1,0 +1,135 @@
+{
+  "name": "signal",
+  "version": 1,
+  "fictional": true,
+  "color": {
+    "canvas": "#0B0D12",
+    "ink": "#F2F4F8",
+    "muted": "#8A93A6",
+    "surface": "#151925",
+    "line": "#262C3B",
+    "accent": "#D7FF3F",
+    "accentInk": "#0B0D12"
+  },
+  "type": {
+    "display": {
+      "family": "Archivo",
+      "weight": 800,
+      "tracking": -0.03,
+      "files": [
+        {
+          "src": "styles/fonts/archivo/archivo-latin-700-normal.woff2",
+          "weight": 700,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/archivo/archivo-latin-ext-700-normal.woff2",
+          "weight": 700,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        },
+        {
+          "src": "styles/fonts/archivo/archivo-latin-800-normal.woff2",
+          "weight": 800,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/archivo/archivo-latin-ext-800-normal.woff2",
+          "weight": 800,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        }
+      ]
+    },
+    "text": {
+      "family": "Manrope",
+      "weight": 400,
+      "tracking": 0,
+      "files": [
+        {
+          "src": "styles/fonts/manrope/manrope-latin-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/manrope/manrope-latin-ext-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        },
+        {
+          "src": "styles/fonts/manrope/manrope-latin-600-normal.woff2",
+          "weight": 600,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/manrope/manrope-latin-ext-600-normal.woff2",
+          "weight": 600,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        },
+        {
+          "src": "styles/fonts/manrope/manrope-latin-700-normal.woff2",
+          "weight": 700,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/manrope/manrope-latin-ext-700-normal.woff2",
+          "weight": 700,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        }
+      ]
+    },
+    "mono": {
+      "family": "IBM Plex Mono",
+      "weight": 400,
+      "tracking": 0,
+      "files": [
+        {
+          "src": "styles/fonts/ibm-plex-mono/ibm-plex-mono-latin-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/ibm-plex-mono/ibm-plex-mono-latin-ext-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        }
+      ]
+    }
+  },
+  "scale": {
+    "display": 1.1,
+    "h1": 0.66,
+    "h2": 0.42,
+    "body": 0.27,
+    "caption": 0.21,
+    "micro": 0.19
+  },
+  "space": [
+    4,
+    8,
+    16,
+    24,
+    40,
+    64,
+    104
+  ],
+  "radius": [
+    0,
+    2,
+    8,
+    16,
+    999
+  ],
+  "composition": {
+    "align": "center",
+    "headlineScale": 1.2,
+    "density": "compact"
+  },
+  "bans": [
+    "centered-title-on-gradient",
+    "fade-only",
+    "corner-labels",
+    "frame-borders",
+    "glow-on-ui",
+    "particle-burst"
+  ],
+  "allow": []
+}

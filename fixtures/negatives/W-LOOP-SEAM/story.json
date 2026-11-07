@@ -1,0 +1,48 @@
+{
+  "id": "w-loop-seam",
+  "kind": "loop",
+  "formats": [
+    "16x9"
+  ],
+  "title": "W-LOOP-SEAM: a loop whose last frames are mid-exit against a first frame at rest.",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "The gate samples three instants for determinism.",
+      "source": "SPEC.md \u00a72.5"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  },
+  "scenes": [
+    {
+      "id": "a",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.5,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Loop start",
+          "out": 3.6,
+          "exit": "exits/slide-out",
+          "params": {
+            "side": "left"
+          }
+        }
+      ],
+      "say": "Loop start"
+    }
+  ]
+}

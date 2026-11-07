@@ -1,0 +1,10 @@
+/* screen/pointer: a vector cursor drawn over the screen. Its place, size, fill and outline are set from JS on every
+   seek (fill and outline are palette roles); the screen layer clips it, so it can never leave the screen. */
+.mm-screen-fx .pointer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  overflow: visible;
+  pointer-events: none;
+}

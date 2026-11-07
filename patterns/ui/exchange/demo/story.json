@@ -1,0 +1,45 @@
+{
+  "id": "demo-ui-exchange",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "ui/exchange demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "shot",
+      "layout": "layouts/stage",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "ui/exchange",
+          "params": {
+            "from": "Shop",
+            "to": "Orders",
+            "request": "POST /order",
+            "reply": "200 OK",
+            "stream": "live status"
+          }
+        }
+      ],
+      "say": "A request goes out, the answer comes back, and the updates keep flowing."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

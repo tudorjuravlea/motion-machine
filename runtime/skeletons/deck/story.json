@@ -1,0 +1,19 @@
+{
+  "id": "new-deck",
+  "kind": "deck",
+  "formats": ["16x9"],
+  "title": "Replace with the deck's title",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "hook", "layout": "layouts/title-stack", "presses": 1, "cut": "transitions/hard-cut", "move": null,
+      "beats": [
+        { "at": 0, "step": 1, "slot": "headline", "fx": "entrances/rise", "text": "Replace with the opening idea" }
+      ],
+      "say": "Replace with the speaker note for this press."
+    }
+  ],
+  "cta": { "text": "Replace with the call to action", "url": "example.org" }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "click",
+  "meaning": "a button is pressed and let go: a click with its release",
+  "durationS": 0.11,
+  "variant": "press-release",
+  "knobs": ["variant", "durS"],
+  "variants": {
+    "press": {
+      "masterGain": 0.1888,
+      "durationS": 0.05,
+      "layers": { "4": { "peak": 0 }, "5": { "peak": 0 } },
+      "finish": { "gate": { "atS": 0.045, "dropDb": 90, "releaseS": 0.008 } }
+    }
+  },
+  "layers": [
+    { "kind": "noise", "filter": { "type": "bandpass", "f": 6000, "q": 0.9 }, "attackS": 0.0005, "t60": 0.003, "peak": 0.8 },
+    { "kind": "tone", "f": 6200, "attackS": 0.0005, "t60": 0.014, "partials": [[1, 0], [1.62, -5], [2.6, -10]], "peak": 0.5 },
+    { "kind": "tone", "f": 600, "glideTo": 510, "glideS": 0.03, "attackS": 0.0005, "t60": 0.03, "peak": 0.45 },
+    { "kind": "noise", "filter": { "type": "bandpass", "f": 3200, "q": 0.6 }, "attackS": 0.0008, "t60": 0.028, "peak": 0.08, "from": 1 },
+    { "kind": "noise", "filter": { "type": "bandpass", "f": 7000, "q": 0.9 }, "attackS": 0.0005, "t60": 0.003, "peak": 0.63, "offsetS": 0.085 },
+    { "kind": "tone", "f": 7300, "attackS": 0.0005, "t60": 0.012, "partials": [[1, 0], [1.62, -5]], "peak": 0.4, "offsetS": 0.085 },
+    { "kind": "noise", "filter": { "type": "highpass", "f": 8000, "q": 0.7 }, "attackS": 0.0005, "t60": 0.008, "peak": 0.12, "from": 2 }
+  ],
+  "room": { "send": -30, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "finish": { "highpassHz": 200, "dip": { "f": 3200, "db": -3, "q": 1.2 }, "drive": 0.4, "gate": { "atS": 0.1, "dropDb": 90, "releaseS": 0.008 } },
+  "vary": { "pitch": 0.02, "force": 0.1 },
+  "masterGain": 0.1558
+}

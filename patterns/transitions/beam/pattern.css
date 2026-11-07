@@ -1,0 +1,17 @@
+/* beam: the light. pattern.js appends one overlay (data-mm-overlay) beside the scenes with the
+   pieces of the variant as children, each styled inline in roles of the palette; the kit removes it
+   on every seek, so nothing is left at a rest. It sits above the scenes, their finish and any
+   device frame. */
+.mm-tx-beam {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  overflow: hidden;
+  pointer-events: none;
+}
+.mm-tx-beam > div { position: absolute; }
+.mm-tx-beam__beam,
+.mm-tx-beam__portal,
+.mm-tx-beam__veil { inset: 0; }
+.mm-tx-beam__curtain { top: 0; bottom: 0; }
+.mm-tx-beam__curtain-glow { top: 0; bottom: 0; }

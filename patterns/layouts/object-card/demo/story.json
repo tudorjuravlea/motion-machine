@@ -1,0 +1,290 @@
+{
+  "id": "demo-layouts-object-card",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "layouts/object-card demo",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo figure for layouts/object-card",
+      "source": "demo fixture, an invented figure that carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "receipt",
+      "layout": "layouts/object-card",
+      "duration": 6.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "object",
+          "fx": "entrances/mask-reveal",
+          "params": {
+            "side": "down",
+            "variant": "receipt"
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "mark",
+          "fx": "entrances/fade",
+          "text": "Order 0042"
+        },
+        {
+          "at": 0.8,
+          "slot": "row-1",
+          "fx": "entrances/fade",
+          "text": "Packaging|12",
+          "params": {
+            "each": true,
+            "sep": "|"
+          }
+        },
+        {
+          "at": 0.95,
+          "slot": "row-2",
+          "fx": "entrances/fade",
+          "text": "Freight|7",
+          "params": {
+            "each": true,
+            "sep": "|"
+          }
+        },
+        {
+          "at": 1.2,
+          "slot": "label",
+          "fx": "entrances/fade",
+          "text": "Total"
+        },
+        {
+          "at": 1.3,
+          "slot": "figure",
+          "fx": "data/counter",
+          "fact": "f1",
+          "value": 19,
+          "params": {
+            "prefix": "$",
+            "size": "h1"
+          }
+        },
+        {
+          "at": 2.2,
+          "slot": "note",
+          "fx": "entrances/fade",
+          "text": "Thank you for shipping with us"
+        }
+      ],
+      "say": "A receipt prints down and the total counts."
+    },
+    {
+      "id": "calendar",
+      "layout": "layouts/object-card",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "object",
+          "fx": "entrances/drop",
+          "params": {
+            "variant": "calendar"
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "mark",
+          "fx": "entrances/fade",
+          "text": "March"
+        },
+        {
+          "at": 1,
+          "slot": "figure",
+          "fx": "data/counter",
+          "fact": "f1",
+          "value": 9,
+          "params": {
+            "size": "display"
+          }
+        },
+        {
+          "at": 1.2,
+          "slot": "label",
+          "fx": "entrances/fade",
+          "text": "Days to first reply"
+        }
+      ],
+      "say": "A calendar page drops in with its rings."
+    },
+    {
+      "id": "tag",
+      "layout": "layouts/object-card",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "object",
+          "fx": "entrances/swing",
+          "params": {
+            "variant": "tag"
+          }
+        },
+        {
+          "at": 0.8,
+          "slot": "label",
+          "fx": "entrances/fade",
+          "text": "Now"
+        },
+        {
+          "at": 1,
+          "slot": "figure",
+          "fx": "data/counter",
+          "fact": "f1",
+          "value": 24,
+          "params": {
+            "prefix": "$",
+            "size": "display"
+          }
+        },
+        {
+          "at": 1.6,
+          "slot": "note",
+          "fx": "entrances/fade",
+          "text": "Per seat, per month"
+        }
+      ],
+      "say": "A tag swings from its cord and settles."
+    },
+    {
+      "id": "stamp",
+      "layout": "layouts/object-card",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "object",
+          "fx": "entrances/pop",
+          "params": {
+            "variant": "stamp"
+          }
+        },
+        {
+          "at": 0.7,
+          "slot": "label",
+          "fx": "entrances/fade",
+          "text": "First class"
+        },
+        {
+          "at": 0.9,
+          "slot": "figure",
+          "fx": "data/counter",
+          "fact": "f1",
+          "value": 48,
+          "params": {
+            "size": "display",
+            "suffix": "c"
+          }
+        },
+        {
+          "at": 1.5,
+          "slot": "mark",
+          "fx": "entrances/fade",
+          "text": "Sent"
+        }
+      ],
+      "say": "A perforated stamp with a postmark."
+    },
+    {
+      "id": "ledger",
+      "layout": "layouts/object-card",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "object",
+          "fx": "entrances/rise",
+          "params": {
+            "variant": "ledger"
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "mark",
+          "fx": "entrances/fade",
+          "text": "March"
+        },
+        {
+          "at": 0.7,
+          "slot": "row-1",
+          "fx": "entrances/fade",
+          "text": "Rent|1,200",
+          "params": {
+            "each": true,
+            "sep": "|"
+          }
+        },
+        {
+          "at": 0.85,
+          "slot": "row-2",
+          "fx": "entrances/fade",
+          "text": "Salaries|8,400",
+          "params": {
+            "each": true,
+            "sep": "|"
+          }
+        },
+        {
+          "at": 1,
+          "slot": "row-3",
+          "fx": "entrances/fade",
+          "text": "Tools|640",
+          "params": {
+            "each": true,
+            "sep": "|"
+          }
+        },
+        {
+          "at": 1.3,
+          "slot": "label",
+          "fx": "entrances/fade",
+          "text": "Left over"
+        },
+        {
+          "at": 1.4,
+          "slot": "figure",
+          "fx": "data/counter",
+          "fact": "f1",
+          "value": 3260,
+          "params": {
+            "prefix": "$",
+            "size": "h2"
+          }
+        }
+      ],
+      "say": "A ledger with one hero row."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

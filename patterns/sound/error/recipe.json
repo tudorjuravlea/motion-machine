@@ -1,0 +1,14 @@
+{
+  "name": "error",
+  "meaning": "a failure: a rejected action, a broken step, a figure that went the wrong way",
+  "durationS": 0.3,
+  "layers": [
+    { "kind": "tone", "f": 349.23, "attackS": 0.002, "t60": 0.12, "peak": 1, "partials": [[1, 0], [3.99, -26]] },
+    { "kind": "tone", "f": 146.83, "attackS": 0.002, "t60": 0.2, "peak": 1.1, "offsetS": 0.09, "partials": [[1, 0], [3.99, -24]] },
+    { "kind": "tone", "f": 73.42, "attackS": 0.003, "t60": 0.2, "peak": 0.4, "offsetS": 0.09, "from": 1 },
+    { "kind": "noise", "attackS": 0.001, "t60": 0.02, "peak": 0.5, "filter": { "type": "bandpass", "f": 900, "q": 1.2 }, "from": 2 }
+  ],
+  "room": { "send": -22, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "masterGain": 0.0804,
+  "emphasis": { "subtle": 0, "normal": 1, "strong": 2 }
+}

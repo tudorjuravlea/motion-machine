@@ -1,0 +1,28 @@
+{
+  "id": "kit-smoke-roles",
+  "kind": "film",
+  "formats": ["16x9"],
+  "title": "kit-smoke roles: the style speaks, the first frame is finished",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "hook", "layout": "layouts/title-stack", "duration": 3, "position": "opening", "move": null,
+      "beats": [
+        { "at": 0, "slot": "headline", "fx": "style:headline", "text": "Finished from frame zero.", "params": { "instant": true } },
+        { "at": 0.6, "slot": "sub", "fx": "style:body", "text": "The riser ends where this lands.", "cue": "riser" }
+      ],
+      "say": "The hook is on screen at frame zero."
+    },
+    {
+      "id": "two", "layout": "layouts/title-stack", "duration": 3, "position": "topic", "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "entrances/spy", "text": "Type never overshoots.", "params": { "spring": "heavy" } },
+        { "at": 0.2, "slot": "sub", "fx": "entrances/spy", "params": { "spring": "heavy" } }
+      ],
+      "say": "A shape may overshoot; type may not."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

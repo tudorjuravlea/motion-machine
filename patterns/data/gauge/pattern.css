@@ -1,0 +1,87 @@
+/* gauge: a dial seven readout-heights wide (a meter fills the safe width). Every stroke is a role:
+   the track the line role, the fill the series role (accent, ink or muted), ticks muted, the notch
+   and needle the series role; a tint is an alpha of one role. Words are DOM text. */
+.mm-gauge {
+  display: block;
+  width: 7em;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--mm-color-ink);
+}
+.mm-gauge[data-variant="semi"] { width: 8em; }
+.mm-gauge[data-variant="rings"], .mm-gauge[data-variant="radial-bars"] { width: min(100%, 12em); }
+.mm-gauge[data-variant="meter"] { width: calc((var(--mm-frame-w) - 2 * var(--mm-safe)) * 0.84); max-width: 100%; }
+.mm-gauge__box { position: relative; width: 100%; }
+.mm-gauge[data-variant="rings"] .mm-gauge__box, .mm-gauge[data-variant="radial-bars"] .mm-gauge__box {
+  display: flex;
+  align-items: center;
+  gap: var(--mm-space-4);
+}
+.mm-gauge[data-variant="rings"] svg, .mm-gauge[data-variant="radial-bars"] svg { flex: none; width: 7em; }
+.mm-gauge svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+.mm-gauge__track, .mm-gauge__face { stroke: var(--mm-color-line); fill: none; }
+.mm-gauge__fill--accent { stroke: var(--mm-color-accent); }
+.mm-gauge__fill--ink { stroke: var(--mm-color-ink); }
+.mm-gauge__fill--muted { stroke: var(--mm-color-muted); }
+.mm-gauge__tick { stroke: var(--mm-color-muted); }
+.mm-gauge__tick--lit { stroke: var(--mm-color-ink); }
+.mm-gauge__tick--end { stroke: var(--mm-color-muted); }
+.mm-gauge__needle--accent, .mm-gauge__hub--accent { stroke: var(--mm-color-accent); }
+.mm-gauge__needle--ink, .mm-gauge__hub--ink { stroke: var(--mm-color-ink); }
+.mm-gauge__needle--muted, .mm-gauge__hub--muted { stroke: var(--mm-color-muted); }
+.mm-gauge__hub--accent { fill: var(--mm-color-accent); }
+.mm-gauge__hub--ink { fill: var(--mm-color-ink); }
+.mm-gauge__hub--muted { fill: var(--mm-color-muted); }
+.mm-gauge__wedge--accent { fill: color-mix(in srgb, var(--mm-color-accent) 18%, transparent); }
+.mm-gauge__wedge--ink { fill: color-mix(in srgb, var(--mm-color-ink) 14%, transparent); }
+.mm-gauge__wedge--muted { fill: color-mix(in srgb, var(--mm-color-muted) 18%, transparent); }
+.mm-gauge__notch--accent { fill: var(--mm-color-accent); }
+.mm-gauge__notch--ink { fill: var(--mm-color-ink); }
+.mm-gauge__notch--muted { fill: var(--mm-color-muted); }
+
+.mm-gauge__readout {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  display: flex;
+  justify-content: center;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+.mm-gauge[data-variant="semi"] .mm-gauge__readout { top: auto; bottom: 0; transform: none; }
+.mm-gauge[data-variant="needle"] .mm-gauge__readout { top: 78%; }
+.mm-gauge[data-variant="clock"] .mm-gauge__readout, .mm-gauge[data-variant="meter"] .mm-gauge__readout {
+  position: static;
+  transform: none;
+  padding: var(--mm-space-3) 0;
+}
+.mm-gauge[data-variant="meter"] .mm-gauge__readout { padding: 0 0 var(--mm-space-3); justify-content: flex-start; }
+
+.mm-gauge__ends {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mm-font-mono);
+  font-weight: var(--mm-weight-mono);
+  letter-spacing: var(--mm-tracking-mono);
+  font-size: var(--mm-size-body);
+  line-height: 1.2;
+  color: var(--mm-color-muted);
+}
+
+.mm-gauge__legend { display: flex; flex-direction: column; gap: var(--mm-space-3); min-width: 0; }
+.mm-gauge__row { display: flex; align-items: center; gap: var(--mm-space-3); font-size: var(--mm-size-body); line-height: 1.1; }
+.mm-gauge__swatch { flex: none; width: var(--mm-space-3); height: var(--mm-space-3); border-radius: var(--mm-radius-4); }
+.mm-gauge__swatch--accent { background: var(--mm-color-accent); }
+.mm-gauge__swatch--ink { background: var(--mm-color-ink); }
+.mm-gauge__swatch--muted { background: var(--mm-color-muted); }
+.mm-gauge__name {
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  color: var(--mm-color-muted);
+}
+.mm-gauge__value { margin-left: auto; padding-left: var(--mm-space-3); }

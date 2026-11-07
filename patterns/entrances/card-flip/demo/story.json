@@ -1,0 +1,54 @@
+{
+  "id": "demo-entrances-card-flip",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "entrances/card-flip demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/paper-cards",
+      "duration": 4.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Turn over"
+        },
+        {
+          "at": 0.8,
+          "slot": "card-1",
+          "fx": "entrances/card-flip",
+          "text": "Faster setup"
+        },
+        {
+          "at": 1.1,
+          "slot": "card-2",
+          "fx": "entrances/card-flip",
+          "text": "Fewer steps",
+          "params": {
+            "steps": 6
+          }
+        }
+      ],
+      "say": "A single scene that shows entrances/card-flip."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

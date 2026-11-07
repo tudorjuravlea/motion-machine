@@ -1,0 +1,28 @@
+{
+  "name": "pop-in",
+  "meaning": "an element appears on screen: an icon, a card, a chip, a label",
+  "durationS": 0.18,
+  "variant": "round",
+  "knobs": ["variant", "durS"],
+  "variants": {
+    "double": {
+      "masterGain": 0.0952,
+      "durationS": 0.24,
+      "layers": { "3": { "peak": 0.6 }, "4": { "peak": 0.016 } }
+    },
+    "deep": {
+      "masterGain": 0.1146,
+      "layers": { "0": { "f": 135, "glideTo": 92 }, "2": { "f": 70, "peak": 0.3 }, "1": { "peak": 0.012 } }
+    }
+  },
+  "layers": [
+    { "kind": "tone", "f": 142, "glideTo": 105, "glideS": 0.03, "envelope": [[0, -50], [0.012, 0], [0.02, -5], [0.032, -6], [0.06, -28], [0.16, -60]], "partials": [[1, 0], [2, -18]], "peak": 1 },
+    { "kind": "noise", "filter": { "type": "bandpass", "f": 3500, "q": 0.9 }, "attackS": 0.0005, "t60": 0.014, "peak": 0.02, "offsetS": 0.007, "from": 1 },
+    { "kind": "tone", "f": 52.5, "envelope": [[0, -50], [0.012, 0], [0.02, -5], [0.032, -6], [0.06, -28], [0.16, -60]], "peak": 0.2, "from": 2 },
+    { "kind": "tone", "f": 130, "glideTo": 120, "glideS": 0.03, "envelope": [[0, -50], [0.012, 0], [0.02, -5], [0.032, -6], [0.06, -28], [0.16, -60]], "partials": [[1, 0], [2, -18]], "peak": 0, "offsetS": 0.065 },
+    { "kind": "noise", "filter": { "type": "bandpass", "f": 4200, "q": 0.9 }, "attackS": 0.0005, "t60": 0.014, "peak": 0, "offsetS": 0.072, "from": 1 }
+  ],
+  "room": { "send": -22, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "vary": { "pitch": 0.02, "force": 0.1 },
+  "masterGain": 0.1104
+}

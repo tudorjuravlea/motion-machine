@@ -1,0 +1,159 @@
+{
+  "id": "kit-island",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "16x9"
+  ],
+  "title": "Kit island",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "scenes": [
+    {
+      "id": "phone",
+      "layout": "layouts/caption-bar",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/grid.png",
+          "screen": [
+            {
+              "do": "screen/island",
+              "at": 0.5,
+              "d": 1,
+              "params": {
+                "w": 0.86,
+                "h": 0.12,
+                "text": "Timer 04:12"
+              }
+            }
+          ],
+          "params": {
+            "size": "large"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "laptop",
+      "layout": "layouts/caption-bar",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/laptop",
+          "asset": "assets/grid.png",
+          "screen": [
+            {
+              "do": "screen/island",
+              "at": 0.5,
+              "d": 1,
+              "params": {
+                "w": 0.5,
+                "h": 0.1,
+                "text": "Recording"
+              }
+            }
+          ]
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "reopen",
+      "layout": "layouts/caption-bar",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/grid.png",
+          "screen": [
+            {
+              "do": "screen/island",
+              "at": 0.3,
+              "d": 1,
+              "params": {
+                "w": 0.86,
+                "h": 0.12,
+                "text": "One"
+              }
+            },
+            {
+              "do": "screen/island",
+              "at": 1.5,
+              "d": 1,
+              "params": {
+                "close": true
+              }
+            },
+            {
+              "do": "screen/island",
+              "at": 2.0,
+              "d": 1,
+              "params": {
+                "w": 0.7,
+                "h": 0.1,
+                "text": "Two"
+              }
+            }
+          ],
+          "params": {
+            "size": "large"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "bare",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Today",
+          "params": {
+            "size": "large"
+          },
+          "screen": [
+            {
+              "do": "screen/island",
+              "at": 0.4,
+              "d": 0.8,
+              "params": {
+                "text": "Hi"
+              }
+            }
+          ]
+        }
+      ],
+      "say": ""
+    }
+  ]
+}

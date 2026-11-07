@@ -1,0 +1,249 @@
+/* object-card: a stat inside an object, drawn in CSS from palette roles. One object (the `object`
+   slot) holds a mark, up to three rows, a label and a figure (the total) and a note. The variant
+   (receipt, calendar, tag, stamp, ledger) comes from a beat's `variant` param (data-p-variant on a
+   slot) or the brand's default for the layout (data-p-variant on the root); with neither it is a
+   receipt. The surface role is the paper, the surface-ink roles the print. An alpha of a role is a
+   tint; no two roles are mixed. Content stays level at rest (bans.md); the swing of a tag is an
+   entrance's, not the layout's. */
+.object-card {
+  --mm-oc-w: min(calc((var(--mm-frame-w) - 2 * var(--mm-safe)) * 0.82), calc(var(--mm-frame-h) * 0.62));
+  --mm-oc-pad: var(--mm-space-5);
+  --mm-oc-print: var(--mm-color-surfaceInk);
+  --mm-oc-faint: var(--mm-surface-muted);
+  position: absolute;
+  inset: var(--mm-safe) calc(var(--mm-safe) + (var(--mm-frame-w) / 2 - var(--mm-safe)) * 0.08 * var(--mm-density)) calc(var(--mm-safe) * 2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.object-card [data-empty] { display: none; }
+.object-card .object-card__object[data-empty] { display: flex; visibility: visible; }
+.object-card__object {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-space-3);
+  box-sizing: border-box;
+  width: var(--mm-oc-w);
+  padding: var(--mm-oc-pad);
+  background: var(--mm-color-surface);
+  color: var(--mm-oc-print);
+  border-radius: var(--mm-radius-2);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+}
+.object-card__string, .object-card__hole, .object-card__rings { display: none; }
+.object-card__mark {
+  font-family: var(--mm-font-mono);
+  font-weight: var(--mm-weight-mono);
+  letter-spacing: var(--mm-tracking-mono);
+  font-size: var(--mm-size-body);
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--mm-oc-faint);
+}
+.object-card__rows { display: flex; flex-direction: column; gap: var(--mm-space-2); }
+.object-card__row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--mm-space-4);
+  font-family: var(--mm-font-mono);
+  font-weight: var(--mm-weight-mono);
+  letter-spacing: var(--mm-tracking-mono);
+  font-size: var(--mm-size-body);
+  line-height: 1.15;
+  color: var(--mm-oc-faint);
+}
+.object-card__total { display: flex; flex-direction: column; gap: var(--mm-space-2); }
+.object-card .object-card__label {
+  font-size: var(--mm-size-body);
+  line-height: 1.15;
+  color: var(--mm-oc-faint);
+}
+.object-card .object-card__figure {
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--mm-size-h1);
+  line-height: 1.05;
+  white-space: nowrap;
+  color: var(--mm-oc-print);
+}
+.object-card .object-card__note {
+  font-size: var(--mm-size-body);
+  line-height: 1.2;
+  text-wrap: pretty;
+  color: var(--mm-oc-faint);
+}
+.object-card__rows:not(:has([data-fx])) { display: none; }
+
+/* receipt (the default): a paper strip, torn along the bottom, a mono header, a dashed rule above the total */
+.object-card:not(:is([data-p-variant], :has([data-p-variant]))) .object-card__object,
+.object-card:is([data-p-variant="receipt"], :has([data-p-variant="receipt"])) .object-card__object {
+  --mm-tear: calc(var(--mm-space-3) * 0.9);
+  border-radius: 0;
+  padding-bottom: calc(var(--mm-oc-pad) + var(--mm-tear));
+  -webkit-mask:
+    linear-gradient(var(--mm-color-ink) 0 0) top / 100% calc(100% - var(--mm-tear) + 1px) no-repeat,
+    conic-gradient(from -45deg at bottom, transparent, var(--mm-color-ink) 1deg 89deg, transparent 90deg) bottom / calc(var(--mm-tear) * 2) var(--mm-tear) repeat-x;
+  mask:
+    linear-gradient(var(--mm-color-ink) 0 0) top / 100% calc(100% - var(--mm-tear) + 1px) no-repeat,
+    conic-gradient(from -45deg at bottom, transparent, var(--mm-color-ink) 1deg 89deg, transparent 90deg) bottom / calc(var(--mm-tear) * 2) var(--mm-tear) repeat-x;
+}
+.object-card:not(:is([data-p-variant], :has([data-p-variant]))) .object-card__mark,
+.object-card:is([data-p-variant="receipt"], :has([data-p-variant="receipt"])) .object-card__mark { text-align: center; }
+.object-card:not(:is([data-p-variant], :has([data-p-variant]))) .object-card__total,
+.object-card:is([data-p-variant="receipt"], :has([data-p-variant="receipt"])) .object-card__total {
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--mm-space-4);
+  padding-top: var(--mm-space-3);
+  border-top: calc(var(--mm-space-0) * 0.5) dashed var(--mm-oc-faint);
+}
+
+/* calendar: a page with a band across the top and two rings through it */
+.object-card:is([data-p-variant="calendar"], :has([data-p-variant="calendar"])) .object-card__object {
+  --mm-oc-pad: 0px;
+  align-items: stretch;
+  text-align: center;
+  padding-bottom: var(--mm-space-5);
+  box-shadow: 0 var(--mm-space-1) 0 color-mix(in srgb, var(--mm-color-ink) 14%, transparent);
+}
+.object-card:is([data-p-variant="calendar"], :has([data-p-variant="calendar"])) .object-card__mark {
+  padding: var(--mm-space-5) var(--mm-space-4) var(--mm-space-4);
+  border-radius: var(--mm-radius-2) var(--mm-radius-2) 0 0;
+  background: var(--mm-color-accent);
+  color: var(--mm-color-accentInk);
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: var(--mm-size-h2);
+}
+.object-card:is([data-p-variant="calendar"], :has([data-p-variant="calendar"])) :is(.object-card__rows, .object-card__total, .object-card__note) { padding-inline: var(--mm-space-5); }
+.object-card:is([data-p-variant="calendar"], :has([data-p-variant="calendar"])) .object-card__rings {
+  position: absolute;
+  top: calc(var(--mm-space-4) * -0.7);
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  padding-inline: 18%;
+}
+.object-card:is([data-p-variant="calendar"], :has([data-p-variant="calendar"])) .object-card__rings b {
+  width: var(--mm-space-3);
+  height: var(--mm-space-5);
+  border-radius: var(--mm-radius-4);
+  background: var(--mm-color-canvas);
+  box-shadow: inset 0 0 0 calc(var(--mm-space-0) * 0.75) var(--mm-color-ink);
+}
+
+/* tag: a shaped tag on a cord; the cord is part of the object, so a swing pivots on its top end */
+.object-card:is([data-p-variant="tag"], :has([data-p-variant="tag"])) .object-card__object {
+  --mm-oc-w: min(calc((var(--mm-frame-w) - 2 * var(--mm-safe)) * 0.62), calc(var(--mm-frame-h) * 0.46));
+  --mm-oc-cord: var(--mm-space-6);
+  align-items: center;
+  text-align: center;
+  background: none;
+  padding-top: calc(var(--mm-oc-cord) + var(--mm-space-6));
+}
+.object-card:is([data-p-variant="tag"], :has([data-p-variant="tag"])) .object-card__object::before {
+  content: "";
+  position: absolute;
+  inset: var(--mm-oc-cord) 0 0;
+  z-index: -1;
+  background: var(--mm-color-surface);
+  clip-path: polygon(20% 0, 80% 0, 100% 12%, 100% 100%, 0 100%, 0 12%);
+}
+.object-card:is([data-p-variant="tag"], :has([data-p-variant="tag"])) .object-card__string {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: block;
+  width: calc(var(--mm-space-0) * 0.75);
+  height: calc(var(--mm-oc-cord) + var(--mm-space-4));
+  background: var(--mm-color-ink);
+}
+.object-card:is([data-p-variant="tag"], :has([data-p-variant="tag"])) .object-card__hole {
+  position: absolute;
+  top: calc(var(--mm-oc-cord) + var(--mm-space-3));
+  left: 50%;
+  display: block;
+  width: var(--mm-space-4);
+  height: var(--mm-space-4);
+  margin-left: calc(var(--mm-space-4) * -0.5);
+  border-radius: var(--mm-radius-4);
+  background: var(--mm-color-canvas);
+  box-shadow: 0 0 0 calc(var(--mm-space-0) * 0.75) color-mix(in srgb, var(--mm-color-surfaceInk) 40%, transparent);
+}
+.object-card:is([data-p-variant="tag"], :has([data-p-variant="tag"])) .object-card__total { align-items: center; }
+
+/* stamp: a postage stamp, perforated on all four edges, an inner frame, a postmark across a corner */
+.object-card:is([data-p-variant="stamp"], :has([data-p-variant="stamp"])) .object-card__object {
+  --mm-perf: var(--mm-space-3);
+  --mm-pitch: calc(var(--mm-space-3) * 1.7);
+  --mm-oc-w: min(calc((var(--mm-frame-w) - 2 * var(--mm-safe)) * 0.7), calc(var(--mm-frame-h) * 0.5));
+  align-items: center;
+  text-align: center;
+  border-radius: 0;
+  padding: calc(var(--mm-perf) * 2 + var(--mm-space-3));
+  -webkit-mask:
+    radial-gradient(circle at 50% 0, transparent calc(var(--mm-perf) * 0.62), var(--mm-color-ink) calc(var(--mm-perf) * 0.62 + 0.5px)) top / var(--mm-pitch) var(--mm-perf) repeat-x,
+    radial-gradient(circle at 50% 100%, transparent calc(var(--mm-perf) * 0.62), var(--mm-color-ink) calc(var(--mm-perf) * 0.62 + 0.5px)) bottom / var(--mm-pitch) var(--mm-perf) repeat-x,
+    radial-gradient(circle at 0 50%, transparent calc(var(--mm-perf) * 0.62), var(--mm-color-ink) calc(var(--mm-perf) * 0.62 + 0.5px)) left / var(--mm-perf) var(--mm-pitch) repeat-y,
+    radial-gradient(circle at 100% 50%, transparent calc(var(--mm-perf) * 0.62), var(--mm-color-ink) calc(var(--mm-perf) * 0.62 + 0.5px)) right / var(--mm-perf) var(--mm-pitch) repeat-y,
+    linear-gradient(var(--mm-color-ink) 0 0) center / calc(100% - var(--mm-perf) * 2) calc(100% - var(--mm-perf) * 2) no-repeat;
+  mask:
+    radial-gradient(circle at 50% 0, transparent calc(var(--mm-perf) * 0.62), var(--mm-color-ink) calc(var(--mm-perf) * 0.62 + 0.5px)) top / var(--mm-pitch) var(--mm-perf) repeat-x,
+    radial-gradient(circle at 50% 100%, transparent calc(var(--mm-perf) * 0.62), var(--mm-color-ink) calc(var(--mm-perf) * 0.62 + 0.5px)) bottom / var(--mm-pitch) var(--mm-perf) repeat-x,
+    radial-gradient(circle at 0 50%, transparent calc(var(--mm-perf) * 0.62), var(--mm-color-ink) calc(var(--mm-perf) * 0.62 + 0.5px)) left / var(--mm-perf) var(--mm-pitch) repeat-y,
+    radial-gradient(circle at 100% 50%, transparent calc(var(--mm-perf) * 0.62), var(--mm-color-ink) calc(var(--mm-perf) * 0.62 + 0.5px)) right / var(--mm-perf) var(--mm-pitch) repeat-y,
+    linear-gradient(var(--mm-color-ink) 0 0) center / calc(100% - var(--mm-perf) * 2) calc(100% - var(--mm-perf) * 2) no-repeat;
+}
+.object-card:is([data-p-variant="stamp"], :has([data-p-variant="stamp"])) .object-card__object::after {
+  content: "";
+  position: absolute;
+  inset: calc(var(--mm-perf) * 1.5);
+  border: calc(var(--mm-space-0) * 0.75) solid color-mix(in srgb, var(--mm-color-surfaceInk) 45%, transparent);
+  pointer-events: none;
+}
+.object-card:is([data-p-variant="stamp"], :has([data-p-variant="stamp"])) .object-card__mark {
+  position: relative;
+  align-self: flex-end;
+  margin: var(--mm-space-1) var(--mm-space-3) 0 0;
+  color: var(--mm-accent-text);
+}
+.object-card:is([data-p-variant="stamp"], :has([data-p-variant="stamp"])) .object-card__mark::after {
+  content: "";
+  position: absolute;
+  inset: calc(var(--mm-space-2) * -1) calc(var(--mm-space-3) * -1);
+  border: calc(var(--mm-space-0) * 1) solid var(--mm-color-accent);
+  border-radius: var(--mm-radius-4);
+}
+.object-card:is([data-p-variant="stamp"], :has([data-p-variant="stamp"])) .object-card__total { align-items: center; }
+
+/* ledger: ruled lines of rows, and the figure's row as a band in the accent */
+.object-card:is([data-p-variant="ledger"], :has([data-p-variant="ledger"])) .object-card__object {
+  border-radius: var(--mm-radius-1);
+  gap: 0;
+  padding: var(--mm-space-4) 0 0;
+}
+.object-card:is([data-p-variant="ledger"], :has([data-p-variant="ledger"])) .object-card__mark { padding: 0 var(--mm-space-5) var(--mm-space-3); }
+.object-card:is([data-p-variant="ledger"], :has([data-p-variant="ledger"])) .object-card__rows { gap: 0; }
+.object-card:is([data-p-variant="ledger"], :has([data-p-variant="ledger"])) .object-card__row {
+  padding: var(--mm-space-3) var(--mm-space-5);
+  border-top: calc(var(--mm-space-0) * 0.5) solid color-mix(in srgb, var(--mm-color-surfaceInk) 22%, transparent);
+}
+.object-card:is([data-p-variant="ledger"], :has([data-p-variant="ledger"])) .object-card__total {
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--mm-space-4);
+  padding: var(--mm-space-4) var(--mm-space-5);
+  background: var(--mm-color-accent);
+  color: var(--mm-color-accentInk);
+}
+.object-card:is([data-p-variant="ledger"], :has([data-p-variant="ledger"])) .object-card__total :is(.object-card__label, .object-card__figure) { color: var(--mm-color-accentInk); }
+.object-card:is([data-p-variant="ledger"], :has([data-p-variant="ledger"])) .object-card__note { padding: var(--mm-space-3) var(--mm-space-5) var(--mm-space-4); }

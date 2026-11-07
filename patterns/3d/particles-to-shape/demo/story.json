@@ -1,0 +1,48 @@
+{
+  "id": "demo-3d-particles-to-shape",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: 3d/particles-to-shape",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/statement",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "3d/particles-to-shape",
+          "text": "Built to last",
+          "params": {
+            "dur": 2.4
+          }
+        },
+        {
+          "at": 2.8,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Out of a cloud, into the words"
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

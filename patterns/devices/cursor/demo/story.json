@@ -1,0 +1,53 @@
+{
+  "id": "demo-cursor",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: devices/cursor",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/caption-bar",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "devices/browser",
+          "text": "Overview"
+        },
+        {
+          "at": 0.8,
+          "slot": "overlay",
+          "fx": "devices/cursor",
+          "params": {
+            "path": "25,30 60,55 70,45"
+          }
+        },
+        {
+          "at": 1.6,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "The pointer shows where to look."
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

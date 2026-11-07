@@ -1,0 +1,75 @@
+/* emphasis/stamp: the stamp's look belongs to the slot (keyed on the data-emphasis the kit writes),
+   so it holds at every rest: level type in one palette role on a plate of the same role with a
+   heavy outer rule and a thin inner rule, tilted a few degrees and pitted. The pits are holes in a
+   mask, so they show the ground through and add no colour. The word is sized to its room: --mm-fit:
+   word asks the kit to size the slot at mount so its longest word fits (never larger, never under
+   the format's body floor; a word that would go under is broken in two at a hyphen first). The
+   emphasis module only plays the slam. */
+:where([data-emphasis="emphasis/stamp"]) { position: relative; }
+[data-emphasis="emphasis/stamp"][data-emphasis] {
+  --mm-stamp-ink: var(--mm-color-accent);
+  --mm-stamp-tilt: -7deg;
+  isolation: isolate;
+  box-sizing: border-box;
+  width: fit-content;
+  max-width: calc(100% - 2 * var(--mm-space-4));
+  padding: var(--mm-space-1) var(--mm-space-2);
+  margin: var(--mm-space-3) var(--mm-space-4);
+  color: var(--mm-stamp-ink);
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: calc(var(--mm-tracking-display) + 0.06em);
+  font-size: var(--mm-size-h1);
+  text-transform: uppercase;
+  line-height: 1.1;
+  overflow-wrap: normal;
+  hyphens: none;
+  --mm-fit: word;
+}
+[data-emphasis="emphasis/stamp"][data-p-size="h2"] { font-size: var(--mm-size-h2); }
+[data-emphasis="emphasis/stamp"][data-p-tone="ink"] { --mm-stamp-ink: var(--mm-color-ink); }
+[data-emphasis="emphasis/stamp"][data-p-tilt="right"] { --mm-stamp-tilt: 7deg; }
+[data-emphasis="emphasis/stamp"][data-p-tilt="none"] { --mm-stamp-tilt: 0deg; }
+[data-emphasis="emphasis/stamp"]::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: calc(var(--mm-space-3) * -1) calc(var(--mm-space-4) * -1);
+  border: 0.09em solid var(--mm-stamp-ink);
+  outline: 0.035em solid var(--mm-stamp-ink);
+  outline-offset: -0.2em;
+  border-radius: var(--mm-radius-1);
+  background: color-mix(in srgb, var(--mm-stamp-ink) 7%, transparent);
+  rotate: var(--mm-stamp-tilt);
+  pointer-events: none;
+  mask-composite: intersect;
+  mask-image:
+    radial-gradient(ellipse 40% 60% at 24% 70%, color-mix(in srgb, var(--mm-color-ink) 55%, transparent), var(--mm-color-ink) 100%),
+    radial-gradient(ellipse 30% 50% at 78% 28%, color-mix(in srgb, var(--mm-color-ink) 65%, transparent), var(--mm-color-ink) 100%),
+    radial-gradient(circle at 45.6% 15.5%, transparent calc(var(--mm-space-0) * 0.99), var(--mm-color-ink) calc(var(--mm-space-0) * 0.99 + 1px)),
+    radial-gradient(circle at 92.8% 69.3%, transparent calc(var(--mm-space-0) * 1.60), var(--mm-color-ink) calc(var(--mm-space-0) * 1.60 + 1px)),
+    radial-gradient(circle at 71.8% 73.6%, transparent calc(var(--mm-space-0) * 0.78), var(--mm-color-ink) calc(var(--mm-space-0) * 0.78 + 1px)),
+    radial-gradient(circle at 86.2% 93.2%, transparent calc(var(--mm-space-0) * 0.79), var(--mm-color-ink) calc(var(--mm-space-0) * 0.79 + 1px)),
+    radial-gradient(circle at 37.4% 5.8%, transparent calc(var(--mm-space-0) * 1.34), var(--mm-color-ink) calc(var(--mm-space-0) * 1.34 + 1px)),
+    radial-gradient(circle at 41.5% 14.8%, transparent calc(var(--mm-space-0) * 1.32), var(--mm-color-ink) calc(var(--mm-space-0) * 1.32 + 1px)),
+    radial-gradient(circle at 61.5% 64.0%, transparent calc(var(--mm-space-0) * 1.34), var(--mm-color-ink) calc(var(--mm-space-0) * 1.34 + 1px)),
+    radial-gradient(circle at 54.0% 73.6%, transparent calc(var(--mm-space-0) * 0.93), var(--mm-color-ink) calc(var(--mm-space-0) * 0.93 + 1px)),
+    radial-gradient(circle at 58.0% 98.6%, transparent calc(var(--mm-space-0) * 0.78), var(--mm-color-ink) calc(var(--mm-space-0) * 0.78 + 1px)),
+    radial-gradient(circle at 32.3% 13.9%, transparent calc(var(--mm-space-0) * 1.51), var(--mm-color-ink) calc(var(--mm-space-0) * 1.51 + 1px)),
+    radial-gradient(circle at 86.2% 30.0%, transparent calc(var(--mm-space-0) * 0.78), var(--mm-color-ink) calc(var(--mm-space-0) * 0.78 + 1px)),
+    radial-gradient(circle at 5.5% 80.6%, transparent calc(var(--mm-space-0) * 1.45), var(--mm-color-ink) calc(var(--mm-space-0) * 1.45 + 1px)),
+    radial-gradient(circle at 61.9% 85.2%, transparent calc(var(--mm-space-0) * 0.86), var(--mm-color-ink) calc(var(--mm-space-0) * 0.86 + 1px)),
+    radial-gradient(circle at 32.1% 92.9%, transparent calc(var(--mm-space-0) * 1.58), var(--mm-color-ink) calc(var(--mm-space-0) * 1.58 + 1px)),
+    radial-gradient(circle at 26.1% 70.9%, transparent calc(var(--mm-space-0) * 1.06), var(--mm-color-ink) calc(var(--mm-space-0) * 1.06 + 1px)),
+    radial-gradient(circle at 13.5% 10.4%, transparent calc(var(--mm-space-0) * 0.59), var(--mm-color-ink) calc(var(--mm-space-0) * 0.59 + 1px)),
+    radial-gradient(circle at 78.0% 65.8%, transparent calc(var(--mm-space-0) * 1.07), var(--mm-color-ink) calc(var(--mm-space-0) * 1.07 + 1px)),
+    radial-gradient(circle at 54.4% 65.7%, transparent calc(var(--mm-space-0) * 0.68), var(--mm-color-ink) calc(var(--mm-space-0) * 0.68 + 1px)),
+    radial-gradient(circle at 47.9% 67.2%, transparent calc(var(--mm-space-0) * 1.47), var(--mm-color-ink) calc(var(--mm-space-0) * 1.47 + 1px)),
+    radial-gradient(circle at 28.9% 87.1%, transparent calc(var(--mm-space-0) * 0.89), var(--mm-color-ink) calc(var(--mm-space-0) * 0.89 + 1px)),
+    radial-gradient(circle at 56.7% 43.3%, transparent calc(var(--mm-space-0) * 0.70), var(--mm-color-ink) calc(var(--mm-space-0) * 0.70 + 1px)),
+    radial-gradient(circle at 79.8% 45.3%, transparent calc(var(--mm-space-0) * 1.18), var(--mm-color-ink) calc(var(--mm-space-0) * 1.18 + 1px)),
+    radial-gradient(circle at 4.6% 39.3%, transparent calc(var(--mm-space-0) * 0.75), var(--mm-color-ink) calc(var(--mm-space-0) * 0.75 + 1px)),
+    radial-gradient(circle at 36.3% 94.6%, transparent calc(var(--mm-space-0) * 1.12), var(--mm-color-ink) calc(var(--mm-space-0) * 1.12 + 1px)),
+    radial-gradient(circle at 34.4% 65.0%, transparent calc(var(--mm-space-0) * 1.35), var(--mm-color-ink) calc(var(--mm-space-0) * 1.35 + 1px)),
+    radial-gradient(circle at 23.0% 0.1%, transparent calc(var(--mm-space-0) * 1.08), var(--mm-color-ink) calc(var(--mm-space-0) * 1.08 + 1px));
+}

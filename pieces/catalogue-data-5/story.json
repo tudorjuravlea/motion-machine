@@ -1,0 +1,303 @@
+{
+  "id": "catalogue-data-5",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Data, part 5 of 5",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Illustrative numbers for the catalogue",
+      "source": "catalogue demo numbers, not a claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Data",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Numbers that arrive as a mechanism. Part 5 of 5."
+        }
+      ],
+      "say": "Numbers that arrive as a mechanism.",
+      "duration": 4
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "unit-stack-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/unit-stack",
+          "value": 46,
+          "fact": "f1",
+          "params": {
+            "unit": 2,
+            "suffix": " t"
+          }
+        },
+        {
+          "at": 3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "unit-stack: A figure built from countable plates."
+        }
+      ],
+      "say": "unit-stack: A figure built from countable plates.",
+      "duration": 6.2
+    },
+    {
+      "id": "unit-stack-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/unit-stack",
+          "value": 46,
+          "fact": "f1",
+          "params": {
+            "unit": 5,
+            "suffix": " t"
+          }
+        },
+        {
+          "at": 3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "unit-stack: unit: 5. Bigger plates, fewer of them."
+        }
+      ],
+      "say": "unit: 5. Bigger plates, fewer of them.",
+      "duration": 6.2
+    },
+    {
+      "id": "venn-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/venn",
+          "params": {
+            "nodes": "Wanted|Possible",
+            "overlap": "Build it",
+            "dur": "hold"
+          }
+        },
+        {
+          "at": 3.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "venn: Circles draw together; the overlap lands last."
+        }
+      ],
+      "say": "venn: Circles draw together; the overlap lands last.",
+      "duration": 6.6
+    },
+    {
+      "id": "venn-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/venn",
+          "params": {
+            "nodes": "Design|Code|Words",
+            "overlap": "Product",
+            "dur": "hold"
+          }
+        },
+        {
+          "at": 3.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "venn: Three sets, the middle labelled."
+        }
+      ],
+      "say": "Three sets, the middle labelled.",
+      "duration": 6.6
+    },
+    {
+      "id": "versus-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/versus",
+          "fact": "f1",
+          "params": {
+            "values": "42,87",
+            "labels": "Before,After",
+            "suffix": " min"
+          }
+        },
+        {
+          "at": 1.8,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "versus: Two figures across a seam; the after leads."
+        }
+      ],
+      "say": "versus: Two figures across a seam; the after leads.",
+      "duration": 5
+    },
+    {
+      "id": "versus-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/versus",
+          "fact": "f1",
+          "params": {
+            "values": "42,87",
+            "labels": "Before,After",
+            "suffix": " min",
+            "axis": "down",
+            "recess": 0.5
+          }
+        },
+        {
+          "at": 1.8,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "versus: axis: down, recess: 0.5."
+        }
+      ],
+      "say": "axis: down, recess: 0.5.",
+      "duration": 5
+    },
+    {
+      "id": "waterfall-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/waterfall",
+          "value": 128,
+          "fact": "f1",
+          "params": {
+            "values": "100,45,-30,25,-12",
+            "labels": "Start,New,Lost,Upsell,Churn",
+            "prefix": "$",
+            "suffix": "K",
+            "size": "body"
+          }
+        },
+        {
+          "at": 1.8,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "waterfall: Signed changes walk from a start to a total."
+        }
+      ],
+      "say": "waterfall: Signed changes walk from a start to a total.",
+      "duration": 5.4
+    },
+    {
+      "id": "waterfall-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/waterfall",
+          "value": 128,
+          "fact": "f1",
+          "params": {
+            "values": "100,45,-30,25,-12",
+            "labels": "Start,New,Lost,Upsell,Churn",
+            "prefix": "$",
+            "suffix": "K",
+            "size": "body",
+            "tone": "ink",
+            "glow": false
+          }
+        },
+        {
+          "at": 1.8,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "waterfall: tone: ink, glow: false. A quiet total."
+        }
+      ],
+      "say": "tone: ink, glow: false. A quiet total.",
+      "duration": 5.4
+    }
+  ],
+  "share": "Data (5/5): unit-stack, venn, versus, waterfall. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

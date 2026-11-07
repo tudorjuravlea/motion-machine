@@ -1,0 +1,70 @@
+{
+  "id": "demo-screen-pointer",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "1x1",
+    "9x16"
+  ],
+  "title": "Demo: screen/pointer",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/caption-bar",
+      "duration": 10.4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "devices/browser",
+          "asset": "assets/plan/",
+          "params": {
+            "size": "large"
+          },
+          "screen": [
+            {
+              "do": "screen/play",
+              "at": 0.3,
+              "d": 9.5
+            },
+            {
+              "do": "screen/zoom-to",
+              "at": 0.3,
+              "d": 9.5,
+              "params": {
+                "mode": "auto",
+                "depth": "fit",
+                "blur": 0.3
+              }
+            },
+            {
+              "do": "screen/pointer",
+              "at": 0.3,
+              "d": 9.5
+            }
+          ]
+        },
+        {
+          "at": 1.0,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "A cursor with weight, drawn from the session."
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

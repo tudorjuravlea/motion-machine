@@ -1,0 +1,35 @@
+/* text/verdict: the stamp's own look, keyed on the data-emphasis that pattern.js sets on the
+   winner's name from the landing (emphasis/stamp's stylesheet, imported, not copied), and the row the
+   names sit in. Every name has the box the stamp gives its word (the same padding and margin), so the
+   landing moves nothing. */
+@import url("../../emphasis/stamp/pattern.css");
+
+.mm-verdict {
+  display: flex;
+  flex-direction: column;
+  align-items: var(--mm-align);
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--mm-space-3);
+  max-width: 100%;
+}
+[data-format="16x9"] .mm-verdict { flex-direction: row; align-items: center; }
+.mm-verdict__name {
+  position: relative;
+  box-sizing: border-box;
+  display: block;
+  width: fit-content;
+  max-width: calc(100% - 2 * var(--mm-space-4));
+  padding: var(--mm-space-1) var(--mm-space-2);
+  margin: var(--mm-space-3) var(--mm-space-4);
+  color: var(--mm-color-ink);
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: calc(var(--mm-tracking-display) + 0.06em);
+  font-size: var(--mm-size-h2);
+  text-transform: uppercase;
+  line-height: 1.1;
+  overflow-wrap: normal;
+  hyphens: none;
+}
+.mm-verdict__name[data-p-size="h1"] { font-size: var(--mm-size-h1); }

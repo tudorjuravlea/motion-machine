@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>kit-smoke composition</title>
+</head>
+<body>
+  <!-- A story from this folder (?story=layouts|opening)
+       over a shipped preset (?preset=editorial|kinetic|calm-product) and the real pattern library.
+       ?align=, ?scale=, ?density= replace one composition field; ?composition=none drops the block
+       (a style written without a composition block). Font sources are rewritten to resolve from this page. -->
+  <script type="module">
+    import { mount } from '../../../runtime/kit/kit.js';
+    const q = new URLSearchParams(location.search);
+    const load = (f) => fetch(new URL(f, import.meta.url)).then((r) => r.json());
+    const [story, style] = await Promise.all([load(`${q.get('story') || 'layouts'}.json`), load(`../../../styles/presets/${q.get('preset') || 'editorial'}.json`)]);
+    for (const face of Object.values(style.type)) for (const f of face.files) f.src = `../../../${f.src}`;
+    if (q.get('composition') === 'none') delete style.composition;
+    if (q.has('align')) style.composition.align = q.get('align');
+    if (q.has('scale')) style.composition.headlineScale = Number(q.get('scale'));
+    if (q.has('density')) style.composition.density = q.get('density');
+    await mount({ story, style, patternsBase: new URL('../../../patterns/', import.meta.url) });
+  </script>
+</body>
+</html>

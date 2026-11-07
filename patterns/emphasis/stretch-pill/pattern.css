@@ -1,0 +1,9 @@
+/* emphasis/stretch-pill: the pill sits behind the slot's text, in the accent at low strength so the
+   ink keeps its contrast. */
+.mm-stretch-pill {
+  position: absolute;
+  z-index: -1;
+  border-radius: calc(var(--mm-frame-h) * 0.1);   /* a full pill at any height */
+  background: color-mix(in srgb, var(--mm-color-accent) var(--mm-pill-strength), transparent);
+  pointer-events: none;
+}

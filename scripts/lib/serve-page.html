@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>mm serve</title>
+<link rel="icon" href="data:,">
+<style>
+  :root { color-scheme: dark; --bg: #14141a; --bar: #1d1d26; --ink: #d9d9e3; --dim: #8a8a9a; --on: #e8b04a; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace; overflow: hidden; }
+  #bar { display: flex; gap: 10px; align-items: center; padding: 8px 12px; background: var(--bar); height: 20px; }
+  #bar button { font: inherit; color: var(--ink); background: transparent; border: 1px solid #3a3a48; border-radius: 4px; padding: 2px 8px; cursor: pointer; }
+  #bar button[aria-pressed="true"] { border-color: var(--on); color: var(--on); }
+  #scrub { flex: 1; }
+  #readout { min-width: 14ch; text-align: right; color: var(--dim); }
+  #hint { color: var(--dim); }
+  #stage { position: absolute; top: 36px; left: 0; right: 0; bottom: 0; overflow: hidden; }
+  #frame { position: absolute; left: 50%; top: 50%; border: 0; background: #000; transform-origin: 0 0; }
+</style>
+</head>
+<body>
+<div id="bar">
+  <strong id="title"></strong>
+  <span id="formats"></span>
+  <button id="play" type="button">play</button>
+  <input id="scrub" type="range" min="0" value="0" step="any" aria-label="time">
+  <span id="readout"></span>
+  <span id="hint"></span>
+</div>
+<div id="stage"><iframe id="frame" title="piece"></iframe></div>
+<script>
+// The play clock lives here, in the server page, never in the piece (SPEC §2.9): the piece only
+// answers seek(t). Film: Space plays or pauses, Left/Right step a second (Shift: one frame at 30 fps),
+// Home restarts, L toggles the loop. Deck: Space, Right, PageDown, Enter advance with the press
+// animated from here (the kit hands the press over through its cancellable `mm:press` event);
+// Left, PageUp, Backspace land on the previous rest.
+const SIZES = { '9x16': [1080, 1920], '1x1': [1080, 1080], '4x5': [1080, 1350], '16x9': [1920, 1080] };
+const q = new URLSearchParams(location.search);
+// the piece is a repo-relative folder path: plain segments only, so `?piece=` can never name another host
+const wanted = (q.get('piece') || '').replace(/^\/+|\/+$/g, '');
+const piece = /^[A-Za-z0-9._-]+(\/[A-Za-z0-9._-]+)*$/.test(wanted) && !wanted.split('/').some((seg) => /^\.{1,2}$/.test(seg)) ? wanted : '';
+const $ = (id) => document.getElementById(id);
+const frame = $('frame'), scrub = $('scrub'), play = $('play'), readout = $('readout');
+let story = null, format = q.get('format'), win = null, mm = null;
+let t = 0, playing = false, looping = true, last = 0, anim = null;
+
+async function boot() {
+  if (!piece) { document.body.textContent = 'mm serve: no piece (use ?piece=pieces/<id>)'; return; }
+  story = await (await fetch(`/${piece}/story.json`, { cache: 'no-store' })).json();
+  format = format || story.formats[0];
+  $('title').textContent = story.id;
+  $('formats').replaceChildren(...story.formats.map((f) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = f; b.setAttribute('aria-pressed', String(f === format));
+    b.onclick = () => { const u = new URL(location.href); u.searchParams.set('format', f); u.searchParams.delete('t'); u.searchParams.delete('press'); location.href = u; };
+    return b;
+  }));
+  const [w, h] = SIZES[format] || SIZES['16x9'];
+  const deck = story.kind === 'deck';
+  frame.style.width = w + 'px'; frame.style.height = h + 'px';
+  const inner = new URLSearchParams({ format });
+  if (q.has('t')) inner.set('t', q.get('t'));
+  if (q.has('press')) inner.set('press', q.get('press'));
+  frame.src = `/${piece}/index.html?${inner}${deck && !q.has('press') && location.hash ? location.hash : ''}`;
+  fit(w, h);
+  addEventListener('resize', () => fit(w, h));
+  frame.addEventListener('load', async () => {
+    win = frame.contentWindow;
+    for (let i = 0; i < 600 && !(win.mm && win.mm.ready !== undefined); i++) await new Promise((r) => setTimeout(r, 50));
+    if (!win.mm || win.mm.ready === false) { readout.textContent = 'piece failed to mount'; return; }
+    mm = win.mm;
+    scrub.max = deck ? mm.presses : mm.duration;
+    scrub.step = deck ? '0.01' : String(1 / 30);
+    $('hint').textContent = deck ? 'space/→ next · ← back' : 'space play · ←/→ ±1s · L loop';
+    if (deck) {
+      t = mm.position();
+      win.addEventListener('mm:press', (e) => { e.preventDefault(); pressTo(e.detail.from, e.detail.to); });
+    } else {
+      t = q.has('t') ? Number(q.get('t')) : 0;
+      playing = !q.has('t');
+      last = performance.now();
+      win.addEventListener('keydown', key);   // the film has no keys of its own: forward from the frame
+    }
+    frame.focus();
+    requestAnimationFrame(tick);
+  });
+}
+
+function fit(w, h) {
+  const s = Math.min($('stage').clientWidth / w, $('stage').clientHeight / h);
+  frame.style.transform = `scale(${s}) translate(-50%, -50%)`;
+}
+
+function show() {
+  scrub.value = t;
+  readout.textContent = story.kind === 'deck' ? `press ${(+t).toFixed(2)} / ${mm.presses}` : `${(+t).toFixed(2)}s / ${mm.duration.toFixed(2)}s`;
+  play.textContent = playing ? 'pause' : 'play';
+}
+
+function tick(now) {
+  if (story.kind === 'film' && playing) {
+    t += (now - last) / 1000;
+    if (t >= mm.duration) { if (looping) t %= mm.duration; else { t = mm.duration; playing = false; } }
+    mm.seek(t);
+  } else if (story.kind === 'deck' && !anim) {
+    t = mm.position();
+  }
+  last = now;
+  show();
+  requestAnimationFrame(tick);
+}
+
+// Deck: animate one press from `from` to `to` over the press's measured length, then land on the rest.
+function pressTo(from, to) {
+  const len = (mm.schedule.pressLengths || [])[to] || 0;
+  const start = performance.now();
+  let set = from;
+  anim = true;
+  const step = (now) => {
+    if (mm.position() !== set) { anim = null; return; }       // someone else navigated: stop animating
+    const u = len > 0 ? Math.min(1, (now - start) / 1000 / len) : 1;
+    if (u >= 1) { anim = null; mm.goto(to); return; }
+    set = from + (to - from) * u;
+    mm.seek(set);
+    requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+function key(e) {
+  if (e.altKey || e.ctrlKey || e.metaKey || !mm) return;
+  if (story.kind === 'deck') {
+    if ([' ', 'ArrowRight', 'PageDown', 'Enter'].includes(e.key)) { e.preventDefault(); mm.next(); }
+    else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); mm.prev(); }
+    return;
+  }
+  const step = e.shiftKey ? 1 / 30 : 1;
+  if (e.key === ' ') { e.preventDefault(); playing = !playing; last = performance.now(); }
+  else if (e.key === 'ArrowRight') { t = Math.min(mm.duration, t + step); playing = false; mm.seek(t); }
+  else if (e.key === 'ArrowLeft') { t = Math.max(0, t - step); playing = false; mm.seek(t); }
+  else if (e.key === 'Home') { t = 0; mm.seek(t); }
+  else if (e.key.toLowerCase() === 'l') { looping = !looping; }
+}
+addEventListener('keydown', key);
+scrub.addEventListener('input', () => { if (!mm) return; t = Number(scrub.value); playing = false; anim = null; mm.seek(t); show(); });
+play.addEventListener('click', () => { if (story.kind === 'film') { playing = !playing; last = performance.now(); } else mm.next(); frame.focus(); });
+boot();
+</script>
+</body>
+</html>

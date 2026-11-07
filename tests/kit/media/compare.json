@@ -1,0 +1,124 @@
+{
+  "id": "kit-compare",
+  "kind": "film",
+  "formats": [
+    "9x16"
+  ],
+  "title": "Kit compare",
+  "scenes": [
+    {
+      "id": "flat",
+      "layout": "layouts/caption-bar",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/compare-a.svg",
+          "params": {
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/compare",
+              "at": 1,
+              "d": 4,
+              "params": {
+                "to": "assets/compare-b.svg",
+                "stop": 0.5,
+                "move": 0.25
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "deep",
+      "layout": "layouts/caption-bar",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/compare-a.svg",
+          "params": {
+            "move": "still",
+            "status": "false"
+          },
+          "screen": [
+            {
+              "do": "screen/compare",
+              "at": 1,
+              "d": 4,
+              "params": {
+                "to": "assets/compare-b.svg",
+                "stop": 0.5,
+                "move": 0.25
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "back",
+      "layout": "layouts/caption-bar",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/compare-a.svg",
+          "params": {
+            "move": "still",
+            "status": "false"
+          },
+          "screen": [
+            {
+              "do": "screen/swap",
+              "at": 0.5,
+              "params": {
+                "to": "assets/compare-b.svg",
+                "how": "cut"
+              }
+            },
+            {
+              "do": "screen/compare",
+              "at": 1,
+              "d": 4,
+              "params": {
+                "to": "assets/compare-a.svg",
+                "stop": 0.5,
+                "move": 0.25
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "language": "en",
+  "facts": []
+}

@@ -1,0 +1,191 @@
+{
+  "id": "demo-ui",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16"
+  ],
+  "title": "Demo: a product film drawn entirely from authored UI",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "14 reviews closed, a figure in this fictional demo",
+      "source": "invented for the demo"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "layout": "layouts/statement",
+      "duration": 2.8,
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Know before you ship.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Know before you ship.",
+      "position": "opening"
+    },
+    {
+      "id": "ask",
+      "layout": "layouts/stage",
+      "duration": 9,
+      "move": null,
+      "beats": [
+        {
+          "at": 0.15,
+          "slot": "stage",
+          "fx": "devices/browser",
+          "params": {
+            "size": "large"
+          },
+          "screen": [
+            {
+              "do": "ui/answer",
+              "at": 0.4,
+              "params": {
+                "ask": "When can we ship?",
+                "answer": "Thursday, once the two open reviews are done.",
+                "sources": "Release plan|Review queue"
+              }
+            }
+          ]
+        }
+      ],
+      "say": "Ask the plan a plain question and get a plain answer.",
+      "position": "topic",
+      "cut": "transitions/hard-cut",
+      "variants": {
+        "9x16": {
+          "beats": [
+            {
+              "at": 0.15,
+              "slot": "stage",
+              "fx": "devices/phone",
+              "params": {
+                "size": "large"
+              },
+              "screen": [
+                {
+                  "do": "ui/answer",
+                  "at": 0.4,
+                  "params": {
+                    "ask": "When can we ship?",
+                    "answer": "Thursday, once the two open reviews are done.",
+                    "sources": "Release plan|Review queue"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "together",
+      "layout": "layouts/stage",
+      "duration": 6.4,
+      "move": null,
+      "beats": [
+        {
+          "at": 0.08,
+          "slot": "stage",
+          "fx": "ui/presence",
+          "params": {
+            "title": "Release plan",
+            "line": "Two reviews left",
+            "typed": "Done by Wednesday",
+            "one": "Design",
+            "two": "Product"
+          }
+        }
+      ],
+      "say": "Your whole team works in the same plan.",
+      "position": "related",
+      "cut": "transitions/hard-cut"
+    },
+    {
+      "id": "fix",
+      "layout": "layouts/stage",
+      "duration": 8.2,
+      "move": null,
+      "beats": [
+        {
+          "at": 0.08,
+          "slot": "stage",
+          "fx": "ui/form-fix",
+          "params": {
+            "label": "Invite code",
+            "wrong": "BETA2062",
+            "error": "That code has expired.",
+            "right": "BETA2026",
+            "button": "Join",
+            "done": "Joined"
+          }
+        }
+      ],
+      "say": "And when something is wrong, it says so, right there.",
+      "position": "climax",
+      "cut": "transitions/hard-cut"
+    },
+    {
+      "id": "whole",
+      "layout": "layouts/stage",
+      "duration": 5.2,
+      "move": null,
+      "beats": [
+        {
+          "at": 0.08,
+          "slot": "stage",
+          "fx": "ui/bento",
+          "params": {
+            "tiles": "figure:Reviews closed:14|bars:This week:4,7,5,9|list:Next up:Review,Ship,Retro|chip:Plan:Thursday"
+          },
+          "fact": "f1"
+        }
+      ],
+      "say": "The whole plan, in one place.",
+      "position": "related",
+      "cut": "transitions/hard-cut"
+    },
+    {
+      "id": "end",
+      "layout": "layouts/endcard",
+      "duration": 3.8,
+      "move": null,
+      "beats": [
+        {
+          "at": 0.55,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Quillmere"
+        },
+        {
+          "at": 1.05,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "quillmere.example"
+        }
+      ],
+      "say": "Quillmere.",
+      "position": "outro"
+    }
+  ],
+  "cta": {
+    "text": "Quillmere",
+    "url": "quillmere.example"
+  }
+}

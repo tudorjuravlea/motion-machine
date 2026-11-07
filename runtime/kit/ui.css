@@ -1,0 +1,91 @@
+/* The shared look of authored product UI, palette roles and steps only. Sizes are in em on the body
+   role, so one panel reads at its format's floor and scales with it. */
+.mm-ui {
+  position: relative;
+  box-sizing: border-box;
+  width: 30em;
+  max-width: calc(100% - 2 * var(--mm-safe));
+  padding: var(--mm-space-5);
+  border: 1px solid var(--mm-color-line);
+  border-radius: var(--mm-radius-3);
+  background: var(--mm-color-surface);
+  color: var(--mm-color-surfaceInk);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: calc(var(--mm-size-body) * 1.3);
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+}
+/* On a device's screen the story fills the glass: no card of its own, type at the format's body size. */
+.mm-screen-fx > .mm-ui {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  border: 0;
+  border-radius: 0;
+  font-size: var(--mm-size-body);
+}
+[data-device="phone"] .mm-screen-fx > .mm-ui { padding-block: 2.6em var(--mm-space-5); }   /* clear of the status bar and the cutout */
+.mm-ui__bar {
+  height: 0.62em;
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-line);
+}
+.mm-ui__cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+.mm-ui__cursor path {
+  fill: var(--mm-color-ink);
+  stroke: var(--mm-color-canvas);
+  stroke-width: 1.6;
+  paint-order: stroke;
+}
+/* The annotation family: one line, one meaning. Notes and nodes keep clear of the route; only the ends carry colour weight. */
+.mm-ui__lines { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.mm-ui__line { fill: none; stroke: var(--mm-color-accent); stroke-width: 0.07em; stroke-linecap: butt; }
+.mm-ui__line--lead { stroke: var(--mm-surface-muted); }
+.mm-ui__line--reply { stroke-dasharray: 0.4em 0.28em; }
+.mm-ui__line--stream { stroke-width: 0.11em; stroke-linecap: round; stroke-dasharray: 0 0.42em; }
+.mm-ui__end { fill: var(--mm-color-accent); }
+.mm-ui__muted { color: var(--mm-surface-muted); }
+.mm-ui__chip {
+  display: inline-block;
+  padding: 0.15em 0.6em;
+  border: 1px solid color-mix(in srgb, var(--mm-surface-muted) 45%, transparent);
+  border-radius: var(--mm-radius-4);
+  white-space: nowrap;
+}
+.mm-ui__button {
+  display: inline-grid;
+  place-items: center;
+  padding: 0.3em 0.9em;
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-accent);
+  color: var(--mm-color-accentInk);
+  font-weight: var(--mm-weight-display);
+  white-space: nowrap;
+}
+.mm-ui__button > * { grid-area: 1 / 1; }
+.mm-ui__field {
+  position: relative;
+  min-height: 1.25em;
+  padding: 0.45em 0.7em;
+  border: 1px solid color-mix(in srgb, var(--mm-surface-muted) 45%, transparent);
+  border-radius: var(--mm-radius-2);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.mm-ui__caret {
+  display: inline-block;
+  width: 0.08em;
+  height: 1.05em;
+  margin-left: 0.04em;
+  vertical-align: text-bottom;
+  background: var(--mm-color-accent);
+}

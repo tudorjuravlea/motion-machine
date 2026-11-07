@@ -1,0 +1,13 @@
+{
+  "kind": "sequence",
+  "fps": 30,
+  "frames": 60,
+  "w": 240,
+  "h": 520,
+  "duration": 2,
+  "source": {
+    "file": "clip-2s.mp4",
+    "sha1": "8d77cc2122ca093c14ea1d3beaa09376c3cc9acd"
+  },
+  "prepared": "2026-10-18T21:00:30.307Z"
+}

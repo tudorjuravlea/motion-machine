@@ -1,0 +1,64 @@
+{
+  "id": "demo-emphasis-roulette",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "emphasis/roulette demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/list-reveal",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Ship day?"
+        },
+        {
+          "at": 0.5,
+          "slot": "item-1",
+          "fx": "entrances/fade",
+          "text": "Tuesday"
+        },
+        {
+          "at": 0.6,
+          "slot": "item-2",
+          "fx": "entrances/fade",
+          "text": "Wednesday"
+        },
+        {
+          "at": 0.7,
+          "slot": "item-3",
+          "fx": "entrances/fade",
+          "text": "Thursday",
+          "emphasis": "emphasis/roulette",
+          "params": {
+            "instant": true,
+            "emphasis": {
+              "passes": 2
+            }
+          }
+        }
+      ],
+      "say": "A single scene that shows emphasis/roulette."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

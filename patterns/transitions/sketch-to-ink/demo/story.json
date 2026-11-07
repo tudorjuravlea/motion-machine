@@ -1,0 +1,103 @@
+{
+  "id": "demo-transitions-sketch-to-ink",
+  "title": "transitions/sketch-to-ink demo",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  },
+  "scenes": [
+    {
+      "id": "wire",
+      "layout": "layouts/bento-3",
+      "duration": 4.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Sketch it first"
+        },
+        {
+          "at": 0.9,
+          "slot": "tile-1",
+          "fx": "entrances/sketch",
+          "text": "Plan the week"
+        },
+        {
+          "at": 1.4,
+          "slot": "tile-2",
+          "fx": "entrances/sketch",
+          "text": "Track the work"
+        },
+        {
+          "at": 1.9,
+          "slot": "tile-3",
+          "fx": "entrances/sketch",
+          "text": "Ship it"
+        }
+      ],
+      "say": "The wireframe."
+    },
+    {
+      "id": "ink",
+      "layout": "layouts/bento-3",
+      "duration": 4,
+      "cut": "transitions/sketch-to-ink",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Sketch it first",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-1",
+          "fx": "entrances/fade",
+          "text": "Plan the week",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-2",
+          "fx": "entrances/fade",
+          "text": "Track the work",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-3",
+          "fx": "entrances/fade",
+          "text": "Ship it",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "The same layout, finished, arriving through transitions/sketch-to-ink."
+    }
+  ]
+}

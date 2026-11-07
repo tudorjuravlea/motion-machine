@@ -1,0 +1,102 @@
+{
+  "id": "catalogue-layouts-4",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Layouts, part 4 of 4",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "1",
+      "source": "catalogue layout demo, not a claim"
+    },
+    {
+      "id": "f2",
+      "text": "9",
+      "source": "catalogue layout demo, not a claim"
+    },
+    {
+      "id": "f11",
+      "text": "1284",
+      "source": "catalogue layout demo, not a claim"
+    },
+    {
+      "id": "f12",
+      "text": "48",
+      "source": "catalogue layout demo, not a claim"
+    },
+    {
+      "id": "f13",
+      "text": "23",
+      "source": "catalogue layout demo, not a claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "footage": {
+    "asset": "assets/shape/"
+  },
+  "scenes": [
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "talking-cutout",
+      "layout": "layouts/talking-cutout",
+      "duration": 2.6,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "backdrop",
+          "fx": "entrances/rise",
+          "text": "SHAPE",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "caption",
+          "fx": "entrances/rise",
+          "text": "talking-cutout: a speaker before huge words."
+        }
+      ],
+      "id": "talking-cutout-a"
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "talking-cutout",
+      "layout": "layouts/talking-cutout",
+      "duration": 2.6,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "backdrop",
+          "fx": "entrances/rise",
+          "text": "MOVES ON",
+          "params": {
+            "lines": 2
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Words stand behind."
+        }
+      ],
+      "id": "talking-cutout-b"
+    }
+  ],
+  "share": "Layouts (4/4): talking-cutout. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

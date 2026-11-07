@@ -1,0 +1,65 @@
+{
+  "id": "kit-desktop",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16"
+  ],
+  "title": "Kit desktop",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "scenes": [
+    {
+      "id": "desk",
+      "layout": "layouts/desktop",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "desk",
+          "fx": "entrances/fade",
+          "params": {
+            "wall": "accent",
+            "instant": true
+          },
+          "screen": [
+            {
+              "do": "screen/island",
+              "at": 0.6,
+              "d": 1,
+              "params": {
+                "w": 0.4,
+                "h": 0.08,
+                "text": "Now playing"
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.1,
+          "slot": "menu",
+          "fx": "entrances/fade",
+          "text": "Finder   File   Edit   View"
+        },
+        {
+          "at": 0.3,
+          "slot": "caption",
+          "fx": "entrances/rise",
+          "text": "Your voice lives here."
+        }
+      ],
+      "say": ""
+    }
+  ]
+}

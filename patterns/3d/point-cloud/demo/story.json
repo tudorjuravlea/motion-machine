@@ -1,0 +1,49 @@
+{
+  "id": "demo-3d-point-cloud",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: 3d/point-cloud",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/caption-bar",
+      "duration": 6.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "3d/point-cloud",
+          "asset": "assets/bottle.png",
+          "params": {
+            "dur": 3.6,
+            "colors": "source"
+          }
+        },
+        {
+          "at": 4.0,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Every point finds its place."
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

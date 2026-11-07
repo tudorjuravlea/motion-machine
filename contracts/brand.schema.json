@@ -1,0 +1,409 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:motion-machine:contracts:brand",
+  "title": "Motion Machine brand half (SPEC §3): the look",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "version", "fictional", "color", "type", "scale", "space", "radius", "composition", "bans", "allow"],
+  "properties": {
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+    "version": { "type": "integer", "minimum": 1 },
+    "fictional": { "type": "boolean", "description": "true for every shipped preset (AXIOM 3); false for a captured or hand-written real brand" },
+    "source": { "type": "string", "description": "where a captured brand came from; never a URL that the piece would load" },
+    "color": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["canvas", "ink", "muted", "surface", "line", "accent", "accentInk"],
+      "properties": {
+        "canvas":    { "$ref": "#/$defs/hex" },
+        "ink":       { "$ref": "#/$defs/hex" },
+        "muted":     { "$ref": "#/$defs/hex" },
+        "surface":   { "$ref": "#/$defs/hex" },
+        "line":      { "$ref": "#/$defs/hex" },
+        "accent":    { "$ref": "#/$defs/hex" },
+        "accentInk": { "$ref": "#/$defs/hex" },
+        "surfaceInk": { "$ref": "#/$defs/hex", "description": "text on a surface (cards, panels, tiles, caption bars, device screens); ink when absent" },
+        "alert": { "$ref": "#/$defs/hex", "description": "the mark of a fault in authored product UI, never text; the accent when absent" }
+      }
+    },
+    "type": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["display", "text", "mono"],
+      "properties": {
+        "display": { "$ref": "#/$defs/face" },
+        "text":    { "$ref": "#/$defs/face" },
+        "mono":    { "$ref": "#/$defs/face" }
+      }
+    },
+    "scale": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["display", "h1", "h2", "body", "caption", "micro"],
+      "properties": {
+        "display": { "type": "number", "exclusiveMinimum": 0, "maximum": 2 },
+        "h1":      { "type": "number", "exclusiveMinimum": 0, "maximum": 2 },
+        "h2":      { "type": "number", "exclusiveMinimum": 0, "maximum": 2 },
+        "body":    { "type": "number", "exclusiveMinimum": 0, "maximum": 2 },
+        "caption": { "type": "number", "exclusiveMinimum": 0, "maximum": 2 },
+        "micro":   { "type": "number", "exclusiveMinimum": 0, "maximum": 2 }
+      }
+    },
+    "space":  { "type": "array", "minItems": 5, "maxItems": 9, "items": { "type": "number", "minimum": 0 } },
+    "radius": { "type": "array", "minItems": 3, "maxItems": 7, "items": { "type": "number", "minimum": 0 } },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["align", "headlineScale", "density"],
+      "description": "the grid and type hierarchy are part of the brand. Layouts take their default alignment and headline size from these; a beat's align param still overrides",
+      "properties": {
+        "align":         { "enum": ["left", "center"], "description": "default alignment of every layout (the kit exposes it as --mm-align: start or center)" },
+        "headlineScale": { "type": "number", "minimum": 0.8, "maximum": 1.4, "description": "multiplier on every layout headline (--mm-headline-scale); 1 is the reference hierarchy" },
+        "density":       { "enum": ["airy", "compact"], "description": "spacing between a layout's blocks and its side indent (--mm-density: airy 1, compact 0.6)" },
+        "accentText":    { "type": "boolean", "description": "false for a brand that never colours text: every pattern that would tint text with the accent uses ink (--mm-accent-text); accent fills are unchanged. Default true" }
+      }
+    },
+    "devices": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "how device frames (phone, laptop, browser) are finished; optional, ink by default",
+      "properties": {
+        "finish": { "enum": ["graphite", "silver", "ink", "canvas"], "description": "every finish is a palette role: ink, canvas (the surface), graphite (the darkest role), silver (the lightest)" }
+      }
+    },
+    "ground": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "what sits behind every scene; optional, a flat canvas by default. `kind` picks one: `blobs` (the default: blurred shapes in the brand's own colours, added to the palette G-BRAND checks, placed and sized by shares of the frame; needs `blobs` and `blur`), `bloom` (a radial light rising from the bottom centre, with an optional dot grid), `graph-paper` (a fine and a heavy grid that drift and loop, with an optional scan band) or `dots` (the dot grid alone). The three newer kinds draw only in palette roles, with sizes as shares of the frame, and need no other field: every block is optional and reads its defaults. The mark is a picture centred and scaled past the frame, faint, on any kind",
+      "allOf": [
+        { "if": { "properties": { "kind": { "const": "blobs" } } },
+          "then": { "required": ["blobs", "blur"], "properties": { "blobs": true, "blur": true, "bloom": false, "dots": false, "grid": false } },
+          "else": { "properties": { "blobs": false, "blur": false } } },
+        { "if": { "required": ["kind"], "properties": { "kind": { "const": "bloom" } } }, "then": { "properties": { "grid": false } } },
+        { "if": { "required": ["kind"], "properties": { "kind": { "const": "graph-paper" } } }, "then": { "properties": { "bloom": false, "dots": false } } },
+        { "if": { "required": ["kind"], "properties": { "kind": { "const": "dots" } } }, "then": { "properties": { "bloom": false, "grid": false } } }
+      ],
+      "properties": {
+        "kind": { "enum": ["blobs", "bloom", "graph-paper", "dots"], "description": "the ground's kind; blobs when absent, so every ground written before kinds existed stays valid" },
+        "bloom": {
+          "type": "object", "additionalProperties": false,
+          "description": "kind bloom: a radial light rising from the bottom centre. On each scene it scales from 0.9 to 1 with the enter ease over the scene's first beat (at least a standard duration); a deck draws it full size",
+          "properties": {
+            "role":     { "$ref": "#/$defs/role", "description": "the palette role the light is made of; accent by default" },
+            "width":    { "type": "number", "exclusiveMinimum": 0, "maximum": 3, "description": "the light's width, share of the frame width; 1.2 by default" },
+            "height":   { "type": "number", "exclusiveMinimum": 0, "maximum": 3, "description": "how high the light reaches above the bottom edge, share of the frame height; 0.75 by default" },
+            "strength": { "type": "number", "minimum": 0, "maximum": 1, "description": "the share of the role at the light's centre; 0.5 by default. Text over a strong light must still clear W-CONTRAST" }
+          }
+        },
+        "dots": {
+          "type": "object", "additionalProperties": false,
+          "description": "the dot grid: faint dots on a regular grid. Alone on kind dots, optional on kind bloom",
+          "properties": {
+            "role":     { "$ref": "#/$defs/role", "description": "line by default" },
+            "spacing":  { "type": "number", "minimum": 0.004, "maximum": 0.2, "description": "distance between dots, share of the frame width, rounded to whole pixels; 0.025 by default" },
+            "size":     { "type": "number", "exclusiveMinimum": 0, "maximum": 0.6, "description": "a dot's diameter, share of the spacing; 0.12 by default" },
+            "strength": { "type": "number", "minimum": 0, "maximum": 1, "description": "the share of the role in a dot; 0.6 by default" }
+          }
+        },
+        "grid": {
+          "type": "object", "additionalProperties": false,
+          "description": "kind graph-paper: a fine grid and a heavier one every Nth line. It wanders out and back (a cosine yoyo) and, with `scan`, a soft band sweeps down the frame once per `cycle`; the motion repeats exactly every `cycle` seconds, so a film whose length is a whole number of cycles closes its loop. A deck draws it still",
+          "properties": {
+            "role":     { "$ref": "#/$defs/role", "description": "line by default" },
+            "spacing":  { "type": "number", "minimum": 0.004, "maximum": 0.2, "description": "a fine cell, share of the frame width, rounded to whole pixels; 0.02 by default" },
+            "every":    { "type": "integer", "minimum": 2, "maximum": 12, "description": "fine cells per heavy line; 5 by default" },
+            "weight":   { "type": "number", "minimum": 0.0002, "maximum": 0.004, "description": "the fine line's width, share of the frame width (at least 1 px; the heavy line is twice it); 0.0006 by default" },
+            "strength": { "type": "number", "minimum": 0, "maximum": 1, "description": "the heavy line's share of the role (the fine line takes 45 % of it); 0.7 by default" },
+            "drift":    { "type": "number", "minimum": 0, "maximum": 0.1, "description": "how far the grid wanders, share of the frame width; 0.012 by default, 0 for a still grid" },
+            "cycle":    { "type": "number", "minimum": 1, "maximum": 60, "description": "seconds for one drift and one scan; 8 by default" },
+            "scan": {
+              "type": "object", "additionalProperties": false,
+              "description": "a soft band that sweeps once per cycle, from above the frame to below it",
+              "properties": {
+                "role":     { "$ref": "#/$defs/role", "description": "accent by default" },
+                "size":     { "type": "number", "exclusiveMinimum": 0, "maximum": 1, "description": "the band's height, share of the frame height; 0.18 by default" },
+                "strength": { "type": "number", "minimum": 0, "maximum": 1, "description": "the share of the role at the band's middle; 0.1 by default" }
+              }
+            }
+          }
+        },
+        "blobs": {
+          "type": "array", "minItems": 1, "maxItems": 8,
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["color", "x", "y", "w", "h", "alpha"],
+            "properties": {
+              "color": { "$ref": "#/$defs/hex" },
+              "x":     { "type": "number", "minimum": -1, "maximum": 2, "description": "left edge, share of the frame width" },
+              "y":     { "type": "number", "minimum": -1, "maximum": 2, "description": "top edge, share of the frame height" },
+              "w":     { "type": "number", "exclusiveMinimum": 0, "maximum": 3, "description": "width, share of the frame width" },
+              "h":     { "type": "number", "exclusiveMinimum": 0, "maximum": 3, "description": "height, share of the frame height" },
+              "alpha": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          }
+        },
+        "blur": { "type": "number", "minimum": 0, "maximum": 0.5, "description": "blur radius, share of the frame width" },
+        "mark": {
+          "type": "object", "additionalProperties": false, "required": ["src", "width", "alpha"],
+          "properties": {
+            "src":   { "type": "string", "pattern": "^(?!https?:)(?!//)[^\\u0000-\\u001f\"\\\\<>]+\\.(svg|png|webp)$", "description": "relative path from the piece page; never a URL (SPEC §2.6)" },
+            "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 4, "description": "width, share of the frame width; above 1 the mark is clipped by the frame" },
+            "alpha": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        }
+      }
+    },
+    "finish": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "the surface look, each strength 0 to 1 and optional. Overlays above the scene; whatever can lie over text stays at or under 0.08 opacity",
+      "properties": {
+        "grain":      { "type": "number", "minimum": 0, "maximum": 1, "description": "film grain in ink, seeded from t at 12 Hz; like halftone it darkens the background a little, which W-CONTRAST measures" },
+        "halftone":   { "type": "number", "minimum": 0, "maximum": 1, "description": "a fine dot screen in ink" },
+        "vignette":   { "type": "number", "minimum": 0, "maximum": 1, "description": "the corners darken toward ink; inside the safe area it stays at or under 0.08" },
+        "edgeFringe": { "type": "number", "minimum": 0, "maximum": 1, "description": "a soft accent glow along the frame's edge, outside the safe area" },
+        "paperEdge":  { "type": "number", "minimum": 0, "maximum": 1, "description": "a rough surface-coloured border inside the frame's edge, within the safe margin; it is a frame border, so W-BAN warns unless the brand lists `frame-borders` in `allow`" },
+        "misregister": { "type": "number", "minimum": 0, "maximum": 1, "description": "a print plate off register: the scene's shapes printed again in accent under themselves, offset down and to one side (at 1, 0.4 % of the frame width, the side seeded per scene); every emphasis kicks the plate and it settles before the rest. Stepped every 2/30 s; never over text" },
+        "paper":      { "type": "number", "minimum": 0, "maximum": 1, "description": "a paper fibre in ink, static (it belongs to the stock, not the film), at no more than 0.08 opacity" },
+        "chroma":     { "type": "number", "minimum": 0, "maximum": 1, "description": "a lens's colour fringe, drawn in palette roles only: two ghosts of the picture, one pulled out toward the frame's rim and one in toward its middle, laid in two roles over bare canvas beside every shape; nothing at the middle and most at the rim, where at 1 the ghosts lie 0.4 % of the frame's short side apart. A filter on the whole frame, so a cut carries it" },
+        "chromaRoles": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "enum": ["accent", "ink", "muted", "surface", "line", "accentInk", "canvas"] }, "description": "the two palette roles of the lens fringe, the ghost pulled toward the rim first; accent and muted by default" },
+        "scanlines":  { "type": "number", "minimum": 0, "maximum": 1, "description": "a CRT line screen in ink, one line every few pixels, still. Lies over text, so it shares the 0.08 with grain, halftone and paper" },
+        "bloom":      { "type": "number", "minimum": 0, "maximum": 1, "description": "a soft glow of whatever is lighter than the canvas, blurred and added to the frame at most 0.08 at 1. A style whose ground is its lightest role has little to glow" },
+        "grainRate":  { "type": "number", "minimum": 0, "maximum": 60, "description": "how many times a second the grain changes: 12 by default, 24 for film, 0 holds one grain still" },
+        "look":       { "enum": ["neutral", "warm-print", "cool-print", "faded", "high-contrast"], "description": "a named film-like tone curve and tint, written from the palette roles and a curve and never a literal colour: warm-print and cool-print tint the shadows and highlights toward the palette's warm or cool role (a palette with none gets the curve alone), faded lifts the blacks, high-contrast bends an S. Never more than 0.08 from the plain frame" },
+        "lookAmount": { "type": "number", "minimum": 0, "maximum": 1, "description": "how much of the look is worn: 1 by default, 0 none" }
+      }
+    },
+    "surface": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "the glass look of a card, set once for the brand and worn by any card-like pattern whose param `surface` is `glass` (a beat, or the brand's own default in `patterns`). Optional, and every field optional: a missing one reads the default. Colours are palette roles: the tint is the surface role at partial strength, the hairline the line role, the top highlight and the shine the lighter of ink and canvas, the shadow the darker. A card keeps its text colour, so keep the tint high enough for it to read over the ground (W-CONTRAST measures the pixels under it)",
+      "properties": {
+        "tint":       { "type": "number", "minimum": 0, "maximum": 1, "description": "the share of the surface role in the fill at its strongest corner (a diagonal of four stops around it); 0.5 by default" },
+        "blur":       { "type": "number", "minimum": 0, "maximum": 0.1, "description": "the blur of what lies behind the card, share of the frame width; 0.012 by default (about 23 px in 16x9)" },
+        "saturate":   { "type": "number", "minimum": 0.5, "maximum": 2, "description": "the behind-the-card saturation; 1 by default. Above 1 it moves the ground's colours off the palette, which G-BRAND can notice" },
+        "border":     { "type": "number", "minimum": 0, "maximum": 1, "description": "the hairline's share of the line role; 0.8 by default" },
+        "highlight":  { "type": "number", "minimum": 0, "maximum": 1, "description": "the inner top edge's share of the lighter of ink and canvas; 0.3 by default" },
+        "shadow":     { "type": "number", "minimum": 0, "maximum": 1, "description": "the soft drop shadow's share of the darker of ink and canvas; 0.45 by default" },
+        "shine":      { "type": "number", "minimum": 0, "maximum": 1, "description": "the shine bar that sweeps once across a card as it arrives, its share of the lighter of ink and canvas; 0.22 by default, 0 for none" },
+        "angle":      { "type": "number", "minimum": 0, "maximum": 45, "description": "the shine bar's lean from the vertical, degrees; 14 by default" },
+        "shineWidth": { "type": "number", "exclusiveMinimum": 0, "maximum": 0.5, "description": "the shine bar's width, share of the card's width; 0.07 by default" }
+      }
+    },
+    "patterns": { "type": "object", "description": "the brand's own defaults for any pattern's params, by pattern (group/name): between the pattern's defaults and a beat's params, so a brand can be made more on brand without touching a story", "propertyNames": { "pattern": "^[a-z0-9-]+/[a-z0-9-]+$" }, "additionalProperties": { "type": "object", "additionalProperties": { "type": ["string", "number", "boolean"] } } },
+    "imagery": { "type": "object", "additionalProperties": false, "required": ["style"], "description": "how generated pictures and clips look (mm gen): added to every image and video prompt with the palette", "properties": {
+      "style": { "type": "string", "minLength": 1, "maxLength": 400 },
+      "mood": { "type": "string", "maxLength": 200 },
+      "avoid": { "type": "string", "maxLength": 300, "description": "what generated pictures must not show; sent as the negative prompt where a model takes one" },
+      "references": { "type": "array", "maxItems": 8, "items": { "type": "string", "minLength": 1 }, "description": "pictures beside the brand file that generators take as style references" },
+      "tone": { "enum": ["none", "palette", "duotone"], "description": "after generation: none keeps the picture, palette pulls its colours toward the brand's, duotone maps it from ink to canvas" } } },
+    "voice": { "type": "object", "additionalProperties": false, "required": ["provider", "id"], "description": "the brand's narration voice (mm gen voice)", "properties": {
+      "provider": { "enum": ["elevenlabs", "higgsfield"] },
+      "id": { "type": "string", "minLength": 1, "description": "the provider's voice id" },
+      "model": { "type": "string" },
+      "language": { "type": "string", "pattern": "^[a-z]{2}(-[A-Z]{2})?$" },
+      "stability": { "type": "number", "minimum": 0, "maximum": 1 },
+      "similarity": { "type": "number", "minimum": 0, "maximum": 1 },
+      "style": { "type": "number", "minimum": 0, "maximum": 1 },
+      "speed": { "type": "number", "minimum": 0.7, "maximum": 1.2 },
+      "lexicon": { "type": "object", "maxProperties": 200, "propertyNames": { "minLength": 1, "maxLength": 60 }, "additionalProperties": { "type": "string", "minLength": 1, "maxLength": 120 }, "description": "how this brand's words are said: each key is a word as written, each value how a voice should say it (a respelling such as ZAH-lo); mm gen voice sends the value in the word's place and keeps the word as shown, and W-SAY does not flag a word listed here" } } },
+    "sound": { "type": "object", "additionalProperties": false, "description": "the brand's sound, chosen once: it wins over the motion half's `sound.profile` when the two halves are composed", "properties": {
+      "profile": { "type": "string", "minLength": 1, "maxLength": 200, "description": "a sound profile (contracts/sound-profile.schema.json): a name in styles/sound/ or a path to a profile file; the cues the style plays are voiced in it and measured against it" },
+      "licences": { "type": "array", "minItems": 1, "maxItems": 3, "uniqueItems": true, "items": { "enum": ["cc0", "pdm", "by"] }, "description": "the licences found sounds may carry (`mm sound find`, `mm sound fetch`, W-SAMPLE-LICENSE): Openverse codes cc0, pdm (public domain), by (CC BY 2.0 to 4.0); default all three. Wins over the motion half's `sound.licences` when the two halves are composed" } } },
+    "music": { "type": "object", "additionalProperties": false, "required": ["style"], "description": "the brand's music (mm gen music); its tempo is the motion half's sound.bpm", "properties": {
+      "style": { "type": "string", "minLength": 1, "maxLength": 300 },
+      "avoid": { "type": "string", "maxLength": 200 } } },
+    "mascot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["box", "ground", "views"],
+      "description": "the brand's character, drawn and acted by runtime/kit/rig.js. Every length is in the character's own unit (u), in SVG axes (y grows downward); the rig scales u to the slot. Parts are filled from palette roles only, so G-BRAND holds by construction",
+      "properties": {
+        "box":    { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number", "exclusiveMinimum": 0, "maximum": 100 }, "description": "width and height of the whole character, legs included, in u" },
+        "ground": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number", "minimum": -100, "maximum": 100 }, "description": "the point between the feet, in the views' coordinates: squash, lean and hops pivot here and the shadow sits under it" },
+        "views": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["front"],
+          "description": "drawn key views, each facing right (facing: left mirrors them). A missing 3/4 or side view is made from the front by moving the face toward the heading and narrowing it; a missing back is the front with no face",
+          "properties": {
+            "front":        { "$ref": "#/$defs/mascotView" },
+            "threeQuarter": { "$ref": "#/$defs/mascotView" },
+            "side":         { "$ref": "#/$defs/mascotView" },
+            "back":         { "$ref": "#/$defs/mascotView" }
+          }
+        },
+        "parts": {
+          "type": "object",
+          "maxProperties": 32,
+          "propertyNames": { "pattern": "^[a-z][a-zA-Z0-9-]{0,31}$" },
+          "additionalProperties": { "$ref": "#/$defs/extraPart" },
+          "description": "the colour of each named part: a role, or a blend of two roles. Defaults: body accent; shade the body's role with 28 % of the darkest role; light the body's role with 35 % of the lightest role; outline, eyes and mouth ink (on a screen face's plate: the lightest role); glint surface; blush the body's role with 45 % of the lightest role; limbs the body's colour; shadow the darkest role; plate the darkest role. Any other name is an extra part (ears, a tail, an antenna, a hat, wings, a held prop): path data with an anchor, a layer, a swing and a colour",
+          "properties": {
+            "body":    { "$ref": "#/$defs/partColor" },
+            "shade":   { "$ref": "#/$defs/partColor" },
+            "light":   { "$ref": "#/$defs/partColor" },
+            "outline": { "$ref": "#/$defs/partColor" },
+            "eyes":    { "$ref": "#/$defs/partColor" },
+            "glint":   { "$ref": "#/$defs/partColor" },
+            "mouth":   { "$ref": "#/$defs/partColor" },
+            "blush":   { "$ref": "#/$defs/partColor" },
+            "limbs":   { "$ref": "#/$defs/partColor" },
+            "shadow":  { "$ref": "#/$defs/partColor" },
+            "plate":   { "$ref": "#/$defs/partColor" }
+          }
+        },
+        "float": { "type": "number", "minimum": 0, "maximum": 20, "description": "how far the character hovers above its ground point at rest, in u: a floating character (no legs) is drawn standing on the ground in its views and lifted by this much, bobbing gently; its shadow stays on the ground. Default 0" },
+        "cast": {
+          "type": "object",
+          "maxProperties": 8,
+          "propertyNames": { "pattern": "^[a-z][a-z0-9-]{0,31}$" },
+          "additionalProperties": { "$ref": "#/$defs/castMember" },
+          "description": "further characters of the brand, by name, each a whole character with the same keys as the mascot (no cast of its own); a beat names one with the character patterns' `who` param"
+        },
+        "outline": { "type": "number", "minimum": 0, "maximum": 3, "description": "outline weight factor; 0 draws no outline. Default 1" },
+        "moods": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "description": "the moods the brand lets its character show; a mood outside the list is drawn as the first one. Default: all eight",
+          "items": { "enum": ["calm", "happy", "excited", "sad", "surprised", "worried", "sleepy", "proud"] }
+        },
+        "faces": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "the eye shapes and mouths the brand allows; a mood whose shape is not allowed wears the first allowed one. Default: all",
+          "properties": {
+            "eyes":   { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["dot", "wide", "arc", "droop", "half", "slant", "line"] } },
+            "mouths": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["none", "smile", "grin", "open", "flat", "frown", "wobble"] } }
+          }
+        }
+      }
+    },
+    "ask": {
+      "type": "array",
+      "description": "fields a capture could not measure (fonts from stills, for example), to be confirmed by hand; W-ASK warns while any remain",
+      "items": { "type": "string", "pattern": "^(color|type)\\.[a-zA-Z]+$" },
+      "uniqueItems": true
+    },
+    "bans":   { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/ban" } },
+    "allow":  { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/ban" }, "description": "bans this brand lifts, by name" }
+  },
+  "$defs": {
+    "hex": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+    "role": { "enum": ["canvas", "ink", "muted", "surface", "line", "accent", "accentInk"] },
+    "partColor": {
+      "oneOf": [
+        { "$ref": "#/$defs/role" },
+        {
+          "type": "object", "additionalProperties": false, "required": ["role", "mix", "share"],
+          "description": "an sRGB blend of two roles: `share` of `mix` into `role`",
+          "properties": { "role": { "$ref": "#/$defs/role" }, "mix": { "$ref": "#/$defs/role" }, "share": { "type": "number", "minimum": 0, "maximum": 1 } }
+        }
+      ]
+    },
+    "path": { "type": "string", "minLength": 1, "maxLength": 4000, "pattern": "^(?:[MmLlHhVvCcSsQqTtAaZz,\\s]|[+-]?(?:\\d{1,3}(?!\\d)(?:\\.\\d*(?!\\d)|(?!\\.))|\\.\\d+(?!\\d)))+$", "description": "SVG path data in u, nothing else: every number under 1000 and without an exponent. The rig also refuses a view whose drawing reaches more than 20 % of the box past the box about the ground point (the front then takes the rig's default figure, another view is made from the front), and clips what it draws to its slot" },
+    "mascotView": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["body"],
+      "properties": {
+        "body":  { "$ref": "#/$defs/path", "description": "the silhouette, filled in the body colour and outlined last" },
+        "strip": { "$ref": "#/$defs/path", "description": "a side face drawn in the shade colour over the body (a block seen at 3/4)" },
+        "seam":  { "$ref": "#/$defs/path", "description": "a line in the outline colour (the edge between front and side)" },
+        "face": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["cx", "cy", "gap", "size"],
+          "description": "the face frame; null for a view with no face (the back)",
+          "properties": {
+            "cx":    { "type": "number", "minimum": -100, "maximum": 100, "description": "centre of the eye line" },
+            "cy":    { "type": "number", "minimum": -100, "maximum": 100 },
+            "gap":   { "type": "number", "minimum": 0, "maximum": 50, "description": "distance between the eye centres" },
+            "size":  { "type": "number", "exclusiveMinimum": 0, "maximum": 20, "description": "eye height" },
+            "fw":    { "type": "number", "exclusiveMinimum": 0, "maximum": 1, "description": "foreshortening of the face across: 1 front, about 0.75 at 3/4, 0.55 side. Default 1" },
+            "mouth": { "type": "number", "minimum": -20, "maximum": 20, "description": "the mouth's distance below the eye line. Default 1.3 eye heights" },
+            "sides": { "enum": ["both", "near"], "description": "both eyes, or only the near one (a side view). Default both" },
+            "plate": {
+              "type": "object", "additionalProperties": false, "required": ["w", "h"],
+              "description": "a screen face: a rounded plate behind the eyes and the mouth, filled in the plate colour; the eyes and the mouth then default to the lightest role",
+              "properties": {
+                "w": { "type": "number", "exclusiveMinimum": 0, "maximum": 50 },
+                "h": { "type": "number", "exclusiveMinimum": 0, "maximum": 50 },
+                "r": { "type": "number", "minimum": 0, "maximum": 25, "description": "corner radius. Default a fifth of the smaller side" },
+                "y": { "type": "number", "minimum": -20, "maximum": 20, "description": "the plate centre's distance below the eye line. Default half the mouth's" }
+              }
+            }
+          }
+        },
+        "limbs": {
+          "type": "array", "maxItems": 8,
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["kind", "x", "y", "width"],
+            "properties": {
+              "kind":   { "enum": ["arm", "leg"] },
+              "x":      { "type": "number", "minimum": -100, "maximum": 100, "description": "the anchor: an arm's shoulder, a leg's hip" },
+              "y":      { "type": "number", "minimum": -100, "maximum": 100 },
+              "length": { "type": "number", "exclusiveMinimum": 0, "maximum": 50, "description": "an arm's length; a leg always reaches the ground" },
+              "width":  { "type": "number", "exclusiveMinimum": 0, "maximum": 20 },
+              "side":   { "enum": ["left", "right"], "description": "which way an arm points and which pose angle drives it; legs on the same side step together. Default by the sign of x" },
+              "layer":  { "enum": ["back", "front"], "description": "drawn behind the body or in front of it. Default back" },
+              "far":    { "type": "boolean", "description": "a far limb is drawn in the shade colour" }
+            }
+          }
+        }
+      }
+    },
+    "extraPart": {
+      "type": "object", "additionalProperties": false, "required": ["d", "anchor"],
+      "description": "an extra part of the character, in the views' coordinates (u): drawn in every view (narrowed with a view made from the front) unless `views` names some",
+      "properties": {
+        "d":      { "$ref": "#/$defs/path", "description": "its shape, filled in its colour and outlined (or stroked, with `stroke`)" },
+        "anchor": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number", "minimum": -100, "maximum": 100 }, "description": "where it joins the body: it swings about this point" },
+        "tip":    { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number", "minimum": -100, "maximum": 100 }, "description": "the point whose lag sets the swing; parts that share an anchor and a tip turn as one. Default the centre of its drawing" },
+        "layer":  { "enum": ["back", "front"], "description": "drawn behind the body or in front of it (under the face). Default front" },
+        "swing":  { "type": "number", "minimum": 0, "maximum": 2, "description": "follow-through: how much it lags and swings about its anchor as the body hops, lands and takes. 0 holds it rigid. Default 0.5" },
+        "color":  { "$ref": "#/$defs/partColor", "description": "default the body's colour" },
+        "stroke": { "type": "number", "exclusiveMinimum": 0, "maximum": 5, "description": "draw it as a line of this width (an antenna's stalk, whiskers) instead of a filled shape" },
+        "views":  { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["front", "threeQuarter", "side", "back"] }, "description": "the views that show it. Default all" }
+      }
+    },
+    "castMember": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["box", "ground", "views"],
+      "properties": {
+        "box":     { "$ref": "#/properties/mascot/properties/box" },
+        "ground":  { "$ref": "#/properties/mascot/properties/ground" },
+        "views":   { "$ref": "#/properties/mascot/properties/views" },
+        "parts":   { "$ref": "#/properties/mascot/properties/parts" },
+        "float":   { "$ref": "#/properties/mascot/properties/float" },
+        "outline": { "$ref": "#/properties/mascot/properties/outline" },
+        "moods":   { "$ref": "#/properties/mascot/properties/moods" },
+        "faces":   { "$ref": "#/properties/mascot/properties/faces" }
+      }
+    },
+    "ban": {
+      "type": "string",
+      "enum": ["centered-title-on-gradient", "fade-only", "corner-labels", "frame-borders", "glow-on-ui", "particle-burst", "gradient-text", "accent-stripe", "pure-black-white", "identical-card-grid"]
+    },
+    "face": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family", "files", "weight", "tracking"],
+      "properties": {
+        "family":   { "type": "string", "minLength": 1 },
+        "files":    {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["src", "weight", "unicodeRange"],
+            "properties": {
+              "src":          { "type": "string", "pattern": "^(?!https?:)(?!//)[^\\u0000-\\u001f\"\\\\<>]+\\.(woff2|woff|ttf|otf)$", "description": "relative path inside the repo or the piece, or from a style file to a font in a brand folder (a folder name may hold spaces); never a URL (SPEC §2.6)" },
+              "weight":       { "type": "integer", "minimum": 100, "maximum": 900 },
+              "unicodeRange": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "weight":   { "type": "integer", "minimum": 100, "maximum": 900 },
+        "tracking": { "type": "number", "minimum": -0.2, "maximum": 0.5, "description": "em" }
+      }
+    }
+  }
+}

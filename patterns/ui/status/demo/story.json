@@ -1,0 +1,45 @@
+{
+  "id": "demo-ui-status",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "ui/status demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "shot",
+      "layout": "layouts/stage",
+      "duration": 8.9,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "ui/status",
+          "params": {
+            "title": "Deploys",
+            "from": "Checking",
+            "to": "Passed",
+            "rows": "Build 41|Build 40|Build 39",
+            "added": "Build 42"
+          }
+        }
+      ],
+      "say": "A status flips on its pill, and a new row lands above it."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

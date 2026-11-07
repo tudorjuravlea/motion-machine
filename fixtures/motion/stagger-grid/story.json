@@ -1,0 +1,153 @@
+{
+  "id": "stagger-grid",
+  "kind": "film",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Stagger grid",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "centre",
+      "layout": "layouts/statement",
+      "duration": 3.4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "One | Two | Three | Four | Five | Six | Seven | Eight | Nine | Ten | Eleven | Twelve",
+          "params": {
+            "each": true,
+            "stagger": {
+              "each": 0.09,
+              "grid": [
+                4,
+                3
+              ],
+              "from": "center"
+            }
+          }
+        },
+        {
+          "at": 0.2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "from the centre of a 4 by 3 grid"
+        }
+      ],
+      "say": "from the centre of a 4 by 3 grid"
+    },
+    {
+      "id": "edges",
+      "layout": "layouts/statement",
+      "duration": 3.4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "One | Two | Three | Four | Five | Six | Seven | Eight | Nine | Ten | Eleven | Twelve",
+          "params": {
+            "each": true,
+            "stagger": {
+              "each": 0.09,
+              "grid": [
+                4,
+                3
+              ],
+              "from": "edges",
+              "ease": "sine.in"
+            }
+          }
+        },
+        {
+          "at": 0.2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "from the edges in, eased"
+        }
+      ],
+      "say": "from the edges in, eased"
+    },
+    {
+      "id": "random",
+      "layout": "layouts/statement",
+      "duration": 3.4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "One | Two | Three | Four | Five | Six | Seven | Eight | Nine | Ten | Eleven | Twelve",
+          "params": {
+            "each": true,
+            "spring": "strike",
+            "stagger": {
+              "amount": 0.5,
+              "from": "random",
+              "seed": 4
+            }
+          }
+        },
+        {
+          "at": 0.2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "a seeded random order, a strike spring"
+        }
+      ],
+      "say": "a seeded random order, a strike spring"
+    },
+    {
+      "id": "axis",
+      "layout": "layouts/statement",
+      "duration": 3.4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "One | Two | Three | Four | Five | Six | Seven | Eight | Nine | Ten | Eleven | Twelve",
+          "params": {
+            "each": true,
+            "stagger": {
+              "each": 0.12,
+              "grid": [
+                4,
+                3
+              ],
+              "axis": "x",
+              "reverse": true
+            }
+          }
+        },
+        {
+          "at": 0.2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "along x, reversed"
+        }
+      ],
+      "say": "along x, reversed"
+    }
+  ],
+  "cta": {
+    "text": "Stagger v2",
+    "url": "example.org"
+  }
+}

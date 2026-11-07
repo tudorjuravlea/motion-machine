@@ -1,0 +1,63 @@
+/* text/code: a block of code on a character grid. The module places every token by column (ch) and row
+   (line heights) and writes the colour of its role; the look is here. --c-* are the four palette roles a
+   token may take: text on the plate takes the brand's surface ink, on the canvas the ink. */
+.mm-code {
+  --c-ink: var(--mm-color-surfaceInk);
+  --c-muted: var(--mm-surface-muted);
+  --c-accent: var(--mm-accent-text);
+  --c-line: var(--mm-color-line);
+  box-sizing: border-box;
+  display: inline-block;
+  max-width: 100%;
+  text-align: left;
+  white-space: pre;
+  font-family: var(--mm-font-mono);
+  font-weight: var(--mm-weight-mono);
+  letter-spacing: var(--mm-tracking-mono);
+  font-kerning: none;
+  font-variant-ligatures: none;
+  color: var(--c-ink);
+}
+.mm-code--panel {
+  padding: var(--mm-space-3);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-surface);
+  border: calc(min(var(--mm-frame-w), var(--mm-frame-h)) * 0.003) solid var(--mm-color-line);
+}
+.mm-code--bare {
+  --c-ink: var(--mm-color-ink);
+  --c-muted: var(--mm-color-muted);
+}
+.mm-code__body { position: relative; }
+.mm-code__t {
+  position: absolute;
+  height: var(--mm-code-lh);
+  line-height: var(--mm-code-lh);
+  white-space: pre;
+}
+.mm-code__probe { position: absolute; visibility: hidden; white-space: pre; }
+/* a call-out: the exact range tinted in the accent, a rule under it, its label in the foot of the block */
+.mm-code__box {
+  position: absolute;
+  box-sizing: border-box;
+  height: var(--mm-code-lh);
+  border-radius: var(--mm-radius-1);
+  background: color-mix(in srgb, var(--c-accent) 16%, transparent);
+  border-bottom: calc(min(var(--mm-frame-w), var(--mm-frame-h)) * 0.003) solid var(--c-accent);
+}
+.mm-code__foot {
+  display: flex;
+  height: var(--mm-code-lh);
+  margin-top: var(--mm-space-2);
+  align-items: center;
+}
+.mm-code__label {
+  padding: 0 var(--mm-space-2);
+  border-radius: var(--mm-radius-1);
+  background: var(--mm-color-accent);
+  color: var(--mm-color-accentInk);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  line-height: var(--mm-code-lh);
+}

@@ -1,0 +1,38 @@
+{
+  "kind": "edit",
+  "fps": 30,
+  "frames": 117,
+  "duration": 3.9,
+  "source": {
+    "file": "shape.mp4",
+    "sha1": "d394ccacf4a2b85e289e423572fdb68bc4fdbee0"
+  },
+  "levels": {
+    "floorDb": -56.995,
+    "speechDb": -17.348,
+    "quietDb": -41.136
+  },
+  "settings": {
+    "maxPause": 0.5,
+    "lead": 0.1,
+    "tail": 0.25,
+    "join": 0.03
+  },
+  "picture": [
+    {
+      "start": 0,
+      "from": 3,
+      "length": 117
+    }
+  ],
+  "cuts": [],
+  "onSound": [],
+  "note": "no pause longer than 0.5 s inside the speech: nothing to cut (the quiet before and after it is trimmed)",
+  "voice": {
+    "file": "voice.wav",
+    "target": -14,
+    "lufs": -18.5,
+    "gainDb": 4.5,
+    "peakLimited": false
+  }
+}

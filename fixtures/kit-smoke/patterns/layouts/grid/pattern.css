@@ -1,0 +1,7 @@
+/* Fixture stub: a grid with a cascade slot, a layout-level data-each list, a device and a tag. */
+.grid { position: absolute; inset: var(--mm-safe); display: grid; grid-template-columns: 1fr 1fr; gap: var(--mm-space-4); align-content: center; }
+.grid__headline { grid-column: 1 / -1; margin: 0; font-family: var(--mm-font-display); font-size: var(--mm-size-h2); color: var(--mm-color-ink); }
+.grid__sub, .grid__list, .grid__tag { margin: 0; font-size: var(--mm-size-body); color: var(--mm-color-muted); }
+.grid__list { display: flex; flex-wrap: wrap; gap: var(--mm-space-2); }
+.grid__steps { display: flex; gap: var(--mm-space-2); margin: 0; padding: 0; list-style: none; }
+.grid__steps > li { width: var(--mm-space-5); height: var(--mm-space-5); background: var(--mm-color-accent); }

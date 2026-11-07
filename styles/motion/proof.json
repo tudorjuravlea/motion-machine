@@ -1,0 +1,135 @@
+{
+  "name": "proof",
+  "version": 1,
+  "motion": {
+    "durations": {
+      "quick": 120,
+      "standard": 300,
+      "slow": 600,
+      "hold": 1600
+    },
+    "easings": {
+      "enter": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "exit": "cubic-bezier(0.7, 0, 0.84, 0)",
+      "move": "cubic-bezier(0.45, 0, 0.2, 1)"
+    },
+    "spring": {
+      "ui": {
+        "k": 520,
+        "c": 46,
+        "m": 1
+      },
+      "type": {
+        "k": 260,
+        "c": 33,
+        "m": 1
+      },
+      "heavy": {
+        "k": 200,
+        "c": 41,
+        "m": 2
+      }
+    },
+    "travel": 0.8,
+    "overshootMax": 0,
+    "exitRatio": 0.6,
+    "stagger": {
+      "eachS": 0.05,
+      "capS": 0.4
+    }
+  },
+  "sound": {
+    "palette": "soft-ui",
+    "bpm": 120,
+    "loudnessLufs": -14,
+    "cuesPer10s": [
+      2,
+      6
+    ]
+  },
+  "transitions": {
+    "opening": "transitions/hard-cut",
+    "topic": "transitions/hard-cut",
+    "related": "transitions/hard-cut",
+    "climax": "transitions/hard-cut",
+    "outro": "transitions/hard-cut",
+    "policy": "owns-exit"
+  },
+  "entrances": {
+    "headline": "entrances/mask-reveal",
+    "body": "entrances/words",
+    "figure": "entrances/count",
+    "plate": "entrances/rise"
+  },
+  "pacing": {
+    "holdMinS": 1.2,
+    "arrivalsPer10s": [
+      3,
+      9
+    ],
+    "energy": "medium"
+  },
+  "essence": {
+    "traits": [
+      "Every cut is a hard cut: scenes change in a single frame, with no dissolve, wipe or push.",
+      "Nothing overshoots or bounces; elements arrive crisp and stop on their mark.",
+      "Text is revealed by mask or word-by-word, and a number counts up to its value.",
+      "Scenes rest for more than a second after the last arrival, so a claim sits still beside its evidence."
+    ],
+    "notLike": [
+      {
+        "style": "kinetic",
+        "line": "kinetic shares the entrances but bounces and uses push and whip-pan; proof stays flat and hard-cuts every scene."
+      },
+      {
+        "style": "calm",
+        "line": "calm is as still but dissolves between scenes; proof cuts."
+      }
+    ]
+  },
+  "nativeMoves": [
+    {
+      "move": "Claim, then evidence on the next hard cut: a statement holds, the frame cuts, and the number or screenshot that backs it fills the frame.",
+      "transfer": "A security audit film where each finding is stated, then cut to the log line that shows it."
+    },
+    {
+      "move": "A counting figure that lands without overshoot, so the final number is the exact value on screen.",
+      "transfer": "A clinical results film where the response rate counts up and stops on the reported figure."
+    },
+    {
+      "move": "Mask-reveal on a caption so a source line is uncovered beneath a figure.",
+      "transfer": "A budget walkthrough where each line item is followed by its source document title."
+    }
+  ],
+  "pitfalls": [
+    {
+      "mistake": "Adding a transition effect to soften a cut.",
+      "mechanism": "The hard cut is the register of the style; a dissolve says presentation, not evidence.",
+      "fix": "Leave every cut hard; shorten the preceding hold if it feels abrupt."
+    },
+    {
+      "mistake": "Letting a figure overshoot its value.",
+      "mechanism": "A counter that passes the number and returns shows a wrong value for a moment, which undermines a proof.",
+      "fix": "Keep overshoot at zero and the count ease monotonic."
+    },
+    {
+      "mistake": "Filling a scene with six arrivals at once.",
+      "mechanism": "The claim and its evidence compete, and the viewer cannot tell which is which.",
+      "fix": "One claim and one piece of evidence per scene."
+    }
+  ],
+  "variation": {
+    "free": [
+      "Which entrance carries each text role (mask-reveal, words or rise).",
+      "How long a claim holds before the cut, from 1.2 seconds up.",
+      "Which evidence form follows the claim: figure, screenshot or quote.",
+      "Whether the sound bed is soft or silent."
+    ],
+    "invariants": [
+      "Every transition is a hard cut.",
+      "Overshoot is zero.",
+      "Counted figures stop on their exact value.",
+      "Arrivals stay between three and nine per ten seconds."
+    ]
+  }
+}

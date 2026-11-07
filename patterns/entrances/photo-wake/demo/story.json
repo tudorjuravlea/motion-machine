@@ -1,0 +1,37 @@
+{
+  "id": "demo-photo-wake",
+  "kind": "film",
+  "formats": ["9x16", "1x1", "4x5", "16x9"],
+  "title": "Demo: entrances/photo-wake",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/media",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0, "slot": "image", "fx": "entrances/photo-wake", "asset": "assets/field.png", "params": { "frame": "bleed" } },
+        { "at": 0.4, "slot": "headline", "fx": "entrances/rise", "text": "Colour arrives." },
+        { "at": 1.6, "slot": "caption", "fx": "entrances/fade", "text": "It starts in the brand's own two inks." }
+      ],
+      "say": "A demo of the pattern."
+    },
+    {
+      "id": "demo-corner",
+      "layout": "layouts/media",
+      "duration": 4.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0, "slot": "image", "fx": "entrances/photo-wake", "asset": "assets/field.png", "params": { "frame": "bleed", "origin": "bottom-right", "band": 0.18, "warp": 0.6 } },
+        { "at": 0.6, "slot": "headline", "fx": "entrances/rise", "text": "From the corner." }
+      ],
+      "say": "A demo of a corner origin."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

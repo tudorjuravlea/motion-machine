@@ -1,0 +1,2 @@
+/* entrances/assemble: the dot canvas overlays the slot (and a margin round it); the words fade in under it. */
+.mm-assemble { position: absolute; pointer-events: none; }

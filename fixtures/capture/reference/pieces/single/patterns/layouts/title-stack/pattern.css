@@ -1,0 +1,30 @@
+/* Fixture stub: a headline over a sub, inside the safe margin. Variables only. */
+.title-stack {
+  position: absolute;
+  inset: var(--mm-safe);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--mm-space-4);
+}
+.title-stack__rule {
+  width: var(--mm-space-6);
+  height: var(--mm-space-1);
+  background: var(--mm-color-accent);
+}
+.title-stack__headline {
+  margin: 0;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: var(--mm-size-h1);
+  line-height: 1.05;
+  color: var(--mm-color-ink);
+}
+.title-stack__sub {
+  margin: 0;
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  font-size: var(--mm-size-body);
+  color: var(--mm-color-muted);
+}

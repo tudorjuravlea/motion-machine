@@ -1,0 +1,17 @@
+/* flood: the disc. pattern.js writes --mm-tx-flood-x, -y, -r (layout pixels), -ry while it lands on
+   an oval dot (the disc's height; it is round without it) and -color (a palette role, or a blend of
+   two while it lands) on the inline style of the one section it draws; the kit restores that style on every seek,
+   so the disc exists only while the cut is drawn and no rule matches at a rest. It sits above the
+   layout, the ground, the finish and any device frame of its scene. */
+.mm-scene[style*="--mm-tx-flood-r"] {
+  isolation: isolate;
+}
+.mm-scene[style*="--mm-tx-flood-r"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+  background: var(--mm-tx-flood-color);
+  clip-path: ellipse(var(--mm-tx-flood-r) var(--mm-tx-flood-ry, var(--mm-tx-flood-r)) at var(--mm-tx-flood-x) var(--mm-tx-flood-y));
+}

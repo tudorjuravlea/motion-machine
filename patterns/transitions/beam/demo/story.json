@@ -1,0 +1,76 @@
+{
+  "id": "demo-transitions-beam",
+  "kind": "film",
+  "formats": ["16x9", "9x16", "1x1"],
+  "title": "transitions/beam demo",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "first",
+      "layout": "layouts/title-stack",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0, "slot": "headline", "fx": "entrances/rise", "text": "Lights down", "params": { "instant": true } },
+        { "at": 0, "slot": "sub", "fx": "entrances/fade", "text": "The scene that leaves", "params": { "instant": true } }
+      ],
+      "say": "The scene that leaves."
+    },
+    {
+      "id": "beam",
+      "layout": "layouts/title-stack",
+      "duration": 3,
+      "cut": "transitions/beam",
+      "cutParams": { "variant": "beam" },
+      "move": null,
+      "beats": [
+        { "at": 0, "slot": "headline", "fx": "entrances/fade", "text": "A beam opens it", "params": { "instant": true } },
+        { "at": 0, "slot": "sub", "fx": "entrances/rise", "text": "variant beam", "params": { "instant": true } }
+      ],
+      "say": "A tilted beam sweeps across and opens the scene."
+    },
+    {
+      "id": "curtain",
+      "layout": "layouts/title-stack",
+      "duration": 3,
+      "cut": "transitions/beam",
+      "cutParams": { "variant": "curtain" },
+      "move": null,
+      "beats": [
+        { "at": 0, "slot": "headline", "fx": "entrances/rise", "text": "Curtains part", "params": { "instant": true } },
+        { "at": 0, "slot": "sub", "fx": "entrances/fade", "text": "variant curtain", "params": { "instant": true } }
+      ],
+      "say": "Two panels close and part on the next scene."
+    },
+    {
+      "id": "portal",
+      "layout": "layouts/title-stack",
+      "duration": 3,
+      "cut": "transitions/beam",
+      "cutParams": { "variant": "portal", "at": "50%,50%" },
+      "move": null,
+      "beats": [
+        { "at": 0, "slot": "headline", "fx": "entrances/fade", "text": "A portal from a point", "params": { "instant": true } },
+        { "at": 0, "slot": "sub", "fx": "entrances/rise", "text": "variant portal", "params": { "instant": true } }
+      ],
+      "say": "The next scene opens from a point."
+    },
+    {
+      "id": "streak",
+      "layout": "layouts/title-stack",
+      "duration": 3,
+      "cut": "transitions/beam",
+      "cutParams": { "variant": "streak" },
+      "move": null,
+      "beats": [
+        { "at": 0, "slot": "headline", "fx": "entrances/rise", "text": "A streak crosses", "params": { "instant": true } },
+        { "at": 0, "slot": "sub", "fx": "entrances/fade", "text": "variant streak", "params": { "instant": true } }
+      ],
+      "say": "An anamorphic streak crosses and leaves the cut."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

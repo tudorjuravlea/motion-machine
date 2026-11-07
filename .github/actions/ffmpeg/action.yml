@@ -1,0 +1,44 @@
+name: ffmpeg
+description: >-
+  A static ffmpeg and ffprobe at a pinned release, checked against pinned SHA-256s and cached between
+  runs, put on PATH and named in MM_FFMPEG and MM_FFPROBE. Replaces the distro package, whose install
+  time on the runners varies from seconds to past the job timeout.
+runs:
+  using: composite
+  steps:
+    - name: Cache ffmpeg
+      id: cache
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      with:
+        path: ~/.cache/mm-ffmpeg
+        key: ffmpeg-9.0.2-linux-amd64
+
+    - name: Download and verify ffmpeg
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        set -euo pipefail
+        base=https://ffmpeg.martin-riedl.de/download/linux/amd64/1789931100_9.0.2
+        dir="$HOME/.cache/mm-ffmpeg"
+        tmp="$(mktemp -d)"
+        mkdir -p "$dir"
+        curl -fsSL --retry 5 --retry-all-errors --max-time 300 -o "$tmp/ffmpeg.zip" "$base/ffmpeg.zip"
+        curl -fsSL --retry 5 --retry-all-errors --max-time 300 -o "$tmp/ffprobe.zip" "$base/ffprobe.zip"
+        (cd "$tmp" && sha256sum -c - <<'SUMS'
+        fa8ecf4abbd290d98f7d188b8649cc6b391ae209a98452be955a15aab1909d7f  ffmpeg.zip
+        3f428c49070be3d24ec338602b76d412e401ffcb8a5641ef0e729181a232fc32  ffprobe.zip
+        SUMS
+        )
+        unzip -q -o "$tmp/ffmpeg.zip" -d "$tmp/x"
+        unzip -q -o "$tmp/ffprobe.zip" -d "$tmp/x"
+        install -m 755 "$(find "$tmp/x" -type f -name ffmpeg | head -1)" "$dir/ffmpeg"
+        install -m 755 "$(find "$tmp/x" -type f -name ffprobe | head -1)" "$dir/ffprobe"
+
+    - name: Put ffmpeg on PATH
+      shell: bash
+      run: |
+        dir="$HOME/.cache/mm-ffmpeg"
+        echo "$dir" >> "$GITHUB_PATH"
+        echo "MM_FFMPEG=$dir/ffmpeg" >> "$GITHUB_ENV"
+        echo "MM_FFPROBE=$dir/ffprobe" >> "$GITHUB_ENV"
+        "$dir/ffmpeg" -hide_banner -version | head -1

@@ -1,0 +1,271 @@
+{
+  "name": "blueprint",
+  "version": 1,
+  "fictional": true,
+  "from": {
+    "brand": "styles/brands/draftline.json",
+    "motion": "styles/motion/grid.json"
+  },
+  "color": {
+    "canvas": "#123A6B",
+    "ink": "#EAF1FA",
+    "muted": "#AABED7",
+    "surface": "#1A4A80",
+    "line": "#3D6699",
+    "accent": "#FF8A3D",
+    "accentInk": "#123A6B"
+  },
+  "type": {
+    "display": {
+      "family": "Archivo",
+      "weight": 800,
+      "tracking": -0.03,
+      "files": [
+        {
+          "src": "styles/fonts/archivo/archivo-latin-700-normal.woff2",
+          "weight": 700,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/archivo/archivo-latin-ext-700-normal.woff2",
+          "weight": 700,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        },
+        {
+          "src": "styles/fonts/archivo/archivo-latin-800-normal.woff2",
+          "weight": 800,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/archivo/archivo-latin-ext-800-normal.woff2",
+          "weight": 800,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        }
+      ]
+    },
+    "text": {
+      "family": "IBM Plex Mono",
+      "weight": 400,
+      "tracking": 0,
+      "files": [
+        {
+          "src": "styles/fonts/ibm-plex-mono/ibm-plex-mono-latin-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/ibm-plex-mono/ibm-plex-mono-latin-ext-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        }
+      ]
+    },
+    "mono": {
+      "family": "IBM Plex Mono",
+      "weight": 400,
+      "tracking": 0,
+      "files": [
+        {
+          "src": "styles/fonts/ibm-plex-mono/ibm-plex-mono-latin-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD"
+        },
+        {
+          "src": "styles/fonts/ibm-plex-mono/ibm-plex-mono-latin-ext-400-normal.woff2",
+          "weight": 400,
+          "unicodeRange": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+        }
+      ]
+    }
+  },
+  "scale": {
+    "display": 1,
+    "h1": 0.6,
+    "h2": 0.42,
+    "body": 0.27,
+    "caption": 0.21,
+    "micro": 0.19
+  },
+  "space": [
+    4,
+    8,
+    16,
+    24,
+    40,
+    64,
+    104
+  ],
+  "radius": [
+    0,
+    1,
+    2,
+    4,
+    999
+  ],
+  "composition": {
+    "align": "left",
+    "headlineScale": 1,
+    "density": "compact"
+  },
+  "ground": {
+    "blobs": [
+      {
+        "color": "#123A6B",
+        "x": 0,
+        "y": 0,
+        "w": 0.1,
+        "h": 0.1,
+        "alpha": 0
+      }
+    ],
+    "blur": 0,
+    "mark": {
+      "src": "styles/grounds/draftline-grid.svg",
+      "width": 1.8,
+      "alpha": 0.16
+    }
+  },
+  "finish": {
+    "paper": 0.5
+  },
+  "bans": [
+    "centered-title-on-gradient",
+    "fade-only",
+    "corner-labels",
+    "frame-borders",
+    "glow-on-ui",
+    "particle-burst"
+  ],
+  "allow": [],
+  "motion": {
+    "durations": {
+      "quick": 125,
+      "standard": 250,
+      "slow": 500,
+      "hold": 2000
+    },
+    "easings": {
+      "enter": "cubic-bezier(0.7, 0, 0.2, 1)",
+      "exit": "cubic-bezier(0.7, 0, 0.2, 1)",
+      "move": "cubic-bezier(0.7, 0, 0.2, 1)"
+    },
+    "spring": {
+      "ui": {
+        "k": 400,
+        "c": 40,
+        "m": 1
+      },
+      "type": {
+        "k": 256,
+        "c": 32,
+        "m": 1
+      },
+      "heavy": {
+        "k": 200,
+        "c": 40,
+        "m": 2
+      }
+    },
+    "travel": 1,
+    "overshootMax": 0,
+    "exitRatio": 0.5,
+    "stagger": {
+      "eachS": 0.0625,
+      "capS": 0.5
+    }
+  },
+  "sound": {
+    "palette": "percussive",
+    "bpm": 120,
+    "loudnessLufs": -14,
+    "cuesPer10s": [
+      2,
+      6
+    ]
+  },
+  "transitions": {
+    "opening": "transitions/hard-cut",
+    "topic": "transitions/wipe",
+    "related": "transitions/hard-cut",
+    "climax": "transitions/split",
+    "outro": "transitions/hard-cut",
+    "policy": "owns-exit"
+  },
+  "entrances": {
+    "headline": "entrances/mask-reveal",
+    "body": "entrances/rise",
+    "figure": "entrances/count",
+    "plate": "entrances/mask-reveal"
+  },
+  "pacing": {
+    "holdMinS": 1,
+    "arrivalsPer10s": [
+      3,
+      7
+    ],
+    "energy": "medium"
+  },
+  "essence": {
+    "traits": [
+      "Every move uses one ease, steep at the start and level at the end, so entrances, exits and travels all feel cut from the same rule.",
+      "Nothing bounces: elements arrive on a mask and stop exactly on their mark.",
+      "Timings are multiples of one beat (125 ms), so arrivals line up with each other across the frame.",
+      "Scenes change by a wipe or a split along a straight edge, or by a hard cut."
+    ],
+    "notLike": [
+      {
+        "style": "proof",
+        "line": "proof also never bounces but its entrances are quick and varied and every cut is hard; grid keeps one ease throughout and lets a wipe or split edge cross the frame."
+      },
+      {
+        "style": "kinetic",
+        "line": "kinetic overshoots and slams; grid is rigid and stops on its mark with no overshoot at all."
+      }
+    ]
+  },
+  "nativeMoves": [
+    {
+      "move": "A mask reveal along a ruled edge: a headline or plate is uncovered by a straight line, as if drawn on a sheet.",
+      "transfer": "A site-survey film for a construction bid, each measured dimension uncovered along its own edge."
+    },
+    {
+      "move": "A split cut at the climax: the frame divides along a line and the next scene is already behind it.",
+      "transfer": "A before-and-after film for a clinic, the cut line running down the middle as the second state slides in."
+    },
+    {
+      "move": "Staggered arrivals on an even 62 ms step, so a row of items lands as a ruler of ticks.",
+      "transfer": "A timetable film where each departure appears in its column one tick after the last."
+    }
+  ],
+  "pitfalls": [
+    {
+      "mistake": "Adding a springy or overshooting entrance to a grid film.",
+      "mechanism": "Everything else sits on a straight edge and stops dead; one element that wobbles past its mark breaks the alignment the viewer is reading.",
+      "fix": "Keep overshoot at zero; use mask-reveal and rise, and move emphasis into the colour."
+    },
+    {
+      "mistake": "Holding scenes longer than about two seconds with no arrivals.",
+      "mechanism": "The style gets its tension from steady ticks; a long still frame reads as stalled, not as calm.",
+      "fix": "Add an arrival every second or so, or shorten the scene."
+    },
+    {
+      "mistake": "Mixing in curved eases for some elements.",
+      "mechanism": "The single shared ease is what makes the film feel rule-bound; a softer curve on one item reads as a mistake.",
+      "fix": "Use the style's enter, exit and move eases as given."
+    }
+  ],
+  "variation": {
+    "free": [
+      "Which entrance (mask-reveal or rise) carries each text role.",
+      "Which scene gets the split and which the wipe, within the topic and climax roles.",
+      "The column and row structure of the layouts.",
+      "Scene length around the 1 second hold floor."
+    ],
+    "invariants": [
+      "One ease for enter, exit and move.",
+      "No overshoot.",
+      "Durations stay on the 125 ms step.",
+      "Cuts are wipes, splits or hard cuts, never a dissolve."
+    ]
+  }
+}

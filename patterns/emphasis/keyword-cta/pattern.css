@@ -1,0 +1,35 @@
+/* emphasis/keyword-cta: the chip's look belongs to the slot (keyed on the data-emphasis the kit writes),
+   so it holds at every rest: a filled plate in one palette role, level type on it. With hold false
+   the rest is a quiet outline instead; the module draws the loud plate only while the window runs. The
+   arrows are spans the module adds while the window runs, small triangles in the same role. */
+[data-emphasis="emphasis/keyword-cta"] {
+  --mm-kcta-tone: var(--mm-color-accent);
+  --mm-kcta-ink: var(--mm-color-accentInk);
+  position: relative;
+  box-sizing: border-box;
+  width: fit-content;
+  max-width: 100%;
+  align-self: var(--mm-align);
+  justify-self: var(--mm-align);
+  padding: var(--mm-space-3) var(--mm-space-5);
+  border: var(--mm-space-1) solid var(--mm-kcta-tone);
+  border-radius: var(--mm-radius-3);
+  background: var(--mm-kcta-tone);
+  color: var(--mm-kcta-ink);
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: var(--mm-size-h2);
+  line-height: 1.1;
+  text-align: center;
+}
+[data-emphasis="emphasis/keyword-cta"][data-p-tone="ink"] { --mm-kcta-tone: var(--mm-color-ink); --mm-kcta-ink: var(--mm-color-canvas); }
+[data-emphasis="emphasis/keyword-cta"][data-p-size="h1"] { font-size: var(--mm-size-h1); }
+[data-emphasis="emphasis/keyword-cta"][data-p-hold="false"] { background: transparent; color: var(--mm-color-ink); }
+.mm-kcta__arrow {
+  position: absolute;
+  display: block;
+  background: var(--mm-color-accent);
+  pointer-events: none;
+}
+[data-emphasis="emphasis/keyword-cta"][data-p-tone="ink"] .mm-kcta__arrow { background: var(--mm-color-ink); }

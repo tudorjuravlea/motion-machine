@@ -1,0 +1,13 @@
+/* re-ink: a section (or its copy) printed in the second role set. pattern.js writes the swapped
+   --mm-color-* values and the marker --mm-tx-reink on its inline style; the kit restores the style
+   on every seek, so no rule matches at a rest. Text colour is inherited from the stage, resolved
+   there, so the re-inked section sets it again from its own ink. */
+.mm-scene[style*="--mm-tx-reink"] {
+  color: var(--mm-color-ink);
+}
+/* the plate of a plate wipe (into a scene that draws pictures): an overlay beside the sections, over both. */
+.mm-tx-reink-plate {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}

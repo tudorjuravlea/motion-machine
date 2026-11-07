@@ -1,0 +1,45 @@
+{
+  "id": "demo-ui-presence",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "ui/presence demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "shot",
+      "layout": "layouts/stage",
+      "duration": 6.7,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "ui/presence",
+          "params": {
+            "title": "Launch notes",
+            "line": "Ship the beta in week two",
+            "typed": "Agreed, week two works",
+            "one": "Design",
+            "two": "Product"
+          }
+        }
+      ],
+      "say": "Two people edit one document at once, each in their own colour."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

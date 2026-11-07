@@ -1,0 +1,45 @@
+{
+  "id": "demo-idle-breathe",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: moves/idle-breathe",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/statement",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": "moves/idle-breathe",
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "A camera that never cuts."
+        },
+        {
+          "at": 0.9,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "One slow move, drawn from t alone."
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

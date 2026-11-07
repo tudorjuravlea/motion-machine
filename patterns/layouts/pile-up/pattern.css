@@ -1,0 +1,115 @@
+/* pile-up: up to fourteen cards land one at a time, overlapping, until the pile is the message; an
+   opaque panel sits over the pile with the line to read. Each card has a fixed place and
+   tilt; the tilt is on the card's backing (::before), so its type is level. Stacking rises with the
+   slot number, so cards brought in slot order always put the newest on top. Cards overlap by design
+   and carry data-over. The panel shows once one of its slots has arrived. The timing (instant
+   arrivals on whole frames, gathering pace) is the story's: a layout has no clock. */
+.pile-up {
+  position: absolute;
+  inset: var(--mm-safe);
+}
+.pile-up__pile {
+  --mm-pile-card-w: 46%;
+  --mm-pile-room: 88%;
+  position: absolute;
+  inset: var(--mm-space-3);
+}
+[data-format="16x9"] .pile-up__pile { --mm-pile-card-w: 30%; --mm-pile-room: 84%; }
+[data-format="1x1"] .pile-up__pile { --mm-pile-card-w: 44%; --mm-pile-room: 82%; }
+.pile-up__card {
+  position: absolute;
+  isolation: isolate;
+  left: calc(var(--mm-pile-x) * (100% - var(--mm-pile-card-w)));
+  top: calc(var(--mm-pile-y) * var(--mm-pile-room));
+  width: var(--mm-pile-card-w);
+  box-sizing: border-box;
+  padding: var(--mm-space-3) var(--mm-space-4);
+  color: var(--mm-color-surfaceInk);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.2;
+  overflow-wrap: break-word;
+}
+.pile-up__card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border: calc(var(--mm-space-0) / 4) solid var(--mm-color-line);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-surface);
+  box-shadow: 0 var(--mm-space-1) var(--mm-space-3) color-mix(in srgb, var(--mm-color-ink) 14%, transparent);
+  rotate: var(--mm-pile-tilt);
+}
+.pile-up__card[data-empty] { display: none; }
+/* the first four cards ring the panel's top and bottom edges, alternating sides, so a short pile
+   shows; later cards fill in around it and pass under it */
+.pile-up__card[data-slot="card-1"] { --mm-pile-x: 0.080; --mm-pile-y: 0.000; --mm-pile-tilt: -4.6deg; z-index: 1; }
+.pile-up__card[data-slot="card-2"] { --mm-pile-x: 0.920; --mm-pile-y: 0.970; --mm-pile-tilt: 3.8deg; z-index: 2; }
+.pile-up__card[data-slot="card-3"] { --mm-pile-x: 0.900; --mm-pile-y: 0.020; --mm-pile-tilt: 2.7deg; z-index: 3; }
+.pile-up__card[data-slot="card-4"] { --mm-pile-x: 0.100; --mm-pile-y: 0.950; --mm-pile-tilt: -5.2deg; z-index: 4; }
+.pile-up__card[data-slot="card-5"] { --mm-pile-x: 0.500; --mm-pile-y: 0.060; --mm-pile-tilt: -2.1deg; z-index: 5; }
+.pile-up__card[data-slot="card-6"] { --mm-pile-x: 0.550; --mm-pile-y: 0.920; --mm-pile-tilt: 4.4deg; z-index: 6; }
+.pile-up__card[data-slot="card-7"] { --mm-pile-x: 0.020; --mm-pile-y: 0.300; --mm-pile-tilt: -3.3deg; z-index: 7; }
+.pile-up__card[data-slot="card-8"] { --mm-pile-x: 0.980; --mm-pile-y: 0.400; --mm-pile-tilt: 5.6deg; z-index: 8; }
+.pile-up__card[data-slot="card-9"] { --mm-pile-x: 0.300; --mm-pile-y: 0.150; --mm-pile-tilt: -1.6deg; z-index: 9; }
+.pile-up__card[data-slot="card-10"] { --mm-pile-x: 0.720; --mm-pile-y: 0.800; --mm-pile-tilt: 2.2deg; z-index: 10; }
+.pile-up__card[data-slot="card-11"] { --mm-pile-x: 0.050; --mm-pile-y: 0.620; --mm-pile-tilt: -4.0deg; z-index: 11; }
+.pile-up__card[data-slot="card-12"] { --mm-pile-x: 0.950; --mm-pile-y: 0.700; --mm-pile-tilt: 3.1deg; z-index: 12; }
+.pile-up__card[data-slot="card-13"] { --mm-pile-x: 0.620; --mm-pile-y: 0.220; --mm-pile-tilt: -5.8deg; z-index: 13; }
+.pile-up__card[data-slot="card-14"] { --mm-pile-x: 0.350; --mm-pile-y: 0.860; --mm-pile-tilt: 1.7deg; z-index: 14; }
+/* the panel: opaque, centred, above every card */
+.pile-up__panel {
+  position: absolute;
+  z-index: 50;
+  inset: 0;
+  margin: auto;
+  width: 78%;
+  height: fit-content;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: var(--mm-align);
+  text-align: var(--mm-align);
+  gap: var(--mm-space-4);
+  padding: var(--mm-space-5);
+  border: calc(var(--mm-space-0) / 4) solid var(--mm-color-line);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-canvas);
+  box-shadow: 0 var(--mm-space-2) var(--mm-space-5) color-mix(in srgb, var(--mm-color-ink) 22%, transparent);
+}
+[data-format="16x9"] .pile-up__panel { width: 52%; }
+.pile-up__panel:not(:has([data-slot]:not([data-empty]))) { display: none; }
+.pile-up__panel:not(:has([data-slot]:not([data-empty]):not([style*="visibility: hidden"]))) { visibility: hidden; }
+.pile-up__headline {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: calc(var(--mm-size-h2) * var(--mm-headline-scale));
+  line-height: 1.1;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+  color: var(--mm-color-ink);
+}
+.pile-up__sub {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.25;
+  text-wrap: pretty;
+  color: var(--mm-color-ink);
+}
+.pile-up__headline[data-empty],
+.pile-up__sub[data-empty] { display: none; }
+/* align: the brand's composition by default; `left` or `center` by a beat param or data-align */
+.pile-up[data-align="center"] .pile-up__panel,
+.pile-up:has([data-p-align="center"]) .pile-up__panel { align-items: center; text-align: center; }
+.pile-up[data-align="left"] .pile-up__panel,
+.pile-up:has([data-p-align="left"]) .pile-up__panel { align-items: start; text-align: left; }

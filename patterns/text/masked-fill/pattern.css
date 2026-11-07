@@ -1,0 +1,20 @@
+/* text/masked-fill: a rising fill clipped to the letterforms over a faint outline of the words.
+   --mm-mf-p (0 to 1) is the fill level; the edge is 0.06 em of the accent text colour above it. */
+.mm-masked-fill {
+  --mm-mf-fill: currentColor;   /* set to the slot's own colour by the pattern */
+  --mm-mf-edge: var(--mm-accent-text);
+  --mm-mf-level: calc(var(--mm-mf-p) * 112% - 6%);
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 0.012em color-mix(in srgb, var(--mm-mf-fill) 35%, transparent);
+  background-image: linear-gradient(to top,
+    var(--mm-mf-fill) 0 var(--mm-mf-level),
+    var(--mm-mf-edge) var(--mm-mf-level) calc(var(--mm-mf-level) + 0.06em),
+    transparent calc(var(--mm-mf-level) + 0.06em));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.mm-masked-fill[data-fill="accent"] { --mm-mf-fill: var(--mm-accent-text) !important; --mm-mf-edge: currentColor; }
+.mm-masked-fill[data-edge="none"] { --mm-mf-edge: var(--mm-mf-fill); }

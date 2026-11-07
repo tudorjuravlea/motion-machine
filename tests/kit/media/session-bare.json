@@ -1,0 +1,11 @@
+{
+  "id": "kit-session-bare", "kind": "film", "formats": ["16x9"], "title": "Kit session without a track", "language": "en", "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null }, "cta": { "text": "", "url": "" },
+  "scenes": [
+    { "id": "bare", "layout": "layouts/caption-bar", "duration": 3, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{ "at": 0.1, "slot": "stage", "fx": "devices/browser", "asset": "assets/rec/", "params": { "size": "large" },
+        "screen": [
+          { "do": "screen/zoom-to", "at": 0.1, "d": 2, "params": { "mode": "auto" } },
+          { "do": "screen/pointer", "at": 0.1, "d": 2 }] }], "say": "" }
+  ]
+}

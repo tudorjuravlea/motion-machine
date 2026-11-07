@@ -1,0 +1,15 @@
+/* color-dip: the veil. pattern.js writes --mm-tx-dip-o and --mm-tx-dip-color on one section's
+   inline style; the kit restores that style on every seek, so the veil exists only while it is
+   being driven and has no rule to match at a rest. */
+.mm-scene[style*="--mm-tx-dip-o"] {
+  isolation: isolate;
+}
+.mm-scene[style*="--mm-tx-dip-o"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: var(--mm-tx-dip-color);
+  opacity: var(--mm-tx-dip-o);
+}

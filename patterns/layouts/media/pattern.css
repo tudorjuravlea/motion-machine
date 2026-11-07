@@ -1,0 +1,135 @@
+/* media: one picture (a beat's asset) with an optional headline above and caption below.
+   framed (default): the frame takes the picture's own proportions (--mm-asset-ratio, written by
+   the kit once the asset decodes) and the largest size the room beside two headline lines and
+   two caption lines allows; the block is centred in the box, which is lifted by half a safe margin;
+   bleed (image beat param frame: bleed): the picture covers the whole frame and the text sits on
+   canvas plates under the top row. The picture is an <img data-media>: the gate masks it. */
+.media {
+  /* room the text may take beside the picture: two headline lines, two caption lines, two gaps */
+  --media-gap: calc(var(--mm-space-4) * var(--mm-density));
+  --media-headline: calc(2 * 1.2 * var(--mm-size-h1) * var(--mm-headline-scale) + var(--media-gap));
+  --media-caption: calc(2 * 1.3 * var(--mm-size-body) + var(--media-gap));
+  position: absolute;
+  inset: var(--mm-safe) calc(var(--mm-safe) + (var(--mm-frame-w) / 2 - var(--mm-safe)) * 0.04 * var(--mm-density)) calc(var(--mm-safe) * 1.5);
+  container-type: size;
+  display: flex;
+  flex-direction: column;
+  justify-content: safe center;
+  align-items: var(--mm-align);
+  text-align: var(--mm-align);
+  gap: var(--media-gap);
+}
+.media:has(> .media__headline[data-empty]) { --media-headline: 0px; }
+.media:has(> .media__caption[data-empty]) { --media-caption: 0px; }
+.media__headline {
+  flex: none;
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: calc(var(--mm-size-h1) * var(--mm-headline-scale));
+  line-height: 1.04;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+  color: var(--mm-color-ink);
+}
+.media__area {
+  flex: none;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: var(--mm-align);
+}
+.media__frame {
+  position: relative;
+  flex: none;
+  width: min(100cqw, calc((100cqh - var(--media-headline) - var(--media-caption)) * var(--mm-asset-ratio, 1.7778)));
+  height: min(calc(100cqh - var(--media-headline) - var(--media-caption)), calc(100cqw / var(--mm-asset-ratio, 1.7778)));
+  overflow: hidden;
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-surface);
+}
+.media__image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.media__image:not([src]) { display: none; }
+.media__caption {
+  flex: none;
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.3;
+  text-wrap: pretty;
+  color: var(--mm-color-muted);
+}
+.media__headline[data-empty],
+.media__caption[data-empty] { display: none; }
+[data-format="16x9"] .media__caption { max-width: 70%; }
+/* 16x9 has the measure for one headline line and one caption line, so it reserves only those. */
+[data-format="16x9"] .media {
+  --media-headline: calc(1.25 * var(--mm-size-h1) * var(--mm-headline-scale) + var(--media-gap));
+  --media-caption: calc(1.3 * var(--mm-size-body) + var(--media-gap));
+}
+/* 16x9, a portrait or square picture (data-asset-shape, written by the kit): it stands at full
+   height on the right and the headline and caption are a column beside it, centred on it. */
+[data-format="16x9"] .media:has(> .media__area > [data-asset-shape="portrait"]:not([data-p-frame="bleed"])),
+[data-format="16x9"] .media:has(> .media__area > [data-asset-shape="square"]:not([data-p-frame="bleed"])) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: minmax(0, 1fr) auto auto minmax(0, 1fr);
+  column-gap: calc(var(--mm-space-5) * var(--mm-density));
+  row-gap: var(--media-gap);
+  justify-items: var(--mm-align);
+}
+[data-format="16x9"] .media:has(> .media__area > [data-asset-shape="portrait"]:not([data-p-frame="bleed"])) .media__headline,
+[data-format="16x9"] .media:has(> .media__area > [data-asset-shape="square"]:not([data-p-frame="bleed"])) .media__headline { grid-column: 1; grid-row: 2; }
+[data-format="16x9"] .media:has(> .media__area > [data-asset-shape="portrait"]:not([data-p-frame="bleed"])) .media__caption,
+[data-format="16x9"] .media:has(> .media__area > [data-asset-shape="square"]:not([data-p-frame="bleed"])) .media__caption { grid-column: 1; grid-row: 3; max-width: 100%; }
+[data-format="16x9"] .media:has(> .media__area > [data-asset-shape="portrait"]:not([data-p-frame="bleed"])) .media__area,
+[data-format="16x9"] .media:has(> .media__area > [data-asset-shape="square"]:not([data-p-frame="bleed"])) .media__area { grid-column: 2; grid-row: 1 / span 4; align-self: center; }
+[data-format="16x9"] .media:has(> .media__area > [data-asset-shape="portrait"]:not([data-p-frame="bleed"])) .media__frame,
+[data-format="16x9"] .media:has(> .media__area > [data-asset-shape="square"]:not([data-p-frame="bleed"])) .media__frame {
+  width: min(60cqw, calc(100cqh * var(--mm-asset-ratio, 1)));
+  height: min(100cqh, calc(60cqw / var(--mm-asset-ratio, 1)));
+}
+/* bleed: the frame is the whole picture; headline and caption sit on canvas plates under the top row. */
+.media:has(> .media__area > [data-p-frame="bleed"]) { justify-content: flex-start; }
+.media:has(> .media__area > [data-p-frame="bleed"]) .media__area {
+  position: absolute;
+  z-index: 0;
+  inset: calc(var(--mm-safe) * -1) calc((var(--mm-safe) + (var(--mm-frame-w) / 2 - var(--mm-safe)) * 0.04 * var(--mm-density)) * -1) calc(var(--mm-safe) * -1.5);
+}
+.media:has(> .media__area > [data-p-frame="bleed"]) .media__frame {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+.media:has(> .media__area > [data-p-frame="bleed"]) .media__headline,
+.media:has(> .media__area > [data-p-frame="bleed"]) .media__caption {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: var(--mm-space-3) var(--mm-space-4);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-canvas);
+}
+.media:has(> .media__area > [data-p-frame="bleed"]) .media__caption { color: var(--mm-color-ink); }
+/* align: the brand's composition (--mm-align) by default; `left` or `center` with a beat param on any slot (data-p-align) or data-align on the layout root. */
+.media[data-align="center"],
+.media:has([data-p-align="center"]) { align-items: center; text-align: center; }
+.media[data-align="center"] .media__area,
+.media:has([data-p-align="center"]) .media__area { justify-content: center; }
+.media[data-align="left"],
+.media:has([data-p-align="left"]) { align-items: start; text-align: left; }
+.media[data-align="left"] .media__area,
+.media:has([data-p-align="left"]) .media__area { justify-content: start; }

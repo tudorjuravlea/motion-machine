@@ -1,0 +1,599 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:motion-machine:contracts:story",
+  "title": "Motion Machine story (SPEC §4): the beat sheet as data",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "kind",
+    "formats",
+    "title",
+    "language",
+    "facts",
+    "audio",
+    "scenes",
+    "cta"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,60}$"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "film",
+        "deck",
+        "loop"
+      ],
+      "description": "loop: a film of 4 to 15 s whose last frame is its first (G-LOOP); scheduled and drawn as a film"
+    },
+    "generator": {
+      "type": "string",
+      "pattern": "^(?![A-Za-z]:)(?!.*(^|/)\\.\\.(/|$))[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)*\\.m?js$",
+      "description": "the repo-relative path of the script that writes this story; the studio opens it read-only and mm timeline refuses to edit it (edit the generator's input instead)"
+    },
+    "autoReturn": {
+      "type": "boolean",
+      "description": "a loop only. Over the last min(1.2 s, 15 %) the kit plays each arrived beat of the last scene back to p = 0, last arrival first, ending on the last exported frame, so the loop ends on its first frame; instant beats stay"
+    },
+    "platform": {
+      "enum": ["reels", "tiktok", "shorts"],
+      "description": "the app a 9x16 film is made for; G-EDGE keeps text out of the UI it draws (bottom 500 px, right 120 px)"
+    },
+    "footage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["asset"],
+      "properties": {
+        "asset": {
+          "type": "string",
+          "pattern": "^(?!https?:)assets/[^\\s]+/$",
+          "description": "a folder under assets/ holding a frame sequence (mm media prep) and its edit (mm footage cut: edit.json, voice.wav)"
+        }
+      },
+      "description": "film only: talking-head footage whose edit sets the film's clock; every <img data-footage> a layout carries (layouts/talking-full) shows the frame the edit maps t to. Put the cut voice in audio.track"
+    },
+    "formats": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "9x16",
+          "1x1",
+          "4x5",
+          "16x9"
+        ]
+      }
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "the film's date of record, YYYY-MM-DD: mm export writes it as the media's creation time, so two exports of the piece are the same bytes; without it the file carries no creation time"
+    },
+    "language": {
+      "type": "string",
+      "pattern": "^[a-z]{2}(-[A-Z]{2})?$"
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "text",
+          "source"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^f[0-9]{1,3}$"
+          },
+          "sample": {
+            "type": "boolean",
+            "description": "the number is illustrative, not measured; G-FACT-REF then needs a visible element with data-sample and text (such as \"Illustrative\") at every rest where a beat citing it shows"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "description": "where the fact comes from; a human checks it against this (H-FACTS)"
+          }
+        }
+      }
+    },
+    "audio": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "track",
+        "bpm",
+        "beats"
+      ],
+      "properties": {
+        "track": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^(?!https?:)[^\\s]+\\.(wav|mp3|m4a|flac)$"
+        },
+        "bpm": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 50,
+          "maximum": 200
+        },
+        "beats": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^(?!https?:)[^\\s]+\\.json$"
+        },
+        "samples": {
+          "type": "object",
+          "maxProperties": 40,
+          "propertyNames": { "pattern": "^[a-z][a-z0-9-]{0,30}$" },
+          "additionalProperties": { "type": "string", "pattern": "^(?!https?:)[^\\s]+\\.(wav|mp3|m4a|flac|ogg)$" },
+          "description": "cue name -> a sound file in the piece (assets/sounds/x.wav) that `mm sound` mixes in place of the cue's synthesis, trimmed and gain-matched to the style's sound profile; wins over the style's `sound.samples`. Every file needs a record beside it (assets/sounds/x.json: source, licence, author): W-SAMPLE-LICENSE"
+        },
+        "acceptLicences": {
+          "type": "array",
+          "maxItems": 10,
+          "uniqueItems": true,
+          "items": { "enum": ["cc0", "pdm", "by", "by-sa", "by-nd", "by-nc", "by-nc-sa", "by-nc-nd", "sampling+", "nc-sampling+"] },
+          "description": "Openverse licence codes the person accepts for the sounds of this piece beyond the free ones (CC0, public domain, CC BY 2.0 to 4.0): `mm sound find` offers them and `mm sound fetch` and W-SAMPLE-LICENSE allow them. A licence is accepted only by being named here; the style's `sound.licences` can narrow the free ones"
+        }
+      }
+    },
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 40,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "layout",
+          "move",
+          "beats",
+          "say"
+        ],
+        "anyOf": [
+          {
+            "required": [
+              "cut"
+            ],
+            "properties": {
+              "cut": true
+            }
+          },
+          {
+            "required": [
+              "position"
+            ],
+            "properties": {
+              "position": true
+            }
+          }
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,40}$"
+          },
+          "layout": {
+            "$ref": "#/$defs/layoutRef"
+          },
+          "duration": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 60,
+            "description": "film only, seconds"
+          },
+          "presses": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12,
+            "description": "deck only"
+          },
+          "cut": {
+            "$ref": "#/$defs/transitionRef",
+            "description": "how this scene arrives; wins over position when both are given"
+          },
+          "position": {
+            "type": "string",
+            "enum": [
+              "opening",
+              "related",
+              "topic",
+              "climax",
+              "outro"
+            ],
+            "description": "the scene's narrative position: without a cut, the scene arrives with style.transitions.<position>"
+          },
+          "move": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/$defs/moveRef"
+              }
+            ]
+          },
+          "cutParams": {
+            "$ref": "#/$defs/paramBag",
+            "description": "params for the cut's transition pattern, over its defaults"
+          },
+          "frame": {
+            "$ref": "#/$defs/speakerFrame"
+          },
+          "variants": {
+            "type": "object",
+            "description": "this scene as drawn in one format, keyed by format; duration, cut and id are shared",
+            "propertyNames": { "enum": ["9x16", "1x1", "4x5", "16x9"] },
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": false,
+              "minProperties": 1,
+              "properties": {
+                "layout": { "$ref": "#/$defs/layoutRef" },
+                "move": { "$ref": "#/properties/scenes/items/properties/move" },
+                "moveParams": { "$ref": "#/$defs/paramBag" },
+                "frame": { "$ref": "#/$defs/speakerFrame" },
+                "beats": { "$ref": "#/properties/scenes/items/properties/beats" },
+                "say": { "type": "string" }
+              }
+            }
+          },
+          "moveParams": {
+            "$ref": "#/$defs/paramBag",
+            "description": "params for the scene's camera move, over its defaults"
+          },
+          "beats": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 24,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "at",
+                "slot",
+                "fx"
+              ],
+              "properties": {
+                "at": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 60,
+                  "description": "seconds after the scene (film) or after the press (deck)"
+                },
+                "step": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 12,
+                  "description": "deck: the press that brings this beat in; 0 = present at the scene's first rest with no animation"
+                },
+                "until": {
+                  "type": "integer",
+                  "minimum": 2,
+                  "maximum": 13,
+                  "description": "deck: the press at which it is removed"
+                },
+                "out": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 60,
+                  "description": "film: scene-local second at which it leaves"
+                },
+                "exit": {
+                  "$ref": "#/$defs/exitRef"
+                },
+                "slot": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]{0,30}$"
+                },
+                "fx": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/$defs/entranceRef"
+                    },
+                    {
+                      "$ref": "#/$defs/styleEntranceRef"
+                    }
+                  ]
+                },
+                "text": {
+                  "type": "string",
+                  "maxLength": 400
+                },
+                "fact": {
+                  "type": "string",
+                  "pattern": "^f[0-9]{1,3}$"
+                },
+                "value": {
+                  "type": "number"
+                },
+                "asset": {
+                  "type": "string",
+                  "pattern": "^(?!https?:)assets/[^\\s]+$"
+                },
+                "screen": {
+                  "type": "array",
+                  "maxItems": 24,
+                  "description": "screen actions on the device screen this beat fills: each reduces the screen's state from the action before it; film: `at` seconds after the beat arrives; deck: `step` presses after the beat's press",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["do"],
+                    "properties": {
+                      "do": { "type": "string", "pattern": "^(screen|ui)/[a-z][a-z0-9-]{0,40}$", "description": "a screen pattern, or a ui pattern to draw that whole story on the screen" },
+                      "at": { "type": "number", "minimum": 0, "maximum": 60 },
+                      "d": { "type": "number", "exclusiveMinimum": 0, "maximum": 30 },
+                      "step": { "type": "integer", "minimum": 0, "maximum": 13 },
+                      "params": { "type": "object" }
+                    }
+                  }
+                },
+                "params": {
+                  "type": "object",
+                  "description": "pattern params: the entrance gets them, and so do the exit and the emphasis unless params.exit / params.emphasis give them their own bag",
+                  "properties": {
+                    "exit": {
+                      "$ref": "#/$defs/paramBag"
+                    },
+                    "emphasis": {
+                      "$ref": "#/$defs/paramBag"
+                    },
+                    "cue": {
+                      "$ref": "#/$defs/paramBag",
+                      "description": "the cue's own params: gain, seed and, for a recipe cue, emphasis (subtle, normal or strong: which layers play); and three that are not the sound's own: offsetMs (move the cue's anchor from its role's offset, ms), soundOk (a reason that acknowledges a sync or audibility warning for this cue) and big (true on a whoosh that should stop the bed down like a hit)"
+                    },
+                    "instant": {
+                      "type": "boolean",
+                      "description": "the kit's: true = the entrance takes 0 s, so the beat is finished from its at (a film's first frame shows the hook)"
+                    },
+                    "stagger": {
+                      "description": "a cascade's spacing: seconds between children, or { each | amount, from, ease, grid, axis, reverse, seed, jitter, use, total } (SPEC §6): `each` seconds a step or `amount` seconds for the whole spread; `from` first, last, center, edges, random, an item index or a ratio pair; `grid` [cols, rows] or [cols, rows, layers]; `axis` x, y or z; `ease` any ease; `jitter` seconds or [start, end]; `use` one number per child to rank them by; `seed` for random and jitter",
+                      "oneOf": [
+                        { "type": ["number", "string", "boolean"], "description": "anything else than seconds falls back to the style's spacing, with a warning" },
+                        {
+                          "type": "object", "additionalProperties": false,
+                          "properties": {
+                            "each": { "type": "number", "minimum": 0 },
+                            "amount": { "type": "number", "minimum": 0 },
+                            "from": { "oneOf": [{ "enum": ["first", "last", "center", "edges", "random"] }, { "type": "integer", "minimum": 0 }, { "type": "array", "minItems": 2, "maxItems": 3, "items": { "type": "number", "minimum": 0, "maximum": 1 } }] },
+                            "ease": { "type": "string", "minLength": 1, "maxLength": 600 },
+                            "grid": { "type": "array", "minItems": 2, "maxItems": 3, "items": { "type": "integer", "minimum": 1 } },
+                            "axis": { "enum": ["x", "y", "z"] },
+                            "reverse": { "type": "boolean" },
+                            "seed": { "type": ["number", "string"] },
+                            "jitter": { "oneOf": [{ "type": "number", "minimum": 0 }, { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number", "minimum": 0 } }] },
+                            "use": { "type": "array", "items": { "type": "number" } },
+                            "total": { "type": "integer", "minimum": 1 }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": {
+                    "$ref": "#/$defs/paramValue"
+                  }
+                },
+                "anchor": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120,
+                  "description": "film only: the spoken word or phrase this beat illustrates; W-ANCHOR checks the beat arrives from 1.8 s before to 0.2 s after its first word, against the words of the footage edit or of the voice (a <track>.words.json beside audio.track)"
+                },
+                "cue": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]{0,30}$",
+                  "description": "a sound cue, by the folder of patterns/sound/<cue>/ (a code cue with pattern.js or a recipe with recipe.json); G-PATTERN-REF fails a cue no folder holds"
+                },
+                "emphasis": {
+                  "$ref": "#/$defs/emphasisRef"
+                }
+              }
+            }
+          },
+          "say": {
+            "type": "string",
+            "maxLength": 1200
+          }
+        }
+      }
+    },
+    "loops": {
+      "type": "array",
+      "maxItems": 12,
+      "description": "open loops: a question the film poses and later answers. W-LOOP warns when more than two are open at once (one main, one secondary), when one never closes, and when one closes after the scene that shows the call to action",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "opens", "question"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,40}$" },
+          "opens": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,40}$", "description": "the scene that poses the question" },
+          "closes": { "type": ["string", "null"], "pattern": "^[a-z][a-z0-9-]{0,40}$", "description": "the scene that answers it; absent or null, the loop never closes" },
+          "question": { "type": "string", "minLength": 1, "maxLength": 200 }
+        }
+      }
+    },
+    "licences": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "the asset licence ledger's decisions for this piece (SPEC §8): W-ASSET-LICENSE warns for a used asset with no assets/<name>.licence.json, or with a licence outside own, generated, CC0, CC-BY and public domain, unless it is listed here",
+      "properties": {
+        "accepted": {
+          "type": "array",
+          "maxItems": 60,
+          "uniqueItems": true,
+          "description": "assets (by their assets/ reference) or licences (by name, any case) the person accepted for this piece",
+          "items": { "type": "string", "minLength": 1, "maxLength": 200 }
+        }
+      }
+    },
+    "share": {
+      "type": "string",
+      "maxLength": 280,
+      "description": "the caption mm export writes to out/share-copy.txt: 1 to 3 sentences, postable as is; without it the hook, the closing headline and the link"
+    },
+    "cta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "url"
+      ],
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "url": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "shown as text on screen; never loaded"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "enum": ["film", "loop"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "scenes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "duration"
+              ],
+              "properties": {
+                "duration": {
+                  "type": "number"
+                },
+                "presses": false
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "deck"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "scenes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "presses"
+              ],
+              "properties": {
+                "presses": {
+                  "type": "integer"
+                },
+                "duration": false
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "paramValue": {
+      "type": [
+        "string",
+        "number",
+        "boolean"
+      ]
+    },
+    "paramBag": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/paramValue"
+      }
+    },
+    "speakerFrame": {
+      "description": "film only, on a scene whose layout shows the story's footage (layouts/talking-full, layouts/talking-cutout): where the speaker stands in the frame, a mode or an object that also gives the column's side, the card's corner or the mode's size",
+      "oneOf": [
+        { "type": "string", "enum": ["hero", "side", "inset", "bottom", "hidden"] },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "mode": { "type": "string", "enum": ["hero", "side", "inset", "bottom", "hidden"] },
+            "side": { "type": "string", "enum": ["left", "right"] },
+            "corner": { "type": "string", "enum": ["tl", "tr", "bl", "br"] },
+            "size": { "type": "number", "minimum": 0.15, "maximum": 0.9 }
+          }
+        }
+      ]
+    },
+    "layoutRef": {
+      "type": "string",
+      "pattern": "^layouts/[a-z][a-z0-9-]*$"
+    },
+    "transitionRef": {
+      "type": "string",
+      "pattern": "^transitions/[a-z][a-z0-9-]*$"
+    },
+    "moveRef": {
+      "type": "string",
+      "pattern": "^moves/[a-z][a-z0-9-]*$"
+    },
+    "entranceRef": {
+      "type": "string",
+      "pattern": "^(entrances|text|data|devices|3d|ui)/[a-z][a-z0-9-]*$"
+    },
+    "styleEntranceRef": {
+      "type": "string",
+      "pattern": "^style:(headline|body|figure|plate)$",
+      "description": "resolves to style.entrances.<role>"
+    },
+    "exitRef": {
+      "type": "string",
+      "pattern": "^exits/[a-z][a-z0-9-]*$"
+    },
+    "emphasisRef": {
+      "type": "string",
+      "pattern": "^emphasis/[a-z][a-z0-9-]*$"
+    }
+  }
+}

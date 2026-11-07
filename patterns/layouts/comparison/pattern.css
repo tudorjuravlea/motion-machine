@@ -1,0 +1,71 @@
+/* comparison: a headline over two equal sides; stacked in 9x16 and 1x1, side by side in 16x9. */
+.comparison {
+  position: absolute;
+  inset: var(--mm-safe) calc(var(--mm-safe) + (var(--mm-frame-w) / 2 - var(--mm-safe)) * 0.08 * var(--mm-density)) calc(var(--mm-safe) * 2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  gap: calc(var(--mm-space-5) * var(--mm-density));
+}
+.comparison__headline {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: calc(var(--mm-size-h1) * var(--mm-headline-scale));
+  line-height: 1.05;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+  text-align: var(--mm-align);
+  color: var(--mm-color-ink);
+}
+.comparison__headline[data-empty] { display: none; }
+.comparison__pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: calc(var(--mm-space-4) * var(--mm-density));
+}
+.comparison__side {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: var(--mm-align);
+  min-width: 0;
+  min-height: calc(var(--mm-frame-h) * 0.14);
+  padding: var(--mm-space-5);
+  border-top: var(--mm-space-1) solid var(--mm-color-ink);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-surface);
+  color: var(--mm-color-surfaceInk);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-h2);
+  line-height: 1.15;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+  text-align: var(--mm-align);
+}
+.comparison__side--right { border-top-color: var(--mm-color-accent); }
+.comparison__side[data-empty] { visibility: hidden; }
+[data-format="16x9"] .comparison__pair { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: calc(var(--mm-space-5) * var(--mm-density)); }
+[data-format="16x9"] .comparison__side { min-height: calc(var(--mm-frame-h) * 0.32); font-size: var(--mm-size-h2); }
+[data-format="9x16"] .comparison__side { min-height: calc(var(--mm-frame-h) * 0.16); }
+/* align: the brand's composition (--mm-align) by default; `left` or `center` with a beat param on any slot (data-p-align) or data-align on the layout root. */
+.comparison[data-align="center"] .comparison__headline,
+.comparison:has([data-p-align="center"]) .comparison__headline { text-align: center; }
+.comparison[data-align="center"] .comparison__side,
+.comparison:has([data-p-align="center"]) .comparison__side { justify-content: center; text-align: center; }
+.comparison[data-align="left"] .comparison__headline,
+.comparison:has([data-p-align="left"]) .comparison__headline { text-align: left; }
+.comparison[data-align="left"] .comparison__side,
+.comparison:has([data-p-align="left"]) .comparison__side { justify-content: start; text-align: left; }
+/* A deck rest shows the slots that have arrived: a slot the kit still hides takes no room, so the
+   visible content stays centred. (A film keeps the room, so nothing shifts as slots arrive.) */
+[data-kind="deck"] .comparison [data-slot][style*="visibility: hidden"] { display: none; }
+[data-kind="deck"][data-format="16x9"] .comparison__pair:has(> [style*="visibility: hidden"]) {
+  grid-template-columns: minmax(0, 60%);
+  justify-content: center;
+}

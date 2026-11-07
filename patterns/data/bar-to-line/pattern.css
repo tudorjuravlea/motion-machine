@@ -1,0 +1,53 @@
+/* data/bar-to-line: columns with no gaps (each column pads its own bar), so a point's x is the
+   column's centre and the line's viewBox maps 1:1 onto the wells. No axes, no gridlines. */
+.mm-b2l {
+  display: block;
+  width: calc((var(--mm-frame-w) - 2 * var(--mm-safe)) * 0.84);   /* a definite width: a slot may shrink to its content */
+  max-width: 100%;
+  padding-top: var(--mm-space-5);
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: var(--mm-size-body);
+  color: var(--mm-color-ink);
+}
+.mm-b2l__chart { position: relative; display: flex; height: calc(var(--mm-frame-h) * 0.34); }
+.mm-b2l__col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--mm-space-2); }
+.mm-b2l__well { position: relative; flex: 1; margin: 0 calc(var(--mm-space-3) / 2); }
+.mm-b2l__bar {
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  border-radius: var(--mm-radius-1) var(--mm-radius-1) 0 0;
+  background: var(--mm-color-muted);
+}
+.mm-b2l__bar--focus { background: var(--mm-color-accent); }
+.mm-b2l__value {
+  position: absolute;
+  left: -50%;
+  right: -50%;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.mm-b2l__label {
+  text-align: center;
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--mm-color-muted);
+}
+/* the line overlays the wells (its size is set in pixels by the pattern) */
+.mm-b2l__line { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.mm-b2l__line polyline {
+  fill: none;
+  stroke: var(--mm-color-accent);
+  stroke-width: calc(var(--mm-space-1) * 0.7);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

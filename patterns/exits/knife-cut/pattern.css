@@ -1,0 +1,17 @@
+/* exits/knife-cut: the cut, a slit of the ground role centred on the cut line (pattern.js sets its
+   thickness from the type size), and its leading edge in the blade's role at the slit's far end. */
+.mm-knife-cut {
+  position: absolute;
+  translate: 0 -50%;
+  background: var(--mm-color-canvas);
+  pointer-events: none;
+}
+.mm-knife-cut__tip {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(to right, transparent, var(--mm-knife-edge));
+}
+.mm-knife-cut--ink { --mm-knife-edge: var(--mm-color-ink); }
+.mm-knife-cut--accent { --mm-knife-edge: var(--mm-color-accent); }

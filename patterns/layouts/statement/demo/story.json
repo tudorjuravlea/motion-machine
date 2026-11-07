@@ -1,0 +1,70 @@
+{
+  "id": "demo-statement",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: layouts/statement",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/statement",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Nobody checks it before you post."
+        },
+        {
+          "at": 1.2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "So the machine does."
+        }
+      ],
+      "say": "A demo of the pattern."
+    },
+    {
+      "id": "demo-align",
+      "layout": "layouts/statement",
+      "duration": 4.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Nobody checks it before you post.",
+          "params": {
+            "align": "center"
+          }
+        },
+        {
+          "at": 1.2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "So the machine does."
+        }
+      ],
+      "say": "The same layout with align set to center."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

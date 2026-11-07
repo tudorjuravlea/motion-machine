@@ -1,0 +1,48 @@
+{
+  "id": "demo-entrances-slats",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: entrances/slats",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/media",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "image",
+          "fx": "entrances/slats",
+          "asset": "assets/grid.png",
+          "params": {
+            "dur": 1.2
+          }
+        },
+        {
+          "at": 1.2,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "The picture opens slat by slat."
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

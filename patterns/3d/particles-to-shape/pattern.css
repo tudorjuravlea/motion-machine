@@ -1,0 +1,2 @@
+/* 3d/particles-to-shape: the WebGL canvas overlays the slot (and a margin round it); the words fade in under it. */
+.mm-p3d { position: absolute; pointer-events: none; }

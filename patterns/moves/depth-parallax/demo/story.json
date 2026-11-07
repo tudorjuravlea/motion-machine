@@ -1,0 +1,39 @@
+{
+  "id": "demo-depth-parallax",
+  "kind": "film",
+  "formats": ["9x16", "1x1", "4x5", "16x9"],
+  "title": "Demo: moves/depth-parallax",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/media",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": "moves/depth-parallax",
+      "moveParams": { "path": "dolly-right" },
+      "beats": [
+        { "at": 0, "slot": "image", "fx": "entrances/fade", "asset": "assets/scene/source.png", "params": { "instant": true, "frame": "bleed" } },
+        { "at": 0.4, "slot": "headline", "fx": "entrances/rise", "text": "Three depths." },
+        { "at": 1.4, "slot": "caption", "fx": "entrances/fade", "text": "The far things slide behind the near one and soften." }
+      ],
+      "say": "A demo of the dolly path."
+    },
+    {
+      "id": "demo-push",
+      "layout": "layouts/media",
+      "duration": 4.0,
+      "cut": "transitions/hard-cut",
+      "move": "moves/depth-parallax",
+      "moveParams": { "path": "push" },
+      "beats": [
+        { "at": 0, "slot": "image", "fx": "entrances/fade", "asset": "assets/scene/source.png", "params": { "instant": true, "frame": "bleed" } },
+        { "at": 0.6, "slot": "headline", "fx": "entrances/rise", "text": "The near one stays sharp." }
+      ],
+      "say": "A demo of the push path."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

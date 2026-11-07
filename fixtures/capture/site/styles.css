@@ -1,0 +1,19 @@
+/* Fictional brand "Harbour & Pine" for capture tests. Fonts are the repo's bundled woff2 files; the
+   heading family is declared under a name on the banned-fonts list (references/bans.md) so the
+   capture note fires; the file behind it is a bundled serif. */
+@font-face { font-family: "Playfair Display"; font-weight: 700; src: url("../../../styles/fonts/fraunces/fraunces-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Manrope"; font-weight: 400; src: url("../../../styles/fonts/manrope/manrope-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Manrope"; font-weight: 700; src: url("../../../styles/fonts/manrope/manrope-latin-700-normal.woff2") format("woff2"); }
+
+html, body { margin: 0; padding: 0; }
+body { background: #F6F1E7; color: #1B2A2F; font-family: "Manrope", sans-serif; font-weight: 400; font-size: 18px; line-height: 1.5; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 48px 32px 64px; }
+h1, h2, h3 { font-family: "Playfair Display", serif; font-weight: 700; color: #1B2A2F; letter-spacing: -0.02em; margin: 0 0 16px; }
+h1 { font-size: 48px; }
+h2 { font-size: 32px; }
+p { margin: 0 0 16px; }
+.caption { color: #6A7478; font-size: 14px; }
+a { color: #D2491F; }
+.cards { display: flex; gap: 24px; margin: 32px 0; }
+.card { flex: 1; background: #FFFFFF; border: 1px solid #D8D0C0; padding: 24px; }
+.btn { display: inline-block; background: #D2491F; color: #FFF7F0; padding: 14px 28px; text-decoration: none; font-weight: 700; }

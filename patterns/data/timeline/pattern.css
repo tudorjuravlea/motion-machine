@@ -1,0 +1,28 @@
+/* data/timeline: the shared diagram look (runtime/kit/diagram.css), a stage sized to the variant and
+   the format, and the dots, bars and the small type of dates, details and axis numbers. */
+@import url('../../../runtime/kit/diagram.css');
+.mm-tl .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.4); }
+[data-format="16x9"] .mm-tl .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.56); }
+[data-format="9x16"] .mm-tl[data-orient="v"] .mm-dg__stage, [data-format="4x5"] .mm-tl[data-orient="v"] .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.46); }
+[data-format="9x16"] .mm-tl[data-variant="stepper"] .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.5); }
+[data-format="1x1"] .mm-tl[data-variant="stepper"] .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.64); }
+[data-format="16x9"] .mm-tl[data-variant="stepper"] .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.7); }
+[data-format="9x16"] .mm-tl[data-variant="gantt"] .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.42); }
+[data-format="1x1"] .mm-tl[data-variant="gantt"] .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.56); }
+[data-format="16x9"] .mm-tl[data-variant="gantt"] .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.66); }
+.mm-tl__dot { fill: var(--dg-accent); }
+.mm-tl__bar {
+  fill: color-mix(in srgb, var(--dg-accent) 55%, transparent);
+  transform-box: fill-box;
+  transform-origin: 0 50%;
+}
+.mm-tl__bar--hero { fill: var(--dg-accent); }
+.mm-tl[data-hero="0"] .mm-tl__bar { fill: var(--dg-accent); }
+.mm-tl[data-align="left"] .mm-dg__node--bare .mm-dg__label { text-align: left; padding-inline: 0; }
+.mm-tl .mm-dg__node--bare .mm-dg__label { color: var(--mm-color-ink); }
+/* names down a tall track and step titles take the larger size while the rows have room for two of them */
+.mm-tl[data-variant="milestones"][data-align="left"] .mm-tl__what .mm-dg__label,
+.mm-tl[data-variant="roadmap"][data-align="left"] .mm-tl__what .mm-dg__label,
+.mm-tl[data-variant="stepper"][data-dense="0"] .mm-tl__what .mm-dg__label,
+.mm-tl[data-variant="stepper"][data-dense="0"] .mm-dg__node--hero .mm-dg__label { font-size: var(--mm-size-h2); }
+.mm-tl .mm-tl__when .mm-dg__label, .mm-tl .mm-tl__tick .mm-dg__label { color: var(--mm-color-muted); }

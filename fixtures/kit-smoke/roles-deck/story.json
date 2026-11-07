@@ -1,0 +1,28 @@
+{
+  "id": "kit-smoke-roles-deck",
+  "kind": "deck",
+  "formats": ["16x9"],
+  "title": "kit-smoke roles deck: step 0 is there at rest 0",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "hook", "layout": "layouts/title-stack", "presses": 2, "position": "opening", "move": null,
+      "beats": [
+        { "at": 0, "step": 0, "slot": "headline", "fx": "style:headline", "text": "Rest zero is the hook." },
+        { "at": 0, "step": 1, "slot": "sub", "fx": "style:body", "text": "The first press adds to it." }
+      ],
+      "say": "The deck opens on a finished picture."
+    },
+    {
+      "id": "two", "layout": "layouts/title-stack", "presses": 1, "position": "topic", "move": null,
+      "beats": [
+        { "at": 0, "step": 0, "slot": "headline", "fx": "style:headline", "text": "Here as the scene cuts in." },
+        { "at": 0, "step": 1, "slot": "sub", "fx": "style:body", "text": "Then this arrives." }
+      ],
+      "say": "A later scene can arrive already titled."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

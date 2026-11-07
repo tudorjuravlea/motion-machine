@@ -1,0 +1,4 @@
+/* emphasis/wash-bloom: the bloom lives in entrances/sketch's fill layer (under the slot's words, the
+   slot isolated); each layer is one palette role at an alpha over the ground, written by pattern.js. */
+.mm-bloom__wash { stroke: none; }
+.mm-bloom__wash--rim { stroke-width: calc(var(--mm-space-1) * 0.3); stroke-linejoin: round; }

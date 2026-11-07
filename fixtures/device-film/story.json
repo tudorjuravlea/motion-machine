@@ -1,0 +1,189 @@
+{
+  "id": "device-film",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "16x9",
+    "4x5"
+  ],
+  "title": "Device film: screen content proof",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "layout": "layouts/statement",
+      "duration": 3,
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Your app, on the screen it lives on.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Your app, on the screen it lives on."
+    },
+    {
+      "id": "recording",
+      "layout": "layouts/caption-bar",
+      "duration": 4.5,
+      "position": "topic",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.12,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/rec/",
+          "params": {
+            "size": "large"
+          }
+        },
+        {
+          "at": 0.8,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "A real recording, frame by frame."
+        }
+      ],
+      "say": "A real recording plays frame by frame.",
+      "cut": "transitions/hard-cut"
+    },
+    {
+      "id": "phone-site",
+      "layout": "layouts/caption-bar",
+      "duration": 6,
+      "position": "related",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.12,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/site-phone/",
+          "params": {
+            "size": "large"
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 0.8,
+              "params": {
+                "to": "Pricing"
+              }
+            },
+            {
+              "do": "screen/scroll",
+              "at": 2.2,
+              "params": {
+                "to": "Start",
+                "align": "center"
+              }
+            },
+            {
+              "do": "screen/tap",
+              "at": 3.3,
+              "params": {
+                "at": "Start"
+              }
+            },
+            {
+              "do": "screen/swap",
+              "at": 3.9,
+              "params": {
+                "to": "assets/next.png"
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.3,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "Scroll, tap and move on."
+        }
+      ],
+      "say": "The site scrolls, a tap lands, the next screen slides in.",
+      "cut": "transitions/hard-cut"
+    },
+    {
+      "id": "laptop-site",
+      "layout": "layouts/caption-bar",
+      "duration": 5.6,
+      "position": "climax",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.12,
+          "slot": "stage",
+          "fx": "devices/laptop",
+          "asset": "assets/site-laptop/",
+          "screen": [
+            {
+              "do": "screen/zoom-to",
+              "at": 0.8,
+              "params": {
+                "at": "Price",
+                "s": 1.6
+              }
+            },
+            {
+              "do": "screen/callout",
+              "at": 2.0,
+              "d": 2.4,
+              "params": {
+                "at": "Price",
+                "text": "One plan"
+              }
+            }
+          ]
+        },
+        {
+          "at": 0.3,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "Zoom in and name what matters."
+        }
+      ],
+      "say": "On the laptop, the page zooms in and a label names the plan.",
+      "cut": "transitions/hard-cut"
+    },
+    {
+      "id": "cta",
+      "layout": "layouts/endcard",
+      "duration": 3,
+      "position": "outro",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Device films, checked."
+        },
+        {
+          "at": 0.5,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "github.com/tudorjuravlea/motion-machine"
+        }
+      ],
+      "say": "Device films, checked before you show them."
+    }
+  ],
+  "cta": {
+    "text": "Device films, checked.",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

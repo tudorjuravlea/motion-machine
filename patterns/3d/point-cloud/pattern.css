@@ -1,0 +1,9 @@
+/* 3d/point-cloud: a picture's slot is filled (the object is framed by the pattern, not by the picture's
+   box); the slot's words stay in flow as a block, so they can turn with the object; the WebGL canvas
+   covers the whole frame, so the burst can spread past the slot. */
+.mm-pc { position: relative; display: block; }
+.mm-pc:has(> .mm-pc__img[src]) { width: 100%; height: 100%; }
+.mm-pc__img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; }
+.mm-pc__img:not([src]) { display: none; }
+.mm-pc__text { display: block; }
+.mm-pc__canvas { position: absolute; pointer-events: none; }

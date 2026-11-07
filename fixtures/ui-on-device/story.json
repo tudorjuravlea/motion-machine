@@ -1,0 +1,47 @@
+{
+  "id": "ui-on-device",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16"
+  ],
+  "title": "A ui story on a device screen",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "shot",
+      "layout": "layouts/stage",
+      "duration": 9,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/browser",
+          "params": {
+            "size": "large"
+          },
+          "screen": [
+            {
+              "do": "ui/answer",
+              "at": 0.3,
+              "params": {
+                "ask": "When can we ship?",
+                "answer": "Thursday, once the two open reviews are done.",
+                "sources": "Release plan|Review queue"
+              }
+            }
+          ]
+        }
+      ],
+      "say": "A story drawn on the screen of a device."
+    }
+  ]
+}

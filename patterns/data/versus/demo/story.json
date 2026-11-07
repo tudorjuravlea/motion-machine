@@ -1,0 +1,87 @@
+{
+  "id": "demo-data-versus",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "data/versus demo",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo figure for data/versus",
+      "source": "demo fixture, an invented figure that carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "vs",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/versus",
+          "fact": "f1",
+          "params": {
+            "values": "42,87",
+            "labels": "Before,After",
+            "suffix": " min"
+          }
+        },
+        {
+          "at": 1.8,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Time to first answer"
+        }
+      ],
+      "say": "Two figures across a seam, the before recessed."
+    },
+    {
+      "id": "vsink",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/versus",
+          "fact": "f1",
+          "params": {
+            "values": "1200,14000",
+            "labels": "Last year,This year",
+            "format": "compact",
+            "fix": 1,
+            "tone": "ink",
+            "recess": 0.5,
+            "prefix": "$"
+          }
+        },
+        {
+          "at": 1.8,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Pipeline"
+        }
+      ],
+      "say": "The same in the ink role with a stronger recess."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

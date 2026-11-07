@@ -1,0 +1,16 @@
+/* G-BRAND/expressive: a deliberately expressive look made only of brand roles. A band across the top of
+   every scene runs a three-stop gradient (accent, ink, canvas) with a soft surface-coloured radial glow laid
+   over it, so many pixels are a blend of three roles; a wide accent glow spreads over the canvas around the
+   band and the headline carries a soft accent glow. No literal, every colour a role or a blend of up to
+   three roles: the gate lets it through. */
+[data-scene]::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 28%;
+  background:
+    radial-gradient(circle at 70% 40%, color-mix(in srgb, var(--mm-color-surface) 85%, transparent), transparent 55%),
+    linear-gradient(90deg, var(--mm-color-accent), var(--mm-color-ink) 50%, var(--mm-color-canvas));
+  box-shadow: 0 0 var(--mm-space-6) color-mix(in srgb, var(--mm-color-accent) 70%, transparent);
+}
+[data-slot="headline"] { text-shadow: 0 0 var(--mm-space-3) color-mix(in srgb, var(--mm-color-accent) 55%, transparent); }

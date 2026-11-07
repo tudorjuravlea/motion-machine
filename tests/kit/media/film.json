@@ -1,0 +1,298 @@
+{
+  "id": "kit-media",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16"
+  ],
+  "title": "Kit media slot",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "framed",
+      "layout": "layouts/media",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "A picture, framed."
+        },
+        {
+          "at": 0.3,
+          "slot": "image",
+          "fx": "entrances/mask-reveal",
+          "asset": "assets/grid.png"
+        },
+        {
+          "at": 0.8,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Drawn from the piece's assets."
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "bleed",
+      "layout": "layouts/media",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": "moves/push-in",
+      "moveParams": {
+        "target": "media",
+        "to": 1.1
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "image",
+          "fx": "entrances/fade",
+          "asset": "assets/grid.png",
+          "params": {
+            "frame": "bleed"
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Edge to edge."
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "phone",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Home",
+          "asset": "assets/grid.png"
+        },
+        {
+          "at": 1.2,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "A poster on the screen."
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "browser",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": "moves/ken-burns",
+      "moveParams": {
+        "target": "media"
+      },
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/browser",
+          "asset": "assets/grid.png"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "laptop",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": "moves/pan",
+      "moveParams": {
+        "target": "media",
+        "dir": "right"
+      },
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/laptop",
+          "asset": "assets/grid.png"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "plain",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/browser",
+          "text": "Overview"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "bento",
+      "layout": "layouts/bento-3",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": "moves/push-in",
+      "moveParams": {
+        "target": "media"
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Three brands."
+        },
+        {
+          "at": 0.3,
+          "slot": "tile-1",
+          "fx": "entrances/pop",
+          "text": "paper",
+          "asset": "assets/grid.png"
+        },
+        {
+          "at": 0.5,
+          "slot": "tile-2",
+          "fx": "entrances/pop",
+          "asset": "assets/grid.png"
+        },
+        {
+          "at": 0.7,
+          "slot": "tile-3",
+          "fx": "entrances/pop",
+          "text": "linen"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "portrait",
+      "layout": "layouts/media",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "A tall picture."
+        },
+        {
+          "at": 0.3,
+          "slot": "image",
+          "fx": "entrances/fade",
+          "asset": "assets/tall.png"
+        },
+        {
+          "at": 0.6,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Beside its text in 16x9."
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "large-phone",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/grid.png",
+          "params": {
+            "size": "large"
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Larger on its stage."
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "large-browser",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/browser",
+          "asset": "assets/grid.png",
+          "params": {
+            "size": "large"
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Larger on its stage."
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "large-laptop",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/laptop",
+          "asset": "assets/grid.png",
+          "params": {
+            "size": "large"
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Larger on its stage."
+        }
+      ],
+      "say": ""
+    }
+  ],
+  "cta": {
+    "text": "",
+    "url": ""
+  }
+}

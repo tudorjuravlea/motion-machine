@@ -1,0 +1,36 @@
+{
+  "id": "kit-finish-fx",
+  "kind": "film",
+  "formats": ["9x16", "16x9"],
+  "title": "Kit finish looks",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "cta": { "text": "", "url": "" },
+  "scenes": [
+    {
+      "id": "one",
+      "layout": "layouts/title-stack",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0, "slot": "headline", "fx": "entrances/fade", "text": "Every frame is drawn from time", "params": { "instant": true } },
+        { "at": 0, "slot": "sub", "fx": "entrances/fade", "text": "Nothing here moves by itself", "params": { "instant": true } }
+      ],
+      "say": ""
+    },
+    {
+      "id": "two",
+      "layout": "layouts/title-stack",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0, "slot": "headline", "fx": "entrances/fade", "text": "The finish is one filter", "params": { "instant": true } },
+        { "at": 0, "slot": "sub", "fx": "entrances/fade", "text": "On the whole frame", "params": { "instant": true } }
+      ],
+      "say": ""
+    }
+  ]
+}

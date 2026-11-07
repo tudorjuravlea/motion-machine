@@ -1,0 +1,53 @@
+{
+  "id": "kit-cross",
+  "kind": "film",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Kit cross",
+  "scenes": [
+    {
+      "id": "cross",
+      "layout": "layouts/caption-bar",
+      "duration": 7,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/compare-a.svg",
+          "params": {
+            "move": "cross",
+            "status": "false",
+            "crossAt": 1.5,
+            "crossFor": 2.4
+          },
+          "screen": [
+            {
+              "do": "screen/swap",
+              "at": 2.7,
+              "params": {
+                "to": "assets/compare-b.svg",
+                "how": "cut"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "language": "en",
+  "facts": []
+}

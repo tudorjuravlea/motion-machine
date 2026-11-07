@@ -1,0 +1,36 @@
+/* delta: a chip (the accent when the change is good news, the line role when not), then a name. */
+.mm-delta {
+  display: flex;
+  align-items: center;
+  gap: var(--mm-space-3);
+  width: fit-content;
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--mm-color-ink);
+}
+.mm-delta__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mm-space-2);
+  padding: var(--mm-space-1) var(--mm-space-4);
+  border-radius: var(--mm-radius-4);
+  line-height: 1.1;
+  white-space: nowrap;
+  background: var(--mm-color-line);
+  color: var(--mm-color-ink);
+}
+.mm-delta[data-corner="square"] .mm-delta__chip { border-radius: var(--mm-radius-1); }
+.mm-delta[data-good="true"] .mm-delta__chip { background: var(--mm-color-accent); color: var(--mm-color-accentInk); }
+.mm-delta__caret { display: inline-flex; width: 0.62em; height: 0.62em; }
+.mm-delta__caret svg { width: 100%; height: 100%; fill: currentColor; }
+.mm-delta__label {
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.15;
+  color: var(--mm-color-muted);
+}

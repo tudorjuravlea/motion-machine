@@ -1,0 +1,64 @@
+{
+  "id": "demo-hairline-phone",
+  "kind": "film",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Drawn, then real",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "drawn",
+      "layout": "layouts/caption-bar",
+      "duration": 12.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/app/",
+          "params": {
+            "move": "drawn"
+          },
+          "screen": [
+            {
+              "do": "screen/scroll",
+              "at": 6.9,
+              "params": {
+                "to": "Today"
+              }
+            },
+            {
+              "do": "screen/tap",
+              "at": 8.5,
+              "params": {
+                "at": "Deep"
+              }
+            },
+            {
+              "do": "screen/swap",
+              "at": 8.9,
+              "params": {
+                "to": "assets/detail/",
+                "how": "slide"
+              }
+            }
+          ]
+        }
+      ],
+      "say": "A phone drawn in lines becomes the real one."
+    }
+  ],
+  "cta": {
+    "text": "Drawn, then real",
+    "url": "example.org"
+  }
+}

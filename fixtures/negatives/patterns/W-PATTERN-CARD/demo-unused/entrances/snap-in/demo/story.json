@@ -1,0 +1,37 @@
+{
+  "id": "snap-in-demo",
+  "kind": "film",
+  "formats": [
+    "16x9"
+  ],
+  "title": "entrances/snap-in demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Snap in."
+        }
+      ],
+      "say": "One element steps in."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

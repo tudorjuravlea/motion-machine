@@ -1,0 +1,22 @@
+{
+  "id": "kit-media-deck",
+  "kind": "deck",
+  "formats": ["16x9"],
+  "title": "Kit media slot, deck",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    { "id": "framed", "layout": "layouts/media", "presses": 1, "cut": "transitions/hard-cut", "move": null,
+      "beats": [
+        { "step": 0, "at": 0, "slot": "headline", "fx": "entrances/rise", "text": "A picture, framed." },
+        { "step": 1, "at": 0, "slot": "image", "fx": "entrances/mask-reveal", "asset": "assets/grid.png" }
+      ], "say": "" },
+    { "id": "phone", "layout": "layouts/caption-bar", "presses": 1, "cut": "transitions/hard-cut", "move": null,
+      "beats": [
+        { "step": 0, "at": 0, "slot": "caption", "fx": "entrances/fade", "text": "A poster on the screen." },
+        { "step": 1, "at": 0, "slot": "stage", "fx": "devices/phone", "asset": "assets/grid.png" }
+      ], "say": "" }
+  ],
+  "cta": { "text": "", "url": "" }
+}

@@ -1,0 +1,48 @@
+{
+  "id": "demo-entrances-one-line",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "Demo: entrances/one-line",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/caption-bar",
+      "duration": 7,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "entrances/one-line",
+          "asset": "assets/mark.svg",
+          "params": {
+            "dur": 5
+          }
+        },
+        {
+          "at": 5.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Drawn in a single stroke."
+        }
+      ],
+      "say": "A mark drawn as one continuous line, slowing on its curves, then a caption."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

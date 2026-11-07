@@ -1,0 +1,14 @@
+{
+  "name": "ready",
+  "meaning": "something is present and ready to use: an assistant listening, a connection made, a screen settled",
+  "durationS": 0.5,
+  "layers": [
+    { "kind": "tone", "f": 880, "attackS": 0.002, "t60": 0.48, "peak": 1, "partials": [[1, 0], [2.76, -27], [5.4, -36]] },
+    { "kind": "tone", "f": 881.6, "attackS": 0.002, "t60": 0.48, "peak": 0.55, "partials": [[1, 0], [2.76, -30]] },
+    { "kind": "tone", "f": 1760, "attackS": 0.002, "t60": 0.3, "peak": 0.18, "from": 1 },
+    { "kind": "tone", "f": 1318.5, "attackS": 0.003, "t60": 0.35, "peak": 0.22, "offsetS": 0.05, "partials": [[1, 0], [2.76, -30]], "from": 2 }
+  ],
+  "room": { "send": -16, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "masterGain": 0.04,
+  "emphasis": { "subtle": 0, "normal": 1, "strong": 2 }
+}

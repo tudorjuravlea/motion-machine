@@ -1,0 +1,43 @@
+/* stat-tile: a surface card; the figure in the display face, the label muted, the delta a chip. */
+.mm-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--mm-space-2);
+  width: fit-content;
+  min-width: 5em;
+  padding: var(--mm-space-4) var(--mm-space-5);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-surface);
+  color: var(--mm-color-surfaceInk);
+}
+.mm-stat__figure {
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+}
+.mm-stat__label {
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.2;
+  color: var(--mm-surface-muted);
+}
+.mm-stat__delta {
+  padding: var(--mm-space-0) var(--mm-space-3);
+  border-radius: var(--mm-radius-4);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-display);
+  font-size: var(--mm-size-body);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  background: var(--mm-color-accent);
+  color: var(--mm-color-accentInk);
+}
+.mm-stat__delta--down {
+  background: var(--mm-color-line);
+  color: var(--mm-color-surfaceInk);
+}

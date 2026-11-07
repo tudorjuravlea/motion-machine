@@ -1,0 +1,14 @@
+{
+  "kind": "sequence",
+  "fps": 8,
+  "frames": 80,
+  "w": 640,
+  "h": 400,
+  "duration": 10,
+  "source": {
+    "file": "plan.webm",
+    "sha1": "cc090b78bf2f4ae5de099711aa5aa26f43bb3468"
+  },
+  "prepared": "2026-11-01T00:44:10.110Z",
+  "cursor": "cursor.json"
+}

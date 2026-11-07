@@ -1,0 +1,22 @@
+/* line-draw: an accent stroke and a head dot; no axes, no gridlines. */
+.mm-line {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-space-3);
+  width: 100%;
+  max-width: calc(var(--mm-frame-w) * 0.7);
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--mm-color-ink);
+}
+.mm-line__readout { line-height: 1.05; }
+.mm-line__box svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.mm-line__stroke { stroke: var(--mm-color-accent); }
+.mm-line__dot { fill: var(--mm-color-accent); }

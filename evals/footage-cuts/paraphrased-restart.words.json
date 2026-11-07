@@ -1,0 +1,12 @@
+[
+  {"text":"we","start":1,"end":1.3},
+  {"text":"offer","start":1.4,"end":1.7},
+  {"text":"three","start":1.8,"end":2.1},
+  {"text":"plans","start":2.2,"end":2.5},
+  {"text":"there","start":4,"end":4.3},
+  {"text":"are","start":4.4,"end":4.7},
+  {"text":"three","start":4.8,"end":5.1},
+  {"text":"tiers","start":5.2,"end":5.5},
+  {"text":"for","start":5.6,"end":5.9},
+  {"text":"teams.","start":6,"end":6.3}
+]

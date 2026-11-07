@@ -1,0 +1,42 @@
+{
+  "id": "demo-ui-skeleton",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "ui/skeleton demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "shot",
+      "layout": "layouts/stage",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "ui/skeleton",
+          "params": {
+            "title": "This week",
+            "rows": "Design review|Launch notes|Pricing page|Team update"
+          }
+        }
+      ],
+      "say": "The list loads, then each row resolves in place."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

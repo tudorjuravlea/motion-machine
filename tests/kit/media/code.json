@@ -1,0 +1,39 @@
+{
+  "id": "kit-code",
+  "kind": "film",
+  "formats": ["16x9", "9x16", "1x1"],
+  "title": "Kit code",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "cta": { "text": "", "url": "" },
+  "scenes": [
+    {
+      "id": "api", "layout": "layouts/caption-bar", "duration": 12, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{
+        "at": 0.3, "slot": "stage", "fx": "text/code",
+        "text": "const res = await get(url);\nconst data = await res.json();\nreturn data;",
+        "params": { "dur": 11, "steps": "select \"get(url)\"\n---\ncall \"get(url)\" | One attempt, then it fails\n---\nreplace \"get(url);\"\nget(url, {\n  retry: 3,\n});\n---\nselect \"retry: 3\"\n---\ncall \"retry: 3\" | Retries three times\n---\nselect none\n---\ncall none" }
+      }],
+      "say": ""
+    },
+    {
+      "id": "rows", "layout": "layouts/caption-bar", "duration": 8, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{
+        "at": 0.3, "slot": "stage", "fx": "text/code",
+        "text": "def total(items):\n\treturn sum(items)\n# done",
+        "params": { "dur": 7, "lang": "py", "steps": "insert L2\n\tacc = 0\n\tfor x in items:\n\t\tacc += x\n---\nreplace \"return sum(items)\" => \"return round(acc)\"\n---\nremove L1" }
+      }],
+      "say": ""
+    },
+    {
+      "id": "brand", "layout": "layouts/caption-bar", "duration": 6, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{
+        "at": 0.3, "slot": "stage", "fx": "text/code",
+        "text": "const ok = true; // yes\nlet n = 42;\nclass Foo {}",
+        "params": { "dur": 5, "frame": "bare", "keyword": "muted", "number": "accent/60", "comment": "line", "punct": "#ff0000", "string": "red" }
+      }],
+      "say": ""
+    }
+  ]
+}

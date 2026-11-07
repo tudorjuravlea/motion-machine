@@ -1,0 +1,56 @@
+/* ui/table-edit: a small table on a grid; the value column is wide enough for the old and the new figure, so nothing shifts. */
+@import url('../../../runtime/kit/ui.css');
+.mm-ui-table-edit {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) calc(var(--cols) * 1ch + 2.6em);
+  column-gap: var(--mm-space-4);
+  row-gap: var(--mm-space-2);
+}
+.mm-ui-table-edit__row {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+  align-items: center;
+  min-height: 1.9em;
+}
+.mm-ui-table-edit__row--total {
+  margin-top: var(--mm-space-1);
+  padding-top: var(--mm-space-2);
+  border-top: 1px solid var(--mm-color-line);
+  font-weight: var(--mm-weight-display);
+}
+.mm-ui-table-edit__row > .mm-ui__bar { justify-self: start; max-width: 100%; }
+.mm-ui-table-edit__row > .mm-ui-table-edit__head { justify-self: end; }
+.mm-ui-table-edit__val {
+  position: relative;
+  display: grid;
+  justify-items: end;
+  padding: 0.25em 0.6em;
+  border-radius: var(--mm-radius-2);
+  text-align: right;
+  white-space: nowrap;
+}
+.mm-ui-table-edit__val > * { grid-area: 1 / 1; }
+.mm-ui-table-edit__old { border-radius: var(--mm-radius-2); }
+.mm-ui-table-edit__chars { white-space: pre; }
+.mm-ui-table-edit__caret { box-shadow: 0.08em 0 0 var(--mm-color-accent); }
+.mm-ui-table-edit__caret--before { box-shadow: -0.08em 0 0 var(--mm-color-accent); }
+.mm-ui-table-edit__ring {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  border: 0.12em solid var(--mm-color-accent);
+  border-radius: var(--mm-radius-2);
+  pointer-events: none;
+}
+.mm-ui-table-edit__wash {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--mm-radius-2);
+  background: linear-gradient(90deg, transparent, var(--mm-color-accent), transparent);
+  background-size: 300% 100%;
+  pointer-events: none;
+}
+/* a tall frame has no room for the filler column: it goes, so a row is never squeezed */
+[data-format="9x16"] .mm-ui-table-edit { grid-template-columns: minmax(0, 1fr) calc(var(--cols) * 1ch + 2.6em); }
+[data-format="9x16"] .mm-ui-table-edit__row > :nth-child(2) { display: none; }

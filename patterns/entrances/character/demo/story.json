@@ -1,0 +1,77 @@
+{
+  "id": "demo-entrances-character",
+  "title": "entrances/character demo",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  },
+  "scenes": [
+    {
+      "id": "meet",
+      "layout": "layouts/split",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Hello"
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/character",
+          "params": {
+            "mood": "happy"
+          }
+        },
+        {
+          "at": 1.3,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "It hops in, then keeps the beat"
+        }
+      ],
+      "say": "The brand's mascot hops into its slot and idles on the beat."
+    },
+    {
+      "id": "sheet",
+      "layout": "layouts/split",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Every view, every mood"
+        },
+        {
+          "at": 0.5,
+          "slot": "figure",
+          "fx": "entrances/character",
+          "params": {
+            "sheet": "all"
+          }
+        }
+      ],
+      "say": "The model sheet: four views by eight moods, at rest."
+    }
+  ]
+}

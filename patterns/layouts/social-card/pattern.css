@@ -1,0 +1,107 @@
+/* social-card: a post card (variant post) or a follow card (variant follow), drawn from palette roles
+   only: an avatar disc, a handle line, the words, and a row of counters. The shape says "post"; the
+   brand's palette dresses it. The counters are beats (entrances/count), the like is pressed by an
+   emphasis on the first counter. The variant is a beat param on any slot (data-p-variant) or
+   data-variant on the layout root. */
+.social-card {
+  position: absolute;
+  inset: var(--mm-safe);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: var(--mm-align);
+}
+.social-card__card {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-space-4);
+  padding: var(--mm-space-4);
+  border-radius: var(--mm-radius-3);
+  background: var(--mm-color-surface);
+  border: var(--mm-space-0) solid var(--mm-color-line);
+  color: var(--mm-color-surfaceInk);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.3;
+}
+[data-format="16x9"] .social-card__card { width: 62%; }
+.social-card__head { display: flex; align-items: center; gap: var(--mm-space-3); }
+.social-card__avatar {
+  flex: none;
+  box-sizing: border-box;
+  inline-size: calc(var(--mm-size-body) * 2.2);
+  block-size: calc(var(--mm-size-body) * 2.2);
+  border-radius: var(--mm-radius-4);
+  background: var(--mm-color-accent);
+  color: var(--mm-color-accentInk);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  line-height: 1;
+}
+.social-card__who { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--mm-space-1); }
+.social-card__handle {
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+.social-card__sub { color: color-mix(in srgb, var(--mm-color-surfaceInk) 72%, transparent); }
+.social-card__action {
+  flex: none;
+  padding: var(--mm-space-2) var(--mm-space-4);
+  border-radius: var(--mm-radius-4);
+  background: var(--mm-color-accent);
+  color: var(--mm-color-accentInk);
+  font-weight: var(--mm-weight-display);
+  line-height: 1.2;
+}
+.social-card__body { margin: 0; text-wrap: pretty; }
+.social-card__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mm-space-2) var(--mm-space-5);
+  padding-top: var(--mm-space-3);
+  border-top: var(--mm-space-0) solid var(--mm-color-line);
+  font-variant-numeric: tabular-nums;
+}
+.social-card__stat { display: inline-flex; align-items: center; gap: var(--mm-space-2); white-space: nowrap; }
+
+/* icons: shapes cut out of a palette role, so they are never another colour; they sit beside the counter's slot, not in it */
+.social-card__icon {
+  display: block;
+  flex: none;
+  inline-size: calc(var(--mm-size-body) * 0.9);
+  block-size: calc(var(--mm-size-body) * 0.9);
+  background: color-mix(in srgb, var(--mm-color-surfaceInk) 60%, transparent);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+.social-card__icon[data-icon="1"] { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E"); }
+.social-card__icon[data-icon="2"] { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 3h16a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H9l-5 4v-4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z'/%3E%3C/svg%3E"); }
+.social-card__icon[data-icon="3"] { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l9 9h-6v9H9v-9H3z'/%3E%3C/svg%3E"); }
+/* the like is pressed: the first counter's beat carries an emphasis */
+.social-card__stat:has([data-emphasis]) .social-card__icon[data-icon="1"] { background: var(--mm-color-accent); }
+
+/* follow: a larger avatar, the button, the bio, and the counters as a row of figures without icons */
+.social-card:has([data-p-variant="follow"]) .social-card__avatar,
+.social-card[data-variant="follow"] .social-card__avatar { inline-size: calc(var(--mm-size-body) * 2.8); block-size: calc(var(--mm-size-body) * 2.8); }
+.social-card:not(:has([data-p-variant="follow"])):not([data-variant="follow"]) .social-card__action { display: none; }
+.social-card:has([data-p-variant="follow"]) .social-card__icon,
+.social-card[data-variant="follow"] .social-card__icon { display: none; }
+.social-card:has([data-p-variant="follow"]) .social-card__stats,
+.social-card[data-variant="follow"] .social-card__stats { justify-content: space-between; column-gap: var(--mm-space-3); }
+
+.social-card [data-empty], .social-card__stat:has([data-empty]) { display: none; }
+/* align: the brand's composition by default; a beat param on any slot or data-align on the root overrides it */
+.social-card[data-align="center"], .social-card:has([data-p-align="center"]) { align-items: center; }
+.social-card[data-align="left"], .social-card:has([data-p-align="left"]) { align-items: start; }
+[data-kind="deck"] .social-card [style*="visibility: hidden"] { display: none; }

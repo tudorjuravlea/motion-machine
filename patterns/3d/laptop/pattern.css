@@ -1,0 +1,16 @@
+/* 3d/laptop: the WebGL canvas fills the slot; the 2D screen it copies is laid out out of sight,
+   in the proportions of the lid's screen for each model. */
+.laptop3d { position: relative; width: 100%; height: 100%; }
+.laptop3d__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.laptop3d__screen {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--mm-frame-h) * 0.6);
+  aspect-ratio: 1930 / 1205;
+  visibility: hidden;
+  overflow: hidden;
+}
+[data-p-model="chin"] > .laptop3d > .laptop3d__screen { aspect-ratio: 1932 / 1092; }
+[data-p-model="plain"] > .laptop3d > .laptop3d__screen { aspect-ratio: 1930 / 1220; }
+.laptop3d__screen .mm-screen { visibility: hidden; }

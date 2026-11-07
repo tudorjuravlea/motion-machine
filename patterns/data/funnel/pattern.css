@@ -1,0 +1,45 @@
+/* funnel: centred stage bars narrowing down the frame. No connectors, no legend. */
+.mm-funnel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-space-3);
+  width: 100%;
+  max-width: calc(var(--mm-frame-w) * 0.7);
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  color: var(--mm-color-ink);
+}
+.mm-funnel__row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-space-1);
+}
+.mm-funnel__label {
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  color: var(--mm-color-muted);
+}
+.mm-funnel__line {
+  display: flex;
+  align-items: center;
+  gap: var(--mm-space-3);
+}
+.mm-funnel__track {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.mm-funnel__bar {
+  height: var(--mm-space-5);
+  border-radius: var(--mm-radius-1);
+  background: var(--mm-color-accent);
+}
+.mm-funnel__value {
+  min-width: 4em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}

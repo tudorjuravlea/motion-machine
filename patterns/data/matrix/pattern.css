@@ -1,0 +1,23 @@
+/* data/matrix: the shared diagram look (runtime/kit/diagram.css), a stage sized to the format, the
+   cells (a palette role, the accent for the hero) and the small type of names, items and axes. */
+@import url('../../../runtime/kit/diagram.css');
+.mm-matrix .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.62); }
+[data-format="9x16"] .mm-matrix .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.44); }
+[data-format="16x9"] .mm-matrix .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.74); }
+.mm-matrix__cell {
+  fill: var(--mm-color-surface);
+  stroke: var(--mm-color-surface);
+  stroke-linejoin: round;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+.mm-matrix__cell--hero { fill: var(--dg-accent); stroke: var(--dg-accent); }
+.mm-matrix .mm-dg__node--bare .mm-dg__label { text-align: left; padding-inline: 0; }
+/* a name carries its cell's fill, so the contrast check reads the colour the text sits on */
+.mm-matrix__title .mm-dg__label { color: var(--mm-color-muted); background: var(--mm-color-surface); }
+.mm-matrix__title.mm-dg__node--hero .mm-dg__label { color: var(--dg-accent-ink); background: var(--dg-accent); }
+.mm-matrix__axis .mm-dg__label { color: var(--mm-color-ink); }
+.mm-matrix__chip .mm-dg__label { padding: var(--mm-space-1) var(--mm-space-3); }
+/* in the hero cell a chip is the accent-ink role with accent text: a light chip on the accent */
+.mm-matrix__chip--onhero .mm-dg__plate { background: var(--dg-accent-ink); }
+.mm-matrix__chip--onhero .mm-dg__label { color: var(--dg-accent); background: var(--dg-accent-ink); }

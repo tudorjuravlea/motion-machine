@@ -1,0 +1,64 @@
+/* paper-cards: a headline over up to three paper cards with torn lower edges, set at staggered
+   heights like notes pinned to a board. The torn edge is an alpha mask (a zigzag from a conic
+   gradient), not an image. Cards are level at rest (no rotated type, bans.md); pair them with
+   entrances/drop to make them fall in. Empty cards leave the flow. */
+.paper-cards {
+  position: absolute;
+  inset: var(--mm-safe) calc(var(--mm-safe) + (var(--mm-frame-w) / 2 - var(--mm-safe)) * 0.08 * var(--mm-density)) calc(var(--mm-safe) * 2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  gap: calc(var(--mm-space-5) * var(--mm-density));
+}
+.paper-cards__headline {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: calc(var(--mm-size-h1) * var(--mm-headline-scale));
+  line-height: 1.05;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+  text-align: var(--mm-align);
+  color: var(--mm-color-ink);
+}
+.paper-cards__headline[data-empty] { display: none; }
+.paper-cards__row {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--mm-space-4) * var(--mm-density));
+}
+[data-format="16x9"] .paper-cards__row, [data-format="1x1"] .paper-cards__row { flex-direction: row; align-items: flex-start; }
+.paper-cards__card {
+  --mm-tear: calc(var(--mm-space-3) * 0.9);
+  flex: 1 1 0;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: var(--mm-space-4) var(--mm-space-4) calc(var(--mm-space-4) + var(--mm-tear));
+  background: var(--mm-color-surface);
+  color: var(--mm-color-surfaceInk);
+  font-family: var(--mm-font-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.2;
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+  -webkit-mask:
+    linear-gradient(var(--mm-color-ink) 0 0) top / 100% calc(100% - var(--mm-tear) + 1px) no-repeat,
+    conic-gradient(from -45deg at bottom, transparent, var(--mm-color-ink) 1deg 89deg, transparent 90deg) bottom / calc(var(--mm-tear) * 2) var(--mm-tear) repeat-x;
+  mask:
+    linear-gradient(var(--mm-color-ink) 0 0) top / 100% calc(100% - var(--mm-tear) + 1px) no-repeat,
+    conic-gradient(from -45deg at bottom, transparent, var(--mm-color-ink) 1deg 89deg, transparent 90deg) bottom / calc(var(--mm-tear) * 2) var(--mm-tear) repeat-x;
+}
+.paper-cards__card[data-empty] { display: none; }
+/* staggered heights in a row: the middle card sits lower, the last a little higher */
+[data-format="16x9"] .paper-cards__card:nth-child(2), [data-format="1x1"] .paper-cards__card:nth-child(2) { margin-top: var(--mm-space-5); }
+[data-format="16x9"] .paper-cards__card:nth-child(3), [data-format="1x1"] .paper-cards__card:nth-child(3) { margin-top: var(--mm-space-3); }
+/* stacked (9x16, 4x5): the cards step in from alternate sides */
+.paper-cards__card:nth-child(2) { margin-left: var(--mm-space-5); }
+[data-format="16x9"] .paper-cards__card:nth-child(2), [data-format="1x1"] .paper-cards__card:nth-child(2) { margin-left: 0; }
+.paper-cards[data-align="center"] .paper-cards__headline,
+.paper-cards:has([data-p-align="center"]) .paper-cards__headline { text-align: center; }
+.paper-cards[data-align="left"] .paper-cards__headline,
+.paper-cards:has([data-p-align="left"]) .paper-cards__headline { text-align: left; }

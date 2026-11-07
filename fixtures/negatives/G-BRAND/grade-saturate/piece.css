@@ -1,0 +1,1 @@
+[data-scene]::after { content: ""; position: absolute; width: 420px; height: 420px; right: 200px; top: 300px; background: var(--mm-color-accent); filter: saturate(1.8) brightness(1.1); }

@@ -1,0 +1,43 @@
+{
+  "id": "demo-ui-annotate",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "ui/annotate demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "shot",
+      "layout": "layouts/stage",
+      "duration": 8,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "ui/annotate",
+          "params": {
+            "title": "Trail bottle",
+            "rows": "Capacity:750 ml|Material:Steel|Weight:310 g",
+            "notes": "0:Enough for a day out|1:Keeps drinks cold|2:Light to carry"
+          }
+        }
+      ],
+      "say": "Three short notes, each pointing at the one thing it names."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "kit-phone3d-drawn",
+  "kind": "film",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Kit 3D phone drawn",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "scenes": [
+    {
+      "id": "drawn",
+      "layout": "layouts/caption-bar",
+      "duration": 9,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/site/",
+          "params": {
+            "move": "drawn"
+          }
+        }
+      ],
+      "say": ""
+    }
+  ]
+}

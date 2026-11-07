@@ -1,0 +1,48 @@
+/* ui/cascade: a segmented selector with its tinted thumb, and three values that roll behind a feathered mask. */
+@import url('../../../runtime/kit/ui.css');
+.mm-ui-cascade { display: flex; flex-direction: column; gap: var(--mm-space-5); }
+.mm-ui-cascade__seg {
+  position: relative;
+  display: grid;
+  padding: 0.2em;
+  border: 1px solid color-mix(in srgb, var(--mm-surface-muted) 45%, transparent);
+  border-radius: var(--mm-radius-3);
+}
+.mm-ui-cascade__thumb {
+  position: absolute;
+  top: 0.2em;
+  bottom: 0.2em;
+  left: 0.2em;
+  box-sizing: border-box;
+  border-radius: var(--mm-radius-2);
+  border: 1px solid var(--mm-color-accent);
+  background: color-mix(in srgb, var(--mm-color-accent) 24%, transparent);
+}
+.mm-ui-cascade__opt {
+  position: relative;
+  padding: 0.35em 0.5em;
+  text-align: center;
+  font-weight: var(--mm-weight-display);
+  white-space: nowrap;
+}
+.mm-ui-cascade__rows { display: flex; flex-direction: column; gap: var(--mm-space-3); }
+.mm-ui-cascade__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--mm-space-4);
+  padding-bottom: var(--mm-space-3);
+  border-bottom: 1px solid var(--mm-color-line);
+}
+.mm-ui-cascade__row:last-child { border-bottom: 0; padding-bottom: 0; }
+.mm-ui-cascade__value { display: flex; align-items: baseline; white-space: pre; font-weight: var(--mm-weight-display); }
+.mm-ui-cascade__keep { white-space: pre; }
+.mm-ui-cascade__win {
+  display: inline-grid;
+  padding-block: 0.25em;
+  margin-block: -0.25em;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, var(--mm-color-ink) 0.25em, var(--mm-color-ink) calc(100% - 0.25em), transparent);
+  mask-image: linear-gradient(to bottom, transparent, var(--mm-color-ink) 0.25em, var(--mm-color-ink) calc(100% - 0.25em), transparent);
+}
+.mm-ui-cascade__roll { grid-area: 1 / 1; white-space: pre; text-align: right; }
+.mm-ui-cascade__hand { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }

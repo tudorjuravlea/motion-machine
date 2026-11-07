@@ -1,0 +1,65 @@
+{
+  "id": "kit-morph",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16"
+  ],
+  "title": "Kit morph",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "scenes": [
+    {
+      "id": "m",
+      "layout": "layouts/comparison",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": "moves/morph",
+      "moveParams": {
+        "from": "left",
+        "to": "headline",
+        "start": 1.0,
+        "dur": 1.2
+      },
+      "beats": [
+        {
+          "at": 0,
+          "slot": "left",
+          "fx": "entrances/fade",
+          "text": "Preview",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "right",
+          "fx": "entrances/fade",
+          "text": "Later",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Spring launch, now playing",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": ""
+    }
+  ]
+}

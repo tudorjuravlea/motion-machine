@@ -1,0 +1,67 @@
+{
+  "id": "demo-devices-demo-frame",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "1x1",
+    "9x16"
+  ],
+  "title": "Demo: devices/demo-frame",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/caption-bar",
+      "duration": 10.4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "devices/demo-frame",
+          "asset": "assets/plan/",
+          "screen": [
+            {
+              "do": "screen/play",
+              "at": 0.3,
+              "d": 9.5
+            },
+            {
+              "do": "screen/zoom-to",
+              "at": 0.3,
+              "d": 9.5,
+              "params": {
+                "mode": "auto",
+                "depth": "fit",
+                "tilt": "alternate"
+              }
+            },
+            {
+              "do": "screen/pointer",
+              "at": 0.3,
+              "d": 9.5
+            }
+          ]
+        },
+        {
+          "at": 1.0,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "The recording sits on the brand's ground."
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "id": "demo-layouts-grid-break",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: layouts/grid-break",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/grid-break",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Your week, at a glance"
+        },
+        {
+          "at": 0.6,
+          "slot": "tile-1",
+          "fx": "entrances/pop",
+          "text": "Meeting"
+        },
+        {
+          "at": 0.7,
+          "slot": "tile-2",
+          "fx": "entrances/pop",
+          "text": "Meeting"
+        },
+        {
+          "at": 0.8,
+          "slot": "tile-3",
+          "fx": "entrances/pop",
+          "text": "Meeting"
+        },
+        {
+          "at": 0.9,
+          "slot": "tile-4",
+          "fx": "entrances/pop",
+          "text": "Meeting"
+        },
+        {
+          "at": 1,
+          "slot": "tile-5",
+          "fx": "entrances/pop",
+          "text": "Meeting"
+        },
+        {
+          "at": 1.8,
+          "slot": "odd",
+          "fx": "entrances/punch",
+          "text": "Focus time"
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

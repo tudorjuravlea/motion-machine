@@ -1,0 +1,49 @@
+{
+  "id": "count-text",
+  "kind": "film",
+  "formats": [
+    "16x9"
+  ],
+  "title": "count text",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "one",
+      "layout": "layouts/statement",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "",
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/count",
+          "text": "Save 40% today"
+        }
+      ]
+    },
+    {
+      "id": "two",
+      "layout": "layouts/statement",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "",
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/count",
+          "text": "1,250 users"
+        }
+      ]
+    }
+  ]
+}

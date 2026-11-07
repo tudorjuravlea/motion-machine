@@ -1,0 +1,56 @@
+{
+  "id": "demo-unit-stack",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: data/unit-stack",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo figure for data/unit-stack: tonnes of packaging saved",
+      "source": "demo fixture, an invented figure that carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/stat-hero",
+      "duration": 6.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "figure",
+          "fx": "data/unit-stack",
+          "value": 46,
+          "fact": "f1",
+          "params": {
+            "unit": 2,
+            "suffix": " t"
+          }
+        },
+        {
+          "at": 3.1,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Less to ship"
+        }
+      ],
+      "say": "A figure built plate by plate, each plate two tonnes."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

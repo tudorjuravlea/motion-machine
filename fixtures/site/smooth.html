@@ -1,0 +1,8 @@
+<!doctype html>
+<!-- A smooth-scrolling page with a fixed header (tests/cli/capture-site.test.mjs): the capture's
+     scroll back to the top must land at once, so the header is measured and drawn at the top. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>smooth</title>
+<style>html { scroll-behavior: smooth; } body { margin: 0; background: #FAFAF7; }
+header { position: fixed; top: 0; left: 0; right: 0; height: 60px; background: #2F6F5E; }
+main { height: 6000px; background: linear-gradient(#FAFAF7, #E8E4DA); }</style></head>
+<body><header id="top">Header</header><main id="main">Long</main></body></html>

@@ -1,0 +1,147 @@
+{
+  "id": "demo-data-unit-grid",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "data/unit-grid demo",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo figure for data/unit-grid",
+      "source": "demo fixture, an invented figure that carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "waffle",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/unit-grid",
+          "fact": "f1",
+          "value": 37,
+          "params": {
+            "variant": "waffle",
+            "suffix": " in 100",
+            "size": "h1"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Households with a garden"
+        }
+      ],
+      "say": "A hundred cells, N lit in reading order."
+    },
+    {
+      "id": "corner",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/unit-grid",
+          "fact": "f1",
+          "value": 62.5,
+          "params": {
+            "variant": "waffle",
+            "order": "distance",
+            "corner": "br",
+            "fix": 1,
+            "suffix": "%",
+            "size": "h1"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Of the route walked"
+        }
+      ],
+      "say": "The same cells lit by distance from a corner."
+    },
+    {
+      "id": "isotype",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/unit-grid",
+          "fact": "f1",
+          "value": 7,
+          "params": {
+            "variant": "isotype",
+            "of": 10,
+            "suffix": " of 10",
+            "size": "h1"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Walk to work"
+        }
+      ],
+      "say": "Seven of ten people lit."
+    },
+    {
+      "id": "pictobar",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/unit-grid",
+          "fact": "f1",
+          "value": 4.5,
+          "params": {
+            "variant": "pictobar",
+            "of": 10,
+            "fix": 1,
+            "suffix": " of 10",
+            "size": "h1"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Sprints shipped on time"
+        }
+      ],
+      "say": "A column filling from the bottom."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

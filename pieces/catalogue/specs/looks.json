@@ -1,0 +1,575 @@
+{
+  "title": "Looks",
+  "sub": "What sits behind and over every scene.",
+  "style": "obsidian-premium",
+  "template": "scenes",
+  "watch": "Look at the frame.",
+  "watchSub": "Each film changes the style once, and says so.",
+  "variants": [
+    {
+      "id": "bloom",
+      "title": "Bloom and glass",
+      "sub": "The shipped look: a bloom ground, glass cards.",
+      "share": "The style's own ground and surface, as shipped."
+    },
+    {
+      "id": "graph-paper",
+      "title": "Graph paper",
+      "sub": "A fine grid, a scan band, a loop.",
+      "share": "A ground kind: graph-paper.",
+      "style": {
+        "ground": {
+          "kind": "graph-paper",
+          "bloom": null,
+          "dots": null,
+          "grid": {
+            "role": "line",
+            "spacing": 0.02,
+            "every": 5,
+            "strength": 0.9,
+            "scan": {
+              "role": "accent",
+              "size": 0.18,
+              "strength": 0.22
+            }
+          }
+        },
+        "finish": {
+          "vignette": null
+        }
+      }
+    },
+    {
+      "id": "dots",
+      "title": "Dots",
+      "sub": "The dot grid alone.",
+      "share": "A ground kind: dots.",
+      "style": {
+        "ground": {
+          "kind": "dots",
+          "bloom": null,
+          "dots": {
+            "role": "line",
+            "spacing": 0.025,
+            "size": 0.12,
+            "strength": 0.8
+          }
+        },
+        "finish": {
+          "vignette": null
+        }
+      }
+    },
+    {
+      "id": "lens",
+      "title": "Lens finish",
+      "sub": "Chroma and bloom, both on here.",
+      "share": "Finish options: chroma and bloom.",
+      "style": {
+        "finish": {
+          "vignette": null,
+          "chroma": 0.9,
+          "bloom": 0.8
+        }
+      }
+    },
+    {
+      "id": "print",
+      "title": "Print finish",
+      "sub": "Scanlines and a tone look, both on here.",
+      "share": "Finish options: scanlines and look.",
+      "style": {
+        "finish": {
+          "vignette": null,
+          "scanlines": 0.5,
+          "look": "cool-print",
+          "lookAmount": 1
+        }
+      }
+    }
+  ],
+  "items": [
+    {
+      "pattern": "looks/bloom",
+      "variant": "bloom",
+      "template": "scenes",
+      "scenes": [
+        {
+          "layout": "layouts/statement",
+          "min": 4.2,
+          "beats": [
+            {
+              "at": 0,
+              "slot": "headline",
+              "fx": "style:headline",
+              "text": "ground: bloom",
+              "params": {
+                "instant": true
+              }
+            },
+            {
+              "at": 0.3,
+              "slot": "sub",
+              "fx": "entrances/fade",
+              "text": "A radial light rises from the bottom edge."
+            }
+          ]
+        },
+        {
+          "layout": "layouts/statement",
+          "min": 4.2,
+          "beats": [
+            {
+              "at": 0,
+              "slot": "headline",
+              "fx": "style:headline",
+              "text": "bloom + dots",
+              "params": {
+                "instant": true
+              }
+            },
+            {
+              "at": 0.3,
+              "slot": "sub",
+              "fx": "entrances/fade",
+              "text": "It can carry a faint grid of dots."
+            }
+          ]
+        },
+        {
+          "layout": "layouts/bento-3",
+          "min": 4.6,
+          "beats": [
+            {
+              "at": 0,
+              "slot": "headline",
+              "fx": "style:headline",
+              "text": "surface: glass. Cards that catch the light.",
+              "params": {
+                "instant": true
+              }
+            },
+            {
+              "at": 0.4,
+              "slot": "tile-1",
+              "fx": "entrances/pop",
+              "text": "Frosted"
+            },
+            {
+              "at": 0.55,
+              "slot": "tile-2",
+              "fx": "entrances/pop",
+              "text": "Edged"
+            },
+            {
+              "at": 0.7,
+              "slot": "tile-3",
+              "fx": "entrances/pop",
+              "text": "Shining"
+            }
+          ]
+        },
+        {
+          "layout": "layouts/bento-3",
+          "min": 4.6,
+          "beats": [
+            {
+              "at": 0,
+              "slot": "headline",
+              "fx": "style:headline",
+              "text": "surface: flat. The same cards, no glass.",
+              "params": {
+                "instant": true
+              }
+            },
+            {
+              "at": 0.4,
+              "slot": "tile-1",
+              "fx": "entrances/pop",
+              "text": "Frosted",
+              "params": {
+                "surface": "flat"
+              }
+            },
+            {
+              "at": 0.55,
+              "slot": "tile-2",
+              "fx": "entrances/pop",
+              "text": "Edged",
+              "params": {
+                "surface": "flat"
+              }
+            },
+            {
+              "at": 0.7,
+              "slot": "tile-3",
+              "fx": "entrances/pop",
+              "text": "Shining",
+              "params": {
+                "surface": "flat"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pattern": "looks/graph-paper",
+      "variant": "graph-paper",
+      "template": "scenes",
+      "scenes": [
+        {
+          "layout": "layouts/statement",
+          "min": 4.2,
+          "beats": [
+            {
+              "at": 0,
+              "slot": "headline",
+              "fx": "style:headline",
+              "text": "ground: graph-paper",
+              "params": {
+                "instant": true
+              }
+            },
+            {
+              "at": 0.3,
+              "slot": "sub",
+              "fx": "entrances/fade",
+              "text": "A fine grid, a heavy line every fifth."
+            }
+          ]
+        },
+        {
+          "layout": "layouts/statement",
+          "min": 4.2,
+          "beats": [
+            {
+              "at": 0,
+              "slot": "headline",
+              "fx": "style:headline",
+              "text": "scan",
+              "params": {
+                "instant": true
+              }
+            },
+            {
+              "at": 0.3,
+              "slot": "sub",
+              "fx": "entrances/fade",
+              "text": "A band sweeps the frame once a cycle."
+            }
+          ]
+        },
+        {
+          "layout": "layouts/list-reveal",
+          "min": 4.8,
+          "beats": [
+            {
+              "at": 0,
+              "slot": "headline",
+              "fx": "style:headline",
+              "text": "cycle: 8 s",
+              "params": {
+                "instant": true
+              }
+            },
+            {
+              "at": 0.3,
+              "slot": "item-1",
+              "fx": "entrances/rise",
+              "text": "Drifts out and back"
+            },
+            {
+              "at": 0.6,
+              "slot": "item-2",
+              "fx": "entrances/rise",
+              "text": "sweeps the band"
+            },
+            {
+              "at": 0.9,
+              "slot": "item-3",
+              "fx": "entrances/rise",
+              "text": "repeats exactly"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pattern": "looks/dots",
+      "variant": "dots",
+      "template": "scenes",
+      "scenes": [
+        {
+          "layout": "layouts/statement",
+          "min": 4.2,
+          "beats": [
+            {
+              "at": 0,
+              "slot": "headline",
+              "fx": "style:headline",
+              "text": "ground: dots",
+              "params": {
+                "instant": true
+              }
+            },
+            {
+              "at": 0.3,
+              "slot": "sub",
+              "fx": "entrances/fade",
+              "text": "The quietest ground: a grid of small dots."
+            }
+          ]
+        },
+        {
+          "layout": "layouts/list-reveal",
+          "min": 4.8,
+          "beats": [
+            {
+              "at": 0,
+              "slot": "headline",
+              "fx": "style:headline",
+              "text": "dots",
+              "params": {
+                "instant": true
+              }
+            },
+            {
+              "at": 0.3,
+              "slot": "item-1",
+              "fx": "entrances/rise",
+              "text": "role: line colour"
+            },
+            {
+              "at": 0.6,
+              "slot": "item-2",
+              "fx": "entrances/rise",
+              "text": "spacing: share of width"
+            },
+            {
+              "at": 0.9,
+              "slot": "item-3",
+              "fx": "entrances/rise",
+              "text": "strength: how faint"
+            }
+          ]
+        },
+        {
+          "layout": "layouts/statement",
+          "min": 4.2,
+          "beats": [
+            {
+              "at": 0,
+              "slot": "headline",
+              "fx": "style:headline",
+              "text": "Under type",
+              "params": {
+                "instant": true
+              }
+            },
+            {
+              "at": 0.3,
+              "slot": "sub",
+              "fx": "entrances/fade",
+              "text": "Nothing competes with the words."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pattern": "looks/lens",
+      "variant": "lens",
+      "template": "scenes",
+      "scenes": [
+        {
+          "layout": "layouts/comparison",
+          "min": 4.4,
+          "beats": [
+            {
+              "at": 0,
+              "slot": "headline",
+              "fx": "style:headline",
+              "text": "finish: chroma. Colour fringes grow toward the rim.",
+              "params": {
+                "instant": true
+              }
+            },
+            {
+              "at": 0.3,
+              "slot": "left",
+              "fx": "entrances/pop",
+              "text": "Rim"
+            },
+            {
+              "at": 0.5,
+              "slot": "right",
+              "fx": "entrances/pop",
+              "text": "Rim"
+            }
+          ]
+        },
+        {
+          "layout": "layouts/bento-3",
+          "min": 4.6,
+          "beats": [
+            {
+              "at": 0,
+              "slot": "headline",
+              "fx": "style:headline",
+              "text": "finish: bloom. A glow around what is lighter.",
+              "params": {
+                "instant": true
+              }
+            },
+            {
+              "at": 0.4,
+              "slot": "tile-1",
+              "fx": "entrances/pop",
+              "text": "Light"
+            },
+            {
+              "at": 0.55,
+              "slot": "tile-2",
+              "fx": "entrances/pop",
+              "text": "Glow"
+            },
+            {
+              "at": 0.7,
+              "slot": "tile-3",
+              "fx": "entrances/pop",
+              "text": "Soft"
+            }
+          ]
+        },
+        {
+          "layout": "layouts/list-reveal",
+          "min": 4.8,
+          "beats": [
+            {
+              "at": 0,
+              "slot": "headline",
+              "fx": "style:headline",
+              "text": "In palette roles only",
+              "params": {
+                "instant": true
+              }
+            },
+            {
+              "at": 0.3,
+              "slot": "item-1",
+              "fx": "entrances/rise",
+              "text": "Never white"
+            },
+            {
+              "at": 0.6,
+              "slot": "item-2",
+              "fx": "entrances/rise",
+              "text": "Never a new colour"
+            },
+            {
+              "at": 0.9,
+              "slot": "item-3",
+              "fx": "entrances/rise",
+              "text": "Cuts carry it"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pattern": "looks/print",
+      "variant": "print",
+      "template": "scenes",
+      "scenes": [
+        {
+          "layout": "layouts/statement",
+          "min": 4.2,
+          "beats": [
+            {
+              "at": 0,
+              "slot": "headline",
+              "fx": "style:headline",
+              "text": "finish: scanlines",
+              "params": {
+                "instant": true
+              }
+            },
+            {
+              "at": 0.3,
+              "slot": "sub",
+              "fx": "entrances/fade",
+              "text": "A fine line screen in ink, held still."
+            }
+          ]
+        },
+        {
+          "layout": "layouts/statement",
+          "min": 4.2,
+          "beats": [
+            {
+              "at": 0,
+              "slot": "headline",
+              "fx": "style:headline",
+              "text": "finish: look",
+              "params": {
+                "instant": true
+              }
+            },
+            {
+              "at": 0.3,
+              "slot": "sub",
+              "fx": "entrances/fade",
+              "text": "cool-print: a tone curve tinted by a palette role."
+            }
+          ]
+        },
+        {
+          "layout": "layouts/list-reveal",
+          "min": 4.8,
+          "beats": [
+            {
+              "at": 0,
+              "slot": "headline",
+              "fx": "style:headline",
+              "text": "look:",
+              "params": {
+                "instant": true
+              }
+            },
+            {
+              "at": 0.3,
+              "slot": "item-1",
+              "fx": "entrances/rise",
+              "text": "neutral"
+            },
+            {
+              "at": 0.5,
+              "slot": "item-2",
+              "fx": "entrances/rise",
+              "text": "warm-print"
+            },
+            {
+              "at": 0.7,
+              "slot": "item-3",
+              "fx": "entrances/rise",
+              "text": "cool-print"
+            },
+            {
+              "at": 0.9,
+              "slot": "item-4",
+              "fx": "entrances/rise",
+              "text": "faded"
+            },
+            {
+              "at": 1.1,
+              "slot": "item-5",
+              "fx": "entrances/rise",
+              "text": "high-contrast"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "ding",
+  "meaning": "a notification arrives, or a small success: a message, a saved change, a step done",
+  "durationS": 0.32,
+  "knobs": ["step", "durS"],
+  "layers": [
+    { "kind": "tone", "f": 1760, "attackS": 0.002, "t60": 0.3, "partials": [[1, 0], [3.42, -10]], "beatHz": 0.8, "gate": { "atS": 0.034, "dropDb": 20 }, "peak": 1 },
+    { "kind": "tone", "f": 880, "attackS": 0.03, "t60": 0.28, "partials": [[1, 0], [3, -7], [6.93, -9]], "tremolo": { "hz": 24, "depthDb": 6 }, "peak": 0.08 },
+    { "kind": "noise", "filter": { "type": "bandpass", "f": 9000, "q": 1 }, "attackS": 0.0005, "t60": 0.006, "peak": 0.03, "from": 1 },
+    { "kind": "tone", "f": 3520, "attackS": 0.001, "t60": 0.12, "peak": 0.1, "from": 2 }
+  ],
+  "room": { "send": -22, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "masterGain": 0.0578
+}

@@ -1,0 +1,66 @@
+{
+  "id": "demo-screen-island",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: screen/island",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/caption-bar",
+      "duration": 6.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "params": {
+            "size": "large"
+          },
+          "text": "Today",
+          "screen": [
+            {
+              "do": "screen/island",
+              "at": 0.8,
+              "params": {
+                "w": 0.86,
+                "h": 0.12,
+                "text": "Timer 04:12"
+              }
+            },
+            {
+              "do": "screen/island",
+              "at": 3.4,
+              "params": {
+                "close": true
+              }
+            }
+          ]
+        },
+        {
+          "at": 1.0,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "The island opens into a live status."
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "about": "stretches with no word in them: plain silence (cut), a keyboard burst in silence (cut), a laugh the transcript missed with silence either side (the laugh stays, the silence goes), and a pause of 0.55 s (optional)",
+  "duration": 22,
+  "sound": {
+    "extra": [
+      {
+        "kind": "noise",
+        "from": 6.5,
+        "to": 7.5,
+        "db": -30
+      },
+      {
+        "kind": "voice",
+        "from": 11.4,
+        "to": 12.2
+      }
+    ]
+  },
+  "mustCut": [
+    {
+      "start": 3.3,
+      "end": 4.4,
+      "note": "silence between two phrases"
+    },
+    {
+      "start": 6.3,
+      "end": 8.4,
+      "note": "a keyboard burst in the quiet; no speech there"
+    },
+    {
+      "start": 10.9,
+      "end": 11.2,
+      "note": "silence before the laugh"
+    },
+    {
+      "start": 12.4,
+      "end": 13,
+      "note": "silence after the laugh"
+    },
+    {
+      "start": 17,
+      "end": 18.85,
+      "note": "the quiet before the last line"
+    }
+  ],
+  "optionalCut": [
+    {
+      "start": 15,
+      "end": 15.4,
+      "note": "a pause just over the maximum"
+    }
+  ],
+  "mustKeep": [
+    {
+      "start": 11.4,
+      "end": 12.2,
+      "note": "a laugh with no word to it: speech to the ear"
+    }
+  ]
+}

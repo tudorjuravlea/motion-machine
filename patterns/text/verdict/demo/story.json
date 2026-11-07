@@ -1,0 +1,24 @@
+{
+  "id": "demo-emphasis-verdict",
+  "kind": "film",
+  "formats": ["16x9", "9x16", "1x1"],
+  "title": "text/verdict demo",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "verdict",
+      "layout": "layouts/statement",
+      "duration": 4.4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "entrances/rise", "text": "Two plans, one verdict" },
+        { "at": 0.9, "slot": "sub", "fx": "text/verdict", "text": "Plan North|Plan South", "params": { "winner": 2 } }
+      ],
+      "say": "Two names show, hold for a beat, and the stamp lands on the second."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

@@ -1,0 +1,28 @@
+{
+  "id": "kit-smoke-film",
+  "kind": "film",
+  "formats": ["16x9", "9x16", "1x1"],
+  "title": "kit-smoke film: two scenes joined by a hard cut",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "intro", "layout": "layouts/title-stack", "duration": 3, "cut": "transitions/hard-cut", "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "entrances/rise", "text": "Only time moves things." },
+        { "at": 1.0, "slot": "sub", "fx": "entrances/fade", "text": "Every frame is drawn from t alone. Povești în mișcare." }
+      ],
+      "say": "The kit draws every frame from one number."
+    },
+    {
+      "id": "outro", "layout": "layouts/title-stack", "duration": 3, "cut": "transitions/hard-cut", "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "entrances/rise", "text": "Same t, same pixels.", "params": { "spring": "ui" } },
+        { "at": 0.8, "slot": "sub", "fx": "entrances/fade", "text": "kit-smoke: two scenes, one hard cut" }
+      ],
+      "say": "Render the same instant twice and get the same picture."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

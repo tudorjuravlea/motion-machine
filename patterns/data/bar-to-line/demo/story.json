@@ -1,0 +1,56 @@
+{
+  "id": "demo-data-bar-to-line",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: data/bar-to-line",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo figure for data/bar-to-line",
+      "source": "demo fixture, an invented figure that carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "data/bar-to-line",
+          "fact": "f1",
+          "params": {
+            "values": "32,48,41,67,82",
+            "labels": "Jan,Feb,Mar,Apr,May",
+            "dur": 2.6
+          }
+        },
+        {
+          "at": 3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Amounts first, then the trend"
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

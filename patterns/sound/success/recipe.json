@@ -1,0 +1,15 @@
+{
+  "name": "success",
+  "meaning": "a positive outcome: a task finished, a payment through, a figure that is good news",
+  "durationS": 0.6,
+  "layers": [
+    { "kind": "tone", "f": 523.25, "attackS": 0.002, "t60": 0.38, "peak": 1, "partials": [[1, 0], [3.99, -30]] },
+    { "kind": "tone", "f": 784, "attackS": 0.002, "t60": 0.38, "peak": 0.9, "offsetS": 0.07, "partials": [[1, 0], [3.99, -30]] },
+    { "kind": "tone", "f": 1318.5, "attackS": 0.002, "t60": 0.44, "peak": 0.8, "offsetS": 0.14, "partials": [[1, 0], [3.99, -30]] },
+    { "kind": "tone", "f": 1046.5, "attackS": 0.002, "t60": 0.3, "peak": 0.22, "offsetS": 0.14, "from": 1 },
+    { "kind": "tone", "f": 1568, "attackS": 0.002, "t60": 0.35, "peak": 0.3, "offsetS": 0.2, "partials": [[1, 0], [3.99, -30]], "from": 2 }
+  ],
+  "room": { "send": -16, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "masterGain": 0.0504,
+  "emphasis": { "subtle": 0, "normal": 1, "strong": 2 }
+}

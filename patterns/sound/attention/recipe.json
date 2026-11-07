@@ -1,0 +1,14 @@
+{
+  "name": "attention",
+  "meaning": "look here: a notification, a nudge, something that wants to be noticed and is not urgent",
+  "durationS": 0.62,
+  "layers": [
+    { "kind": "tone", "f": 880, "attackS": 0.002, "t60": 0.3, "peak": 1, "partials": [[1, 0], [2.76, -27], [5.4, -36]] },
+    { "kind": "tone", "f": 1318.5, "attackS": 0.002, "t60": 0.42, "peak": 0.9, "offsetS": 0.16, "partials": [[1, 0], [2.76, -27]] },
+    { "kind": "tone", "f": 1760, "attackS": 0.002, "t60": 0.3, "peak": 0.15, "offsetS": 0.16, "from": 1 },
+    { "kind": "tone", "f": 1568, "attackS": 0.003, "t60": 0.3, "peak": 0.5, "offsetS": 0.32, "partials": [[1, 0], [2.76, -30]], "from": 2 }
+  ],
+  "room": { "send": -22, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "masterGain": 0.0563,
+  "emphasis": { "subtle": 0, "normal": 1, "strong": 2 }
+}

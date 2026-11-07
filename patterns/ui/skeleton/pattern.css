@@ -1,0 +1,11 @@
+/* ui/skeleton: one cell per row holds the word and the bar standing in for it, at the word's own width. */
+@import url('../../../runtime/kit/ui.css');
+.mm-ui-skeleton { display: flex; flex-direction: column; gap: var(--mm-space-3); }
+.mm-ui-skeleton__head { display: flex; align-items: center; justify-content: space-between; padding-bottom: var(--mm-space-2); border-bottom: 1px solid var(--mm-color-line); }
+.mm-ui-skeleton__title { font-weight: var(--mm-weight-display); }
+.mm-ui-skeleton__row { display: flex; align-items: center; gap: var(--mm-space-3); }
+.mm-ui-skeleton__dot { position: relative; flex: none; width: 1.3em; height: 1.3em; border-radius: 50%; background: var(--mm-color-line); overflow: hidden; }
+.mm-ui-skeleton__fill { position: absolute; inset: 0; background: var(--mm-color-accent); }
+.mm-ui-skeleton__cell { position: relative; flex: none; white-space: nowrap; }
+.mm-ui-skeleton__stand { position: absolute; left: 0; right: 0; top: 50%; translate: 0 -50%; }
+.mm-ui-skeleton__meta { margin-left: auto; }

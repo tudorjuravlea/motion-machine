@@ -1,0 +1,18 @@
+/* ui/answer: the question on the accent, the answer on the surface, the composer at the foot. */
+@import url('../../../runtime/kit/ui.css');
+.mm-ui-answer { display: flex; flex-direction: column; gap: var(--mm-space-4); }
+.mm-screen-fx > .mm-ui-answer > .mm-ui-answer__composer { margin-top: auto; }
+.mm-ui-answer__ask {
+  align-self: flex-end;
+  max-width: 85%;
+  padding: 0.35em 0.75em;
+  border-radius: var(--mm-radius-3);
+  background: var(--mm-color-accent);
+  color: var(--mm-color-accentInk);
+}
+.mm-ui-answer__lane { display: grid; }
+.mm-ui-answer__lane > * { grid-area: 1 / 1; }
+.mm-ui-answer__sources { display: flex; flex-wrap: wrap; gap: var(--mm-space-2); min-height: 1.6em; }
+.mm-ui-answer__composer { display: flex; align-items: center; justify-content: space-between; min-height: 1.4em; }
+.mm-ui-answer__typed { min-width: 0; overflow: hidden; }
+.mm-ui-answer__send { flex: none; width: 1.3em; height: 1.3em; border-radius: 50%; background: var(--mm-color-accent); }

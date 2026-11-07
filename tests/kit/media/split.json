@@ -1,0 +1,42 @@
+{
+  "id": "kit-split",
+  "kind": "film",
+  "formats": ["16x9", "9x16"],
+  "title": "Kit split",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "cta": { "text": "", "url": "" },
+  "scenes": [
+    {
+      "id": "en", "layout": "layouts/statement", "duration": 4, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{ "at": 0.2, "slot": "headline", "fx": "entrances/line-reveal", "text": "Design systems that scale across every product team, however many there are" }],
+      "say": ""
+    },
+    {
+      "id": "ro", "layout": "layouts/statement", "duration": 4, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{ "at": 0.2, "slot": "headline", "fx": "entrances/line-reveal", "text": "Știința și țara noastră: povești în mișcare, la timpul potrivit pentru fiecare echipă" }],
+      "say": ""
+    },
+    {
+      "id": "ja", "layout": "layouts/statement", "duration": 4, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{ "at": 0.2, "slot": "headline", "fx": "entrances/line-reveal", "text": "これは日本語のテキストです。ブランドの書体で正しく折り返されます。長い文章も行ごとに現れます。", "params": { "unit": "word" } }],
+      "say": ""
+    },
+    {
+      "id": "emoji", "layout": "layouts/statement", "duration": 4, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{ "at": 0.2, "slot": "headline", "fx": "entrances/letter-cascade", "text": "Hi 👋🏽 team 👨‍👩‍👧 Ștefan é" }],
+      "say": ""
+    },
+    {
+      "id": "words", "layout": "layouts/statement", "duration": 4, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{ "at": 0.2, "slot": "headline", "fx": "entrances/words", "text": "Say it plainly, then say it again — (almost) every time" }],
+      "say": ""
+    },
+    {
+      "id": "roll", "layout": "layouts/statement", "duration": 4, "cut": "transitions/hard-cut", "move": null,
+      "beats": [{ "at": 0.2, "slot": "headline", "fx": "entrances/line-reveal", "text": "Rolling in", "params": { "unit": "char", "mode": "roll", "from": "bottom" } }],
+      "say": ""
+    }
+  ]
+}

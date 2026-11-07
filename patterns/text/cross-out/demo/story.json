@@ -1,0 +1,34 @@
+{
+  "id": "demo-emphasis-cross-out",
+  "kind": "film",
+  "formats": ["16x9", "9x16", "1x1"],
+  "title": "text/cross-out demo",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "myths",
+      "layout": "layouts/statement",
+      "duration": 3.8,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "text/cross-out", "text": "Needs a huge budget|Needs a full studio|Takes all year|Takes an afternoon" }
+      ],
+      "say": "Three claims are struck, one by one, and the last one stays."
+    },
+    {
+      "id": "scribble",
+      "layout": "layouts/statement",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "text/cross-out", "text": "Too many tools|Too many meetings|One clear plan", "params": { "stroke": "scribble", "survivor": "grow" } }
+      ],
+      "say": "The same, with a scribble, and the survivor grows."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

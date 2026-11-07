@@ -1,0 +1,60 @@
+{
+  "id": "demo-move-morph",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: moves/morph",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/comparison",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": "moves/morph",
+      "moveParams": {
+        "from": "left",
+        "to": "headline",
+        "start": 1.2,
+        "dur": 1.2
+      },
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "left",
+          "fx": "entrances/rise",
+          "text": "Preview"
+        },
+        {
+          "at": 0.3,
+          "slot": "right",
+          "fx": "entrances/rise",
+          "text": "Share"
+        },
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Spring launch, now playing",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

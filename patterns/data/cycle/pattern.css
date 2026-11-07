@@ -1,0 +1,18 @@
+/* data/cycle: the shared diagram look (runtime/kit/diagram.css) and a stage sized to the format. */
+@import url('../../../runtime/kit/diagram.css');
+.mm-cycle .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.6); }
+[data-format="9x16"] .mm-cycle .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.4); }
+[data-format="16x9"] .mm-cycle .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.72); }
+.mm-cycle__centre {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: var(--mm-size-h2);
+  line-height: 1.05;
+  text-wrap: balance;
+  color: var(--mm-color-ink);
+}

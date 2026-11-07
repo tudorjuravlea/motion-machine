@@ -1,0 +1,196 @@
+/* label-column: an object (a picture of the product, or its layers) with up to six labels in a
+   column beside it, each joined to a point on the object by a leader. The labels sit in the
+   column's flow at a minimum spacing, so they can never overlap whatever their length: the
+   relaxation is the layout's own flow. Each label's point comes from its beat params x and y
+   (shares of the picture, or of the object frame when there is none, read with typed attr()); the
+   dot is placed there, and the leader
+   runs from the dot to the label's name, found with CSS anchor positioning. The dots and leaders
+   are positioned against the stage, so the labels must not be positioned; while a label's own
+   entrance moves or scales it, its dot and leader wait until it lands. A label is an index (its
+   slot number, in the accent), its name (the beat's text) and an optional spec line (param `spec`).
+   A measure slot under the object spans its width, for emphasis/dimension. The column never runs
+   out of the frame with longer labels: the stage is a size container, and the labels take the body
+   size, shrunk toward the body floor when six labels of two and a half lines would not fit its height;
+   in the square and feed formats the spec runs on after the name and the object frame is narrower. */
+.label-column {
+  position: absolute;
+  inset: calc(var(--mm-safe) + var(--mm-space-4)) calc(var(--mm-safe) + (var(--mm-frame-w) / 2 - var(--mm-safe)) * 0.08 * var(--mm-density)) calc(var(--mm-safe) * 2);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--mm-space-4) * var(--mm-density));
+  text-align: var(--mm-align);
+  anchor-scope: --mm-lc-object, --mm-lc-1, --mm-lc-2, --mm-lc-3, --mm-lc-4, --mm-lc-5, --mm-lc-6;
+}
+.label-column__headline {
+  flex: none;
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: calc(var(--mm-size-h1) * var(--mm-headline-scale));
+  line-height: 1.05;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+  color: var(--mm-color-ink);
+}
+.label-column__headline[data-empty] { display: none; }
+.label-column__stage {
+  --mm-lc-obj: 50%;
+  --mm-lc-measure: calc(var(--mm-size-body) * 1.6);
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: var(--mm-lc-obj) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) var(--mm-lc-measure);
+  column-gap: var(--mm-space-5);
+  container-type: size;
+}
+.label-column:has(.label-column__measure[data-empty]) .label-column__stage { --mm-lc-measure: 0px; }
+[data-format="16x9"] .label-column__stage { --mm-lc-obj: 46%; }
+[data-format="1x1"] .label-column__stage,
+[data-format="4x5"] .label-column__stage { --mm-lc-obj: 40%; }
+.label-column__object {
+  grid-column: 1;
+  grid-row: 1;
+  min-height: 0;
+  position: relative;
+}
+/* the picture at its own proportions, as large as the frame allows and centred: its box is the
+   picture, so the label points are shares of the picture in every format */
+.label-column__picture {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  anchor-name: --mm-lc-object;
+}
+.label-column__picture:not([src]) { display: none; }
+.label-column__measure {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: end;
+  font-size: var(--mm-size-body);
+  line-height: 1.2;
+  color: var(--mm-color-ink);
+}
+.label-column__measure[data-empty] { display: none; }
+.label-column__labels {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: var(--mm-space-3);
+  text-align: start;
+}
+.label-column__label {
+  --mm-lc-x: attr(data-p-x type(<number>), 0.5);
+  --mm-lc-y: attr(data-p-y type(<number>), 0.5);
+  /* the point in the stage: on the picture when there is one, else on the object frame */
+  --mm-lc-px: calc(anchor(--mm-lc-object left, 0px) + var(--mm-lc-x) * anchor-size(--mm-lc-object width, var(--mm-lc-obj)));
+  --mm-lc-py: calc(anchor(--mm-lc-object top, 0px) + var(--mm-lc-y) * anchor-size(--mm-lc-object height, calc(100% - var(--mm-lc-measure))));
+  display: flex;
+  flex-direction: column;
+  color: var(--mm-color-ink);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  /* the body size, or less when six labels of two and a half lines each (6 × 2.5 × 1.1 = 16.5
+     line heights, plus the gaps) would not fit the stage's height, but never under the body
+     floor: the gate's floor is at most 0.625 of the safe margin in every format */
+  --mm-lc-floor: calc(var(--mm-safe) * 0.625);
+  font-size: min(var(--mm-size-body), max(var(--mm-lc-floor), calc((100cqh - 5 * var(--mm-space-3)) / 16.5)));
+  line-height: 1.1;
+  overflow-wrap: break-word;
+}
+.label-column__label[data-empty] { display: none; }
+/* in the short and square formats the spec runs on after the name, so six labels fit the height */
+[data-format="16x9"] .label-column__label,
+[data-format="1x1"] .label-column__label,
+[data-format="4x5"] .label-column__label { flex-flow: row wrap; align-items: baseline; column-gap: 0.6em; }
+.label-column__name::before {
+  margin-inline-end: 0.5em;
+  font-family: var(--mm-font-mono);
+  font-weight: var(--mm-weight-mono);
+  letter-spacing: var(--mm-tracking-mono);
+  color: var(--mm-accent-text);
+}
+.label-column__label::after {
+  content: attr(data-p-spec);
+  font-family: var(--mm-font-mono);
+  font-weight: var(--mm-weight-mono);
+  letter-spacing: var(--mm-tracking-mono);
+  color: var(--mm-color-muted);
+}
+.label-column__label:not([data-p-spec])::after { display: none; }
+.label-column__label[data-slot="label-1"] .label-column__name { anchor-name: --mm-lc-1; }
+.label-column__label[data-slot="label-1"] .label-column__name::before { content: "01"; }
+.label-column__label[data-slot="label-1"] .label-column__lead { position-anchor: --mm-lc-1; }
+.label-column__label[data-slot="label-2"] .label-column__name { anchor-name: --mm-lc-2; }
+.label-column__label[data-slot="label-2"] .label-column__name::before { content: "02"; }
+.label-column__label[data-slot="label-2"] .label-column__lead { position-anchor: --mm-lc-2; }
+.label-column__label[data-slot="label-3"] .label-column__name { anchor-name: --mm-lc-3; }
+.label-column__label[data-slot="label-3"] .label-column__name::before { content: "03"; }
+.label-column__label[data-slot="label-3"] .label-column__lead { position-anchor: --mm-lc-3; }
+.label-column__label[data-slot="label-4"] .label-column__name { anchor-name: --mm-lc-4; }
+.label-column__label[data-slot="label-4"] .label-column__name::before { content: "04"; }
+.label-column__label[data-slot="label-4"] .label-column__lead { position-anchor: --mm-lc-4; }
+.label-column__label[data-slot="label-5"] .label-column__name { anchor-name: --mm-lc-5; }
+.label-column__label[data-slot="label-5"] .label-column__name::before { content: "05"; }
+.label-column__label[data-slot="label-5"] .label-column__lead { position-anchor: --mm-lc-5; }
+.label-column__label[data-slot="label-6"] .label-column__name { anchor-name: --mm-lc-6; }
+.label-column__label[data-slot="label-6"] .label-column__name::before { content: "06"; }
+.label-column__label[data-slot="label-6"] .label-column__lead { position-anchor: --mm-lc-6; }
+/* the point on the object, and the leader from it to the label's name */
+.label-column__dot {
+  position: absolute;
+  z-index: 1;
+  left: var(--mm-lc-px);
+  top: var(--mm-lc-py);
+  width: var(--mm-space-3);
+  height: var(--mm-space-3);
+  margin: calc(var(--mm-space-3) / -2) 0 0 calc(var(--mm-space-3) / -2);
+  box-sizing: border-box;
+  border-radius: var(--mm-radius-4);
+  background: var(--mm-color-accent);
+  box-shadow: 0 0 0 calc(var(--mm-space-0) * 1.5) color-mix(in srgb, var(--mm-color-accent) 30%, transparent);
+}
+.label-column__lead {
+  position: absolute;
+  left: var(--mm-lc-px);
+  right: calc(anchor(left) + var(--mm-space-2));
+  pointer-events: none;
+}
+/* the box stretches between the point and the name (a span, so its insets size it, and a box with
+   no room collapses to nothing); the line is drawn corner to corner inside it */
+.label-column__lead svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.label-column__lead line {
+  stroke: var(--mm-color-muted);
+  stroke-width: calc(var(--mm-space-0) / 2);
+  vector-effect: non-scaling-stroke;
+}
+/* down: the name sits below the point (a box from the point to the name, or 1 px tall when level) */
+.label-column__lead--down {
+  top: calc(var(--mm-lc-py) - 1px);
+  bottom: anchor(center);
+}
+/* up: the name sits above the point; the box collapses to nothing otherwise. (In `bottom`, anchor(top)
+   measures from the stage's bottom edge, so the point is written out again for this side.) */
+.label-column__lead--up {
+  top: anchor(center);
+  bottom: calc(anchor(--mm-lc-object top, 100%) - var(--mm-lc-y) * anchor-size(--mm-lc-object height, calc(100% - var(--mm-lc-measure))));
+}
+/* while a label's entrance moves, scales or blurs it, it becomes the frame its dot and leader are
+   placed in: they wait until it lands */
+.label-column__label:is([style*="translate:"]:not([style*="translate: none"]), [style*="scale:"]:not([style*="scale: none"]), [style*="transform:"]:not([style*="transform: none"]), [style*="filter:"]:not([style*="filter: none"])) :is(.label-column__dot, .label-column__lead) { visibility: hidden; }

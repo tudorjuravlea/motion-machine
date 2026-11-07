@@ -1,0 +1,94 @@
+{
+  "id": "demo-bento-3",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: layouts/bento-3",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/bento-3",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "A library of patterns."
+        },
+        {
+          "at": 0.8,
+          "slot": "tile-1",
+          "fx": "entrances/pop",
+          "text": "entrances"
+        },
+        {
+          "at": 1.1,
+          "slot": "tile-2",
+          "fx": "entrances/pop",
+          "text": "transitions"
+        },
+        {
+          "at": 1.4,
+          "slot": "tile-3",
+          "fx": "entrances/pop",
+          "text": "sound"
+        }
+      ],
+      "say": "A demo of the pattern."
+    },
+    {
+      "id": "demo-align",
+      "layout": "layouts/bento-3",
+      "duration": 4.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "A library of patterns.",
+          "params": {
+            "align": "center"
+          }
+        },
+        {
+          "at": 0.8,
+          "slot": "tile-1",
+          "fx": "entrances/pop",
+          "text": "entrances"
+        },
+        {
+          "at": 1.1,
+          "slot": "tile-2",
+          "fx": "entrances/pop",
+          "text": "transitions"
+        },
+        {
+          "at": 1.4,
+          "slot": "tile-3",
+          "fx": "entrances/pop",
+          "text": "sound"
+        }
+      ],
+      "say": "The same layout with align set to center."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

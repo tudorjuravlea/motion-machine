@@ -1,0 +1,13 @@
+{
+  "about": "a talk with ordinary pauses (none over half a second): nothing to cut, and every word is protected",
+  "duration": 10,
+  "mustCut": [],
+  "optionalCut": [],
+  "mustKeep": [
+    {
+      "start": 0.8,
+      "end": 8.75,
+      "note": "all of it"
+    }
+  ]
+}

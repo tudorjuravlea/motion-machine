@@ -1,0 +1,109 @@
+/* shortlist: up to six candidates in a grid; the beat that carries `pick: true` is the choice. When
+   the result slot arrives (the kit has made it visible), the field collapses to the pick: every other
+   candidate's card dims to 0.35 and blurs (never scaled down, so its text keeps the body floor), the pick takes an accent ring and
+   steps up to 1.03, and the result card sits under the pick in its column (over it when there is no
+   room below). The collapse lives on each card (the slot's [data-text] child), never on the slot,
+   so it never fights an entrance's inline styles. Without a result beat nothing collapses. The pick
+   is the first item that carries `pick`: a later one is a candidate like the rest. With no pick
+   nothing collapses, and the result card takes its place in the flow under the grid. */
+.shortlist {
+  position: absolute;
+  inset: var(--mm-safe) calc(var(--mm-safe) + (var(--mm-frame-w) / 2 - var(--mm-safe)) * 0.08 * var(--mm-density)) calc(var(--mm-safe) * 2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: var(--mm-align);
+  text-align: var(--mm-align);
+  gap: calc(var(--mm-space-5) * var(--mm-density));
+  anchor-scope: --mm-shortlist-pick;
+}
+.shortlist__headline {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: calc(var(--mm-size-h1) * var(--mm-headline-scale));
+  line-height: 1.05;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+  color: var(--mm-color-ink);
+}
+.shortlist__headline[data-empty] { display: none; }
+.shortlist__items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--mm-space-3);
+}
+[data-format="16x9"] .shortlist__items { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.shortlist__item { display: flex; text-align: start; }
+.shortlist__item[data-empty] { display: none; }
+.shortlist__item[data-p-pick="true"] { anchor-name: --mm-shortlist-pick; }
+.shortlist__item[data-p-pick="true"] ~ .shortlist__item[data-p-pick="true"] { anchor-name: none; }
+.shortlist__card {
+  display: block;
+  flex: 1;
+  box-sizing: border-box;
+  padding: var(--mm-space-3) var(--mm-space-4);
+  border: calc(var(--mm-space-0) / 4) solid var(--mm-color-line);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-surface);
+  color: var(--mm-color-surfaceInk);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.2;
+  overflow-wrap: break-word;
+}
+/* the result: an accent card under the pick, in its column; flipped over the pick when the pick is
+   on the last row. It overlaps a dimmed candidate by design, so it carries data-over. */
+.shortlist__result {
+  position: absolute;
+  z-index: 2;
+  position-anchor: --mm-shortlist-pick;
+  top: calc(anchor(bottom) + var(--mm-space-2));
+  left: anchor(left);
+  width: anchor-size(width);
+  position-try-fallbacks: flip-block;
+  text-align: start;
+}
+.shortlist__result[data-empty] { display: none; }
+/* no pick: the result is a card under the grid, in the column's flow (its place is kept while it waits) */
+.shortlist:not(:has(.shortlist__item[data-p-pick="true"])) > .shortlist__result {
+  position: static;
+  width: 100%;
+}
+.shortlist__verdict {
+  display: block;
+  box-sizing: border-box;
+  padding: var(--mm-space-3) var(--mm-space-4);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-accent);
+  color: var(--mm-color-accentInk);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.2;
+  overflow-wrap: break-word;
+}
+/* the collapse, once the result has arrived, when there is a pick */
+.shortlist:has(.shortlist__item[data-p-pick="true"]):has(> .shortlist__result:not([data-empty]):not([style*="visibility: hidden"])) .shortlist__item:is(:not([data-p-pick="true"]), [data-p-pick="true"] ~ [data-p-pick="true"]) > .shortlist__card {
+  opacity: 0.35;
+  filter: blur(var(--mm-space-1));
+}
+.shortlist:has(> .shortlist__result:not([data-empty]):not([style*="visibility: hidden"])) .shortlist__item[data-p-pick="true"]:not([data-p-pick="true"] ~ *) > .shortlist__card {
+  outline: var(--mm-space-0) solid var(--mm-color-accent);
+  outline-offset: var(--mm-space-1);
+  scale: 1.03;
+}
+/* align: the brand's composition by default; `left` or `center` by a beat param or data-align */
+.shortlist[data-align="center"],
+.shortlist:has([data-p-align="center"]) { align-items: center; text-align: center; }
+.shortlist[data-align="left"],
+.shortlist:has([data-p-align="left"]) { align-items: start; text-align: left; }

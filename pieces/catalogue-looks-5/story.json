@@ -1,0 +1,172 @@
+{
+  "id": "catalogue-looks-5",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Print finish",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Print finish",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Scanlines and a tone look, both on here."
+        }
+      ],
+      "say": "Scanlines and a tone look, both on here.",
+      "duration": 3.6
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Look at the frame.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Each film changes the style once, and says so."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 4.25
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "print",
+      "layout": "layouts/statement",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "finish: scanlines",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "A fine line screen in ink, held still."
+        }
+      ],
+      "id": "print-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "print",
+      "layout": "layouts/statement",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "finish: look",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "cool-print: a tone curve tinted by a palette role."
+        }
+      ],
+      "id": "print-b",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "print",
+      "layout": "layouts/list-reveal",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "look:",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "item-1",
+          "fx": "entrances/rise",
+          "text": "neutral"
+        },
+        {
+          "at": 0.5,
+          "slot": "item-2",
+          "fx": "entrances/rise",
+          "text": "warm-print"
+        },
+        {
+          "at": 0.7,
+          "slot": "item-3",
+          "fx": "entrances/rise",
+          "text": "cool-print"
+        },
+        {
+          "at": 0.9,
+          "slot": "item-4",
+          "fx": "entrances/rise",
+          "text": "faded"
+        },
+        {
+          "at": 1.1,
+          "slot": "item-5",
+          "fx": "entrances/rise",
+          "text": "high-contrast"
+        }
+      ],
+      "id": "print-c",
+      "duration": 4.8
+    }
+  ],
+  "share": "Print finish: print. Finish options: scanlines and look.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

@@ -1,0 +1,2 @@
+/* Negative G-LEGIBLE/first-letter: the headline's first letter at 10 % of its size. */
+[data-scene="style"] [data-slot="headline"]::first-letter { font-size: 10%; }

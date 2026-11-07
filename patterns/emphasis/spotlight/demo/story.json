@@ -1,0 +1,46 @@
+{
+  "id": "demo-emphasis-spotlight",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "emphasis/spotlight demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Many things, one thing to read"
+        },
+        {
+          "at": 0.9,
+          "slot": "sub",
+          "fx": "entrances/rise",
+          "text": "This line is the one",
+          "emphasis": "emphasis/spotlight"
+        }
+      ],
+      "say": "A single scene that shows emphasis/spotlight."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

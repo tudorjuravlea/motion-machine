@@ -1,0 +1,197 @@
+/* devices/phone: a generic handset, no trade dress. Finish comes from the brand colours:
+   a metal rim in the finish (a gradient toward the lightest and the darkest palette roles), a glass
+   bezel in the darkest role, side buttons, a faint sheen on the glass and a soft two-part shadow,
+   a contact shadow and an ambient one. today's proportions (a 0.478 slab, the screen inset
+   3.5 % of the width all round, corners 15.7 % of the screen wide), five keys and a lensed island;
+   model punch is the other common form, a round camera dot. Sized from the frame. */
+.phone {
+  position: relative;
+  height: calc(var(--mm-frame-h) * 0.6);
+  aspect-ratio: 1752 / 3668;
+  filter:
+    drop-shadow(0 calc(var(--mm-frame-h) * 0.004) calc(var(--mm-frame-h) * 0.004) color-mix(in srgb, var(--mm-device-shade) 30%, transparent))
+    drop-shadow(0 calc(var(--mm-frame-h) * 0.028) calc(var(--mm-frame-h) * 0.03) color-mix(in srgb, var(--mm-device-shade) 22%, transparent))
+    drop-shadow(0 0 calc(var(--mm-frame-h) * 0.008) color-mix(in srgb, var(--mm-device-glint) 8%, transparent));   /* the metal's glow: faint on purpose, a stronger tail over a dark canvas quantises off the palette in a solid row */
+}
+.phone__shell {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  padding: calc(3.48% - var(--mm-frame-h) * 0.0032);   /* the rim plus the bezel: 3.48 % of the width, on every side */
+  border: calc(var(--mm-frame-h) * 0.0032) solid transparent;
+  border-radius: 18.1% / 8.6%;
+  /* a lit hairline where the metal meets the glass */
+  box-shadow: inset 0 0 0 calc(var(--mm-frame-h) * 0.0012) color-mix(in srgb, var(--mm-device-glint) 28%, transparent);
+  /* the bezel is the padding box in glass; the rim is the border box in brushed metal */
+  background:
+    linear-gradient(var(--mm-device-glass), var(--mm-device-glass)) padding-box,
+    linear-gradient(135deg, var(--mm-device-rim-light) 0%, var(--mm-device-body) 14%, var(--mm-device-spec) 21%, var(--mm-device-body) 29%, var(--mm-device-body) 55%, var(--mm-device-rim-dark) 70%, var(--mm-device-body) 82%, var(--mm-device-spec) 92%, var(--mm-device-rim-light) 100%) border-box;
+}
+/* the keys, each a band on one thin strip outside the rim: on the left an action key and the two
+   volume keys (20.5-24 %, 28.6-35.5 %, 38-45 % of the height), on the right the power key and a
+   flush camera key (31-42 %, 56-62 %) */
+.phone::before, .phone::after {
+  content: '';
+  position: absolute;
+  width: calc(var(--mm-frame-h) * 0.0034);
+  border-radius: calc(var(--mm-frame-h) * 0.002);
+}
+.phone::after {
+  left: calc(var(--mm-frame-h) * -0.0026);
+  top: 20.5%;
+  height: 24.5%;
+  background: linear-gradient(to bottom, var(--mm-device-rim-dark) 0 14.3%, transparent 14.3% 32.7%, var(--mm-device-rim-dark) 32.7% 61.2%, transparent 61.2% 71.4%, var(--mm-device-rim-dark) 71.4% 100%);
+}
+.phone::before {
+  right: calc(var(--mm-frame-h) * -0.0026);
+  top: 31%;
+  height: 31%;
+  background: linear-gradient(to bottom, var(--mm-device-rim-dark) 0 35.5%, transparent 35.5% 80.6%, var(--mm-device-rim-dark) 80.6% 100%);
+}
+.phone__screen {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-space-3);
+  padding: 17% var(--mm-space-3) var(--mm-space-3);   /* the top clears the status bar (7.5 % of the height) */
+  border-radius: 15.7% / 7.2%;
+  background: var(--mm-color-surface);
+}
+.phone__bar {
+  flex: none;
+  width: 40%;
+  height: var(--mm-space-2);
+  border-radius: var(--mm-radius-4);
+  background: var(--mm-color-accent);
+}
+.phone__label {
+  flex: none;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: var(--mm-size-body);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  color: var(--mm-color-surfaceInk);
+}
+.phone__label:empty { display: none; }
+.phone__row {
+  flex: none;
+  height: var(--mm-space-3);
+  border-radius: var(--mm-radius-4);
+  background: var(--mm-color-line);
+}
+.phone__row--short { width: 62%; }
+/* A beat's asset fills the screen edge to edge (object-fit cover, clipped by the screen) and the
+   placeholder title and rows give way to it; without an asset the <img> takes no room. */
+.phone__screen { position: relative; }
+.phone__media {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.phone__media:not([src]) { display: none; }
+.phone__screen:is(:has(> .phone__media[src]), :has(> .mm-screen:not(.mm-screen--bare))) > :is(.phone__bar, .phone__label, .phone__row) { display: none; }
+/* status (data-p-status): auto shows the bar on a bare phone only, since a picture or a recording
+   carries its own; true always; false never */
+.phone__screen:is(:has(> .phone__media[src]), :has(> .mm-screen:not(.mm-screen--bare))) > .phone__status { display: none; }
+[data-p-status="true"] .phone__screen > .phone__status { display: flex !important; }
+/* size: large (a beat param, read as data-p-size): the handset at 0.74 of the frame height. */
+[data-p-size="large"] > .phone { height: calc(var(--mm-frame-h) * 0.74); }
+/* The cutout and the status bar sit over the screen and over the kit's screen layer.
+   model (a beat param, read as data-p-model): island (default), notch or plain. Proportions are
+   fractions of the screen: island 0.2385 wide, 0.0431 tall, 0.0161 from the top, with a camera lens
+   at 0.806 across it; punch is a round dot 0.071 of the screen wide, 0.0196 from the top. */
+.phone__island, .phone__notch, .phone__status { position: absolute; z-index: 3; }
+.phone__island {
+  left: 50%;
+  top: 1.61%;
+  width: 23.85%;
+  height: 4.31%;
+  translate: -50% 0;
+  border-radius: calc(var(--mm-frame-h) * 0.1);
+  background-color: var(--mm-device-island);
+  /* the front camera's lens inside the island: a dark core, a lit ring, a soft outer edge */
+  background-image: radial-gradient(circle closest-side at 80.6% 50%, var(--mm-device-lens) 0 16%, var(--mm-device-glass) 26%, var(--mm-device-lens-ring) 36% 42%, var(--mm-device-glass) 50% 84%, var(--mm-device-lens) 90%, transparent 96%);
+}
+.phone__notch {
+  display: none;
+  left: 50%;
+  top: 0;
+  width: 46%;
+  height: 3.6%;
+  translate: -50% 0;
+  border-radius: 0 0 calc(var(--mm-frame-h) * 0.02) calc(var(--mm-frame-h) * 0.02);
+  background: var(--mm-device-island);
+}
+[data-p-model="notch"] .phone__island { display: none; }
+[data-p-model="notch"] .phone__notch { display: block; }
+[data-p-model="plain"] .phone__island { display: none; }
+.phone__status {
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 7.5%;   /* centred on the island */
+  box-sizing: border-box;
+  padding: 0 8.5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--mm-color-surfaceInk);
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-display);
+  font-size: var(--mm-size-micro);
+  line-height: 1;
+}
+[data-p-status="false"] .phone__status { display: none; }
+.phone__glyphs { display: flex; align-items: center; gap: 0.35em; }
+.phone__glyph { height: 0.62em; width: auto; fill: currentColor; }
+.phone__glyph--battery { height: 0.66em; }
+/* the glass: a top highlight and a diagonal reflection over everything on the screen, under the island and status bar */
+.phone__screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  /* premium glass: a top highlight, then a broad diagonal reflection with a brighter core */
+  background:
+    linear-gradient(to bottom, color-mix(in srgb, var(--mm-device-glint) 12%, transparent) 0, transparent 16%),
+    linear-gradient(115deg, transparent 0 16%, color-mix(in srgb, var(--mm-device-glint) 8%, transparent) 24%, color-mix(in srgb, var(--mm-device-glint) 16%, transparent) 30%, color-mix(in srgb, var(--mm-device-glint) 6%, transparent) 36%, transparent 46%);   /* toward the top corner: the middle of the content stays true */
+}
+/* your own frame (beat param `frame`): the device takes the image's proportions, the screen
+   fills the measured hole, and the frame image (drawn by the kit over the screen) replaces the
+   built-in rim, bezel, buttons and cutout; the shadows stay. */
+[data-frame] > .phone { aspect-ratio: var(--mm-df-ar); }
+[data-frame] .phone::before, [data-frame] .phone::after { content: none; }
+[data-frame] .phone__shell { padding: 0; border: 0; background: none; box-shadow: none; }
+[data-frame] .phone__screen { position: absolute; left: var(--mm-df-x); top: var(--mm-df-y); width: var(--mm-df-w); height: var(--mm-df-h); border-radius: var(--mm-df-r); }
+[data-frame] .phone__island, [data-frame] .phone__notch { display: none !important; }
+[data-frame] .phone__screen::after { content: none; }   /* a maker's frame brings its own glass */
+/* model punch: a touch wider slab, softer corners, a round camera dot centred at the top,
+   the power key and a volume rocker on the right only */
+[data-p-model="punch"] > .phone { aspect-ratio: 1726 / 3654; }
+[data-p-model="punch"] .phone__shell { padding: calc(3.88% - var(--mm-frame-h) * 0.0032); border-radius: 16.8% / 8%; }
+[data-p-model="punch"] .phone__screen { border-radius: 14.1% / 6.3%; }
+[data-p-model="punch"] .phone__island {
+  top: 1.96%;
+  width: 7.1%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background-image: radial-gradient(circle closest-side at 50% 50%, var(--mm-device-lens) 0 22%, var(--mm-device-glass) 34%, var(--mm-device-lens-ring) 50% 58%, var(--mm-device-glass) 70% 100%);
+}
+[data-p-model="punch"] > .phone::after { content: none; }
+[data-p-model="punch"] > .phone::before {
+  top: 27.8%;
+  height: 24.5%;
+  background: linear-gradient(to bottom, var(--mm-device-rim-dark) 0 28%, transparent 28% 49%, var(--mm-device-rim-dark) 49% 100%);
+}

@@ -1,0 +1,39 @@
+/* ui/presence: two people in one document, each in one colour on cursor, flag, selection and caret. */
+@import url('../../../runtime/kit/ui.css');
+.mm-ui-presence {
+  --mm-person-one: var(--mm-color-accent);
+  --mm-person-two: var(--mm-color-surfaceInk);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-space-4);
+}
+.mm-ui-presence__title { font-weight: var(--mm-weight-display); font-size: calc(var(--mm-size-body) * 1.6); white-space: nowrap; }
+.mm-ui-presence__body { display: flex; flex-direction: column; gap: var(--mm-space-4); }
+.mm-ui-presence__rows { display: flex; flex-direction: column; gap: var(--mm-space-2); }
+.mm-ui-presence__line { position: relative; display: flex; align-items: center; min-height: 1.6em; white-space: pre; }
+.mm-ui-presence__text { position: relative; white-space: nowrap; }
+.mm-ui-presence__sel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: color-mix(in srgb, var(--mm-person-one) 32%, transparent);
+}
+.mm-ui-presence__caret { position: absolute; top: 50%; margin: 0; transform: translateY(-50%); background: var(--mm-person-two); }
+.mm-ui-presence__foot { display: flex; align-items: center; min-height: 1.6em; }
+.mm-ui-presence__flag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 0.05em 0.5em;
+  border-radius: var(--mm-radius-2);
+  font-size: calc(var(--mm-size-body));
+  font-weight: var(--mm-weight-display);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.mm-ui-presence__flag--one { background: var(--mm-person-one); color: var(--mm-color-accentInk); }
+.mm-ui-presence__flag--two { background: var(--mm-person-two); color: var(--mm-color-surface); }
+.mm-ui-presence .mm-ui__cursor--one path, .mm-ui-presence .mm-ui-presence__cursor--one path { fill: var(--mm-person-one); }
+.mm-ui-presence .mm-ui-presence__cursor--two path { fill: var(--mm-person-two); }
+.mm-ui-presence .mm-ui__bar { max-width: 100%; }

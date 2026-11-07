@@ -1,0 +1,3 @@
+/* Negative G-BRAND/checker: a 1 px checkerboard of an unowned colour over the whole frame. Cells touch
+   only at corners, so no region is larger than one pixel, yet half the frame is off the palette. */
+body::after { content: ""; position: fixed; inset: 0; z-index: 99; pointer-events: none; background: conic-gradient(#ff00ff 25%, transparent 0 50%, #ff00ff 0 75%, transparent 0) 0 0 / 2px 2px; }

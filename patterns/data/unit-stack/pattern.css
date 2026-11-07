@@ -1,0 +1,63 @@
+/* data/unit-stack: the figure, the stack and the rule line, stacked. Plates are oblique boxes: the
+   front is the series role (muted, or the accent on a ruler plate) nudged toward the light or dark
+   role by a seeded shade, the top face is lit toward the lighter of ink and canvas, the side face
+   shaded toward the darker one; each nudge is an alpha of a role laid over the base role, so every
+   colour is a role or a blend of two or three roles. */
+.mm-unit-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: var(--mm-align);
+  gap: var(--mm-space-3);
+}
+.mm-unit-stack__figure {
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--mm-color-ink);
+}
+.mm-unit-stack__stage {
+  position: relative;
+  flex: none;
+}
+.mm-unit-stack__plate {
+  --mm-us-base: var(--mm-color-muted);
+  position: absolute;
+  box-sizing: border-box;
+  background: linear-gradient(color-mix(in srgb, var(--mm-us-toward) var(--mm-us-shade), transparent), color-mix(in srgb, var(--mm-us-toward) var(--mm-us-shade), transparent)), var(--mm-us-base);
+}
+.mm-unit-stack__plate[data-ruler] { --mm-us-base: var(--mm-color-accent); }
+.mm-unit-stack__plate::before,
+.mm-unit-stack__plate::after {
+  content: "";
+  position: absolute;
+}
+/* the top face: a parallelogram leaning back by the depth */
+.mm-unit-stack__plate::before {
+  left: 0;
+  bottom: 100%;
+  width: 100%;
+  height: calc(var(--mm-us-depth) * 0.5);
+  transform-origin: left bottom;
+  transform: skewX(-45deg);
+  background: linear-gradient(color-mix(in srgb, var(--mm-us-light) 28%, transparent), color-mix(in srgb, var(--mm-us-light) 28%, transparent)), var(--mm-us-base);
+}
+/* the side face: down the right edge, leaning up by the depth */
+.mm-unit-stack__plate::after {
+  left: 100%;
+  top: 0;
+  width: calc(var(--mm-us-depth) * 0.5);
+  height: 100%;
+  transform-origin: left top;
+  transform: skewY(-45deg);
+  background: linear-gradient(color-mix(in srgb, var(--mm-us-dark) 30%, transparent), color-mix(in srgb, var(--mm-us-dark) 30%, transparent)), var(--mm-us-base);
+}
+.mm-unit-stack__rule {
+  font-family: var(--mm-font-mono);
+  font-weight: var(--mm-weight-mono);
+  letter-spacing: var(--mm-tracking-mono);
+  font-size: var(--mm-size-body);
+  line-height: 1.2;
+  color: var(--mm-color-muted);
+}

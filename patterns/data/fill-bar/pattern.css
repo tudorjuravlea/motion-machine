@@ -1,0 +1,25 @@
+/* fill-bar: a pill track, an accent fill, a readout in the display face. */
+.mm-fillbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-space-2);
+  width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--mm-color-ink);
+}
+.mm-fillbar__readout { line-height: 1.05; }
+.mm-fillbar__track {
+  width: 100%;
+  height: var(--mm-space-4);
+  border-radius: var(--mm-radius-4);
+  background: var(--mm-color-line);
+  overflow: hidden;
+}
+.mm-fillbar__fill {
+  height: 100%;
+  border-radius: var(--mm-radius-4);
+  background: var(--mm-color-accent);
+}

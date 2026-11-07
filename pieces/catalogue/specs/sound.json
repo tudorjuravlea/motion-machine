@@ -1,0 +1,870 @@
+{
+ "title": "Sound cues",
+ "sub": "Synthesised, never sampled. Turn the sound on.",
+ "style": "nocturne-kinetic",
+ "template": "scenes",
+ "watch": "Listen as it lands.",
+ "watchSub": "Each cue plays on its own moment.",
+ "items": [
+  {
+   "pattern": "sound/tick",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "tick",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/pop",
+       "text": "Chip",
+       "cue": "tick"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A small arrival: a chip, a word, a bar.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/tick",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/step",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "step",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/rise",
+       "text": "Next",
+       "cue": "step"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "Progress moving on: an item, a stage.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/step",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/press",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "press",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/punch",
+       "text": "Press",
+       "cue": "press"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A button pressed, or a deck advanced.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/press",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/hit",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "hit",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/slam",
+       "text": "Land",
+       "cue": "hit"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A slam, or a figure landing.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/hit",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/swipe",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "cut": "transitions/push",
+     "min": 4.4,
+     "beats": [
+      {
+       "at": 0.7,
+       "slot": "headline",
+       "fx": "entrances/rise",
+       "text": "swipe",
+       "cue": "swipe"
+      },
+      {
+       "at": 0.85,
+       "slot": "body",
+       "fx": "entrances/fade",
+       "text": "A cut between scenes; it sits on the cut."
+      },
+      {
+       "at": 1,
+       "slot": "caption",
+       "fx": "entrances/fade",
+       "text": "sound/swipe"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/riser",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "riser",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 1.6,
+       "slot": "figure",
+       "fx": "entrances/slam",
+       "text": "Peak",
+       "cue": "riser"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "The second before a climax; it ends on the landing.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/riser",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/success",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "success",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/pop",
+       "text": "Done",
+       "cue": "success"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A good outcome, landing.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/success",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/bed",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "bed",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/fade",
+       "text": "Hold",
+       "cue": "bed"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A quiet loop under a held rest.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/bed",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/complete",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "complete",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/rise",
+       "text": "The end",
+       "cue": "complete"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "The end card.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/complete",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/ready",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "ready",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/fade",
+       "text": "Ready",
+       "cue": "ready"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "Something is present and ready.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/ready",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/attention",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "attention",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/pop",
+       "text": "New",
+       "cue": "attention"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A nudge: look here.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/attention",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/warning",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "warning",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/rise",
+       "text": "Check",
+       "cue": "warning"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "Caution: take a second look.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/warning",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/error",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "error",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/drop",
+       "text": "Failed",
+       "cue": "error"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A failure; the contour falls.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/error",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/loading",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "loading",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/typewriter",
+       "text": "Loading",
+       "cue": "loading"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "Work is under way.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/loading",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/tap",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "tap",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/pop",
+       "text": "Tap",
+       "cue": "tap"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A touch on a control.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/tap",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/toggle-on",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "toggle-on",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/pop",
+       "text": "On",
+       "cue": "toggle-on"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A switch turned on.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/toggle-on",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/toggle-off",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "toggle-off",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/fade",
+       "text": "Off",
+       "cue": "toggle-off"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "A switch turned off.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/toggle-off",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/open",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "open",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/mask-reveal",
+       "text": "Open",
+       "cue": "open"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "Something opens.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/open",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "pattern": "sound/close",
+   "template": "scenes",
+   "scenes": [
+    {
+     "layout": "layouts/split",
+     "min": 4.2,
+     "beats": [
+      {
+       "at": 0,
+       "slot": "headline",
+       "fx": "style:headline",
+       "text": "close",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0.6,
+       "slot": "figure",
+       "fx": "entrances/rise",
+       "text": "Close",
+       "cue": "close"
+      },
+      {
+       "at": 0,
+       "slot": "body",
+       "fx": "style:body",
+       "text": "Something closes.",
+       "params": {
+        "instant": true
+       }
+      },
+      {
+       "at": 0,
+       "slot": "caption",
+       "fx": "style:body",
+       "text": "sound/close",
+       "params": {
+        "instant": true
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

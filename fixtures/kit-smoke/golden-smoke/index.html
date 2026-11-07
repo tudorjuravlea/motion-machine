@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>kit-smoke golden</title>
+</head>
+<body>
+  <!-- The golden stories (fixtures/golden) over a shipped preset (styles/presets) and the
+       real pattern library. ?story=film|deck&preset=editorial|kinetic|calm-product. Font sources
+       in a preset are repo-relative (styles/fonts/...), rewritten here to resolve from this page. -->
+  <script type="module">
+    import { mount } from '../../../runtime/kit/kit.js';
+    const q = new URLSearchParams(location.search);
+    const load = (f) => fetch(new URL(f, import.meta.url)).then((r) => r.json());
+    const [story, style] = await Promise.all([load(`../../golden/story.${q.get('story')}.json`), load(`../../../styles/presets/${q.get('preset')}.json`)]);
+    for (const face of Object.values(style.type)) for (const f of face.files) f.src = `../../../${f.src}`;
+    await mount({ story, style, patternsBase: new URL('../../../patterns/', import.meta.url) });
+  </script>
+</body>
+</html>

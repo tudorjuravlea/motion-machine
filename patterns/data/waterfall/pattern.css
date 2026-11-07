@@ -1,0 +1,68 @@
+/* waterfall: a plot of columns (percentages of its height) over a row of names. The start bar is
+   the muted role, a rise the ink role, a fall an alpha of ink, the total the tone role with a halo
+   of that role (an alpha). Links and the baseline are the line role. */
+.mm-wf {
+  --mm-wf-tone: var(--mm-color-accent);
+  display: block;
+  width: calc((var(--mm-frame-w) - 2 * var(--mm-safe)) * 0.9);
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--mm-color-ink);
+}
+.mm-wf[data-tone="ink"] { --mm-wf-tone: var(--mm-color-ink); }
+.mm-wf[data-tone="muted"] { --mm-wf-tone: var(--mm-color-muted); }
+.mm-wf__plot {
+  position: relative;
+  display: flex;
+  height: calc(var(--mm-frame-h) * 0.28);
+  margin-top: calc(1.6em + var(--mm-space-3));
+  margin-bottom: calc(1.6em + var(--mm-space-3));
+}
+[data-format="16x9"] .mm-wf__plot { height: calc(var(--mm-frame-h) * 0.4); }
+.mm-wf__zero, .mm-wf__link {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  border-top: calc(var(--mm-space-0) * 0.5) solid var(--mm-color-line);
+}
+.mm-wf__link { right: auto; }
+.mm-wf__col { position: relative; flex: 1 1 0; min-width: 0; }
+.mm-wf__bar {
+  position: absolute;
+  left: calc((100% - var(--mm-wf-weight)) / 2);
+  width: var(--mm-wf-weight);
+  border-radius: var(--mm-radius-1);
+  background: var(--mm-color-ink);
+}
+.mm-wf__bar--start { background: var(--mm-color-muted); }
+.mm-wf__bar--down { background: color-mix(in srgb, var(--mm-color-ink) 38%, transparent); }
+.mm-wf__bar--total {
+  background: var(--mm-wf-tone);
+  box-shadow: 0 0 calc(var(--mm-space-5) * var(--mm-wf-glow, 0)) color-mix(in srgb, var(--mm-wf-tone) 45%, transparent);
+}
+.mm-wf__figure {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+.mm-wf__names { display: flex; }
+.mm-wf__name {
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: center;
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  color: var(--mm-color-muted);
+}
+.mm-wf__name--total { color: var(--mm-color-ink); }

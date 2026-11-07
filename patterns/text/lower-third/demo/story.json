@@ -1,0 +1,247 @@
+{
+  "id": "demo-lower-third",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: text/lower-third",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "bar-wipe",
+      "layout": "layouts/caption-bar",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Interview"
+        },
+        {
+          "at": 0.5,
+          "slot": "overlay",
+          "fx": "text/lower-third",
+          "text": "Alex Sample | Design lead",
+          "params": {
+            "mechanism": "bar-wipe",
+            "side": "left"
+          },
+          "out": 3.0,
+          "exit": "exits/lower-third"
+        }
+      ],
+      "say": "The bar-wipe mechanism, on the left."
+    },
+    {
+      "id": "bracket",
+      "layout": "layouts/caption-bar",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Interview"
+        },
+        {
+          "at": 0.5,
+          "slot": "overlay",
+          "fx": "text/lower-third",
+          "text": "Alex Sample | Design lead",
+          "params": {
+            "mechanism": "bracket",
+            "side": "right"
+          },
+          "out": 3.0,
+          "exit": "exits/lower-third"
+        }
+      ],
+      "say": "The bracket mechanism, on the right."
+    },
+    {
+      "id": "flip",
+      "layout": "layouts/caption-bar",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Interview"
+        },
+        {
+          "at": 0.5,
+          "slot": "overlay",
+          "fx": "text/lower-third",
+          "text": "Alex Sample | Design lead",
+          "params": {
+            "mechanism": "flip",
+            "side": "left"
+          },
+          "out": 3.0,
+          "exit": "exits/lower-third"
+        }
+      ],
+      "say": "The flip mechanism, on the left."
+    },
+    {
+      "id": "tab",
+      "layout": "layouts/caption-bar",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Interview"
+        },
+        {
+          "at": 0.5,
+          "slot": "overlay",
+          "fx": "text/lower-third",
+          "text": "Alex Sample | Design lead",
+          "params": {
+            "mechanism": "tab",
+            "side": "right"
+          },
+          "out": 3.0,
+          "exit": "exits/lower-third"
+        }
+      ],
+      "say": "The tab mechanism, on the right."
+    },
+    {
+      "id": "stamp",
+      "layout": "layouts/caption-bar",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Interview"
+        },
+        {
+          "at": 0.5,
+          "slot": "overlay",
+          "fx": "text/lower-third",
+          "text": "Alex Sample | Design lead",
+          "params": {
+            "mechanism": "stamp",
+            "side": "left"
+          },
+          "out": 3.0,
+          "exit": "exits/lower-third"
+        }
+      ],
+      "say": "The stamp mechanism, on the left."
+    },
+    {
+      "id": "typed",
+      "layout": "layouts/caption-bar",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Interview"
+        },
+        {
+          "at": 0.5,
+          "slot": "overlay",
+          "fx": "text/lower-third",
+          "text": "Alex Sample | Design lead",
+          "params": {
+            "mechanism": "typed",
+            "side": "right"
+          },
+          "out": 3.0,
+          "exit": "exits/lower-third"
+        }
+      ],
+      "say": "The typed mechanism, on the right."
+    },
+    {
+      "id": "strip",
+      "layout": "layouts/caption-bar",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Interview"
+        },
+        {
+          "at": 0.5,
+          "slot": "overlay",
+          "fx": "text/lower-third",
+          "text": "Alex Sample | Design lead",
+          "params": {
+            "mechanism": "strip",
+            "side": "left"
+          },
+          "out": 3.0,
+          "exit": "exits/lower-third"
+        }
+      ],
+      "say": "The strip mechanism, on the left."
+    },
+    {
+      "id": "pill",
+      "layout": "layouts/caption-bar",
+      "duration": 3.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Interview"
+        },
+        {
+          "at": 0.5,
+          "slot": "overlay",
+          "fx": "text/lower-third",
+          "text": "Alex Sample | Design lead",
+          "params": {
+            "mechanism": "pill",
+            "side": "right"
+          },
+          "out": 3.0,
+          "exit": "exits/lower-third"
+        }
+      ],
+      "say": "The pill mechanism, on the right."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

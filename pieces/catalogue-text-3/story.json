@@ -1,0 +1,478 @@
+{
+  "id": "catalogue-text-3",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Text, part 3 of 3",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Text",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Type that moves as it lands. Part 3 of 3."
+        }
+      ],
+      "say": "Type that moves as it lands.",
+      "duration": 4
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "cross-out-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "cross-out",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/cross-out",
+          "text": "Slow|Costly|Simple"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Strikes claims through one by one; the last survives.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "text/cross-out",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "cross-out: Strikes claims through one by one; the last survives.",
+      "duration": 4.4
+    },
+    {
+      "id": "cross-out-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "cross-out",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/cross-out",
+          "text": "Slow|Costly|Simple",
+          "params": {
+            "stroke": "scribble",
+            "survivor": "grow"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "stroke: scribble, survivor: grow.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "stroke: scribble, survivor: grow.",
+      "duration": 4.2
+    },
+    {
+      "id": "garden-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "garden",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.8,
+          "slot": "figure",
+          "fx": "text/garden",
+          "text": "Growing",
+          "params": {
+            "dur": 2.2,
+            "kind": "flowers",
+            "seed": 2
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Ornament grows out of the letters themselves.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "text/garden",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "garden: Ornament grows out of the letters themselves.",
+      "duration": 4.6
+    },
+    {
+      "id": "garden-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "garden",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.8,
+          "slot": "figure",
+          "fx": "text/garden",
+          "text": "Growing",
+          "params": {
+            "dur": 2.2,
+            "kind": "vines",
+            "seed": 2,
+            "text": "type"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "kind: vines, text: type. Typed, then grown.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "kind: vines, text: type. Typed, then grown.",
+      "duration": 4.6
+    },
+    {
+      "id": "lit-sweep-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "lit-sweep",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/lit-sweep",
+          "text": "Read with light"
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Readable at once, lifted word by word.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "text/lit-sweep",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "lit-sweep: Readable at once, lifted word by word.",
+      "duration": 4.4
+    },
+    {
+      "id": "lit-sweep-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "lit-sweep",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.45,
+          "slot": "figure",
+          "fx": "text/lit-sweep",
+          "text": "Read with light",
+          "params": {
+            "edge": "accent",
+            "floor": 20
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "edge: accent, floor: 20. A coloured, dimmer start.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "edge: accent, floor: 20. A coloured, dimmer start.",
+      "duration": 4.1
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "lower-third",
+      "layout": "layouts/caption-bar",
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Interview",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "overlay",
+          "fx": "text/lower-third",
+          "text": "Alex Sample | Design lead",
+          "params": {
+            "mechanism": "bar-wipe",
+            "side": "left"
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "lower-third: names the speaker."
+        }
+      ],
+      "id": "lower-third-a",
+      "duration": 4
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "lower-third",
+      "layout": "layouts/caption-bar",
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Interview",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "overlay",
+          "fx": "text/lower-third",
+          "text": "Alex Sample | Design lead",
+          "params": {
+            "mechanism": "stamp",
+            "side": "right"
+          }
+        },
+        {
+          "at": 0.5,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "mechanism: stamp, side: right."
+        }
+      ],
+      "id": "lower-third-b",
+      "duration": 4
+    },
+    {
+      "id": "verdict-a",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "verdict",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.8,
+          "slot": "figure",
+          "fx": "text/verdict",
+          "text": "North|South",
+          "params": {
+            "winner": 2
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "Two names hold; a stamp lands on one.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "style:body",
+          "text": "text/verdict",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "verdict: Two names hold; a stamp lands on one.",
+      "duration": 4.6
+    },
+    {
+      "id": "verdict-b",
+      "layout": "layouts/split",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "verdict",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.8,
+          "slot": "figure",
+          "fx": "text/verdict",
+          "text": "North|South",
+          "params": {
+            "winner": 1,
+            "personality": "press",
+            "tilt": "right"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "winner: 1, personality: press, tilt: right.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "winner: 1, personality: press, tilt: right.",
+      "duration": 4.4
+    }
+  ],
+  "share": "Text (3/3): cross-out, garden, lit-sweep, lower-third, verdict. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

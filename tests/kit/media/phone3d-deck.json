@@ -1,0 +1,41 @@
+{
+  "id": "kit-phone3d-deck",
+  "kind": "deck",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Kit 3D phone deck",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "scenes": [
+    {
+      "id": "d",
+      "layout": "layouts/caption-bar",
+      "presses": 1,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "step": 1,
+          "at": 0,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/rec/",
+          "params": {
+            "move": "hero"
+          }
+        }
+      ],
+      "say": ""
+    }
+  ]
+}

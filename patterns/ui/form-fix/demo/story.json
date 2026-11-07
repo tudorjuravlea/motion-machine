@@ -1,0 +1,46 @@
+{
+  "id": "demo-ui-form-fix",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "ui/form-fix demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "shot",
+      "layout": "layouts/stage",
+      "duration": 9,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "ui/form-fix",
+          "params": {
+            "label": "Invite code",
+            "wrong": "BETA12",
+            "error": "Needs eight characters.",
+            "right": "BETA2026",
+            "button": "Save",
+            "done": "Saved"
+          }
+        }
+      ],
+      "say": "The mistake is named in its own space, fixed, and confirmed."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

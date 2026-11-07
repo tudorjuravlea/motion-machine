@@ -1,0 +1,15 @@
+{
+  "name": "open",
+  "meaning": "something opens: a panel, a menu, a sheet, a drawer",
+  "durationS": 0.2,
+  "layers": [
+    { "kind": "noise", "attackS": 0.03, "t60": 0.15, "peak": 0.55, "glideTo": 1900, "glideS": 0.14, "filter": { "type": "bandpass", "f": 700, "q": 0.9 } },
+    { "kind": "tone", "f": 392, "glideTo": 587.33, "glideS": 0.12, "attackS": 0.02, "t60": 0.14, "peak": 0.12, "from": 1 },
+    { "kind": "tone", "f": 784, "attackS": 0.001, "t60": 0.05, "peak": 0.35, "offsetS": 0.12 },
+    { "kind": "tone", "f": 1174.66, "glideTo": 1568, "glideS": 0.1, "attackS": 0.02, "t60": 0.12, "peak": 0.15, "from": 2 }
+  ],
+  "room": { "send": -22, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "masterGain": 0.4166,
+  "vary": { "pitch": 0.02, "force": 0.1 },
+  "emphasis": { "subtle": 0, "normal": 1, "strong": 2 }
+}

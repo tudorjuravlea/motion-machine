@@ -1,0 +1,490 @@
+{
+  "id": "kit-effects",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "16x9"
+  ],
+  "title": "Kit effects",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "scenes": [
+    {
+      "id": "masked",
+      "layout": "layouts/statement",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/masked-fill",
+          "text": "Plan the week in one place",
+          "params": {
+            "dur": 2
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "elastic",
+      "layout": "layouts/statement",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/elastic",
+          "text": "Stretch the whole line",
+          "params": {
+            "dur": 2
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "slats",
+      "layout": "layouts/statement",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/slats",
+          "text": "Through the slats",
+          "params": {
+            "dur": 1.2
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "marker",
+      "layout": "layouts/statement",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Ring this one",
+          "emphasis": "emphasis/marker-circle"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "dateflip",
+      "layout": "layouts/statement",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/date-flip",
+          "text": "2027",
+          "params": {
+            "from": "2025",
+            "dur": 2
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "gridbreak",
+      "layout": "layouts/grid-break",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "One of these is not a meeting"
+        },
+        {
+          "at": 0.4,
+          "slot": "tile-1",
+          "fx": "entrances/fade",
+          "text": "Meeting"
+        },
+        {
+          "at": 0.5,
+          "slot": "tile-2",
+          "fx": "entrances/fade",
+          "text": "Meeting"
+        },
+        {
+          "at": 0.6000000000000001,
+          "slot": "tile-3",
+          "fx": "entrances/fade",
+          "text": "Meeting"
+        },
+        {
+          "at": 0.7,
+          "slot": "tile-4",
+          "fx": "entrances/fade",
+          "text": "Meeting"
+        },
+        {
+          "at": 1.2,
+          "slot": "odd",
+          "fx": "entrances/pop",
+          "text": "Focus"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "paper",
+      "layout": "layouts/paper-cards",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Three things we learned"
+        },
+        {
+          "at": 0.4,
+          "slot": "card-1",
+          "fx": "entrances/fade",
+          "text": "Ask before you build"
+        },
+        {
+          "at": 0.7,
+          "slot": "card-2",
+          "fx": "entrances/fade",
+          "text": "Ship the smallest thing"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "pill",
+      "layout": "layouts/statement",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Pick a plan",
+          "emphasis": "emphasis/stretch-pill"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "brackets",
+      "layout": "layouts/statement",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Frame this",
+          "emphasis": "emphasis/brackets"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "lens",
+      "layout": "layouts/list-reveal",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Pick your focus"
+        },
+        {
+          "at": 0.3,
+          "slot": "item-1",
+          "fx": "entrances/fade",
+          "text": "Design reviews"
+        },
+        {
+          "at": 0.4,
+          "slot": "item-3",
+          "fx": "entrances/fade",
+          "text": "Team rituals"
+        },
+        {
+          "at": 0.6,
+          "slot": "item-2",
+          "fx": "entrances/fade",
+          "text": "Deep work",
+          "emphasis": "emphasis/lens"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "b2l",
+      "layout": "layouts/title-stack",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/bar-to-line",
+          "params": {
+            "values": "32,48,41,67,82",
+            "labels": "Jan,Feb,Mar,Apr,May",
+            "dur": 2.5
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "fan",
+      "layout": "layouts/fan-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "headline",
+          "fx": "entrances/pop",
+          "text": "Everything in one inbox"
+        },
+        {
+          "at": 0.4,
+          "slot": "card-1",
+          "fx": "entrances/pop",
+          "text": "Invoice from the studio"
+        },
+        {
+          "at": 0.6,
+          "slot": "card-2",
+          "fx": "entrances/pop",
+          "text": "Design review moved"
+        },
+        {
+          "at": 0.8,
+          "slot": "card-3",
+          "fx": "entrances/pop",
+          "text": "Two new comments"
+        },
+        {
+          "at": 1.0,
+          "slot": "card-4",
+          "fx": "entrances/pop",
+          "text": "Your launch plan is ready"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "flow",
+      "layout": "layouts/title-stack",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/flow",
+          "params": {
+            "nodes": "Brief|Design,Build,Test|Launch",
+            "dur": 3
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "explode",
+      "layout": "layouts/bento-3",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": "moves/explode-layers",
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Built in layers"
+        },
+        {
+          "at": 0.2,
+          "slot": "tile-1",
+          "fx": "entrances/fade",
+          "text": "Data"
+        },
+        {
+          "at": 0.3,
+          "slot": "tile-2",
+          "fx": "entrances/fade",
+          "text": "Logic"
+        },
+        {
+          "at": 0.4,
+          "slot": "tile-3",
+          "fx": "entrances/fade",
+          "text": "Interface"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "assemble",
+      "layout": "layouts/statement",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/assemble",
+          "text": "Made of parts",
+          "params": {
+            "dur": 2
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "lens2",
+      "layout": "layouts/list-reveal",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Pick your focus"
+        },
+        {
+          "at": 0.3,
+          "slot": "item-1",
+          "fx": "entrances/fade",
+          "text": "Design reviews"
+        },
+        {
+          "at": 0.4,
+          "slot": "item-2",
+          "fx": "entrances/fade",
+          "text": "Deep work",
+          "emphasis": "emphasis/lens"
+        },
+        {
+          "at": 0.5,
+          "slot": "item-3",
+          "fx": "entrances/fade",
+          "text": "Team rituals"
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "b2l8",
+      "layout": "layouts/title-stack",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/bar-to-line",
+          "params": {
+            "values": "12,30,22,41,35,52,48,60",
+            "labels": "Jan,Feb,Mar",
+            "dur": 2.5
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "maskodd",
+      "layout": "layouts/grid-break",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Odd one"
+        },
+        {
+          "at": 0.3,
+          "slot": "odd",
+          "fx": "text/masked-fill",
+          "text": "Focus",
+          "params": {
+            "dur": 2
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "p3d",
+      "layout": "layouts/statement",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "3d/particles-to-shape",
+          "text": "Built to last",
+          "params": {
+            "dur": 2
+          }
+        }
+      ],
+      "say": ""
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+/* data/org-chart: the shared diagram look (runtime/kit/diagram.css) and a stage sized to the format. */
+@import url('../../../runtime/kit/diagram.css');
+.mm-org .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.42); }
+[data-format="9x16"] .mm-org .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.4); }
+[data-format="16x9"] .mm-org .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.62); }
+.mm-org[data-variant="mind-map"] .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.5); }
+[data-format="9x16"] .mm-org[data-variant="mind-map"] .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.5); }
+[data-format="16x9"] .mm-org[data-variant="mind-map"] .mm-dg__stage { height: calc(var(--mm-frame-h) * 0.72); }

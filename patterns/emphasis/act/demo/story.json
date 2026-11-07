@@ -1,0 +1,55 @@
+{
+  "id": "demo-emphasis-act",
+  "title": "emphasis/act demo",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  },
+  "scenes": [
+    {
+      "id": "react",
+      "layout": "layouts/split",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Big news"
+        },
+        {
+          "at": 0.6,
+          "slot": "figure",
+          "fx": "entrances/character",
+          "params": {
+            "mood": "calm",
+            "to": "surprised"
+          },
+          "emphasis": "emphasis/act"
+        },
+        {
+          "at": 2.4,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "A reaction, acted once"
+        }
+      ],
+      "say": "The mascot lands calm, then acts a surprise and keeps it."
+    }
+  ]
+}

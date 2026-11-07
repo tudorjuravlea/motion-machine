@@ -1,0 +1,71 @@
+{
+  "id": "variants",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16"
+  ],
+  "title": "variants",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "a",
+      "layout": "layouts/statement",
+      "duration": 3,
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Same story",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "."
+    },
+    {
+      "id": "b",
+      "layout": "layouts/statement",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Wide frame"
+        }
+      ],
+      "say": "wide",
+      "variants": {
+        "9x16": {
+          "layout": "layouts/title-stack",
+          "beats": [
+            {
+              "at": 0.1,
+              "slot": "headline",
+              "fx": "entrances/fade",
+              "text": "Tall frame"
+            }
+          ],
+          "say": "tall"
+        }
+      }
+    }
+  ],
+  "cta": {
+    "text": "Same story",
+    "url": ""
+  }
+}

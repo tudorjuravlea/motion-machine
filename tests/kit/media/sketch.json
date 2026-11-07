@@ -1,0 +1,105 @@
+{
+  "id": "kit-sketch",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "16x9"
+  ],
+  "title": "Kit sketch",
+  "scenes": [
+    {
+      "id": "wire",
+      "layout": "layouts/bento-3",
+      "duration": 4.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Sketch it first"
+        },
+        {
+          "at": 0.6,
+          "slot": "tile-1",
+          "fx": "entrances/sketch",
+          "text": "Plan the week"
+        },
+        {
+          "at": 1.2,
+          "slot": "tile-2",
+          "fx": "entrances/sketch",
+          "text": "Track the work"
+        },
+        {
+          "at": 1.8,
+          "slot": "tile-3",
+          "fx": "entrances/sketch",
+          "text": "Ship it",
+          "params": {
+            "shape": "pill"
+          }
+        }
+      ],
+      "say": ""
+    },
+    {
+      "id": "ink",
+      "layout": "layouts/bento-3",
+      "duration": 4,
+      "cut": "transitions/sketch-to-ink",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Then it ships",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-1",
+          "fx": "entrances/fade",
+          "text": "Plan the week",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-2",
+          "fx": "entrances/fade",
+          "text": "Track the work",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-3",
+          "fx": "entrances/fade",
+          "text": "Ship it",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": ""
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "",
+    "url": ""
+  },
+  "language": "en",
+  "facts": []
+}

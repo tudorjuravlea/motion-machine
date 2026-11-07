@@ -1,0 +1,2 @@
+/* The sub line climbs into the headline. */
+[data-scene="style"] [data-slot="sub"] { margin-top: calc(-1 * var(--mm-space-6)); }

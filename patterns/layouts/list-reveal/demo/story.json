@@ -1,0 +1,106 @@
+{
+  "id": "demo-list-reveal",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: layouts/list-reveal",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/list-reveal",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "What a piece needs"
+        },
+        {
+          "at": 0.8,
+          "slot": "item-1",
+          "fx": "entrances/rise",
+          "text": "A story"
+        },
+        {
+          "at": 1.2000000000000002,
+          "slot": "item-2",
+          "fx": "entrances/rise",
+          "text": "A style"
+        },
+        {
+          "at": 1.6,
+          "slot": "item-3",
+          "fx": "entrances/rise",
+          "text": "A gate"
+        },
+        {
+          "at": 2.0,
+          "slot": "item-4",
+          "fx": "entrances/rise",
+          "text": "A render"
+        }
+      ],
+      "say": "A demo of the pattern."
+    },
+    {
+      "id": "demo-align",
+      "layout": "layouts/list-reveal",
+      "duration": 4.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "What a piece needs",
+          "params": {
+            "align": "center"
+          }
+        },
+        {
+          "at": 0.8,
+          "slot": "item-1",
+          "fx": "entrances/rise",
+          "text": "A story"
+        },
+        {
+          "at": 1.2000000000000002,
+          "slot": "item-2",
+          "fx": "entrances/rise",
+          "text": "A style"
+        },
+        {
+          "at": 1.6,
+          "slot": "item-3",
+          "fx": "entrances/rise",
+          "text": "A gate"
+        },
+        {
+          "at": 2.0,
+          "slot": "item-4",
+          "fx": "entrances/rise",
+          "text": "A render"
+        }
+      ],
+      "say": "The same layout with align set to center."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

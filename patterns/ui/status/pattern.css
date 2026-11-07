@@ -1,0 +1,32 @@
+/* ui/status: a pill changes state in place and a new row pushes in above it. */
+@import url('../../../runtime/kit/ui.css');
+.mm-ui-status { display: flex; flex-direction: column; gap: var(--mm-space-4); }
+.mm-ui-status__head { display: flex; align-items: center; justify-content: space-between; font-weight: var(--mm-weight-display); }
+.mm-ui-status__list { position: relative; display: flex; flex-direction: column; gap: var(--mm-space-2); overflow: hidden; }
+.mm-ui-status__row { display: flex; align-items: center; gap: var(--mm-space-3); min-height: 2.2em; }
+.mm-ui-status__text { flex: 1; min-width: 0; white-space: nowrap; }
+.mm-ui-status__meta { flex: none; }
+.mm-ui-status__slot { flex: none; display: flex; justify-content: flex-end; }
+.mm-ui-status__pill {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  box-sizing: border-box;
+  height: 1.8em;
+  padding: 0 0.7em 0 0.45em;
+  border: 1px solid color-mix(in srgb, var(--mm-surface-muted) 70%, transparent);
+  border-radius: var(--mm-radius-4);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.mm-ui-status__probe { position: absolute; left: 0; top: 0; visibility: hidden; pointer-events: none; }
+.mm-ui-status__probe .mm-ui-status__pill { width: max-content; }
+.mm-ui-status__probe .mm-ui-status__label:last-child { display: none; }
+.mm-ui-status__icon { flex: none; display: grid; width: 1.1em; height: 1.1em; }
+.mm-ui-status__icon > * { grid-area: 1 / 1; width: 100%; height: 100%; overflow: visible; }
+.mm-ui-status__arc { fill: none; stroke: var(--mm-color-accent); stroke-width: 2.4; stroke-linecap: round; transform-origin: center; }
+.mm-ui-status__disc { transform-origin: center; }
+.mm-ui-status__disc circle { fill: var(--mm-color-accent); }
+.mm-ui-status__disc path { fill: none; stroke: var(--mm-color-accentInk); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; }
+.mm-ui-status__labels { display: grid; }
+.mm-ui-status__labels > * { grid-area: 1 / 1; }

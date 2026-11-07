@@ -1,0 +1,2 @@
+[data-scene="style"] [data-slot="headline"],
+[data-scene="style"] [data-slot="sub"] { color: var(--mm-color-accent); }

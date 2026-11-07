@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- A small neutral app page for the screen pattern demos (patterns/screen/*/demo): about 2,600 css
+     px tall at phone width, with marks #pricing and .cta. Captured into each demo's assets by
+     fixtures/site/make-demo-assets.sh. No brand. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>demo app</title>
+<style>
+  body { margin: 0; font: 17px/1.45 -apple-system, system-ui, sans-serif; background: #F6F4EF; color: #22201C; }
+  header { height: 64px; display: flex; align-items: center; padding: 0 20px; font-weight: 700; background: #22201C; color: #F6F4EF; }
+  .hero { padding: 48px 20px 56px; background: #E9E3D7; }
+  .hero h1 { font-size: 34px; line-height: 1.1; margin: 0 0 12px; }
+  .card { margin: 16px 20px; padding: 18px; border-radius: 16px; background: #FFFFFF; box-shadow: 0 1px 0 #D8D2C5; }
+  .card b { display: block; font-size: 19px; margin-bottom: 6px; }
+  .bar { height: 10px; border-radius: 5px; background: #D8D2C5; margin-top: 8px; }
+  .bar.short { width: 60%; }
+  #pricing { margin-top: 40px; padding: 32px 20px; background: #22201C; color: #F6F4EF; }
+  #pricing .price { display: inline-block; font-size: 44px; font-weight: 800; }   /* the mark hugs the price text */
+  #signup { padding: 40px 20px 120px; text-align: center; }
+  .cta { display: inline-block; padding: 16px 36px; border-radius: 14px; background: #C2532B; color: #FFFFFF; font-weight: 700; }
+</style></head>
+<body>
+  <header>Week planner</header>
+  <section class="hero"><h1>Plan the week in one place.</h1><p>Tasks, notes and time blocks, side by side.</p></section>
+  <div class="card"><b>Monday</b><div class="bar"></div><div class="bar short"></div></div>
+  <div class="card"><b>Tuesday</b><div class="bar"></div><div class="bar short"></div></div>
+  <div class="card"><b>Wednesday</b><div class="bar"></div><div class="bar short"></div></div>
+  <div class="card"><b>Thursday</b><div class="bar"></div><div class="bar short"></div></div>
+  <div class="card"><b>Friday</b><div class="bar"></div><div class="bar short"></div></div>
+  <div class="card"><b>Weekend</b><div class="bar"></div><div class="bar short"></div></div>
+  <section id="pricing"><p>One plan</p><div class="price">4 a month</div><p>Every feature, every device.</p></section>
+  <section id="signup"><p>Start in a minute.</p><a class="cta" href="#">Get started</a></section>
+</body></html>

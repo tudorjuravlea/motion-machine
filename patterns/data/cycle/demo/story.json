@@ -1,0 +1,36 @@
+{
+  "id": "demo-data-cycle",
+  "kind": "film",
+  "formats": ["9x16", "1x1", "16x9"],
+  "title": "Demo: data/cycle",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "four",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "data/cycle", "params": { "nodes": "Plan|Make|Check|Learn", "centre": "Repeat", "hero": 1, "dur": "hold" } },
+        { "at": 3.4, "slot": "sub", "fx": "entrances/fade", "text": "Four steps, round and round" }
+      ],
+      "say": "A demo of the pattern."
+    },
+    {
+      "id": "three",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "data/cycle", "params": { "nodes": "Draft|Review|Ship", "shape": "disc", "dur": "hold" } },
+        { "at": 3.4, "slot": "sub", "fx": "entrances/fade", "text": "Three steps, disc nodes" }
+      ],
+      "say": "Three nodes."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

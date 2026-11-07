@@ -1,0 +1,206 @@
+{
+  "id": "catalogue-looks-1",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Bloom and glass",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Bloom and glass",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "The shipped look: a bloom ground, glass cards."
+        }
+      ],
+      "say": "The shipped look: a bloom ground, glass cards.",
+      "duration": 3.75
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Look at the frame.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Each film changes the style once, and says so."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 4.25
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "bloom",
+      "layout": "layouts/statement",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "ground: bloom",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "A radial light rises from the bottom edge."
+        }
+      ],
+      "id": "bloom-a",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "bloom",
+      "layout": "layouts/statement",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "bloom + dots",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "It can carry a faint grid of dots."
+        }
+      ],
+      "id": "bloom-b",
+      "duration": 4.2
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "bloom",
+      "layout": "layouts/bento-3",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "surface: glass. Cards that catch the light.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "tile-1",
+          "fx": "entrances/pop",
+          "text": "Frosted"
+        },
+        {
+          "at": 0.55,
+          "slot": "tile-2",
+          "fx": "entrances/pop",
+          "text": "Edged"
+        },
+        {
+          "at": 0.7,
+          "slot": "tile-3",
+          "fx": "entrances/pop",
+          "text": "Shining"
+        }
+      ],
+      "id": "bloom-c",
+      "duration": 4.6
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "bloom",
+      "layout": "layouts/bento-3",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "surface: flat. The same cards, no glass.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "tile-1",
+          "fx": "entrances/pop",
+          "text": "Frosted",
+          "params": {
+            "surface": "flat"
+          }
+        },
+        {
+          "at": 0.55,
+          "slot": "tile-2",
+          "fx": "entrances/pop",
+          "text": "Edged",
+          "params": {
+            "surface": "flat"
+          }
+        },
+        {
+          "at": 0.7,
+          "slot": "tile-3",
+          "fx": "entrances/pop",
+          "text": "Shining",
+          "params": {
+            "surface": "flat"
+          }
+        }
+      ],
+      "id": "bloom-d",
+      "duration": 4.6
+    }
+  ],
+  "share": "Bloom and glass: bloom. The style's own ground and surface, as shipped.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

@@ -1,0 +1,17 @@
+[
+  {"text":"good","start":0.8,"end":1.2},
+  {"text":"morning","start":1.3,"end":1.7},
+  {"text":"everyone.","start":1.8,"end":2.2},
+  {"text":"today","start":2.6,"end":2.95},
+  {"text":"I","start":3.05,"end":3.4},
+  {"text":"will","start":3.5,"end":3.85},
+  {"text":"show","start":3.95,"end":4.3},
+  {"text":"you","start":4.4,"end":4.75},
+  {"text":"how","start":4.85,"end":5.2},
+  {"text":"it","start":5.3,"end":5.65},
+  {"text":"works.","start":5.75,"end":6.1},
+  {"text":"first","start":6.5,"end":6.95},
+  {"text":"a","start":7.1,"end":7.55},
+  {"text":"little","start":7.7,"end":8.15},
+  {"text":"background.","start":8.3,"end":8.75}
+]

@@ -1,0 +1,229 @@
+{
+  "id": "capture-reference-kinds",
+  "kind": "film",
+  "formats": [
+    "16x9"
+  ],
+  "title": "capture reference: one cut of each kind the capture classifies, between shots that are already full",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "k1",
+      "layout": "layouts/statement",
+      "duration": 2.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Cut kinds.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Both shots carry content when the cut runs.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Start."
+    },
+    {
+      "id": "k2",
+      "layout": "layouts/comparison",
+      "duration": 2.5,
+      "cut": "transitions/wipe",
+      "cutParams": {
+        "direction": "right"
+      },
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "A wipe.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "left",
+          "fx": "entrances/fade",
+          "text": "Both shots carry content when the cut runs.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Wipe."
+    },
+    {
+      "id": "k3",
+      "layout": "layouts/title-stack",
+      "duration": 2.5,
+      "cut": "transitions/iris",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "An iris.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Both shots carry content when the cut runs.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Iris."
+    },
+    {
+      "id": "k4",
+      "layout": "layouts/split",
+      "duration": 2.5,
+      "cut": "transitions/color-dip",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "A colour dip.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "Both shots carry content when the cut runs.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Dip."
+    },
+    {
+      "id": "k5",
+      "layout": "layouts/bento-3",
+      "duration": 2.5,
+      "cut": "transitions/whip-pan",
+      "cutParams": {
+        "direction": "left"
+      },
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "A whip-pan.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "tile-1",
+          "fx": "entrances/fade",
+          "text": "Both shots carry content when the cut runs.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Whip."
+    },
+    {
+      "id": "k6",
+      "layout": "layouts/quote",
+      "duration": 2.5,
+      "cut": "transitions/push",
+      "cutParams": {
+        "direction": "up"
+      },
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "A push up.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "attribution",
+          "fx": "entrances/fade",
+          "text": "Both shots carry content when the cut runs.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Push."
+    },
+    {
+      "id": "k7",
+      "layout": "layouts/endcard",
+      "duration": 2.5,
+      "cut": "transitions/wipe",
+      "cutParams": {
+        "direction": "down"
+      },
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "A wipe down.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "Both shots carry content when the cut runs.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "Wipe down."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

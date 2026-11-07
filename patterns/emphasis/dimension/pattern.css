@@ -1,0 +1,79 @@
+/* emphasis/dimension: a measure drawn across what it measures, keyed on the data-emphasis the kit
+   writes, so it holds at every rest. The slot's text is the value, level and in ink; the two halves of
+   the line are the slot's ::before and ::after, each a main line, an extension line at its outer end
+   and a 45° tick there. Where they go comes from the measure pattern.js takes once at mount and
+   writes into its own stylesheet as custom properties of the slot: --mm-dim-x0 and --mm-dim-x1 (the
+   ink edges the line spans, px from the slot's left), --mm-dim-g0 and --mm-dim-g1 (the gap around
+   the value, equal when the line passes under it) and --mm-dim-y (the line's height in the slot,
+   its middle by default). In a gap the value is moved to the line's centre; under, the slot keeps a
+   band below the value for the line. The emphasis module only animates the draw, through four inline
+   custom properties (--mm-dim-ext, --mm-dim-grow, --mm-dim-tick, --mm-dim-label) that default to 1,
+   which is the finished drawing. axis: y stands the halves above and below the value, across the
+   slot's box. */
+[data-emphasis="emphasis/dimension"][data-emphasis] {
+  --mm-dim-ink: var(--mm-color-accent);
+  --mm-dim-w: calc(var(--mm-space-0) * 0.75);
+  --mm-dim-tick-size: var(--mm-space-4);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  box-sizing: border-box;
+  min-height: var(--mm-space-5);
+  font-family: var(--mm-font-mono);
+  font-weight: var(--mm-weight-mono);
+  letter-spacing: var(--mm-tracking-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--mm-color-ink);
+}
+[data-emphasis="emphasis/dimension"][data-p-tone="ink"] { --mm-dim-ink: var(--mm-color-ink); }
+[data-emphasis="emphasis/dimension"][data-p-tone="muted"] { --mm-dim-ink: var(--mm-color-muted); }
+[data-emphasis="emphasis/dimension"]::before,
+[data-emphasis="emphasis/dimension"]::after {
+  --mm-dim-c-line: var(--mm-dim-ink);
+  --mm-dim-c-ext: color-mix(in srgb, var(--mm-dim-ink) calc(var(--mm-dim-ext, 1) * 100%), transparent);
+  --mm-dim-c-tick: color-mix(in srgb, var(--mm-dim-ink) calc(var(--mm-dim-tick, 1) * 100%), transparent);
+  content: "";
+  position: absolute;
+  top: calc(var(--mm-dim-y, 50%) - var(--mm-space-5) / 2);
+  height: var(--mm-space-5);
+  background-repeat: no-repeat;
+  background-image:
+    linear-gradient(45deg, transparent calc(50% - var(--mm-dim-w) * 0.7), var(--mm-dim-c-tick) 0, var(--mm-dim-c-tick) calc(50% + var(--mm-dim-w) * 0.7), transparent 0),
+    linear-gradient(var(--mm-dim-c-ext), var(--mm-dim-c-ext)),
+    linear-gradient(var(--mm-dim-c-line), var(--mm-dim-c-line));
+  background-size: var(--mm-dim-tick-size) var(--mm-dim-tick-size), var(--mm-dim-w) 100%, calc(var(--mm-dim-grow, 1) * 100%) var(--mm-dim-w);
+  pointer-events: none;
+}
+/* the left half from the left ink edge to the gap; the right half from the gap to the right ink edge
+   (without a measure, the slot's own box split around its middle fifth) */
+[data-emphasis="emphasis/dimension"]::before {
+  left: var(--mm-dim-x0, 0px);
+  width: calc(var(--mm-dim-g0, 40%) - var(--mm-dim-x0, 0px));
+  background-position: left center, left center, right center;
+}
+[data-emphasis="emphasis/dimension"]::after {
+  left: var(--mm-dim-g1, 60%);
+  width: calc(var(--mm-dim-x1, 100%) - var(--mm-dim-g1, 60%));
+  background-position: right center, right center, left center;
+}
+/* axis: y, a measure that stands: the halves above and below the value, in the flow of the slot */
+[data-emphasis="emphasis/dimension"][data-p-axis="y"] {
+  flex-direction: column;
+  min-height: calc(var(--mm-size-body) * 5);
+  gap: var(--mm-space-3);
+}
+[data-emphasis="emphasis/dimension"][data-p-axis="y"]::before,
+[data-emphasis="emphasis/dimension"][data-p-axis="y"]::after {
+  position: static;
+  flex: 1 1 0;
+  align-self: center;
+  width: var(--mm-space-5);
+  height: auto;
+  min-height: var(--mm-space-4);
+  background-size: var(--mm-dim-tick-size) var(--mm-dim-tick-size), 100% var(--mm-dim-w), var(--mm-dim-w) calc(var(--mm-dim-grow, 1) * 100%);
+}
+[data-emphasis="emphasis/dimension"][data-p-axis="y"]::before { background-position: center top, center top, center bottom; }
+[data-emphasis="emphasis/dimension"][data-p-axis="y"]::after { background-position: center bottom, center bottom, center top; }

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>capture reference: labelled tempo</title>
+</head>
+<body>
+  <script type="module">
+    // One story, three motion styles: ?motion=calm|premium|kinetic picks style-<motion>.json.
+    import { mount } from '../../../../../runtime/kit/kit.js';
+    const motion = new URLSearchParams(location.search).get('motion') ?? 'premium';
+    const load = (f) => fetch(new URL(f, import.meta.url)).then((r) => r.json());
+    const [story, style] = await Promise.all([load('story.json'), load(`style-${motion}.json`)]);
+    await mount({ story, style });
+  </script>
+</body>
+</html>

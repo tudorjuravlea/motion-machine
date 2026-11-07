@@ -1,0 +1,54 @@
+{
+  "id": "demo-exits-knife-cut",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "exits/knife-cut demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 4.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "The old roadmap",
+          "out": 2.8,
+          "exit": "exits/knife-cut"
+        },
+        {
+          "at": 1.0,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Cut, folded shut, gone",
+          "out": 3.2,
+          "exit": "exits/knife-cut",
+          "params": {
+            "exit": {
+              "rule": "accent"
+            }
+          }
+        }
+      ],
+      "say": "A single scene that shows exits/knife-cut."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

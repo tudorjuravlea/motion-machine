@@ -1,0 +1,52 @@
+{
+  "id": "demo-ui-table-edit",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "ui/table-edit demo",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo figures for ui/table-edit",
+      "source": "demo fixture, invented figures that carry no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "shot",
+      "layout": "layouts/stage",
+      "duration": 7.2,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "ui/table-edit",
+          "fact": "f1",
+          "params": {
+            "rows": "Design:1200|Build:2400|Test:800",
+            "edit": 1,
+            "to": 3000,
+            "total": "Total",
+            "prefix": "$"
+          }
+        }
+      ],
+      "say": "One figure changes, and the total follows."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

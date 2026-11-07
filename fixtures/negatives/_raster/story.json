@@ -1,0 +1,58 @@
+{
+  "id": "raster-bento",
+  "kind": "film",
+  "formats": [
+    "16x9"
+  ],
+  "title": "raster fixture: bento tiles popping in, rendered frame by frame",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "tiles",
+      "layout": "layouts/bento-3",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Three tiles, one pass.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.2,
+          "slot": "tile-1",
+          "fx": "entrances/pop",
+          "text": "Same t"
+        },
+        {
+          "at": 0.45,
+          "slot": "tile-2",
+          "fx": "entrances/pop",
+          "text": "same pixels"
+        },
+        {
+          "at": 0.7,
+          "slot": "tile-3",
+          "fx": "entrances/pop",
+          "text": "every pass"
+        }
+      ],
+      "say": "Tiles."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

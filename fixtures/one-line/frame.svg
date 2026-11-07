@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- An invented mark for the one-line tests: a rounded square holding a tick. Two parts, so the line
+       needs one bridge between them. Drawn for this fixture; no source. -->
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="30" y="30" width="140" height="140" rx="28"/>
+    <polyline points="62,104 90,132 142,70"/>
+  </g>
+</svg>

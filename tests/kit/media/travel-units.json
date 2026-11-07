@@ -1,0 +1,43 @@
+{
+  "id": "travel-px",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "16x9"
+  ],
+  "title": "travel px",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "one",
+      "layout": "layouts/statement",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "",
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Travel",
+          "params": {
+            "d": 60
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/drop",
+          "text": "Fall"
+        }
+      ]
+    }
+  ]
+}

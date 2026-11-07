@@ -1,0 +1,36 @@
+{
+  "id": "demo-ui-handoff",
+  "kind": "film",
+  "formats": ["16x9", "9x16", "1x1"],
+  "title": "ui/handoff demo",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo order total for ui/handoff",
+      "source": "demo fixture, an invented figure that carries no claim"
+    }
+  ],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "shot",
+      "layout": "layouts/stage",
+      "duration": 5.8,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "ui/handoff",
+          "fact": "f1",
+          "params": { "action": "Add to order", "item": "Desk lamp", "from": 120, "to": 168, "prefix": "$" },
+          "value": 168
+        }
+      ],
+      "say": "One press moves the lamp into the order and the total follows."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

@@ -1,0 +1,13 @@
+/* moves/along-path: the trail behind the carried point, in one palette role. */
+.mm-along { position: absolute; inset: 0; pointer-events: none; z-index: 4; }
+.mm-along svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.mm-along[data-ink="ink"] path { --mm-along-ink: var(--mm-color-ink); }
+.mm-along[data-ink="accent"] path { --mm-along-ink: var(--mm-color-accent); }
+.mm-along[data-ink="muted"] path { --mm-along-ink: var(--mm-color-muted); }
+.mm-along path {
+  fill: none;
+  stroke: var(--mm-along-ink);
+  stroke-width: calc(min(var(--mm-frame-w), var(--mm-frame-h)) * var(--mm-along-weight));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

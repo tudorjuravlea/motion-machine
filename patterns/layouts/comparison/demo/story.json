@@ -1,0 +1,82 @@
+{
+  "id": "demo-comparison",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: layouts/comparison",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/comparison",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "One brand file. One motion file."
+        },
+        {
+          "at": 0.9,
+          "slot": "left",
+          "fx": "entrances/pop",
+          "text": "brand: colour, type, space"
+        },
+        {
+          "at": 1.3,
+          "slot": "right",
+          "fx": "entrances/pop",
+          "text": "motion: tempo, curves, cuts"
+        }
+      ],
+      "say": "A demo of the pattern."
+    },
+    {
+      "id": "demo-align",
+      "layout": "layouts/comparison",
+      "duration": 4.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "One brand file. One motion file.",
+          "params": {
+            "align": "center"
+          }
+        },
+        {
+          "at": 0.9,
+          "slot": "left",
+          "fx": "entrances/pop",
+          "text": "brand: colour, type, space"
+        },
+        {
+          "at": 1.3,
+          "slot": "right",
+          "fx": "entrances/pop",
+          "text": "motion: tempo, curves, cuts"
+        }
+      ],
+      "say": "The same layout with align set to center."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

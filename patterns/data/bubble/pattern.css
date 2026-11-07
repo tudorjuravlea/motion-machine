@@ -1,0 +1,36 @@
+/* bubble: a box 100 wide of viewBox units: the big circle's column is 60 %, the reference's 40 %,
+   so each caption centres under its circle. Circles are roles; the baseline is the line role. */
+.mm-bubble {
+  display: block;
+  width: min(calc((var(--mm-frame-w) - 2 * var(--mm-safe)) * 0.84), calc(var(--mm-frame-h) * 0.8));
+  max-width: 100%;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--mm-color-ink);
+}
+.mm-bubble svg { display: block; width: 100%; height: auto; overflow: visible; }
+.mm-bubble__big { fill: var(--mm-color-accent); }
+.mm-bubble[data-tone="ink"] .mm-bubble__big { fill: var(--mm-color-ink); }
+.mm-bubble[data-tone="muted"] .mm-bubble__big { fill: var(--mm-color-muted); }
+.mm-bubble__ref { fill: var(--mm-color-ink); }
+.mm-bubble[data-tone="ink"] .mm-bubble__ref { fill: var(--mm-color-muted); }
+.mm-bubble__base { stroke: var(--mm-color-line); stroke-width: 0.4; }
+.mm-bubble__row {
+  display: grid;
+  grid-template-columns: 60fr 40fr;
+  padding-top: var(--mm-space-3);
+  text-align: center;
+}
+.mm-bubble__figure { line-height: 1; }
+.mm-bubble__name {
+  align-self: start;
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  letter-spacing: var(--mm-tracking-text);
+  font-size: var(--mm-size-body);
+  line-height: 1.15;
+  text-wrap: balance;
+  color: var(--mm-color-muted);
+}

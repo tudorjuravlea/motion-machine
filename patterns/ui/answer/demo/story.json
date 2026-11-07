@@ -1,0 +1,43 @@
+{
+  "id": "demo-ui-answer",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "ui/answer demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "shot",
+      "layout": "layouts/stage",
+      "duration": 9,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "ui/answer",
+          "params": {
+            "ask": "When can we ship?",
+            "answer": "Thursday, once the two open reviews are done.",
+            "sources": "Release plan|Review queue"
+          }
+        }
+      ],
+      "say": "A question goes in, the answer streams back with its sources."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

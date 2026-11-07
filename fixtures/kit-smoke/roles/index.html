@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>kit-smoke roles</title>
+</head>
+<body>
+  <!-- Eval fixes: style roles, the finished first frame and step 0, an
+       end-anchored cue and type that never overshoots, over the stub patterns. -->
+  <script type="module">
+    import { mount } from '../../../runtime/kit/kit.js';
+    const load = (f) => fetch(new URL(f, import.meta.url)).then((r) => r.json());
+    const [story, style] = await Promise.all([load('story.json'), load('../roles/style.json')]);
+    await mount({ story, style, patternsBase: new URL('../patterns/', import.meta.url) });
+  </script>
+</body>
+</html>

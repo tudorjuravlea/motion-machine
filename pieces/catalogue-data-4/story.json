@@ -1,0 +1,298 @@
+{
+  "id": "catalogue-data-4",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Data, part 4 of 5",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Illustrative numbers for the catalogue",
+      "source": "catalogue demo numbers, not a claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Data",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Numbers that arrive as a mechanism. Part 4 of 5."
+        }
+      ],
+      "say": "Numbers that arrive as a mechanism.",
+      "duration": 4
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Watch twice.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "As shipped, then with one knob turned."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.05
+    },
+    {
+      "id": "org-chart-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/org-chart",
+          "params": {
+            "nodes": "Studio|>Design,Build|>>Brand|>Grow|>>Web,Apps",
+            "dur": "hold"
+          }
+        },
+        {
+          "at": 3.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "org-chart: A tree draws itself, level by level."
+        }
+      ],
+      "say": "org-chart: A tree draws itself, level by level.",
+      "duration": 6.6
+    },
+    {
+      "id": "org-chart-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/org-chart",
+          "params": {
+            "nodes": "Studio|>Design,Build|>>Brand|>Grow|>>Web,Apps",
+            "dur": "hold",
+            "variant": "mind-map"
+          }
+        },
+        {
+          "at": 3.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "org-chart: variant: mind-map. A centre and its spokes."
+        }
+      ],
+      "say": "variant: mind-map. A centre and its spokes.",
+      "duration": 6.6
+    },
+    {
+      "id": "pyramid-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/pyramid",
+          "params": {
+            "nodes": "Purpose|Product|Process|People",
+            "dur": "hold"
+          }
+        },
+        {
+          "at": 3.2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "pyramid: Bands stack up into a pyramid."
+        }
+      ],
+      "say": "pyramid: Bands stack up into a pyramid.",
+      "duration": 6.4
+    },
+    {
+      "id": "pyramid-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/pyramid",
+          "params": {
+            "nodes": "Purpose|Product|Process|People",
+            "dur": "hold",
+            "variant": "funnel-up",
+            "hero": 4
+          }
+        },
+        {
+          "at": 3.2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "pyramid: variant: funnel-up, hero: 4."
+        }
+      ],
+      "say": "variant: funnel-up, hero: 4.",
+      "duration": 6.4
+    },
+    {
+      "id": "timeline-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/timeline",
+          "params": {
+            "nodes": "Q1>Research|Q2>Prototype|Q3>Pilot|Q4>Launch",
+            "hero": 4,
+            "dur": "hold"
+          }
+        },
+        {
+          "at": 3.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "timeline: A track draws; its stops spring on."
+        }
+      ],
+      "say": "timeline: A track draws; its stops spring on.",
+      "duration": 6.6
+    },
+    {
+      "id": "timeline-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/timeline",
+          "params": {
+            "nodes": "Q1>Research|Q2>Prototype|Q3>Pilot|Q4>Launch",
+            "hero": 4,
+            "dur": "hold",
+            "variant": "milestones"
+          }
+        },
+        {
+          "at": 3.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "timeline: variant: milestones. Dates on the track."
+        }
+      ],
+      "say": "variant: milestones. Dates on the track.",
+      "duration": 6.6
+    },
+    {
+      "id": "unit-grid-a",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/unit-grid",
+          "value": 37,
+          "fact": "f1",
+          "params": {
+            "variant": "waffle",
+            "suffix": " in 100",
+            "size": "h1"
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "unit-grid: N of M as countable units, lit one by one.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "unit-grid: N of M as countable units, lit one by one.",
+      "duration": 4.1
+    },
+    {
+      "id": "unit-grid-b",
+      "layout": "layouts/title-stack",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "data/unit-grid",
+          "value": 7,
+          "fact": "f1",
+          "params": {
+            "variant": "isotype",
+            "suffix": " of 10",
+            "size": "h1",
+            "of": 10
+          }
+        },
+        {
+          "at": 0,
+          "slot": "sub",
+          "fx": "style:body",
+          "text": "unit-grid: variant: isotype, of: 10.",
+          "params": {
+            "instant": true
+          }
+        }
+      ],
+      "say": "variant: isotype, of: 10.",
+      "duration": 3.4
+    }
+  ],
+  "share": "Data (4/5): org-chart, pyramid, timeline, unit-grid. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

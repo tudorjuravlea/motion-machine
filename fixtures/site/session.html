@@ -1,0 +1,39 @@
+<!doctype html>
+<!-- Test site for a scripted capture session (tests/cli/capture-session.test.mjs): one screen tall at
+     laptop width plus a long tail, a button that turns the whole page red the moment the mouse goes down
+     (so a video shows exactly when a click landed), a link, a text field, a hover menu, and a tall
+     section to scroll to. Everything local. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>fixture session</title>
+<style>
+  html { scroll-behavior: auto; }
+  body { margin: 0; font: 20px/1.4 sans-serif; background: #F4EFE6; color: #1E1B16; }
+  header { height: 70px; background: #1E1B16; color: #F4EFE6; display: flex; align-items: center; padding: 0 32px; gap: 32px; }
+  .menu { position: relative; }
+  .menu > span { cursor: default; }
+  .menu ul { display: none; position: absolute; top: 28px; left: 0; margin: 0; padding: 8px 16px; list-style: none; background: #fff; color: #1E1B16; }
+  .menu:hover ul { display: block; }
+  main { padding: 80px 32px; }
+  #go { font: inherit; padding: 16px 40px; background: #B5451B; color: #fff; border: 0; border-radius: 10px; cursor: pointer; margin-left: 560px; }
+  #name { font: inherit; display: block; margin: 60px 0 0 560px; width: 320px; padding: 10px; }
+  #result { margin: 24px 0 0 560px; min-height: 28px; }
+  a.more { display: inline-block; margin: 40px 0 0 560px; color: #B5451B; cursor: pointer; }
+  #tail { height: 2400px; margin-top: 200px; border-top: 4px solid #B5451B; }
+  #deep { margin-top: 1200px; padding: 20px; background: #E9DFC8; }
+</style></head>
+<body>
+  <header><b>Fixture</b><div class="menu"><span>Products</span><ul><li>Alpha</li><li>Beta</li></ul></div></header>
+  <main>
+    <button id="go" type="button">Start</button>
+    <input id="name" type="text" placeholder="Your name" aria-label="Your name">
+    <div id="result"></div>
+    <a class="more" href="#deep">Read more</a>
+  </main>
+  <section id="tail"><div id="deep">Deep section</div></section>
+  <script>
+    // the whole page goes red on mousedown, anywhere: a flash a video can be searched for
+    document.addEventListener('mousedown', () => { document.documentElement.style.background = '#ff0000'; document.body.style.background = '#ff0000'; });
+    document.addEventListener('mouseup', () => { document.documentElement.style.background = ''; document.body.style.background = ''; });
+    document.getElementById('go').addEventListener('click', () => { document.getElementById('result').textContent = 'Started'; });
+  </script>
+</body></html>

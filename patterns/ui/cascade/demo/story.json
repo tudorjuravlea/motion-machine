@@ -1,0 +1,43 @@
+{
+  "id": "demo-ui-cascade",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "ui/cascade demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "shot",
+      "layout": "layouts/stage",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "ui/cascade",
+          "params": {
+            "options": "Monthly|Yearly",
+            "from": "Price:$12|Method:Card|Renews:Mar 3",
+            "to": "$96|Transfer|Jan 3"
+          }
+        }
+      ],
+      "say": "One choice changes, and everything that depends on it follows."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

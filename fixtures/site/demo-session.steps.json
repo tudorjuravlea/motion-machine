@@ -1,0 +1,10 @@
+[
+  { "do": "wait", "ms": 300 },
+  { "do": "click", "on": "#new", "ms": 700 },
+  { "do": "wait", "ms": 450 },
+  { "do": "click", "on": "#title", "ms": 500 },
+  { "do": "type", "text": "Draft the launch plan", "delay": 45 },
+  { "do": "click", "on": "#add", "ms": 500 },
+  { "do": "hover", "on": "#list .row", "ms": 500 },
+  { "do": "wait", "ms": 1600 }
+]

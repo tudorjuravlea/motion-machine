@@ -1,0 +1,15 @@
+{
+  "name": "tap",
+  "meaning": "a touch or a click on a control: a button, a chip, a row",
+  "durationS": 0.05,
+  "layers": [
+    { "kind": "noise", "attackS": 0.001, "t60": 0.012, "peak": 0.55, "filter": { "type": "bandpass", "f": 2400, "q": 1.1 } },
+    { "kind": "tone", "f": 587.33, "glideTo": 440, "glideS": 0.025, "attackS": 0.001, "t60": 0.04, "peak": 1 },
+    { "kind": "tone", "f": 1174.66, "attackS": 0.001, "t60": 0.015, "peak": 0.25, "from": 1 },
+    { "kind": "noise", "attackS": 0.001, "t60": 0.025, "peak": 0.1, "filter": { "type": "highpass", "f": 5000, "q": 0.7 }, "from": 2 }
+  ],
+  "room": { "send": -22, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "masterGain": 0.1746,
+  "vary": { "pitch": 0.03, "force": 0.15 },
+  "emphasis": { "subtle": 0, "normal": 1, "strong": 2 }
+}

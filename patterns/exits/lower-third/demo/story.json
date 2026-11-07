@@ -1,0 +1,104 @@
+{
+  "id": "demo-exits-lower-third",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: exits/lower-third",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "bar-wipe",
+      "layout": "layouts/caption-bar",
+      "duration": 3.4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Interview"
+        },
+        {
+          "at": 0.4,
+          "slot": "overlay",
+          "fx": "text/lower-third",
+          "text": "Alex Sample | Design lead",
+          "params": {
+            "mechanism": "bar-wipe"
+          },
+          "out": 2.8,
+          "exit": "exits/lower-third"
+        }
+      ],
+      "say": "The bar-wipe lower third leaves the way it came."
+    },
+    {
+      "id": "stamp",
+      "layout": "layouts/caption-bar",
+      "duration": 3.4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Interview"
+        },
+        {
+          "at": 0.4,
+          "slot": "overlay",
+          "fx": "text/lower-third",
+          "text": "Alex Sample | Design lead",
+          "params": {
+            "mechanism": "stamp"
+          },
+          "out": 2.8,
+          "exit": "exits/lower-third"
+        }
+      ],
+      "say": "The stamp lower third leaves the way it came."
+    },
+    {
+      "id": "typed",
+      "layout": "layouts/caption-bar",
+      "duration": 3.4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Interview"
+        },
+        {
+          "at": 0.4,
+          "slot": "overlay",
+          "fx": "text/lower-third",
+          "text": "Alex Sample | Design lead",
+          "params": {
+            "mechanism": "typed"
+          },
+          "out": 2.8,
+          "exit": "exits/lower-third"
+        }
+      ],
+      "say": "The typed lower third leaves the way it came."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

@@ -1,0 +1,530 @@
+{
+  "id": "catalogue-layouts-2",
+  "kind": "film",
+  "generator": "pieces/catalogue/build.mjs",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Layouts, part 2 of 4",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "1",
+      "source": "catalogue layout demo, not a claim"
+    },
+    {
+      "id": "f2",
+      "text": "9",
+      "source": "catalogue layout demo, not a claim"
+    },
+    {
+      "id": "f11",
+      "text": "1284",
+      "source": "catalogue layout demo, not a claim"
+    },
+    {
+      "id": "f12",
+      "text": "48",
+      "source": "catalogue layout demo, not a claim"
+    },
+    {
+      "id": "f13",
+      "text": "23",
+      "source": "catalogue layout demo, not a claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "layout": "layouts/statement",
+      "position": "opening",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Layouts",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Where things sit. Every slot names itself. Part 2 of 4."
+        }
+      ],
+      "say": "Where things sit. Every slot names itself.",
+      "duration": 4.3
+    },
+    {
+      "id": "how",
+      "layout": "layouts/statement",
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Read the frame.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Each layout fills its slots with its own description."
+        }
+      ],
+      "say": "Watch twice.",
+      "duration": 3.95
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "media",
+      "layout": "layouts/media",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "media",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "image",
+          "fx": "entrances/mask-reveal",
+          "asset": "assets/grid.png"
+        },
+        {
+          "at": 0.8,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "One picture, framed at its own proportions."
+        }
+      ],
+      "id": "media-a",
+      "duration": 3.8
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "caption-bar",
+      "layout": "layouts/caption-bar",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "text": "Dashboard",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "caption-bar: a stage, and a band beneath it."
+        }
+      ],
+      "id": "caption-bar-a",
+      "duration": 3.8
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "desktop",
+      "layout": "layouts/desktop",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "desk",
+          "fx": "entrances/fade",
+          "params": {
+            "wall": "accent",
+            "instant": true
+          }
+        },
+        {
+          "at": 0.2,
+          "slot": "menu",
+          "fx": "entrances/fade",
+          "text": "Notes   File   Edit   View"
+        },
+        {
+          "at": 0.5,
+          "slot": "caption",
+          "fx": "entrances/rise",
+          "text": "desktop: the frame is a laptop screen."
+        }
+      ],
+      "id": "desktop-a",
+      "duration": 3.85
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "endcard",
+      "layout": "layouts/endcard",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "line",
+          "fx": "entrances/fade",
+          "text": "endcard: the sign-off.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "motion-machine"
+        },
+        {
+          "at": 0.6,
+          "slot": "body",
+          "fx": "entrances/fade",
+          "text": "github.com/tudorjuravlea/motion-machine"
+        }
+      ],
+      "id": "endcard-a",
+      "duration": 3.8
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "label-column",
+      "layout": "layouts/label-column",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "label-column: labels joined by leaders.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.3,
+          "slot": "object",
+          "fx": "entrances/mask-reveal",
+          "asset": "assets/layers.svg"
+        },
+        {
+          "at": 1,
+          "slot": "label-1",
+          "fx": "entrances/fade",
+          "text": "Glass",
+          "params": {
+            "x": 0.5,
+            "y": 0.15,
+            "spec": "Toughened"
+          }
+        },
+        {
+          "at": 1.3,
+          "slot": "label-2",
+          "fx": "entrances/fade",
+          "text": "Display",
+          "params": {
+            "x": 0.5,
+            "y": 0.33,
+            "spec": "Bright"
+          }
+        },
+        {
+          "at": 1.6,
+          "slot": "label-3",
+          "fx": "entrances/fade",
+          "text": "Camera",
+          "params": {
+            "x": 0.65,
+            "y": 0.48,
+            "spec": "Wide"
+          }
+        },
+        {
+          "at": 1.9,
+          "slot": "label-4",
+          "fx": "entrances/fade",
+          "text": "Battery",
+          "params": {
+            "x": 0.5,
+            "y": 0.73,
+            "spec": "Long-lived"
+          }
+        }
+      ],
+      "id": "label-column-a",
+      "duration": 4.65
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "object-card",
+      "layout": "layouts/object-card",
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "object",
+          "fx": "entrances/drop",
+          "params": {
+            "variant": "calendar"
+          }
+        },
+        {
+          "at": 0.6,
+          "slot": "mark",
+          "fx": "entrances/fade",
+          "text": "March"
+        },
+        {
+          "at": 1,
+          "slot": "figure",
+          "fx": "data/counter",
+          "fact": "f2",
+          "value": 9,
+          "params": {
+            "size": "display"
+          }
+        },
+        {
+          "at": 1.2,
+          "slot": "label",
+          "fx": "entrances/fade",
+          "text": "Days to first reply"
+        },
+        {
+          "at": 1.8,
+          "slot": "note",
+          "fx": "entrances/fade",
+          "text": "object-card: a stat inside an object."
+        }
+      ],
+      "id": "object-card-a",
+      "duration": 5.15
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "pile-up",
+      "layout": "layouts/pile-up",
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "card-1",
+          "fx": "entrances/pop",
+          "text": "Signed",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.55,
+          "slot": "card-2",
+          "fx": "entrances/pop",
+          "text": "Loved",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.8,
+          "slot": "card-3",
+          "fx": "entrances/pop",
+          "text": "Invited",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 1.05,
+          "slot": "card-4",
+          "fx": "entrances/pop",
+          "text": "Again",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 1.25,
+          "slot": "card-5",
+          "fx": "entrances/pop",
+          "text": "Easy",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 1.45,
+          "slot": "card-6",
+          "fx": "entrances/pop",
+          "text": "Renewed",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "pile-up"
+        },
+        {
+          "at": 2.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "The pile is the message."
+        }
+      ],
+      "id": "pile-up-a",
+      "duration": 5.95
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "shortlist",
+      "layout": "layouts/shortlist",
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "shortlist"
+        },
+        {
+          "at": 0.8,
+          "slot": "item-1",
+          "fx": "entrances/pop",
+          "text": "Hall"
+        },
+        {
+          "at": 0.95,
+          "slot": "item-2",
+          "fx": "entrances/pop",
+          "text": "Loft"
+        },
+        {
+          "at": 1.1,
+          "slot": "item-3",
+          "fx": "entrances/pop",
+          "text": "Glasshouse",
+          "params": {
+            "pick": true
+          }
+        },
+        {
+          "at": 1.25,
+          "slot": "item-4",
+          "fx": "entrances/pop",
+          "text": "Yard"
+        },
+        {
+          "at": 1.4,
+          "slot": "item-5",
+          "fx": "entrances/pop",
+          "text": "Mill"
+        },
+        {
+          "at": 2.8,
+          "slot": "result",
+          "fx": "entrances/drop",
+          "text": "One is picked, the rest clear."
+        }
+      ],
+      "id": "shortlist-a",
+      "duration": 6.45
+    },
+    {
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "social-card",
+      "layout": "layouts/social-card",
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "avatar",
+          "fx": "entrances/fade",
+          "text": "AS"
+        },
+        {
+          "at": 0.2,
+          "slot": "handle",
+          "fx": "entrances/fade",
+          "text": "@alex.sample",
+          "params": {
+            "variant": "post"
+          }
+        },
+        {
+          "at": 0.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "2 min ago"
+        },
+        {
+          "at": 0.7,
+          "slot": "body",
+          "fx": "entrances/rise",
+          "text": "social-card: a post, with counters that tick."
+        },
+        {
+          "at": 1.6,
+          "slot": "stat-1",
+          "fx": "entrances/count",
+          "value": 1284,
+          "fact": "f11",
+          "params": {
+            "from": 1200
+          }
+        },
+        {
+          "at": 1.9,
+          "slot": "stat-2",
+          "fx": "entrances/count",
+          "value": 48,
+          "fact": "f12",
+          "params": {
+            "from": 40
+          }
+        },
+        {
+          "at": 2.2,
+          "slot": "stat-3",
+          "fx": "entrances/count",
+          "value": 23,
+          "fact": "f13",
+          "params": {
+            "from": 20
+          }
+        }
+      ],
+      "id": "social-card-a",
+      "duration": 5.85
+    }
+  ],
+  "share": "Layouts (2/4): media, caption-bar, desktop, endcard, label-column, object-card, pile-up, shortlist, social-card. Each one shown, explained, then replayed with a knob turned.",
+  "cta": {
+    "text": "Motion Machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

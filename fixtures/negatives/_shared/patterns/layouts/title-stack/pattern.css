@@ -1,0 +1,32 @@
+/* Gate fixture stub: kit-smoke's title-stack with two optional slots (kicker, note) so the
+   gate's negatives can add arrivals. Variables only. Empty slots take no room. */
+.title-stack {
+  position: absolute;
+  inset: var(--mm-safe);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--mm-space-4);
+}
+.title-stack > [data-empty] { display: none; }
+.title-stack__rule {
+  width: var(--mm-space-6);
+  height: var(--mm-space-1);
+  background: var(--mm-color-accent);
+}
+.title-stack__headline {
+  margin: 0;
+  font-family: var(--mm-font-display);
+  font-weight: var(--mm-weight-display);
+  letter-spacing: var(--mm-tracking-display);
+  font-size: var(--mm-size-h1);
+  line-height: 1.05;
+  color: var(--mm-color-ink);
+}
+.title-stack__sub, .title-stack__kicker, .title-stack__note {
+  margin: 0;
+  font-family: var(--mm-font-text);
+  font-weight: var(--mm-weight-text);
+  font-size: var(--mm-size-body);
+  color: var(--mm-color-muted);
+}

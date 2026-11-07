@@ -1,0 +1,41 @@
+{
+  "id": "demo-ui-bento",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "ui/bento demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "shot",
+      "layout": "layouts/stage",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "ui/bento",
+          "params": {
+            "tiles": "figure:Active teams:128|bars:Weekly runs:4,7,5,9|filler|list:Next up:Review,Ship,Retro|chip:Plan:Pro|filler"
+          }
+        }
+      ],
+      "say": "Six small facts about one product, each moving once."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

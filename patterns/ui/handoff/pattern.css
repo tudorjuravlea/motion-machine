@@ -1,0 +1,36 @@
+/* ui/handoff: a source card and a list side by side, or stacked, with the flying chip above both. */
+@import url('../../../runtime/kit/ui.css');
+.mm-ui-handoff { display: grid; gap: var(--mm-space-5); }
+.mm-ui-handoff[data-layout='row'] { grid-template-columns: 0.8fr 1.2fr; align-items: stretch; }
+:not(.mm-screen-fx) > .mm-ui-handoff[data-layout='row'] { width: 40em; }
+.mm-screen-fx > .mm-ui-handoff[data-layout='col'] .mm-ui-handoff__lines { display: none; }
+.mm-screen-fx > .mm-ui-handoff[data-layout='col'] { grid-template-columns: minmax(0, 1fr); }
+.mm-screen-fx > .mm-ui-handoff .mm-ui-handoff__row > .mm-ui__bar { max-width: 28%; }
+.mm-ui-handoff__source {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--mm-space-4);
+  padding: var(--mm-space-4);
+  border: 1px solid var(--mm-color-line);
+  border-radius: var(--mm-radius-2);
+}
+.mm-ui-handoff[data-layout='col'] .mm-ui-handoff__lines { flex-direction: row; align-items: center; }
+.mm-ui-handoff[data-layout='col'] .mm-ui-handoff__head { display: none; }
+.mm-ui-handoff[data-layout='row'] .mm-ui-handoff__source { justify-content: space-between; }
+.mm-ui-handoff__lines { display: flex; flex-direction: column; gap: var(--mm-space-3); }
+.mm-ui-handoff__list { display: flex; flex-direction: column; gap: var(--mm-space-3); }
+.mm-ui-handoff__row { display: flex; align-items: center; justify-content: space-between; gap: var(--mm-space-3); min-height: 1.8em; }
+.mm-ui-handoff__lead { min-width: 0; }
+.mm-ui-handoff__ghost { height: 1.5em; border-radius: var(--mm-radius-4); }
+.mm-ui-handoff__total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-top: var(--mm-space-3);
+  border-top: 1px solid var(--mm-color-line);
+}
+.mm-ui-handoff__figure { font-weight: var(--mm-weight-display); text-align: right; }
+.mm-ui-handoff__chip { position: absolute; background: var(--mm-color-surface); pointer-events: none; }

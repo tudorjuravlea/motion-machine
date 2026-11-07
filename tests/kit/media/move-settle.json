@@ -1,0 +1,56 @@
+{
+  "id": "move-settle",
+  "kind": "film",
+  "formats": [
+    "16x9"
+  ],
+  "title": "move settle",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "one",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": "moves/push-in",
+      "moveParams": {
+        "end": "settle",
+        "to": 1.2
+      },
+      "say": "",
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Settle"
+        }
+      ]
+    },
+    {
+      "id": "two",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": "moves/push-in",
+      "moveParams": {
+        "to": 1.2
+      },
+      "say": "",
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Whole scene"
+        }
+      ]
+    }
+  ]
+}

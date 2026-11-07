@@ -1,0 +1,51 @@
+{
+  "id": "capture-reference-tempo-a",
+  "kind": "film",
+  "formats": ["16x9"],
+  "title": "capture reference: seven short shots whose cuts and entrances come from the motion style",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    { "id": "s1", "layout": "layouts/statement", "duration": 3.5, "position": "opening", "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "style:headline", "text": "Grammar, not content." },
+        { "at": 1.2, "slot": "sub", "fx": "style:body", "text": "Capture reads how a film moves." }
+      ], "say": "Opening." },
+    { "id": "s2", "layout": "layouts/title-stack", "duration": 3, "position": "related", "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "style:headline", "text": "Cuts and arrivals." },
+        { "at": 1.0, "slot": "sub", "fx": "style:body", "text": "Counted from the frames alone." }
+      ], "say": "Related." },
+    { "id": "s3", "layout": "layouts/comparison", "duration": 3.5, "position": "topic", "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "style:headline", "text": "Two halves." },
+        { "at": 0.8, "slot": "left", "fx": "style:plate", "text": "brand" },
+        { "at": 1.2, "slot": "right", "fx": "style:plate", "text": "motion" }
+      ], "say": "Topic." },
+    { "id": "s4", "layout": "layouts/split", "duration": 3, "position": "related", "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "style:headline", "text": "Tempo is measured." },
+        { "at": 1.0, "slot": "body", "fx": "style:body", "text": "shot length and arrival rate" },
+        { "at": 1.4, "slot": "caption", "fx": "style:body", "text": "per ten seconds" }
+      ], "say": "Related." },
+    { "id": "s5", "layout": "layouts/bento-3", "duration": 3.5, "position": "topic", "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "style:headline", "text": "Three signals." },
+        { "at": 0.7, "slot": "tile-1", "fx": "style:plate", "text": "cuts" },
+        { "at": 0.85, "slot": "tile-2", "fx": "style:plate", "text": "bursts" },
+        { "at": 1.0, "slot": "tile-3", "fx": "style:plate", "text": "rests" }
+      ], "say": "Topic." },
+    { "id": "s6", "layout": "layouts/quote", "duration": 4, "position": "climax", "move": null,
+      "beats": [
+        { "at": 0.4, "slot": "headline", "fx": "style:headline", "text": "Only time moves things." },
+        { "at": 1.4, "slot": "attribution", "fx": "style:body", "text": "the kit" }
+      ], "say": "Climax." },
+    { "id": "s7", "layout": "layouts/endcard", "duration": 3, "position": "outro", "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "style:headline", "text": "Measured, not felt." },
+        { "at": 0.9, "slot": "body", "fx": "style:body", "text": "motion-machine" }
+      ], "say": "Outro." }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

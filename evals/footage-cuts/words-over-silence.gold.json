@@ -1,0 +1,16 @@
+{
+  "about": "a transcript over a recording with no speech in it (a transcriber invents words over silence, and says the same line again): no cut may be proposed, for the repeats in it were never said",
+  "duration": 10,
+  "sound": {
+    "voiced": false
+  },
+  "mustCut": [],
+  "optionalCut": [],
+  "mustKeep": [
+    {
+      "start": 0,
+      "end": 10,
+      "note": "nothing is to be cut"
+    }
+  ]
+}

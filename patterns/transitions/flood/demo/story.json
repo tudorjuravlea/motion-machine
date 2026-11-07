@@ -1,0 +1,75 @@
+{
+  "id": "demo-transitions-flood",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "transitions/flood demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "before",
+      "layout": "layouts/title-stack",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "One colour takes the frame"
+        },
+        {
+          "at": 1.1,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "It grows from this line"
+        }
+      ],
+      "say": "The scene that leaves."
+    },
+    {
+      "id": "after",
+      "layout": "layouts/statement",
+      "duration": 3.6,
+      "cut": "transitions/flood",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Ideas in motion",
+          "params": {
+            "dur": "quick"
+          }
+        },
+        {
+          "at": 1.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "The colour comes to rest on a dot"
+        }
+      ],
+      "say": "The scene that arrives through transitions/flood: the colour lands on the dot of the i.",
+      "cutParams": {
+        "from": "sub",
+        "to": "headline",
+        "land": "dot"
+      }
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

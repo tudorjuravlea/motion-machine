@@ -1,0 +1,144 @@
+{
+  "id": "gate-base-film",
+  "kind": "film",
+  "formats": [
+    "16x9"
+  ],
+  "title": "G-BRAND/vignette-black: a black vignette; black is not a brand role, so its darkest edge fails.",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "The gate samples three instants for determinism.",
+      "source": "SPEC.md §2.5"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "open",
+      "layout": "layouts/title-stack",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Time draws every frame.",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 1.2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "The gate checks each rest before export.",
+          "fact": "f1"
+        }
+      ],
+      "say": "Scene 1."
+    },
+    {
+      "id": "style",
+      "layout": "layouts/title-stack",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Two halves make one style."
+        },
+        {
+          "at": 1.2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Brand and motion compose per piece."
+        }
+      ],
+      "say": "Scene 2."
+    },
+    {
+      "id": "rests",
+      "layout": "layouts/title-stack",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Every rest is finished.",
+          "params": {
+            "spring": "ui"
+          }
+        },
+        {
+          "at": 1.2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Nothing waits mid-entrance at a rest."
+        }
+      ],
+      "say": "Scene 3."
+    },
+    {
+      "id": "sizes",
+      "layout": "layouts/title-stack",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Every size has a floor."
+        },
+        {
+          "at": 1.2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Small type fails before it ships."
+        }
+      ],
+      "say": "Scene 4."
+    },
+    {
+      "id": "close",
+      "layout": "layouts/title-stack",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Same t, same pixels."
+        },
+        {
+          "at": 1.2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Check it, then export the piece."
+        }
+      ],
+      "say": "Scene 5."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

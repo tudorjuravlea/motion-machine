@@ -1,0 +1,13 @@
+{
+  "name": "key",
+  "meaning": "one key of a type-on: a character lands in a text that is being written",
+  "durationS": 0.075,
+  "layers": [
+    { "kind": "noise", "filter": { "type": "none" }, "envelope": [[0, -60], [0.0018, -12], [0.0042, -36], [0.012, -60]], "chain": [{ "type": "highpass", "f": 3400, "stages": 3 }, { "type": "peaking", "f": 9600, "q": 1, "db": 6 }, { "type": "lowpass", "f": 15000, "stages": 2 }], "peak": 0.5, "from": 1 },
+    { "kind": "noise", "filter": { "type": "none" }, "envelope": [[0, -50], [0.0025, 0], [0.0055, -16], [0.009, -22], [0.02, -26], [0.04, -36], [0.062, -50], [0.072, -60]], "chain": [{ "type": "highpass", "f": 3400, "stages": 3 }, { "type": "peaking", "f": 9600, "q": 1, "db": 6 }, { "type": "lowpass", "f": 15000, "stages": 2 }], "peak": 1, "offsetS": 0.003 },
+    { "kind": "noise", "filter": { "type": "none" }, "envelope": [[0, -60], [0.0008, -12], [0.0035, -28], [0.012, -60]], "chain": [{ "type": "highpass", "f": 3600, "stages": 3 }, { "type": "peaking", "f": 11000, "q": 1, "db": 6 }, { "type": "lowpass", "f": 15000, "stages": 2 }], "peak": 0.5, "offsetS": 0.052, "from": 2 }
+  ],
+  "room": { "send": -22, "predelayS": 0.008, "sizeS": 0.25, "lowpassHz": 3500 },
+  "vary": { "pitch": 0.03, "force": 0.12 },
+  "masterGain": 0.2828
+}

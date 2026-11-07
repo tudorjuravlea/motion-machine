@@ -1,0 +1,423 @@
+{
+  "id": "demo-text-garden",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: text/garden",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "flowers",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/garden",
+          "text": "Always growing",
+          "params": {
+            "dur": 2.6,
+            "kind": "flowers",
+            "seed": 2
+          }
+        },
+        {
+          "at": 2.9,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Every stem ends in a blossom."
+        }
+      ],
+      "say": "Flowers on upright stems."
+    },
+    {
+      "id": "vines",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/garden",
+          "text": "Grow slowly",
+          "params": {
+            "dur": 2.6,
+            "kind": "vines",
+            "seed": 4
+          }
+        },
+        {
+          "at": 2.9,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Vines root in the letters."
+        }
+      ],
+      "say": "Vines grow out of the headline."
+    },
+    {
+      "id": "circuits",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/garden",
+          "text": "Built to connect",
+          "params": {
+            "dur": 2.6,
+            "kind": "circuits",
+            "seed": 4
+          }
+        },
+        {
+          "at": 2.9,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Traces end in vias and pads."
+        }
+      ],
+      "say": "Circuit traces grow from the letters."
+    },
+    {
+      "id": "crystals",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/garden",
+          "text": "Clear value",
+          "params": {
+            "dur": 2.6,
+            "kind": "crystals",
+            "seed": 5
+          }
+        },
+        {
+          "at": 2.9,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Faceted shards in the accent."
+        }
+      ],
+      "say": "Crystal shards grow from the letters."
+    },
+    {
+      "id": "leaves",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/garden",
+          "text": "Evergreen",
+          "params": {
+            "dur": 2.6,
+            "kind": "leaves",
+            "seed": 3
+          }
+        },
+        {
+          "at": 2.9,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Leaf pairs climb ivy stems."
+        }
+      ],
+      "say": "Ivy stems with heart-shaped leaf pairs."
+    },
+    {
+      "id": "ferns",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/garden",
+          "text": "Unfold gently",
+          "params": {
+            "dur": 2.6,
+            "kind": "ferns",
+            "seed": 2
+          }
+        },
+        {
+          "at": 2.9,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Fronds of graded leaflets."
+        }
+      ],
+      "say": "Fern fronds uncurl from the letters."
+    },
+    {
+      "id": "branches",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/garden",
+          "text": "First blossom",
+          "params": {
+            "dur": 2.6,
+            "kind": "branches",
+            "seed": 1
+          }
+        },
+        {
+          "at": 2.9,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Twigs with buds and blossoms."
+        }
+      ],
+      "say": "Twigs bud and blossom."
+    },
+    {
+      "id": "roots",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/garden",
+          "text": "Deep roots",
+          "params": {
+            "dur": 2.6,
+            "kind": "roots",
+            "seed": 2
+          }
+        },
+        {
+          "at": 2.9,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Threads fork under the baseline."
+        }
+      ],
+      "say": "Roots hang from the letters' feet."
+    },
+    {
+      "id": "coral",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/garden",
+          "text": "Reef life",
+          "params": {
+            "dur": 2.6,
+            "kind": "coral",
+            "seed": 3
+          }
+        },
+        {
+          "at": 2.9,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Thick limbs with round tips."
+        }
+      ],
+      "say": "Coral branches from the letters."
+    },
+    {
+      "id": "seaweed",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/garden",
+          "text": "Ocean calm",
+          "params": {
+            "dur": 2.6,
+            "kind": "seaweed",
+            "seed": 2
+          }
+        },
+        {
+          "at": 2.9,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Kelp ribbons rise and wave."
+        }
+      ],
+      "say": "Kelp rises from the baseline."
+    },
+    {
+      "id": "moss",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/garden",
+          "text": "Soft ground",
+          "params": {
+            "dur": 2.6,
+            "kind": "moss",
+            "seed": 1
+          }
+        },
+        {
+          "at": 2.9,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Cushions on the top edges."
+        }
+      ],
+      "say": "Moss settles on the letters."
+    },
+    {
+      "id": "grass",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/garden",
+          "text": "Open fields",
+          "params": {
+            "dur": 2.6,
+            "kind": "grass",
+            "seed": 2
+          }
+        },
+        {
+          "at": 2.9,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Blades and seed heads."
+        }
+      ],
+      "say": "Grass grows along the baseline."
+    },
+    {
+      "id": "mix",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/garden",
+          "text": "Wild garden",
+          "params": {
+            "dur": 2.6,
+            "kind": "mix",
+            "seed": 4
+          }
+        },
+        {
+          "at": 2.9,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Two or three part sets at once."
+        }
+      ],
+      "say": "A mixed garden."
+    },
+    {
+      "id": "botanical",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/garden",
+          "text": "Quietly thriving",
+          "params": {
+            "dur": 2.6,
+            "kind": "botanical",
+            "seed": 2
+          }
+        },
+        {
+          "at": 2.9,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Illustrated blooms grow from the letters."
+        }
+      ],
+      "say": "Filled, shaded blooms on the letters."
+    },
+    {
+      "id": "botanical-bed",
+      "layout": "layouts/statement",
+      "duration": 6.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/garden",
+          "text": "Room to grow",
+          "params": {
+            "dur": 3,
+            "kind": "botanical",
+            "bed": true,
+            "seed": 1
+          }
+        }
+      ],
+      "say": "A bed of flowers rises from below the headline."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

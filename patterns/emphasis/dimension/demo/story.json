@@ -1,0 +1,57 @@
+{
+  "id": "demo-dimension",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: emphasis/dimension",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo device width for emphasis/dimension",
+      "source": "demo fixture, an invented figure that carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/statement",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Narrow enough to hold"
+        },
+        {
+          "at": 1.3,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "71.5 mm",
+          "fact": "f1",
+          "params": {
+            "instant": true,
+            "for": "headline"
+          },
+          "emphasis": "emphasis/dimension"
+        }
+      ],
+      "say": "A claim, then its measure drawn under it, spanning exactly the headline."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

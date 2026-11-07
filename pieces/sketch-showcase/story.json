@@ -1,0 +1,124 @@
+{
+  "id": "sketch-showcase",
+  "kind": "film",
+  "formats": [
+    "16x9"
+  ],
+  "title": "Sketch showcase: drawn, turned, shipped, compared",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo app for the sketch showcase",
+      "source": "an invented app that carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "cta": {
+    "text": "Sketch it. Ship it.",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  },
+  "scenes": [
+    {
+      "id": "open",
+      "layout": "layouts/statement",
+      "duration": 2.5,
+      "move": null,
+      "position": "opening",
+      "say": "Sketch first.",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Sketch first.",
+          "params": {
+            "instant": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "show",
+      "layout": "layouts/caption-bar",
+      "duration": 13.6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "say": "The drawn app turns into the finished one, then both sit side by side.",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "3d/phone",
+          "asset": "assets/sketch/",
+          "params": {
+            "move": "cross",
+            "from": -0.28,
+            "to": 0.28,
+            "crossAt": 2.4,
+            "crossFor": 2.6,
+            "status": "true"
+          },
+          "screen": [
+            {
+              "do": "screen/play",
+              "at": 0,
+              "d": 12
+            },
+            {
+              "do": "screen/swap",
+              "at": 3.7,
+              "params": {
+                "to": "assets/hifi.png",
+                "how": "cut"
+              }
+            },
+            {
+              "do": "screen/compare",
+              "at": 6.4,
+              "d": 4.8,
+              "params": {
+                "to": "assets/sketch/",
+                "stop": 0.5,
+                "move": 0.34
+              }
+            }
+          ]
+        },
+        {
+          "at": 9.6,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "Before and after, side by side."
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "layout": "layouts/endcard",
+      "duration": 4.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "position": "outro",
+      "say": "Sketch it. Ship it.",
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "style:headline",
+          "text": "Sketch it. Ship it."
+        },
+        {
+          "at": 0.8,
+          "slot": "body",
+          "fx": "style:body",
+          "text": "github.com/tudorjuravlea/motion-machine"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "id": "demo-text-masked-fill",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: text/masked-fill",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/statement",
+      "duration": 5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/masked-fill",
+          "text": "Fill it up",
+          "params": {
+            "dur": 2
+          }
+        },
+        {
+          "at": 2.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "The colour rises inside the letters."
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

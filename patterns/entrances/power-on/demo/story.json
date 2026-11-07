@@ -1,0 +1,24 @@
+{
+  "id": "demo-entrances-power-on",
+  "kind": "film",
+  "formats": ["16x9", "9x16", "1x1"],
+  "title": "entrances/power-on demo",
+  "language": "en",
+  "facts": [],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "on",
+      "layout": "layouts/statement",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "entrances/power-on", "text": "Signal acquired" },
+        { "at": 1.6, "slot": "sub", "fx": "entrances/power-on", "text": "No colour split on this line", "params": { "split": 0, "flicker": 1 } }
+      ],
+      "say": "A headline switches on, then a quieter line."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

@@ -1,0 +1,65 @@
+{
+  "id": "demo-text-caption-karaoke",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "text/caption-karaoke demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "footage": {
+    "asset": "assets/talk/"
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 4.5,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "text/caption-karaoke",
+          "text": "Each group lights word by word",
+          "params": {
+            "group": 3,
+            "dur": "hold"
+          }
+        }
+      ],
+      "say": "A single scene that shows text/caption-karaoke."
+    },
+    {
+      "id": "words",
+      "layout": "layouts/talking-full",
+      "duration": 4.3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "caption",
+          "fx": "text/caption-karaoke",
+          "params": {
+            "mode": "words",
+            "group": 3
+          }
+        }
+      ],
+      "say": "mode words: the captions follow the words of the footage (synthetic test footage and invented words), group by group."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

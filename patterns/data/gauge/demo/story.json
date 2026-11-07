@@ -1,0 +1,220 @@
+{
+  "id": "demo-data-gauge",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "data/gauge demo",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Demo figure for data/gauge",
+      "source": "demo fixture, an invented figure that carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "arc",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/gauge",
+          "fact": "f1",
+          "value": 68,
+          "params": {
+            "variant": "arc",
+            "size": "h1"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Of tasks closed this week"
+        }
+      ],
+      "say": "A figure on a 270 degree arc."
+    },
+    {
+      "id": "semi",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/gauge",
+          "fact": "f1",
+          "value": 72,
+          "params": {
+            "variant": "semi",
+            "size": "h1"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Of the plan delivered"
+        }
+      ],
+      "say": "A half dial."
+    },
+    {
+      "id": "needle",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/gauge",
+          "fact": "f1",
+          "value": 82,
+          "params": {
+            "variant": "needle",
+            "size": "h1"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Customer satisfaction"
+        }
+      ],
+      "say": "A needle swings to the value and settles."
+    },
+    {
+      "id": "clock",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/gauge",
+          "fact": "f1",
+          "value": 65,
+          "params": {
+            "variant": "clock",
+            "size": "h1"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Of the day on the road"
+        }
+      ],
+      "say": "A hand sweeps a wedge."
+    },
+    {
+      "id": "rings",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/gauge",
+          "fact": "f1",
+          "value": 80,
+          "params": {
+            "variant": "rings",
+            "values": "84,62,41",
+            "labels": "Move,Focus,Rest"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Goals met today"
+        }
+      ],
+      "say": "Three concentric rings."
+    },
+    {
+      "id": "bars",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/gauge",
+          "fact": "f1",
+          "value": 80,
+          "params": {
+            "variant": "radial-bars",
+            "values": "88,64,47,30",
+            "labels": "North,South,East,West"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Share of orders by region"
+        }
+      ],
+      "say": "Radial bars."
+    },
+    {
+      "id": "meter",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.4,
+          "slot": "headline",
+          "fx": "data/gauge",
+          "fact": "f1",
+          "value": 58,
+          "params": {
+            "variant": "meter",
+            "size": "h1"
+          }
+        },
+        {
+          "at": 1.4,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "Storage used"
+        }
+      ],
+      "say": "A linear meter with a notch."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

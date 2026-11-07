@@ -1,0 +1,59 @@
+{
+  "id": "demo-screen-play",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: screen/play",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/caption-bar",
+      "duration": 6.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "stage",
+          "fx": "devices/phone",
+          "asset": "assets/rec/",
+          "params": {
+            "size": "large"
+          },
+          "screen": [
+            {
+              "do": "screen/play",
+              "at": 0.8,
+              "d": 4,
+              "params": {
+                "from": 0.5,
+                "rate": 0.5
+              }
+            }
+          ]
+        },
+        {
+          "at": 1.0,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "A recording plays at half speed."
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

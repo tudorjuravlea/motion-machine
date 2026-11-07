@@ -1,0 +1,53 @@
+{
+  "id": "demo-ground-glass",
+  "kind": "film",
+  "formats": ["16x9", "9x16", "1x1"],
+  "title": "Grounds and glass",
+  "language": "en",
+  "facts": [
+    { "id": "f1", "text": "Demo figure for the glass stat tile", "source": "demo fixture, an invented figure that carries no claim" }
+  ],
+  "audio": { "track": null, "bpm": null, "beats": null },
+  "scenes": [
+    {
+      "id": "figure",
+      "layout": "layouts/title-stack",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.3, "slot": "headline", "fx": "data/stat-tile", "fact": "f1", "params": { "label": "Weekly signups", "delta": "+18%" }, "value": 4280 },
+        { "at": 1.3, "slot": "sub", "fx": "entrances/fade", "text": "Against the same week last year" }
+      ],
+      "say": "A stat tile on the ground."
+    },
+    {
+      "id": "tiles",
+      "layout": "layouts/bento-3",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "entrances/rise", "text": "Three things, one surface." },
+        { "at": 0.8, "slot": "tile-1", "fx": "entrances/pop", "text": "grounds" },
+        { "at": 1.1, "slot": "tile-2", "fx": "entrances/pop", "text": "glass" },
+        { "at": 1.4, "slot": "tile-3", "fx": "entrances/pop", "text": "light" }
+      ],
+      "say": "Bento tiles in glass."
+    },
+    {
+      "id": "versus",
+      "layout": "layouts/comparison",
+      "duration": 4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        { "at": 0.2, "slot": "headline", "fx": "entrances/rise", "text": "Flat or glass." },
+        { "at": 0.9, "slot": "left", "fx": "entrances/pop", "text": "a card is a fill" },
+        { "at": 1.3, "slot": "right", "fx": "entrances/pop", "text": "a card is a pane" }
+      ],
+      "say": "A comparison in glass."
+    }
+  ],
+  "cta": { "text": "motion-machine", "url": "github.com/tudorjuravlea/motion-machine" }
+}

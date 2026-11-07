@@ -1,0 +1,63 @@
+{
+  "id": "demo-emphasis-wash-bloom",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "Demo: emphasis/wash-bloom",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/bento-3",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Colour"
+        },
+        {
+          "at": 0.8,
+          "slot": "tile-1",
+          "fx": "entrances/sketch",
+          "text": "Plan the week",
+          "emphasis": "emphasis/wash-bloom"
+        },
+        {
+          "at": 1.5,
+          "slot": "tile-2",
+          "fx": "entrances/sketch",
+          "text": "Track the work",
+          "emphasis": "emphasis/wash-bloom"
+        },
+        {
+          "at": 2.2,
+          "slot": "tile-3",
+          "fx": "entrances/sketch",
+          "text": "Ship it",
+          "emphasis": "emphasis/wash-bloom",
+          "params": {
+            "shape": "pill"
+          }
+        }
+      ],
+      "say": "Three tiles drawn as a sketch, then washed in the brand's colours one after another, in the order the pen drew them."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

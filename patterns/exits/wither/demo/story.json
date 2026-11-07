@@ -1,0 +1,42 @@
+{
+  "id": "demo-exits-wither",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: exits/wither",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/statement",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "text/garden",
+          "text": "Seasons turn",
+          "params": { "dur": 2.4, "kind": "vines", "seed": 2 },
+          "out": 4,
+          "exit": "exits/wither"
+        }
+      ],
+      "say": "Vines climb the letters, then fall back to bare type."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

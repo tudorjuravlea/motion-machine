@@ -1,0 +1,127 @@
+{
+  "id": "brand-rules",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16"
+  ],
+  "title": "brand text rules",
+  "language": "en",
+  "facts": [
+    {
+      "id": "f1",
+      "text": "A figure for the test.",
+      "source": "test fixture, carries no claim"
+    }
+  ],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "stat",
+      "layout": "layouts/stat-hero",
+      "duration": 3,
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "42",
+          "fact": "f1",
+          "params": {
+            "instant": true
+          }
+        },
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "A figure"
+        }
+      ],
+      "say": ".",
+      "position": "opening"
+    },
+    {
+      "id": "split",
+      "layout": "layouts/split",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "Split"
+        },
+        {
+          "at": 0.2,
+          "slot": "figure",
+          "fx": "entrances/fade",
+          "text": "7",
+          "fact": "f1"
+        }
+      ],
+      "say": "."
+    },
+    {
+      "id": "cmp",
+      "layout": "layouts/comparison",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "headline",
+          "fx": "entrances/fade",
+          "text": "This or that"
+        },
+        {
+          "at": 0.2,
+          "slot": "left",
+          "fx": "entrances/fade",
+          "text": "This"
+        },
+        {
+          "at": 0.3,
+          "slot": "right",
+          "fx": "entrances/fade",
+          "text": "That"
+        }
+      ],
+      "say": "."
+    },
+    {
+      "id": "bar",
+      "layout": "layouts/caption-bar",
+      "duration": 3,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.1,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "A caption"
+        },
+        {
+          "at": 0.2,
+          "slot": "stage",
+          "fx": "text/split-flap",
+          "text": "FLAP"
+        }
+      ],
+      "say": "."
+    }
+  ],
+  "cta": {
+    "text": "",
+    "url": ""
+  }
+}
