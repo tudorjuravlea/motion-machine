@@ -8,6 +8,9 @@
 //                  events) is a base64 data URI, decoded without a request, so it plays from file://. Audio is unlocked by the
 //                  first gesture: capture-phase touchstart, touchend, click and keydown, a one-sample buffer played, the
 //                  context resumed. A mute button (and the m key) silences it; with no sprite there is no button.
+//   live video     a <video data-live> that a scene shows plays from its start, with its sound, when the deck comes to rest on it, and
+//                  stops as the deck moves on (a press, Back, a jump). With no gesture yet (a deck opened on that rest) it plays muted.
+//                  The mute button silences it too. A render never plays it: there it is the clip's first frame.
 //   fit            the stage is a fixed frame (1920 x 1080 for a 16x9 deck): outside a render it is scaled to fit the window, up or down,
 //                  centred on the canvas colour, so a deck shows whole in a small window, a frame of a page or a big screen.
 //   a parent page  may steer the deck with postMessage: { mm: 'goto', press: n }, { mm: 'next' }, { mm: 'prev' } (only from
@@ -98,9 +101,28 @@ export function startDeckPlayer({ sound = null, win = window } = {}) {
     win.addEventListener('resize', fit);
   }
 
+  // ---- live video: at a rest, every <video data-live> that shows plays from its start; anywhere else none plays
+  let liveAt = null;
+  const liveAll = () => [...doc.querySelectorAll('video[data-live]')];
+  const liveSync = () => {
+    const x = mm.position();
+    if (x === liveAt) return;
+    liveAt = x;
+    for (const v of liveAll()) if (!v.paused) v.pause();
+    if (!Number.isInteger(x)) return;
+    for (const v of liveAll()) {
+      if (!v.getClientRects().length || win.getComputedStyle(v).visibility === 'hidden') continue;   // a scene or a slot the kit has hidden
+      try { v.currentTime = 0; } catch { /* not seekable yet: it starts where it is */ }
+      v.muted = muted;
+      v.play()?.catch?.(() => { v.muted = true; v.play()?.catch?.(() => {}); });   // refused with sound (no gesture yet): muted
+    }
+  };
+  win.setInterval(liveSync, 100);   // a jump (Back, a hash, goto) is not an event the player hears: the position is read
+
   // ---- a press: real time from one rest to the next, with the cues of that press
   win.addEventListener('mm:press', (e) => {
     e.preventDefault();
+    for (const v of liveAll()) if (!v.paused) v.pause();   // the deck is leaving this rest now: not a tenth of a second on
     const { from, to } = e.detail;
     const len = mm.schedule.pressLengths?.[to] ?? 0;
     const due = cuesOfPress(sound?.events, to);
@@ -110,7 +132,7 @@ export function startDeckPlayer({ sound = null, win = window } = {}) {
       if (mm.position() !== set) return;                // someone else navigated: the press is over, its cues are not played
       const s = (win.performance.now() - t0) / 1000;
       while (fired < due.length && (len <= 0 || s >= len || due[fired].at <= s)) play(due[fired++].key);
-      if (!(len > 0) || s >= len) { mm.goto(to); return; }
+      if (!(len > 0) || s >= len) { mm.goto(to); liveSync(); return; }
       set = from + (to - from) * (s / len);
       mm.seek(set);
       win.requestAnimationFrame(step);
@@ -134,6 +156,7 @@ export function startDeckPlayer({ sound = null, win = window } = {}) {
     mute(on = !muted) {
       muted = Boolean(on);
       if (gain) gain.gain.value = muted ? 0 : 1;
+      for (const v of liveAll()) v.muted = muted;
       if (button) { button.setAttribute('aria-pressed', String(muted)); button.textContent = muted ? 'Sound off' : 'Sound on'; }
     },
   };

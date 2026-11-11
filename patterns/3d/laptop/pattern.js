@@ -4,6 +4,9 @@
 // or none). It turns like the phone (hero, turntable, still, showcase); in a hero the lid opens as
 // it arrives. The screen is copied from a hidden 2D screen the kit's screen fold drives; the pose
 // is a pure function of p and u; a deck rest faces the viewer with the lid open.
+// A pose move travels from one written pose to another (lid, turn, place, how far the camera stands back, and
+// `fill`: the camera square in front of the screen, the screen covering the canvas), each key in its own part
+// of the beat's time; a deck rest holds the pose it ends on, so a notebook can rest half shut.
 import { THREE, clamp01, smoothstep01, cssText, cssColour, stage, slab, plate, disc, sheen, sweep, lightAll, menuBar, alloy, metal, glass, glossy, turn, fitCanvas, mark, draw, LOOK_PARAMS, lookOf } from '../../../runtime/kit/device3d.js';
 
 const LW = 2, LH = 1.29, LT = 0.024, LR = 0.065;   // the lid, in scene units
@@ -11,6 +14,33 @@ const BD = 1.38, BT = 0.058, BR = 0.075;           // the base: depth (front to 
 const FACES = { notch: [0.035, 0.035, 0.05], chin: [0.034, 0.088, 0.11], plain: [0.035, 0.035, 0.035] };   // bezels: side, top, bottom
 const OPEN = -0.21, SHUT = 1.48;                   // the lid's angle from upright at rest and closed (radians)
 const cache = new WeakMap();
+
+// a pose, written "key:value …": lid 0 (shut) to 1 (open), turn (radians about the vertical), x (sideways, scene units: the
+// notebook is 2 wide), rise (up, scene units), back (the camera's distance, 1 is the standard one), fill 0 to 1 (the camera goes
+// from its standard place to square in front of the screen, which then covers the canvas), alpha (0 to 1).
+// In the pose a move ends on, "key:value@a-b" moves that key during that part of the beat's time (0 to 1), eased inside it.
+const POSE = { lid: 1, turn: 0, x: 0, rise: 0, back: 1, fill: 0, alpha: 1 };
+export function poseOf(text, base = POSE) {
+  const out = { ...base }, when = {};
+  for (const part of String(text ?? '').trim().split(/\s+/).filter(Boolean)) {
+    const m = /^([a-z]+):(-?\d*\.?\d+)(?:@(\d*\.?\d+)-(\d*\.?\d+))?$/.exec(part);
+    if (!m || !(m[1] in POSE)) continue;
+    out[m[1]] = Number(m[2]);
+    if (m[3] != null) when[m[1]] = [Number(m[3]), Number(m[4])];
+  }
+  return { pose: out, when };
+}
+/** The pose at s (0 to 1 of the beat's time) on the way from `from` to `to`. */
+export function poseAt(from, to, s) {
+  const a = poseOf(from).pose, { pose: b, when } = poseOf(to, a);
+  const out = {};
+  for (const k of Object.keys(POSE)) {
+    const [t0, t1] = when[k] ?? [0, 1];
+    out[k] = a[k] + (b[k] - a[k]) * smoothstep01(t1 > t0 ? (s - t0) / (t1 - t0) : s >= t1 ? 1 : 0);
+  }
+  return out;
+}
+const SCREEN_Z = new THREE.Vector3(0, 0, 1), SCREEN_Y = new THREE.Vector3(0, 1, 0);
 const say = (g, text, x, y) => g.fillText(text, x, y);   // the top bar's words: chrome on a declared-media canvas (canvasText)
 
 // the deck: a keyboard well with its keys and a trackpad, drawn once into a texture (back edge at the top)
@@ -104,7 +134,7 @@ function build(el, holder, model, kind, look) {
   c.floor.position.y = -0.002;
   c.glow.position.set(0, 0.7, -2.2); c.glow.scale.set(4.6, 2.9, 1);
   c.key.position.set(2.5, 5, 4.5);
-  Object.assign(c, { kind, brushed: look.brushed, laptop, lid, shine, backShine, cutout, model, surface: cssText(holder, '--mm-color-surface'), accent: cssText(holder, '--mm-color-accent') });
+  Object.assign(c, { kind, brushed: look.brushed, laptop, lid, screen, screenW: SW, screenH: SH, shine, backShine, cutout, model, surface: cssText(holder, '--mm-color-surface'), accent: cssText(holder, '--mm-color-accent') });
   cache.set(el, c);
   return c;
 }
@@ -117,7 +147,9 @@ export default {
   canvasText: true,   // the top bar's time, network and menu words are drawn into the screen texture
   ambient: true,   // it keeps turning after it arrives: a move until the scene ends (schedule)
   params: {
-    move: { type: 'enum(hero|turntable|still|showcase)', default: 'hero', meaning: 'hero turns from the side to facing while the lid opens, then sways; turntable turns slowly the whole time; still holds a slight angle; showcase starts with the back to the viewer and makes a slow half-turn to face it, then holds' },
+    move: { type: 'enum(hero|turntable|still|showcase|pose)', default: 'hero', meaning: 'hero turns from the side to facing while the lid opens, then sways; turntable turns slowly the whole time; still holds a slight angle; showcase starts with the back to the viewer and makes a slow half-turn to face it, then holds; pose travels from the pose in `from` to the one in `to` and holds it, in a deck too' },
+    from: { type: 'string', default: '', meaning: 'pose: where it starts, as "key:value …": lid 0 (shut) to 1 (open), turn (radians), x (sideways, the notebook is 2 wide), rise, back (camera distance, 1 is standard), fill 0 to 1 (the camera square in front of the screen, the screen covering the canvas), alpha; a key left out is lid 1, back 1, alpha 1, the others 0' },
+    to: { type: 'string', default: '', meaning: 'pose: where it ends and rests; a key left out stays as in `from`; "key:value@a-b" moves that key during that part of the beat\'s time (lid:1@0-0.5 opens the lid in the first half)' },
     status: { type: 'enum(auto|true|false)', default: 'auto', meaning: 'the menu bar (menu items, wifi, battery, time) drawn across the top of the screen: auto shows it on a bare screen and a captured page, and leaves it to a recording or a still, which carry their own' },
     statusTime: { type: 'string', default: '10:00', meaning: 'the time in the menu bar' },
     browser: { type: 'enum(auto|true|false)', default: 'auto', meaning: 'a browser window around the screen picture (three dots, back and forward, an address pill): auto shows it for a captured page, not for a recording or a still' },
@@ -141,21 +173,36 @@ export default {
     c.bar = { ...menuBar(items, String(ctx.params?.statusTime ?? '10:00'), getComputedStyle(holder).getPropertyValue('--mm-font-text').trim() || 'sans-serif', 0.032, String(ctx.params?.url ?? ''), say), status: String(ctx.params?.status ?? 'auto'), browser: String(ctx.params?.browser ?? 'auto') };
     const q = clamp01(p), u = Math.max(0, Number(ctx.u) || 0);
     const move = ctx.params?.move ?? 'hero';
-    const ry = turn(move, q, u, ctx) * (move === 'hero' ? 0.75 : 1);
-    const opened = move === 'hero' && !(ctx.deck && q >= 1) ? smoothstep01((q - 0.15) / 0.85) : 1;
+    // a pose move reads the beat's own time (u of d), so each key keeps its part of it whatever the entrance's easing
+    const pose = move === 'pose' ? poseAt(ctx.params?.from, ctx.params?.to, ctx.d > 0 ? clamp01(u / ctx.d) : 1) : null;
+    const ry = pose ? pose.turn : turn(move, q, u, ctx) * (move === 'hero' ? 0.75 : 1);
+    const opened = pose ? clamp01(pose.lid) : move === 'hero' && !(ctx.deck && q >= 1) ? smoothstep01((q - 0.15) / 0.85) : 1;
     const lid = SHUT + (OPEN - SHUT) * opened;
     c.lid.rotation.x = lid;
     c.laptop.rotation.set(0, ry, 0);
-    c.laptop.position.set(0, -0.3 * (1 - smoothstep01(q)), 0);
+    c.laptop.position.set(pose ? pose.x : 0, pose ? pose.rise : -0.3 * (1 - smoothstep01(q)), 0);
     sweep(c.shine, ry, 0.74);
     sweep(c.backShine, ry + Math.PI, 0.18);
     // the camera looks a little down onto the deck, far enough for the whole notebook in any aspect
     const tan = Math.tan((c.camera.fov * Math.PI) / 360);
-    const dist = Math.max(1.0 / tan, 1.35 / (tan * c.camera.aspect));
+    const dist = Math.max(1.0 / tan, 1.35 / (tan * c.camera.aspect)) * (pose ? pose.back : 1);
+    c.camera.up.set(0, 1, 0);
     c.camera.position.set(0, 0.5 + dist * 0.26, dist);
-    c.camera.lookAt(0, 0.48, 0);
-    holder.style.opacity = String(Math.round(clamp01(q / 0.4) * 1000) / 1000);
-    mark(c, ry, { cutout: c.cutout, lid: Math.round(lid * 1e6) / 1e6 });
+    const aim = new THREE.Vector3(0, 0.48, 0);
+    const fill = pose ? clamp01(pose.fill) : 0;
+    if (fill > 0) {
+      // square in front of the screen, at the distance where the screen covers the canvas (its width or its height, whichever is nearer)
+      c.laptop.updateMatrixWorld(true);
+      const centre = c.screen.getWorldPosition(new THREE.Vector3());
+      const out = SCREEN_Z.clone().transformDirection(c.screen.matrixWorld), up = SCREEN_Y.clone().transformDirection(c.screen.matrixWorld);
+      const cover = Math.min(c.screenW / 2 / (tan * c.camera.aspect), c.screenH / 2 / tan);
+      c.camera.position.lerp(centre.clone().addScaledVector(out, cover), fill);
+      c.camera.up.lerp(up, fill).normalize();
+      aim.lerp(centre, fill);
+    }
+    c.camera.lookAt(aim);
+    holder.style.opacity = String(Math.round((pose ? clamp01(pose.alpha) : clamp01(q / 0.4)) * 1000) / 1000);
+    mark(c, ry, { cutout: c.cutout, lid: Math.round(lid * 1e6) / 1e6, ...(pose ? { fill: Math.round(fill * 1e6) / 1e6 } : {}) });
     draw(c, holder, ctx);
   },
 };

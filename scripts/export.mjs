@@ -1,4 +1,4 @@
-// mm export [piece] [--fps 30] [--sub 1] [--formats 9x16,1x1,4x5,16x9] [--force] [--prove] [--workers N]   (SPEC §2.8, §2.10, §8)
+// mm export [piece] [--fps 30] [--sub 1] [--formats 9x16,1x1,4x5,16x9] [--force] [--prove] [--one-file] [--workers N]   (SPEC §2.8, §2.10, §8)
 //   film: out/<id>-<format>.mp4 per format · out/poster.png · out/loop_check.mp4 · out/export.json
 //   both: out/share-copy.txt, one caption (the story's `share`, else its hook, closing headline and link)
 //   deck: out/deck/ (standalone) · out/handout.pdf (one page per rest, set in the brand's bundled faces) ·
@@ -446,8 +446,8 @@ async function exportDeck(dir, story, o, shared, manifest) {
   let sound = null;
   const soundPiece = await openPiece(dir, { format, ...shared });
   try { sound = await buildDeckSprite(dir, { codec: o.sprite ?? 'wav', piece: soundPiece }); } finally { await soundPiece.close(); }
-  const standalone = buildStandalone(dir, join(outDir, 'deck'), { story, style, sound });
-  manifest.deck = { dir: standalone.dir, modules: standalone.modules, warnings: standalone.warnings, ...(standalone.sound ? { sound: { ...standalone.sound, codec: o.sprite ?? 'wav' } } : {}) };
+  const standalone = buildStandalone(dir, join(outDir, 'deck'), { story, style, sound, ...(o.oneFile ? { oneFile: join(outDir, `${story.id}.html`) } : {}) });
+  manifest.deck = { dir: standalone.dir, modules: standalone.modules, warnings: standalone.warnings, ...(standalone.oneFile ? { oneFile: standalone.oneFile } : {}), ...(standalone.sound ? { sound: { ...standalone.sound, codec: o.sprite ?? 'wav' } } : {}) };
   for (const n of sound?.notes ?? []) log(`  note: ${n}`);
   for (const w of standalone.warnings) log(`  warning: ${w}`);
 
@@ -607,6 +607,7 @@ export async function exportPiece(dir, opts = {}) {
 /** exportPiece, holding the piece's export lock: `held` is the story it pinned ({ story, version }). */
 async function exportHeld(dir, o, { story, version, journal }, workersRequested) {
   o.version = version;
+  if (o.oneFile && story.kind !== 'deck') throw new UsageError('--one-file is for decks: a film is one MP4 already');
   if (o.alpha && story.kind === 'deck') throw new UsageError('--alpha is for films: a deck has no transparent export');
   o.meta = exportMeta(dir, story);
   const formats = o.formats ?? story.formats;
@@ -655,12 +656,12 @@ async function exportHeld(dir, o, { story, version, journal }, workersRequested)
 
 runMain(import.meta, async () => {
   const { values, positionals } = parseArgs({ allowPositionals: true, options: {
-    fps: { type: 'string', default: '30' }, sub: { type: 'string', default: '1' }, formats: { type: 'string' }, force: { type: 'boolean', default: false }, prove: { type: 'boolean', default: false }, gif: { type: 'boolean', default: false }, 'gif-width': { type: 'string' }, workers: { type: 'string' }, encoder: { type: 'string' }, sprite: { type: 'string' }, alpha: { type: 'boolean', default: false }, 'alpha-mov': { type: 'boolean', default: false } } });
+    fps: { type: 'string', default: '30' }, sub: { type: 'string', default: '1' }, formats: { type: 'string' }, force: { type: 'boolean', default: false }, prove: { type: 'boolean', default: false }, 'one-file': { type: 'boolean', default: false }, gif: { type: 'boolean', default: false }, 'gif-width': { type: 'string' }, workers: { type: 'string' }, encoder: { type: 'string' }, sprite: { type: 'string' }, alpha: { type: 'boolean', default: false }, 'alpha-mov': { type: 'boolean', default: false } } });
   const dir = resolvePiece(positionals[0]);
-  const { manifest, code } = await exportPiece(dir, { fps: Number(values.fps), sub: Number(values.sub), formats: values.formats?.split(',').map((s) => s.trim()).filter(Boolean), force: values.force, prove: values.prove, gif: values.gif, gifWidth: values['gif-width'] ? Number(values['gif-width']) : undefined, workers: values.workers === undefined ? undefined : /^\d+$/.test(values.workers) ? Number(values.workers) : NaN, encoder: values.encoder, sprite: values.sprite, alpha: values.alpha, alphaMov: values['alpha-mov'] });
+  const { manifest, code } = await exportPiece(dir, { fps: Number(values.fps), sub: Number(values.sub), formats: values.formats?.split(',').map((s) => s.trim()).filter(Boolean), force: values.force, prove: values.prove, oneFile: values['one-file'], gif: values.gif, gifWidth: values['gif-width'] ? Number(values['gif-width']) : undefined, workers: values.workers === undefined ? undefined : /^\d+$/.test(values.workers) ? Number(values.workers) : NaN, encoder: values.encoder, sprite: values.sprite, alpha: values.alpha, alphaMov: values['alpha-mov'] });
   for (const f of manifest.files ?? []) console.log(`${f.format}: ${f.file} (${f.width}x${f.height}, ${f.frames} frames)`);
   if (manifest.loop) console.log(`loop: SSIM last vs first ${manifest.loop.ssim}`);
-  if (manifest.deck) console.log(`deck: ${manifest.deck.dir}${manifest.deck.sound ? ` (sound: ${manifest.deck.sound.cues} cues, ${(manifest.deck.sound.bytes / 1e6).toFixed(1)} MB as ${manifest.deck.sound.codec})` : ''}\nhandout: ${manifest.handout.file} (${manifest.handout.pages} pages)\nwalkthrough: ${manifest.walkthrough.file} (${manifest.walkthrough.seconds.toFixed(1)} s, ${manifest.walkthrough.transitions} transitions)`);
+  if (manifest.deck) console.log(`deck: ${manifest.deck.dir}${manifest.deck.sound ? ` (sound: ${manifest.deck.sound.cues} cues, ${(manifest.deck.sound.bytes / 1e6).toFixed(1)} MB as ${manifest.deck.sound.codec})` : ''}${manifest.deck.oneFile ? `\none file: ${manifest.deck.oneFile.file} (${(manifest.deck.oneFile.bytes / 1e6).toFixed(1)} MB; opens by double-click, fonts, pictures, video and sound inside)` : ''}\nhandout: ${manifest.handout.file} (${manifest.handout.pages} pages)\nwalkthrough: ${manifest.walkthrough.file} (${manifest.walkthrough.seconds.toFixed(1)} s, ${manifest.walkthrough.transitions} transitions)`);
   for (const w of manifest.warnings ?? []) console.log(`warning: ${w}`);
   if (manifest.encoder?.used !== 'software') console.log(`encoder: ${manifest.encoder.used}`);
   if (manifest.qa) console.log(manifest.qa.ok === true ? `read back: ok (${manifest.qa.file})` : manifest.qa.ok === false ? `read back FAILED: ${manifest.qa.failed.join(', ')} (see ${manifest.qa.file})` : `read back: not run (${manifest.qa.error})`);

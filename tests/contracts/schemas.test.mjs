@@ -63,7 +63,8 @@ const failsAt = (validate, doc, pathPart) => {
 
 test('invalid: an eighth colour role', () => { const b = paper(); b.color.shadow = '#000000'; failsAt(brand, b, 'shadow'); });
 test('invalid: missing accentInk', () => { const b = paper(); delete b.color.accentInk; failsAt(brand, b, 'accentInk'); });
-test('invalid: presses 0 in a deck scene', () => { const s = read('fixtures/golden/story.deck.json'); s.scenes[0].presses = 0; failsAt(story, s, '/scenes/0/presses'); });
+test('invalid: a negative press count in a deck scene', () => { const s = read('fixtures/golden/story.deck.json'); s.scenes[0].presses = -1; failsAt(story, s, '/scenes/0/presses'); });
+test('a deck\'s first scene may hold no press: it is whole at rest 0', () => { const s = read('fixtures/golden/story.deck.json'); s.scenes[0].presses = 0; s.scenes[0].beats.forEach((b) => { b.step = 0; delete b.until; delete b.exit; }); assert.ok(story(s), explain(story)); });
 test('invalid: negative duration in a film scene', () => { const s = filmStory(); s.scenes[0].duration = -1; failsAt(story, s, '/scenes/0/duration'); });
 test('invalid: unknown format', () => { const s = filmStory(); s.formats = ['4x3']; failsAt(story, s, '/formats/0'); });
 test('invalid: a URL as a font file', () => { const b = paper(); b.type.text.files[0].src = 'https://fonts.example/x.woff2'; failsAt(brand, b, '/type/text/files/0/src'); });

@@ -209,9 +209,9 @@
           },
           "presses": {
             "type": "integer",
-            "minimum": 1,
+            "minimum": 0,
             "maximum": 12,
-            "description": "deck only"
+            "description": "deck only; 0 only in the first scene (a cover that is whole at rest 0: the first press cuts to the next scene); the schedule refuses 0 in a later scene, which arrives on a press"
           },
           "cut": {
             "$ref": "#/$defs/transitionRef",

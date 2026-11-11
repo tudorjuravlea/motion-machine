@@ -220,3 +220,16 @@ test('transitions/flood: speed sets its cut, 1.3 s divided by it, and no speed k
   close(cutOf({ speed: 0.5 }), 2.6, 'speed 0.5');
   close(cutOf({ speed: 2 }), 0.67, 'speed 2 stops at the phases\' floors');
 });
+
+test('a deck\'s first scene may hold no press: the first press cuts to the second; a later scene without one is refused', () => {
+  const d = structuredClone(deck);
+  const was = schedule(d, editorial);
+  d.scenes[0].presses = 0;
+  d.scenes[0].beats.forEach((b) => { b.step = 0; delete b.until; delete b.exit; delete b.emphasis; });
+  const s = schedule(d, editorial);
+  assert.equal(s.presses, was.presses - deck.scenes[0].presses);
+  assert.deepEqual([s.scenes[0].start, s.scenes[0].end, s.scenes[1].start], [0, 0, 0]);
+  assert.equal(s.events.find((e) => e.kind === 'cut' && e.scene === d.scenes[1].id).press, 1);
+  d.scenes[1].presses = 0;
+  assert.throws(() => schedule(d, editorial), /after the first needs at least 1 press/);
+});

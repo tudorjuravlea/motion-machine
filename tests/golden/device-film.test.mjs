@@ -10,7 +10,7 @@ import { join } from 'node:path';
 import { ROOT, serveRoot, openPiece, launchBrowser, framePng } from '../../scripts/lib/browser.mjs';
 
 const PIECE = join(ROOT, 'fixtures/device-film');
-const mm = (args) => spawnSync(process.execPath, [join(ROOT, 'scripts/mm.mjs'), ...args], { encoding: 'utf8', timeout: 900_000, maxBuffer: 64 << 20 });
+const mm = (args, timeout = 900_000) => spawnSync(process.execPath, [join(ROOT, 'scripts/mm.mjs'), ...args], { encoding: 'utf8', timeout, maxBuffer: 64 << 20 });
 
 before(() => {
   if (!existsSync(join(PIECE, 'assets/site-laptop/media.json'))) assert.equal(spawnSync('sh', [join(PIECE, 'make-assets.sh')], { encoding: 'utf8' }).status, 0, 'make-assets.sh failed');
@@ -26,7 +26,8 @@ for (const format of ['9x16', '16x9', '4x5']) {
 }
 
 test('export --prove renders every frame twice, identically (9x16)', () => {
-  const r = mm(['export', PIECE, '--formats', '9x16', '--prove', '--force']);
+  // --prove renders the film twice: a CI runner took 13 to 15 minutes, so it gets 30
+  const r = mm(['export', PIECE, '--formats', '9x16', '--prove', '--force'], 1_800_000);
   assert.equal(r.status, 0, r.stdout.slice(-2000) + r.stderr.slice(-2000));
   const manifest = JSON.parse(readFileSync(join(PIECE, 'out/export.json'), 'utf8'));
   assert.equal(manifest.prove[0].mismatches.length, 0);

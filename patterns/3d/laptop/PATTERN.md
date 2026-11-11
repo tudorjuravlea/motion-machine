@@ -16,7 +16,9 @@ A notebook in real 3D, matching 3d/phone: it turns into frame while its lid open
 ## Params
 | name | type | default | meaning |
 |---|---|---|---|
-| `move` | enum(hero|turntable|still|showcase) | `hero` | `hero` turns from the side to facing while the lid opens from nearly shut, then sways slowly; `turntable` turns about 20° a second; `still` holds a slight angle; `showcase` starts with the back to the viewer and turns half a turn to face it over 3.2 s, lid open, then holds still. In a deck every rest faces the viewer with the lid open |
+| `move` | enum(hero|turntable|still|showcase|pose) | `hero` | `hero` turns from the side to facing while the lid opens from nearly shut, then sways slowly; `turntable` turns about 20° a second; `still` holds a slight angle; `showcase` starts with the back to the viewer and turns half a turn to face it over 3.2 s, lid open, then holds still; `pose` travels from the pose in `from` to the one in `to` and holds it. In a deck every rest faces the viewer with the lid open, except a pose, which rests as written |
+| `from` | string | (empty) | pose: where it starts, as `key:value …`: `lid` 0 (shut) to 1 (open), `turn` (radians about the vertical), `x` (sideways, scene units: the notebook is 2 wide), `rise` (up), `back` (the camera's distance, 1 is the standard one), `fill` 0 to 1 (the camera goes from its standard place to square in front of the screen, which then covers the canvas), `alpha` 0 to 1. A key left out is lid 1, back 1, alpha 1, the others 0 |
+| `to` | string | (empty) | pose: where it ends and rests; a key left out stays as in `from`. `key:value@a-b` moves that key during that part of the beat's time, eased inside it (`lid:1@0-0.5 fill:1@0.4-1` opens the lid, then pushes in). The beat's `dur` may be a number of seconds |
 | `metal` | enum(aluminium|titanium) | `aluminium` | the frame: satin aluminium in a neutral, faintly cool grey; or titanium, darker and faintly warm with a finer brushed sheen |
 | `status` | enum(auto|true|false) | `auto` | the top bar drawn into the screen: `auto` shows it on a bare screen and a captured page (the page starts below it, as on a real screen) and leaves it to a recording or a still, which carry their own; its text goes dark or light with the content underneath |
 | `statusTime` | string | `10:00` | the time in the top bar |
@@ -64,3 +66,4 @@ three.js (mrdoob/three.js), MIT: the vendored library (runtime/vendor/three/0.17
 - The mirror floor shows a hard vertical cut at the edge of its reflection on some poses (seen on a dark ground); it is off by default.
 - Screen overlays other than tap rings (callouts, a menu bar) are not drawn into the glass.
 - One laptop per slot; a frame image (`frame`) stays with devices/laptop.
+- A pose with `fill: 1` shows the screen's own picture edge to edge; a still shaped unlike the screen (16:10) is cover-cropped by the screen first, so bake a 16:9 picture into a 16:10 one with bars.

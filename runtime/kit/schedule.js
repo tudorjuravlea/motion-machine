@@ -326,6 +326,8 @@ function deckSchedule(story, style, meta, eachOpts) {
 
   scenes.forEach((sc, i) => {
     const P = firstPress[i];
+    // a scene after the first arrives on a press, its cut: it holds that one at least (the first is there at rest 0 and may hold none)
+    if (i > 0 && !(sc.presses >= 1)) throw new RangeError(`schedule: ${sc.id}: a deck scene after the first needs at least 1 press (its cut)`);
     if (i > 0) L[P + 1] = Math.max(L[P + 1], cutD[i]);
     for (const beat of sc.beats) {
       let step = beat.step ?? 1;

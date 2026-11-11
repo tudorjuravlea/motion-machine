@@ -707,6 +707,15 @@ html, body { margin: 0; padding: 0; background: var(--mm-color-canvas); }
 }
 
 function linkCss(url, warnings) {
+  // the one-file deck keeps its stylesheets inside the page: it defines window.__mmCss, which hands back a file's text
+  // (the folder deck defines nothing, and links the file)
+  const text = window.__mmCss?.(url.href);
+  if (typeof text === 'string') {
+    const s = document.createElement('style');
+    s.textContent = text;
+    document.head.append(s);
+    return Promise.resolve(true);
+  }
   return new Promise((resolve) => {
     const l = document.createElement('link');
     l.rel = 'stylesheet';
@@ -1148,7 +1157,7 @@ function seekDeck(x) {
   if (cutting) runTransition(a, u, sc[a].cut.d);
   // a deck scene's move runs across its presses; p is the press position through the
   // scene, so every rest is a still, finished picture and the move plays only while a press does.
-  sc.forEach((s, i) => { if (vis[i]) runMove(i, (x - s.start) / (s.end - s.start), { presses: s.end - s.start }); });
+  sc.forEach((s, i) => { if (vis[i]) runMove(i, s.end > s.start ? (x - s.start) / (s.end - s.start) : 1, { presses: s.end - s.start }); });   // a first scene with no press is at its move's end
   const pressU = (it) => (it.press < n ? Infinity : it.press === n ? u - it.at : -1);
   const goneAt = (it) => { const X = it.exit ? it.exit.press : Infinity; return X < n || (X === n && (it.exit.d === 0 || u >= it.exit.d - TOL)); };
   for (const it of S.items) {
