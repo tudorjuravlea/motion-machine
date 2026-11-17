@@ -45,7 +45,7 @@ export const ROLE_SETS = {
 // What a copy of a section cannot show: pictures in the markup at mount, and the patterns that draw
 // the scene on a canvas of their own once they run (besides every 3d/ pattern).
 const PICTURES = 'canvas, video, [data-footage], .mm-screen';
-export const PAINTERS = ['entrances/assemble', 'entrances/photo-wake', 'moves/depth-parallax'];
+export const PAINTERS = ['entrances/assemble', 'entrances/ascii', 'entrances/photo-wake', 'moves/depth-parallax'];
 /** Whether the pattern named ref draws on a canvas of its own in the page. */
 export const paints = (ref) => typeof ref === 'string' && (ref.startsWith('3d/') || PAINTERS.includes(ref));
 const PAINTED = ['[data-fx^="3d/"]', ...PAINTERS.map((r) => `[data-fx="${r}"]`)].join(', ');

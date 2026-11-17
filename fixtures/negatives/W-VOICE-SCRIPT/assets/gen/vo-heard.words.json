@@ -1,0 +1,37 @@
+[
+  {
+    "text": "We",
+    "start": 0,
+    "end": 0.25
+  },
+  {
+    "text": "shipped",
+    "start": 0.3,
+    "end": 0.55
+  },
+  {
+    "text": "five",
+    "start": 0.8,
+    "end": 1.05
+  },
+  {
+    "text": "builds",
+    "start": 1.1,
+    "end": 1.35
+  },
+  {
+    "text": "in",
+    "start": 1.5,
+    "end": 1.75
+  },
+  {
+    "text": "two",
+    "start": 1.7,
+    "end": 1.95
+  },
+  {
+    "text": "days.",
+    "start": 2.0,
+    "end": 2.25
+  }
+]

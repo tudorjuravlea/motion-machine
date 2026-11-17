@@ -77,6 +77,7 @@ let areaReady = false;
 function softboxes(kind, accent) {
   if (!areaReady) { RectAreaLightUniformsLib.init(); areaReady = true; }
   const g = new THREE.Group();
+  g.name = 'mm-softboxes';   // reflect() turns it
   const box = (w, h, x, y, z, intensity, colour = 0xffffff) => {
     const l = new THREE.RectAreaLight(colour, intensity, w, h);
     l.position.set(x, y, z);
@@ -185,10 +186,11 @@ export function rrect(w, h, r) {
 // `opts` ({ body, focus, reach, height }: the device group, a point of it that stays in focus, how far its
 // shadow and reflection reach and how tall it is), builds the stage's look: the chain that draws the frame.
 export function lightAll(c, opts) {
+  c.envMats = [];
   c.scene.traverse((o) => {
     for (const mt of [o.material ?? []].flat()) {
       if (mt.isMeshStandardMaterial) {
-        mt.envMap = c.env; mt.needsUpdate = true;
+        mt.envMap = c.env; mt.needsUpdate = true; c.envMats.push(mt);
         // a bright void mirrors far more than the dark room did: the screen and the glass take less of it, so the picture
         // stays as it is and the bezel stays dark
         if (c.studio !== 'dark' && mt.metalness === 0 && !mt.userData.envScaled) { mt.userData.envScaled = true; mt.envMapIntensity *= mt.userData.glowSource ? 0.2 : 0.45; }
@@ -198,6 +200,18 @@ export function lightAll(c, opts) {
   });
   if (opts?.reach && c.edges) c.edges.mmReach.value = opts.reach;
   if (opts) c.look = new Look(c, opts);
+}
+
+// The studio turned about the vertical by `yaw` radians for what a device mirrors: every material's
+// reflection of the studio (`envMapRotation`) and the softbox lights, which make the crisp highlights and
+// cast no shadow. The highlights slide along the bevel and the glass while the key light, its shadow and
+// the rim lights stay put. A pure function of what the pattern passes: reflect(c, look.sweep * (1 -
+// smoothstep01(q))) sweeps them during the arrival and leaves the rest exactly as the look has it.
+export function reflect(c, yaw) {
+  const y = Number.isFinite(yaw) ? yaw : 0;
+  for (const mt of c.envMats ?? []) if (mt.envMapRotation && mt.envMapRotation.y !== y) mt.envMapRotation.set(0, y, 0);
+  c.softboxes ??= c.scene.getObjectByName('mm-softboxes') ?? null;
+  if (c.softboxes) c.softboxes.rotation.y = y;
 }
 
 // a w x h x d slab centred on the origin, corners of radius r, edges bevelled by b; mats: [faces, sides]

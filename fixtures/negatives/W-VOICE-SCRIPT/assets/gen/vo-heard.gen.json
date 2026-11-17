@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "kind": "transcribe",
+  "name": "vo-heard",
+  "file": "assets/gen/vo-heard.words.json",
+  "provider": "elevenlabs",
+  "words": "assets/gen/vo-heard.words.json",
+  "request": {
+    "audio": "assets/gen/vo.mp3"
+  }
+}

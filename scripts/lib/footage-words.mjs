@@ -12,6 +12,10 @@ import { wordsFrom } from './footage.mjs';
 export const WORDS_MARK_SHARE = 0.2;
 /** A word shorter than this many seconds is marked unreliable. */
 export const UNRELIABLE_S = 0.05;
+/** A word WhisperX scored below this (0..1) is a low-confidence word: its text, and the caption made from it, may be wrong. */
+export const SCORE_MIN = 0.5;
+/** A word with a digit in it (a number, a date, a price) is held to this score: a transcriber gets numbers wrong more than words. */
+export const SCORE_MIN_DIGITS = 0.8;
 /** A hesitation (um, uh, hm…) shorter than this many seconds is dropped: it is a click, not a sound a viewer hears. */
 export const FILLER_MIN_S = 0.1;
 /** The hesitations a transcriber writes as words, folded (no case, no diacritics): English, and Romanian ăă / ăăă. Words that are also words (Romanian "am", "îi") are not here. */
@@ -52,6 +56,11 @@ export function checkTranscript(words, { storyLanguage = null, declared = null }
     const short = w.end - w.start < FILLER_MIN_S;
     if (isMark(w.text) || (FILLER_WORDS.has(normWord(w.text)) && short)) { dropped++; continue; }
     kept.push(w.end - w.start < UNRELIABLE_S ? { ...w, unreliable: true } : { ...w });
+  }
+  const doubtful = kept.filter((w) => Number.isFinite(w.score) && (w.score < SCORE_MIN || (/\d/.test(w.text) && w.score < SCORE_MIN_DIGITS)));
+  if (doubtful.length) {
+    const shown = doubtful.slice(0, 5).map((w) => `${JSON.stringify(w.text)} at ${w.start.toFixed(2)} s (${w.score.toFixed(2)})`).join(', ');
+    warnings.push(`${doubtful.length} word${doubtful.length === 1 ? '' : 's'} the transcriber was not sure of (score under ${SCORE_MIN}, or under ${SCORE_MIN_DIGITS} for a word with a digit): ${shown}${doubtful.length > 5 ? `, +${doubtful.length - 5} more` : ''}; check ${doubtful.length === 1 ? 'it' : 'them'} against the recording before a caption shows ${doubtful.length === 1 ? 'it' : 'them'}`);
   }
   const story = primary(storyLanguage);
   if (story) {

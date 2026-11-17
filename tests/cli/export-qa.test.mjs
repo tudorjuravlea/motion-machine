@@ -110,8 +110,8 @@ test('mm export reads the finished MP4 back: every check passes or says why it s
   assert.equal(report.ok, true);
   const f = report.files[0];
   assert.equal(f.phase, 'export');
-  assert.deepEqual(f.checks.map((c) => c.id), ['QA-STREAM', 'QA-DURATION', 'QA-FRAMES', 'QA-SIZE', 'QA-FPS', 'QA-COLOUR', 'QA-BITRATE', 'QA-AUDIO', 'QA-SILENCE', 'QA-LEVEL', 'QA-SYNC', 'QA-MONO', 'QA-END', 'QA-PHONE', 'QA-QUIET', 'QA-BLACK', 'QA-FROZEN', 'QA-FLASH', 'QA-STILL', 'QA-SLIDESHOW', 'QA-DECODE', 'QA-SEAM']);
-  for (const id of ['QA-STREAM', 'QA-DURATION', 'QA-FRAMES', 'QA-SIZE', 'QA-FPS', 'QA-COLOUR', 'QA-BITRATE', 'QA-BLACK', 'QA-FROZEN', 'QA-FLASH', 'QA-DECODE', 'QA-SEAM']) assert.equal(row(f, id).status, 'PASS', `${id}: ${JSON.stringify(row(f, id).evidence)}`);
+  assert.deepEqual(f.checks.map((c) => c.id), ['QA-STREAM', 'QA-DURATION', 'QA-FRAMES', 'QA-SIZE', 'QA-FPS', 'QA-COLOUR', 'QA-KEYFRAMES', 'QA-BITRATE', 'QA-AUDIO', 'QA-SILENCE', 'QA-LEVEL', 'QA-SYNC', 'QA-MONO', 'QA-END', 'QA-PHONE', 'QA-QUIET', 'QA-BLACK', 'QA-FROZEN', 'QA-FLASH', 'QA-STILL', 'QA-SLIDESHOW', 'QA-DECODE', 'QA-SEAM']);
+  for (const id of ['QA-STREAM', 'QA-DURATION', 'QA-FRAMES', 'QA-SIZE', 'QA-FPS', 'QA-COLOUR', 'QA-KEYFRAMES', 'QA-BITRATE', 'QA-BLACK', 'QA-FROZEN', 'QA-FLASH', 'QA-DECODE', 'QA-SEAM']) assert.equal(row(f, id).status, 'PASS', `${id}: ${JSON.stringify(row(f, id).evidence)}`);
   for (const id of ['QA-AUDIO', 'QA-SILENCE', 'QA-LEVEL']) assert.equal(row(f, id).status, 'SKIP', id);
   assert.equal(row(f, 'QA-AUDIO').evidence.unread, undefined);
   assert.match(row(f, 'QA-SILENCE').evidence.reason, /no sound/);

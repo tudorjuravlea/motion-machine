@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "kind": "voice",
+  "name": "vo",
+  "file": "assets/gen/vo.mp3",
+  "provider": "elevenlabs",
+  "request": {
+    "text": "We shipped 3 builds in two days."
+  }
+}

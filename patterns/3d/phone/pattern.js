@@ -6,7 +6,7 @@
 // screen ([data-screen]) that the kit's screen fold drives exactly like a flat device. The pose is a
 // pure function of p and u; the renderer is cached per slot and holds GPU resources only, never
 // visible state. A deck rest faces the viewer. No clock, no animation loop.
-import { THREE, clamp01, smoothstep01, cssText, cssColour, stage, slab, plate, disc, sheen, sweep, lightAll, phoneBar, alloy, metal, glass, glossy, turn, cross, fitCanvas, mark, draw, LOOK_PARAMS, lookOf } from '../../../runtime/kit/device3d.js';
+import { THREE, clamp01, smoothstep01, cssText, cssColour, stage, slab, plate, disc, sheen, sweep, lightAll, reflect, phoneBar, alloy, metal, glass, glossy, turn, cross, fitCanvas, mark, draw, LOOK_PARAMS, lookOf } from '../../../runtime/kit/device3d.js';
 import { RoundedBoxGeometry } from '../../../runtime/vendor/three/0.170.0/RoundedBoxGeometry.js';
 import { DRAWN, phases, stroke, linesCanvas, paintLines } from '../../../runtime/kit/drawn.js';
 import { rrect as ring, circ, solid, extremes } from '../../../runtime/kit/hairline.js';
@@ -313,6 +313,7 @@ export default {
     fitCanvas(c, holder, ctx.params);
     c.bar = { ...phoneBar(model, String(ctx.params?.statusTime ?? '10:00'), getComputedStyle(holder).getPropertyValue('--mm-font-text').trim() || 'sans-serif', say), status: String(ctx.params?.status ?? 'auto') };
     const q = clamp01(p), u = Math.max(0, Number(ctx.u) || 0);
+    reflect(c, look.sweep * (1 - smoothstep01(q)));   // the studio's reflections slide across the bevel while it arrives; at rest they stand where the look has them
     if (ctx.params?.move === 'drawn') {
       const dp = drawnPose(c, u, q, ctx);
       holder.style.opacity = '1';

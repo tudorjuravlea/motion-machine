@@ -7,6 +7,7 @@ import { spawn } from 'node:child_process';
 import { parseArgs } from 'node:util';
 import { UsageError, resolvePiece, runMain, usageText } from './lib/cli.mjs';
 import { startStudio } from './studio/server.mjs';
+import { forgetStudio, noteStudio } from './lib/studio-link.mjs';
 
 runMain(import.meta, async () => {
   const { values, positionals } = parseArgs({ allowPositionals: true, options: { port: { type: 'string' }, open: { type: 'boolean', default: false } } });
@@ -23,6 +24,11 @@ runMain(import.meta, async () => {
     throw e;
   }
   const url = `${s.url}/scripts/studio/ui/index.html?piece=${encodeURIComponent(s.piece)}`;
+  // the note `mm export` reads to print this studio's link; removed when the studio stops
+  const dir = resolvePiece(positionals[0]);
+  noteStudio(dir, url);
+  process.on('exit', () => forgetStudio(dir));
+  for (const [sig, n] of [['SIGINT', 2], ['SIGTERM', 15], ['SIGHUP', 1]]) process.on(sig, () => process.exit(128 + n));
   console.log(`studio ${url}\n  Ctrl-C to stop`);
   if (values.open) openUrl(url);
   await new Promise(() => {});   // runs until interrupted

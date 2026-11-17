@@ -1,0 +1,2 @@
+/* entrances/streamer: the ribbon lies behind the element's own content and draws outside its box. */
+.mm-streamer { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; z-index: -1; }

@@ -96,6 +96,9 @@ project's own file formats, commands and tests.
 | motiondivision/ai-kit | none stated | Ideas only: a reduced-motion policy that drops movement and keeps opacity and colour (`runtime/kit/press.js` `reducedMotion`, the kit's reduced draw) |
 | Vanilagy/mediabunny | MPL-2.0 | Ideas only, in our own words: WebVTT as the one caption format a shared video carries, with a language tag on the track, and chapters kept in the page because an MP4 here carries none. No code and no dependency |
 | Stageshow | MIT | Ideas only, in our own code, from `benjitaylor/skills`: the `ui/` group's story shapes, a skeleton at the content's own geometry, a reserved lane for an error, a press that dips, cursor travel timed by distance on a bowed path, one meaning for each line of an annotation, tiles that land in reading order, each drawn here as a pure function of time. Its app icons and brand marks are not taken |
+| Alchemist0823/three.quarks | MIT | Ideas only, in our own closed forms: the burst recipe behind the particle emitter (`runtime/kit/emit.js`; `emphasis/sparks`, `emphasis/confetti`, `emphasis/dust`): life, speed and size ranges, linear drag and gravity, streaks along the velocity, and one hash per particle and attribute in place of a stateful generator |
+| jrouwe/JoltPhysics | MIT | Ideas only, in our own closed form: the restitution bounce of `entrances/bounce` (`runtime/kit/bounce.js`), contact times as a geometric series from the coefficient of restitution, so every contact is known before a frame is drawn and can carry a sound |
+| pmndrs/postprocessing | Zlib | Ideas only, in our own code: the seeded glitch burst behind `transitions/glitch` (bands slipped by a perturbation map, restated as an SVG displacement on a stepped clock) and the glyph-ramp ASCII look behind `entrances/ascii` (square cells, a character ramp by luminance, on a 2D canvas in the brand's face and roles) |
 
 ## On-device frameworks
 

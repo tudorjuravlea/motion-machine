@@ -58,7 +58,9 @@ during the gate (the gate writes no report when interrupted), no MP4 replaced du
 and after the render the MP4s it made. The page matches the server's last export on every
 reconnect, so a restarted server's lost run is named, and a finished run is shown after a reload.
 A read-only story exports too (export does not edit the story); its formats cannot change.
-`mm studio --open` opens the page in the default browser.
+`mm studio --open` opens the page in the default browser. While it serves, it notes its page in
+`out/studio/server.json` (`scripts/lib/studio-link.mjs`), so `mm export` ends with the live link, or with
+the command that starts a studio.
 
 ## Rules the studio keeps
 

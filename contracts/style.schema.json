@@ -29,6 +29,7 @@
     "voice":   { "$ref": "urn:motion-machine:contracts:brand#/properties/voice" },
     "music":   { "$ref": "urn:motion-machine:contracts:brand#/properties/music" },
     "surface": { "$ref": "urn:motion-machine:contracts:brand#/properties/surface" },
+    "particles": { "$ref": "urn:motion-machine:contracts:brand#/properties/particles" },
     "finish":  { "$ref": "urn:motion-machine:contracts:brand#/properties/finish" },
     "mascot":  { "$ref": "urn:motion-machine:contracts:brand#/properties/mascot" },
     "ask":     { "$ref": "urn:motion-machine:contracts:brand#/properties/ask" },

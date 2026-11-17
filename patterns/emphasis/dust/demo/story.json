@@ -1,0 +1,47 @@
+{
+  "id": "demo-emphasis-dust",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "Demo: emphasis/dust",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/title-stack",
+      "duration": 6,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.3,
+          "slot": "headline",
+          "fx": "entrances/slam",
+          "text": "Heavy",
+          "emphasis": "emphasis/dust",
+          "cue": "hit"
+        },
+        {
+          "at": 2.2,
+          "slot": "sub",
+          "fx": "entrances/fade",
+          "text": "A burst on the landing, in the brand's roles"
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

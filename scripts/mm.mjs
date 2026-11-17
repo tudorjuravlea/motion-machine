@@ -26,7 +26,7 @@ const GROUPS = {
   motion: { capture: 'capture-motion.mjs' },
   style: { compose: 'compose.mjs', 'export-designmd': 'export-designmd.mjs', 'export-motion': 'export-motion.mjs' },
   skill: { new: 'skill-new.mjs' },
-  media: { prep: 'media-prep.mjs', frame: 'media-frame.mjs', layers: 'media-layers.mjs' },
+  media: { prep: 'media-prep.mjs', grade: 'media-grade.mjs', trim: 'media-trim.mjs', frame: 'media-frame.mjs', layers: 'media-layers.mjs' },
   footage: { cut: 'footage-cut.mjs', review: 'footage-review.mjs', scenes: 'footage-scenes.mjs', audit: 'footage-audit.mjs', verify: 'footage-verify.mjs', matte: 'footage-matte.mjs' },
   capture: { site: 'capture-site.mjs' },
   project: { new: 'project.mjs', make: 'project.mjs', path: 'project.mjs' },   // one script; the subcommand is its first argument

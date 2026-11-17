@@ -101,9 +101,11 @@ export function encodeArgs({ out, fps = 30, sub = 1, comment, encoder = 'softwar
       '-vf', subFilter(sub) + alphaFilter(pixFmt), ...video, ...COLOR_TAGS, '-r', rateArg(fps), '-fflags', '+bitexact', '-flags:v', '+bitexact',
       ...metaArgs({ comment, meta }), out];
   }
+  // a keyframe at least every 2 s (QA-KEYFRAMES): x264 still adds one at a scene change on its own
+  const gop = ['-g', String(Math.max(1, Math.round(2 * exactFps(fps).value)))];
   const video = encoder === 'videotoolbox'
-    ? ['-c:v', 'h264_videotoolbox', '-b:v', String(Math.round((width ?? 1080) * (height ?? 1920) * exactFps(fps).value * HW_BITS_PER_PIXEL)), '-profile:v', 'high', '-allow_sw', '0', '-tag:v', 'avc1']
-    : ['-c:v', 'libx264', '-preset', 'slow', '-crf', '16', '-tune', 'animation'];
+    ? [...gop, '-c:v', 'h264_videotoolbox', '-b:v', String(Math.round((width ?? 1080) * (height ?? 1920) * exactFps(fps).value * HW_BITS_PER_PIXEL)), '-profile:v', 'high', '-allow_sw', '0', '-tag:v', 'avc1']
+    : ['-c:v', 'libx264', '-preset', 'slow', '-crf', '16', '-tune', 'animation', ...gop];
   // a silent stereo AAC track, its handler named `silent`, so the apps accept the file before `mm sound`
   // muxes the real mix (which replaces it); G-PEAK and W-LOUDNESS do not take it for sound (sound.mjs hasAudio)
   return ['-y', '-hide_banner', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', rateArg(fps, sub), '-c:v', 'png', '-i', '-',

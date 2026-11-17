@@ -397,13 +397,17 @@ export async function buildSound(pieceDir, { formats = null, patterns = null, tr
       // One render per distinct cue and params (gain, seed, emphasis: the pattern's, the brand's, then the beat's). A recipe that
       // varies (an input cue) rings through four seeds, so a run of taps is not one sample repeated.
       const times = new Map();
+      const contactSeed = new Map();   // a bounce's first contact's seed, by its element
       for (const c of cuePlanList) {
         const mod = mods[c.name];
         const { offsetMs, soundOk, big, ...opts } = paramsOf(mod, c.params, style);   // placement and gate params are not the sound's: they must not split its renders
         c.extra = { offsetMs, soundOk, big };
+        // a bounce's later contacts replay its first contact's sound (the level alone falls); every other repeat varies
+        const first = c.contact > 0 ? contactSeed.get(c.selector) : undefined;
         const n = times.get(c.name) ?? 0;
-        times.set(c.name, n + 1);
-        if (mod.recipe?.vary) opts.seed = (Number(opts.seed) + (n % VARY_SEEDS) * 101) >>> 0;
+        if (first === undefined) times.set(c.name, n + 1);
+        if (mod.recipe?.vary) opts.seed = first ?? ((Number(opts.seed) + (n % VARY_SEEDS) * 101) >>> 0);
+        if (c.contact === 0) contactSeed.set(c.selector, opts.seed);
         c.opts = opts;
         c.key = `${c.name}|${JSON.stringify(opts)}`;
       }
@@ -517,6 +521,7 @@ export async function buildSound(pieceDir, { formats = null, patterns = null, tr
     } else if (bedPeak != null) c.gainDb = Math.min(Math.max(p, bedPeak + BED_BAND_DB[0] + 0.25), bedPeak + BED_BAND_DB[1] - 0.25) - p;
     else if (trackInfo) c.gainDb = trackInfo.peakDb - CUE_UNDER_TRACK_PEAK_DB - Math.max(...names.map((x) => nat[x].peakDb));
     else c.gainDb = 0;
+    if (c.levelDb) c.gainDb += c.levelDb;   // a bounce's later contact sounds a little under its first
   }
   const cueStem = [new Float32Array(total), new Float32Array(total)];
   for (const c of plain) {

@@ -7,7 +7,7 @@
 // which the kit's screen fold drives exactly like a flat device. The pose is a pure function of p and
 // u; the renderer is cached per slot and holds GPU resources only, never visible state. A deck rest
 // faces the viewer. No clock, no animation loop.
-import { THREE, clamp01, smoothstep01, cssText, cssColour, stage, slab, plate, disc, sheen, sweep, lightAll, phoneBar, alloy, glass, glossy, turn, fitCanvas, mark, draw, LOOK_PARAMS, lookOf } from '../../../runtime/kit/device3d.js';
+import { THREE, clamp01, smoothstep01, cssText, cssColour, stage, slab, plate, disc, sheen, sweep, lightAll, reflect, phoneBar, alloy, glass, glossy, turn, fitCanvas, mark, draw, LOOK_PARAMS, lookOf } from '../../../runtime/kit/device3d.js';
 import { RoundedBoxGeometry } from '../../../runtime/vendor/three/0.170.0/RoundedBoxGeometry.js';
 
 // the slab in portrait, in widths: a 3:4 screen inside even bezels, small round corners, a thin body
@@ -134,6 +134,7 @@ export default {
     fitCanvas(c, holder, ctx.params);
     c.bar = { ...tabletBar(orientation === 'landscape', String(ctx.params?.statusTime ?? '10:00'), getComputedStyle(holder).getPropertyValue('--mm-font-text').trim() || 'sans-serif'), status: String(ctx.params?.status ?? 'auto') };
     const q = clamp01(p), u = Math.max(0, Number(ctx.u) || 0);
+    reflect(c, look.sweep * (1 - smoothstep01(q)));   // the studio's reflections slide across the bevel while it arrives; at rest they stand where the look has them
     const ry = turn(ctx.params?.move ?? 'hero', q, u, ctx);
     c.tablet.rotation.set(0.06 * (1 - q) + 0.04, ry, 0);
     c.tablet.position.set(0, -0.4 * (1 - smoothstep01(q)), 0);

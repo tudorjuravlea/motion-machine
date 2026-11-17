@@ -13,7 +13,7 @@ import { loadProfile } from '../lib/sound-profile.mjs';
 import { sampleMap } from '../lib/sound-sample.mjs';
 
 const FALLBACK_S = 0.15;
-const VISIBLE = new Set(['arrive', 'cut', 'depart', 'move']);
+const VISIBLE = new Set(['arrive', 'cut', 'depart', 'move', 'contact']);   // contact: a bounce touching down
 const VISIBLE_WINDOW_S = 0.04;
 const BALANCE_MAX_DB = 0.5;
 
@@ -52,18 +52,19 @@ export default async function (ctx) {
   // 3. a cue marks a visible event
   const visible = (ctx.schedule?.events ?? []).filter((e) => VISIBLE.has(e.kind) && typeof e.t === 'number');
   for (const c of all) {
-    if (!visible.some((e) => Math.abs(e.t - c.t) <= VISIBLE_WINDOW_S + 1e-9)) push('no-visible-event', `${c.name} at ${c.t.toFixed(3)} s has no arrive, cut, depart or move event within ${VISIBLE_WINDOW_S * 1000} ms`, c);
+    if (!visible.some((e) => Math.abs(e.t - c.t) <= VISIBLE_WINDOW_S + 1e-9)) push('no-visible-event', `${c.name} at ${c.t.toFixed(3)} s has no arrive, cut, depart, move or contact event within ${VISIBLE_WINDOW_S * 1000} ms`, c);
   }
 
-  // 4. cues per 10 s inside the style's band (the bed is not a cue)
+  // 4. cues per 10 s inside the style's band (the bed is not a cue; a bounce's later contacts are its first cue going on)
   const band = ctx.style?.sound?.cuesPer10s;
+  const counted = cues.filter((c) => !(c.contact > 0));
   const total = ctx.schedule?.duration ?? (cues.at(-1)?.t ?? 0);
   if (band && total > 0) {
-    const rate = (cues.length / total) * 10;
+    const rate = (counted.length / total) * 10;
     if (rate < band[0] - 1e-9 || rate > band[1] + 1e-9) push('rate', `${rate.toFixed(1)} cues per 10 s, the style's band is ${band[0]}-${band[1]}`, null, { measured: rate });
     else if (total > 10) {
-      for (const c of cues) {
-        const n = cues.filter((o) => o.t >= c.t && o.t < c.t + 10).length;
+      for (const c of counted) {
+        const n = counted.filter((o) => o.t >= c.t && o.t < c.t + 10).length;
         if (n > band[1]) { push('rate', `${n} cues in the 10 s from ${c.t.toFixed(1)} s, the band tops out at ${band[1]}`, c, { measured: n }); break; }
       }
     }

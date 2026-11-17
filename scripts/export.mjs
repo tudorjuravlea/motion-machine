@@ -48,11 +48,13 @@ import { isSafeFamily, unsafeStyleValues } from './lib/style-values.mjs';
 import { ALPHA_KINDS, assertTools, chooseEncoder, loopSeam, probe, runFfmpeg, ssim, startEncoder } from './lib/ffmpeg.mjs';
 import { exactFps } from './lib/frame-rate.mjs';
 import { exportMeta } from './lib/export-meta.mjs';
+import { stayAwake } from './lib/awake.mjs';
 import { displayText } from './lib/say.mjs';
 import { verdictLines, verifyExport } from './lib/export-qa.mjs';
 import { buildStandalone } from './lib/standalone.mjs';
 import { buildDeckSprite } from './lib/deck-sound.mjs';
 import { momentsOf } from './stills.mjs';
+import { studioLine } from './lib/studio-link.mjs';
 
 const sha = (buf) => createHash('sha256').update(buf).digest('hex');
 const log = (...a) => process.stderr.write(a.join(' ') + '\n');
@@ -633,6 +635,7 @@ async function exportHeld(dir, o, { story, version, journal }, workersRequested)
     }
   }
   const release = guardInterrupts();
+  const sleepAgain = stayAwake();   // a long render keeps a Mac awake; it may sleep once the export ends
   try {
     let server, browser;
     try {
@@ -645,7 +648,7 @@ async function exportHeld(dir, o, { story, version, journal }, workersRequested)
       await browser?.close();
       await server?.close();
     }
-  } finally { release(); }
+  } finally { sleepAgain(); release(); }
   writeFileSync(join(dir, 'out', 'share-copy.txt'), share.text + '\n');
   const bad = (manifest.prove ?? []).filter((p) => p.mismatches.length);
   const unread = manifest.qa?.ok === false;
@@ -666,5 +669,7 @@ runMain(import.meta, async () => {
   if (manifest.encoder?.used !== 'software') console.log(`encoder: ${manifest.encoder.used}`);
   if (manifest.qa) console.log(manifest.qa.ok === true ? `read back: ok (${manifest.qa.file})` : manifest.qa.ok === false ? `read back FAILED: ${manifest.qa.failed.join(', ')} (see ${manifest.qa.file})` : `read back: not run (${manifest.qa.error})`);
   for (const p of manifest.prove ?? []) console.log(p.mismatches.length ? `prove FAILED (${p.format}): ${p.mismatches.length} of ${p.frames} frames differ: ${p.mismatches.slice(0, 8).join(', ')}` : `prove ok (${p.format}): ${p.frames} frames identical on a second render`);
+  // the timeline editor, one step away (not when the studio itself runs this export)
+  if (!code && !process.env.MM_EXPORT_LOCK) console.log(await studioLine(dir));
   return code;
 });

@@ -21,6 +21,7 @@ import { ROOT, SLOW_FRAME_MS, launchBrowser, openPiece, serveRoot } from './lib/
 import { UsageError, usageText } from './lib/cli.mjs';
 import { patternsBaseOf } from './lib/patterns-base.mjs';
 import { rule, writeReport } from './lib/report.mjs';
+import { withFix } from './check/_fixes.mjs';
 import { versionOf } from './lib/story-version.mjs';
 import { journalHead } from './lib/story-edit.mjs';
 import { resolveStory, forFormat, schedule as buildSchedule, addImplicitPlays } from '../runtime/kit/schedule.js';
@@ -35,7 +36,7 @@ export const IDS = ['G-TIME', 'G-DETERMINISM', 'G-LOCAL', 'G-BRAND', 'G-PLACEHOL
   'W-HOOK', 'W-DEAD', 'W-QUIET', 'W-LENGTH', 'W-SCENE-END', 'W-LOUDNESS', 'W-LITERAL', 'W-PATTERN-CARD', 'W-PROVENANCE',
   'W-FADE-ONLY', 'W-READ', 'W-CUE', 'W-DUR-LITERAL', 'W-BAN', 'W-SUB', 'W-CONTRAST', 'W-PACE', 'W-HOLD', 'W-EMPTY', 'W-ENTRANCE',
   'W-STAGGER', 'W-AMBIENT', 'W-CAPTION', 'W-OVERSHOOT', 'W-MIX', 'W-ASK', 'W-FACE', 'W-GEN-BRAND',
-  'W-ANCHOR', 'W-POP', 'W-DEADSTOP', 'W-FOCUS', 'W-TOKENS', 'W-SEAM', 'W-LOOP', 'W-SAMEBOX', 'W-ASSET-LICENSE', 'W-PALETTE', 'W-SAMPLE-LICENSE', 'W-AUDIBLE', 'W-SOUND-SHAPE', 'W-SOUND-ARTIFACT', 'W-SAY', 'W-EASE', 'W-DECK-STEP',
+  'W-ANCHOR', 'W-POP', 'W-DEADSTOP', 'W-FOCUS', 'W-TOKENS', 'W-SEAM', 'W-LOOP', 'W-SAMEBOX', 'W-ASSET-LICENSE', 'W-PALETTE', 'W-SAMPLE-LICENSE', 'W-AUDIBLE', 'W-SOUND-SHAPE', 'W-SOUND-ARTIFACT', 'W-SAY', 'W-VOICE-SCRIPT', 'W-EASE', 'W-DECK-STEP',
   'W-RHYTHM', 'W-READS', 'W-DEVICES', 'W-SCREEN-IDLE', 'W-NUMBER', 'W-CASE', 'W-LOOP-SEAM'];
 
 export { patternsBaseOf };
@@ -193,7 +194,7 @@ export async function runCheck(dir, { formats, format, sub = null, browser, serv
     if (!r) { if (!only) out.push(rule(id, 'SKIP', { reason: `no rule file scripts/check/${id}.mjs yet` })); continue; }
     const evidence = { ...r.evidence };
     if (r.format && fmts.length > 1) evidence.format ??= r.format;
-    out.push({ id: r.id, status: r.status, evidence });
+    out.push(withFix({ id: r.id, status: r.status, evidence }));   // a finding says how to fix it and where to read the rule
   }
   const anyFail = out.some((r) => r.status === 'FAIL' && r.id.startsWith('G-'));
   const code = crashed ? 2 : anyFail ? 1 : mountFailed ? 2 : 0;

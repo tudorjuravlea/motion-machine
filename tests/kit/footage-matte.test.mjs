@@ -96,9 +96,10 @@ test('WhisperX word lists read as { text, start, end }, words without timings pl
   assert.deepEqual(wordsFrom({ words: plain }), plain);
   const wx = { segments: [{ start: 0.1, end: 1, text: ' one two', words: [{ word: 'one', start: 0.1, end: 0.3, score: 0.9 }, { word: 'two', start: 0.5, end: 0.9, score: 0.8 }] }],
     word_segments: [{ word: 'one', start: 0.1, end: 0.3, score: 0.9 }, { word: '42' }, { word: 'two', start: 0.5, end: 0.9, score: 0.8 }] };
-  assert.deepEqual(wordsFrom(wx), [{ text: 'one', start: 0.1, end: 0.3 }, { text: '42', start: 0.3, end: 0.5 }, { text: 'two', start: 0.5, end: 0.9 }]);
+  // the per-word score is kept; an unaligned word has none
+  assert.deepEqual(wordsFrom(wx), [{ text: 'one', start: 0.1, end: 0.3, score: 0.9 }, { text: '42', start: 0.3, end: 0.5 }, { text: 'two', start: 0.5, end: 0.9, score: 0.8 }]);
   const segOnly = { segments: wx.segments };
-  assert.deepEqual(wordsFrom(segOnly), [{ text: 'one', start: 0.1, end: 0.3 }, { text: 'two', start: 0.5, end: 0.9 }]);
+  assert.deepEqual(wordsFrom(segOnly), [{ text: 'one', start: 0.1, end: 0.3, score: 0.9 }, { text: 'two', start: 0.5, end: 0.9, score: 0.8 }]);
   assert.throws(() => wordsFrom({ segments: [] }), /no timed word/);
   assert.throws(() => wordsFrom([{ text: 'x', start: 2, end: 1 }]), /end ≥ start/);
 });

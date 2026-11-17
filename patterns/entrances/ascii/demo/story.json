@@ -1,0 +1,51 @@
+{
+  "id": "demo-entrances-ascii",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "entrances/ascii demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/media",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "Signal, then picture."
+        },
+        {
+          "at": 0.6,
+          "slot": "image",
+          "fx": "entrances/ascii",
+          "asset": "assets/grid.png"
+        },
+        {
+          "at": 2.6,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "The picture arrives as glyphs, then as itself."
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

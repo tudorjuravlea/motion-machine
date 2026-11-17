@@ -61,6 +61,7 @@ advises: a direction may break a line on purpose, and the director decides.
 - no template: not more than half of the scenes put their content in the same boxes, and no two neighbouring scenes of one layout differ in text only (W-SAMEBOX);
 - every cue measured against the style's sound profile, and every sound file with its licence on record, and a sound found on Openverse still within the licences the piece offers and still the file that was fetched (W-PALETTE, W-SAMPLE-LICENSE), and no cue carrying a click, a DC offset, clipping, a cut tail, a comb ring, a ghost in the tail, stacked attacks or a rising glide (W-SOUND-ARTIFACT); every cue heard in the finished mix, over the music and the voice (W-AUDIBLE), and on its picture event (W-CUE reads the sync lock `mm sound` writes);
 - a film's voice-over (a scene's `say`) read for words a voice may get wrong that nothing marks (W-SAY): acronyms, camelCase names, file names, web addresses, numbers with units. `[display](spoken)` in the text, or the brand's `voice.lexicon`, says how a word is read; `<<slot>>` before a word puts the beat with that slot on it (W-ANCHOR checks it). `mm say-lint` reads a text or a piece, and `mm gen voice` shows the findings in its plan and stops a `--yes` until they are fixed or `--say-ok` says they are meant
+- a generated voice that does not say its script (W-VOICE-SCRIPT): a transcript of the voice's audio (`mm gen transcribe`) beside it is compared word by word with the text it was sent; warns above a word error rate of 0.1 or when a figure changed; SKIP, never PASS, with no transcript.
 - the shape of the sound: a hook in the first 0.6 s, a spread of levels, no machine-gun, and five places to listen first (W-SOUND-SHAPE);
 - every ease the piece spells read as written: it parses, a custom curve is a function of x, steps are whole, `linear()` stops run 0 to 1 (W-EASE);
 - every deck step reached by a press, and one beat to a slot in a scene (W-DECK-STEP);
@@ -127,7 +128,8 @@ UNCHECKED). Present pacing, cut weights, holds and entrances as options (SKILL.m
 side"). Tell the director that stills cannot show pacing and that only the export can.
 
 Then start the studio once and leave it running: `mm studio pieces/<id> --open` in the background
-(it prints its URL and opens it). Keep that URL for every round to gate 7; check it still answers
+(it prints its URL and opens it; every `mm export` after that ends with a `studio:` line, the live
+link, or the command when the studio has died). Keep that URL for every round to gate 7; check it still answers
 before a round and start it again only if it died: a second `mm studio` is a second server and a
 second tab. Tell the director what it is for: the piece above a timeline, drag a line to retime it
 or a scene's end to change its length, `?` for the keys, every Instagram, LinkedIn and YouTube size

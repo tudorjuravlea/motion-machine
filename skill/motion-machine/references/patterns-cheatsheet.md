@@ -40,7 +40,7 @@ lists). A story passes params as `params` on a beat (entrance), `params.exit` /
 | `layouts/label-column` | An object (a picture, or its layers) with up to six labels in a column beside it, each joined by a leader to its point on the object, like a teardown. Labels shrink toward the body floor to fit; keep names to a few words, labels in point order, and fade them in. | headline, object (asset), measure, label-1 … label-6 | `x=0.5` `y=0.5` `spec=` (label beats) |
 | `layouts/object-card` | Puts one stat inside an object drawn from palette roles: a receipt, a calendar page, a swinging tag, a perforated stamp or a ledger with one hero row. Every slot is inside `object`, so one entrance on it moves the card; the variant is a beat param or the brand's default. | object, mark, row-1 … row-3, label, figure, note | `variant=receipt` |
 
-## entrances (27)
+## entrances (30)
 
 | id | what it does | key params |
 |---|---|---|
@@ -48,6 +48,9 @@ lists). A story passes params as `params` on a beat (entrance), `params.exit` /
 | `entrances/count` | Counts a number up from a start value to its fact, with steady digit widths. | `from=0` `prefix=(empty)` `suffix=(empty)` `fix=-1` `pad=0` |
 | `entrances/draw` | Reveals a line along the x axis by growing it from one edge, so a rule or a stroke draws itself. | `origin=left` |
 | `entrances/drop` | Lets an element fall from above and fall on the ui spring and stop at its place, without a bounce. | `d=0.75` |
+| `entrances/bounce` | An object (never type) drops onto its place and bounces, each hop lower, then settles, as its `material` (rigid, wood, plastic, rubber) and `weight` (light, medium, heavy) say: heavier bounces less, more elastic bounces more and squashes. A beat `cue` sounds on every contact, each a little quieter. | `material=plastic` `weight=medium` `d=4` `fall=0.42` |
+| `entrances/streamer` | The element flies in along an arc trailing a ribbon in a palette role that flutters and catches up as it lands; the ribbon is delayed copies of the flight, gone at rest. One per scene. | `from=below` `distance=3` `role=accent` `width=0.9` `wave=1` |
+| `entrances/ascii` | Opt-in tech look: a picture arrives as a field of glyphs in the brand's face and one role, each cell's glyph by the picture's light, flickering then settling, then resolves into the plain picture. | `cell=0.018` `role=accent` |
 | `entrances/fade` | Brings an element in by opacity alone, the quietest arrival there is. | none |
 | `entrances/ghost-fade` | Shows a faint, soft, slightly large ghost of the element first, then tightens it into focus. | `ghost=0.25` `from=1.04` `blur=6` |
 | `entrances/letter-cascade` | Drops every letter of a short line into place in a quick ripple. | `d=36` |
@@ -84,7 +87,7 @@ lists). A story passes params as `params` on a beat (entrance), `params.exit` /
 | `exits/knife-cut` | A blade slices through each line of the text, parting the letters, then the element folds shut onto the middle and is gone: "what we removed". Give the beat an entrance, not `instant`, so the exit has a length. | `rule=ink` |
 | `exits/lower-third` | Takes a `text/lower-third` out the way its mechanism came in (the bar wipes away, the brackets retract, the plate turns back, the name un-types). Reads the lower third's own params. | none |
 
-## emphasis (16)
+## emphasis (19)
 
 | id | what it does | key params |
 |---|---|---|
@@ -104,8 +107,11 @@ lists). A story passes params as `params` on a beat (entrance), `params.exit` /
 | `emphasis/countdown-clock` | Urgency on a line: a clock face over it whose hand sweeps a full turn while slanted stripes scroll behind the text, then both leave (finite; the slot is plain at rest). | `tone=accent` `turns=1` `place=above` `size=0.2` `stripes=true` +1 |
 | `emphasis/dimension` | A measure drawn across exactly what it measures, glyph ink to glyph ink: the slot's own text, or `for: <slot>` (the headline above, `object` on label-column), the value centred on it. Beat `instant: true`. | `for=` `axis=x` `tone=accent` |
 | `emphasis/keyword-cta` | A keyword chip slams on its beat (`instant: true`) and three arrows bob toward it a finite number of times, then leave; the chip keeps its plate (`hold`) or relaxes to an outline. | `from=below` `bobs=3` `hold=true` `tone=accent` `size=h2` |
+| `emphasis/sparks` | Opt-in particles (the brand's `particles` block, else G-PATTERN-REF fails): on the landing, short sparks leave the text's edges, slow, fall a little and fade, in the brand's particle roles, never over type. One burst per event; give the beat one `cue` (`hit`). | `count=18` |
+| `emphasis/confetti` | Opt-in particles: on a milestone's landing, chips burst up from the top of the text, flutter and fall away, gone before the rest. Once a piece, never on a serious line; one `cue` (`success`). | `count=32` |
+| `emphasis/dust` | Opt-in particles: where a heavy word lands, a low puff spreads to both sides along its base and thins away. Only on a contact (a drop or a slam); one `cue` (`hit`). | `count=14` |
 
-## transitions (26)
+## transitions (27)
 
 | id | what it does | key params |
 |---|---|---|
@@ -133,6 +139,7 @@ lists). A story passes params as `params` on a beat (entrance), `params.exit` /
 | `transitions/re-ink` | A print look: the incoming scene is pulled in a second role set behind a ragged front, then pulled again in the brand's own inks; into a canvas, footage or device screen it wipes with a role plate. | `inks=invert` `side=left` |
 | `transitions/brush-wipe` | Tilted ragged painted bands in brand colours cover the frame, the cut happens under cover, and they drag off: a topic or chapter break. | `pair=accent` `bands=5` `tilt=-6` `side=left` |
 | `transitions/impact` | A hit at the cut: the outgoing scene builds, then the incoming scene lands punched in, shaking and fringed in two palette roles, all settling before the cut ends: climax, once or twice a film. | `strength=0.6` `shake=0.6` `fringe=0.6` `hit=0.3` `outer=accent` `inner=muted` |
+| `transitions/glitch` | Opt-in tech look: horizontal bands of the picture slip sideways, the scenes stutter for a frame or two, and the next scene lands whole; one scene drawn per frame. Once or twice a film. | `strength=0.6` `bands=14` `stutter=true` |
 | `transitions/anticipation` | A wind-up before the push: the outgoing scene gives a little ground, then dives through (`zoom`) or both scenes travel edge to edge (`slide`) into the next. | `mode=zoom` `direction=left` `pull=0.06` `depth=0.6` `windup=0.25` |
 | `transitions/dissolve-edge` | A seeded noise-field dissolve whose moving edge burns in a palette role: topic change or reveal, a slow cut. | `glow=accent` `width=0.08` `scale=0.3` `detail=3` |
 

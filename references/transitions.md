@@ -47,7 +47,7 @@ The catalogue of cuts the grammar knows. Durations are seconds at calm, medium a
 - focus-pull and blur-through (variants of blur-crossfade)
 - diamond and SDF iris, morph-circle, staggered-blocks (variants of iris, flip, grid-dissolve)
 - cross-warp, domain-warp, thermal, swirl, ripple-waves (fluid, for openings or climaxes, 0.5-1.0 s)
-- glitch, chromatic, vhs, ridged-burn (jarring, for climaxes, 0.15-0.5 s)
+- glitch (`transitions/glitch`, opt-in), chromatic, vhs, ridged-burn (jarring, for climaxes, 0.15-0.5 s)
 - page-burn (high energy only, 1.2 s or more, one hero moment per film)
 - draw-on and path-morph reveals as scene joins (0.8-1.2 s)
 - tile, hex and dot transitions are banned looks, not deferred ones

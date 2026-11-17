@@ -873,7 +873,7 @@ function runFx(it, p, u) {
   }
   // finished from TOL before the end, as entrance() and progressOf() count it: a pattern reading u / d sees exactly 1
   // there; past the end u runs on (a 3D device keeps turning after its entrance)
-  mod.at(it.el, p, ctxFor(it.selector, { params: paramsOf(mod, shared(it.beat)), u: u >= it.d - TOL && u < it.d ? it.d : u, d: it.d, scene: it.scene }));
+  mod.at(it.el, p, ctxFor(it.selector, { params: paramsOf(mod, shared(it.beat)), u: u >= it.d - TOL && u < it.d ? it.d : u, d: it.d, scene: it.scene, type: !!it.type }));   // type: the beat sets type, which never bounces or overshoots
   shineGlass(it.el, it.d > 0 ? clamp01(u / it.d) : 1);
 }
 

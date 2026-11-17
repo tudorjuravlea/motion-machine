@@ -51,7 +51,8 @@ async function payoffCheck(ctx) {
 export default async function (ctx) {
   if (ctx.schedule?.kind === 'deck') return shapeVerdict({ cues: [], levels: null, duration: 0, deck: true });
   if (ctx.style?.sound?.palette === 'none') return rule('W-SOUND-SHAPE', 'SKIP', { reason: 'style.sound.palette is "none": cues are not rendered' });
-  const cues = cueEvents(ctx.schedule).filter((c) => c.name !== 'bed').map((c) => ({ t: c.t, name: c.name, ...(c.params?.seed != null ? { seed: c.params.seed } : {}) }));
+  // a bounce's later contacts are its first sound going on, not a run of separate cues
+  const cues = cueEvents(ctx.schedule).filter((c) => c.name !== 'bed' && !(c.contact > 0)).map((c) => ({ t: c.t, name: c.name, ...(c.params?.seed != null ? { seed: c.params.seed } : {}) }));
   const duration = ctx.schedule?.duration ?? (cues.at(-1)?.t ?? 0);
   const firstEventS = (ctx.schedule?.events ?? []).filter((e) => OPENING.has(e.kind) && typeof e.t === 'number').reduce((m, e) => Math.min(m, e.t), Infinity);
 

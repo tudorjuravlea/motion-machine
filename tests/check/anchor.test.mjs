@@ -115,7 +115,7 @@ test('the sidecar may be the plain list or a WhisperX result', () => {
   const plain = wordsOf(piece({ 'v.words.json': [{ text: 'a', start: 1, end: 2 }] }), { audio: { track: 'v.wav' } });
   assert.deepEqual(plain.words, [{ text: 'a', start: 1, end: 2 }]);
   const wx = wordsOf(piece({ 'v.words.json': { word_segments: [{ word: 'b', start: 1.5, end: 2, score: 0.9 }] } }), { audio: { track: 'v.wav' } });
-  assert.deepEqual(wx.words, [{ text: 'b', start: 1.5, end: 2 }]);
+  assert.deepEqual(wx.words, [{ text: 'b', start: 1.5, end: 2, score: 0.9 }]);   // WhisperX's per-word confidence is kept
   const bad = wordsOf(piece({ 'v.words.json': { nothing: 1 } }), { audio: { track: 'v.wav' } });
   assert.equal(bad.words, null);
   assert.match(bad.why, /v\.words\.json: the words must be/);

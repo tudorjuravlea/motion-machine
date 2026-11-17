@@ -1,0 +1,2 @@
+/* emphasis/confetti: the burst's canvas covers the frame from the slot (runtime/kit/emit.js) and never takes a pointer. */
+.mm-emit { position: absolute; pointer-events: none; }

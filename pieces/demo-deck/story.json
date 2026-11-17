@@ -55,12 +55,12 @@
     },
     {
       "id": "f10",
-      "text": "The gate checks 66 rules: 14 errors (G-) and 52 warnings (W-). On pieces/golden-film-kinetic: 43 PASS, 5 WARN, 18 SKIP.",
-      "source": "SPEC.md §7; scripts/check/ (14 G-*.mjs, 45 W-*.mjs); pieces/golden-film-kinetic/out/check.json"
+      "text": "The gate checks 67 rules: 14 errors (G-) and 53 warnings (W-). On pieces/golden-film-kinetic: 43 PASS, 6 WARN, 18 SKIP.",
+      "source": "SPEC.md §7; scripts/check/ (14 G-*.mjs, 53 W-*.mjs); pieces/golden-film-kinetic/out/check.json"
     },
     {
       "id": "f11",
-      "text": "215 patterns in 13 groups: 3d 5, data 23, devices 6, emphasis 16, entrances 27, exits 7, layouts 23, moves 16, screen 9, sound 29, text 17, transitions 26, ui 11. None carries a brand. The wall shows each one's demo still in this film's style.",
+      "text": "222 patterns in 13 groups: 3d 5, data 23, devices 6, emphasis 19, entrances 30, exits 7, layouts 23, moves 16, screen 9, sound 29, text 17, transitions 27, ui 11. None carries a brand. The wall shows each one's demo still in this film's style.",
       "source": "node scripts/mm.mjs pattern list; node scripts/pattern-lint.mjs; capture/assets.json library-wall"
     },
     {
@@ -488,7 +488,7 @@
           "at": 0.15,
           "slot": "headline",
           "fx": "style:headline",
-          "text": "66 rules, measured.",
+          "text": "67 rules, measured.",
           "fact": "f10",
           "step": 1
         },
@@ -511,7 +511,7 @@
           "cue": "tick"
         }
       ],
-      "say": "So the gate can measure instead of judge. 66 rules: 14 errors that stop an export, 52 warnings that advise. This is its real report on the golden film. Click for the totals.",
+      "say": "So the gate can measure instead of judge. 67 rules: 14 errors that stop an export, 53 warnings that advise. This is its real report on the golden film. Click for the totals.",
       "presses": 2
     },
     {
@@ -538,7 +538,7 @@
           "at": 0.3,
           "slot": "headline",
           "fx": "style:headline",
-          "text": "215 patterns. None branded.",
+          "text": "222 patterns. None branded.",
           "fact": "f11",
           "step": 1,
           "cue": "tick"
@@ -553,7 +553,7 @@
           "cue": "tick"
         }
       ],
-      "say": "Underneath sits a library of 215 patterns in 13 groups. Every still on this wall is drawn in this deck's brand, because no pattern carries one of its own.",
+      "say": "Underneath sits a library of 222 patterns in 13 groups. Every still on this wall is drawn in this deck's brand, because no pattern carries one of its own.",
       "presses": 1
     },
     {

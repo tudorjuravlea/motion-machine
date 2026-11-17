@@ -6,7 +6,8 @@
 //   QA-DURATION  the frame count is the story's duration at the frame rate (a film), or the walkthrough's holds and presses (a deck)
 //   QA-SIZE      the picture is the format's size (even sides)
 //   QA-FPS       the frame rate is the one asked for, and constant
-//   QA-COLOUR    the file carries the BT.709 tags the export writes
+//   QA-COLOUR    the file carries the BT.709 tags the export writes, limited (tv) range included
+//   QA-KEYFRAMES a keyframe at least every KEYFRAME_MAX_S, so a seek or a stream-copy trim finds one near
 //   QA-AUDIO     a piece with sound has an audio stream that is not the placeholder, as long as the picture to a frame
 //   QA-BLACK     no black frames (blackdetect), unless the brand's canvas is itself black
 //   QA-FROZEN    no frozen span while the schedule moves: a rest or a gap between motions is still on purpose
@@ -71,6 +72,7 @@ export const MOTION_KINDS = ['arrive', 'depart', 'move', 'cut'];
 // Provisional, from the encodes MM makes (x264 CRF 16, flat graphics): bits a pixel a frame. Under the floor a
 // stream holds next to nothing (an encode that lost its picture); over the ceiling the encoder was not the one asked for.
 export const BITRATE_BPP = { lo: 0.0005, hi: 0.5 };
+export const KEYFRAME_MAX_S = 2;       // the longest gap between two keyframes: what a seek, a platform's trim or an editor's stream copy waits for
 export const DECODE_MAE_MAX = 3;        // a frame decoded from the file against the same frame drawn cold: the mean of |R, G, B differences|, 0..255
 export const DECODE_BIG = 48;           // a channel off by more than this is a "big" miss ...
 export const DECODE_BIG_SHARE = 0.01;   // ... and no more than this share of the samples may be
@@ -357,7 +359,7 @@ export async function verifyFile(file, o = {}) {
   const add = (id, status, evidence) => rows.push(rule(id, status, evidence));
   const skipRest = (reason, ids) => { for (const id of ids) add(id, 'SKIP', { reason }); };
   const unread = (id, reason) => add(id, 'SKIP', { reason, unread: true });
-  const ALL = ['QA-DURATION', 'QA-FRAMES', 'QA-SIZE', 'QA-FPS', 'QA-COLOUR', 'QA-BITRATE', 'QA-AUDIO', 'QA-BLACK', 'QA-FROZEN', 'QA-FLASH', 'QA-STILL', 'QA-SLIDESHOW', 'QA-SILENCE', 'QA-LEVEL', 'QA-SYNC', 'QA-MONO', 'QA-END', 'QA-PHONE', 'QA-QUIET', 'QA-DECODE', 'QA-SEAM'];
+  const ALL = ['QA-DURATION', 'QA-FRAMES', 'QA-SIZE', 'QA-FPS', 'QA-COLOUR', 'QA-KEYFRAMES', 'QA-BITRATE', 'QA-AUDIO', 'QA-BLACK', 'QA-FROZEN', 'QA-FLASH', 'QA-STILL', 'QA-SLIDESHOW', 'QA-SILENCE', 'QA-LEVEL', 'QA-SYNC', 'QA-MONO', 'QA-END', 'QA-PHONE', 'QA-QUIET', 'QA-DECODE', 'QA-SEAM'];
 
   let info;
   try { info = probe(file); } catch (e) { add('QA-STREAM', 'FAIL', { reason: `the file cannot be read: ${e.message.split('\n')[0]}` }); skipRest('the file cannot be read', ALL); return finish(file, null, rows); }
@@ -416,7 +418,24 @@ export async function verifyFile(file, o = {}) {
   {
     const tags = { space: video.color_space, primaries: video.color_primaries, transfer: video.color_transfer };
     const off = Object.entries(tags).filter(([, v]) => v !== 'bt709').map(([k, v]) => `${k} ${v ?? 'unset'}`);
-    add('QA-COLOUR', off.length ? 'FAIL' : 'PASS', { ...tags, range: video.color_range ?? null, ...(off.length ? { reason: `not tagged BT.709: ${off.join(', ')}` } : {}) });
+    // the range too: a file that says nothing, or says full (pc), shows black and white at other levels in some players
+    if (video.color_range !== 'tv') off.push(`range ${video.color_range ?? 'unset'} (not tv, limited)`);
+    add('QA-COLOUR', off.length ? 'FAIL' : 'PASS', { ...tags, range: video.color_range ?? null, ...(off.length ? { reason: `not tagged BT.709 limited range: ${off.join(', ')}` } : {}) });
+  }
+
+  // QA-KEYFRAMES: a keyframe at least every KEYFRAME_MAX_S (and a frame of grace), so a seek or a stream-copy trim finds one near
+  {
+    const r = spawnSync(bin('ffprobe'), ['-v', 'error', '-select_streams', 'v:0', '-skip_frame', 'nokey', '-show_entries', 'frame=pts_time', '-of', 'csv=p=0', file], { encoding: 'utf8', maxBuffer: 16 << 20 });
+    const keys = String(r.stdout ?? '').split('\n').map((l) => l.trim().replace(/,$/, '')).filter((l) => l !== '').map(Number).filter(Number.isFinite);
+    const end = Number(video.duration ?? info.format?.duration);
+    if (r.status !== 0 || !keys.length || !Number.isFinite(end)) unread('QA-KEYFRAMES', 'ffprobe could not list the keyframes');
+    else {
+      const marks = [...keys, end];
+      let gap = 0, at = 0;
+      for (let i = 1; i < marks.length; i++) if (marks[i] - marks[i - 1] > gap) { gap = marks[i] - marks[i - 1]; at = marks[i - 1]; }
+      const ok = gap <= KEYFRAME_MAX_S + 1 / (rate || 30) + 1e-6;
+      add('QA-KEYFRAMES', ok ? 'PASS' : 'FAIL', { keyframes: keys.length, longestGapS: Math.round(gap * 1000) / 1000, threshold: KEYFRAME_MAX_S, ...(ok ? {} : { reason: `${Math.round(gap * 1000) / 1000} s without a keyframe from ${Math.round(at * 1000) / 1000} s; at most ${KEYFRAME_MAX_S} s` }) });
+    }
   }
 
   // QA-BITRATE: the video stream's bits a second against what a picture of this size at this rate may take

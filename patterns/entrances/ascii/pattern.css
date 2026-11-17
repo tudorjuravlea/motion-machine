@@ -1,0 +1,2 @@
+/* entrances/ascii: the glyph field covers the picture exactly and never takes a pointer. */
+.mm-ascii { position: absolute; pointer-events: none; }

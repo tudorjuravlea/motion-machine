@@ -37,10 +37,11 @@ A notebook in real 3D, matching 3d/phone: it turns into frame while its lid open
 | `dof` | number | `0` | depth of field, 0 to 1 (0 is off): what lies nearer or further than the device is blurred; the focus is set from the camera to the device at that instant, never found by looking at the picture |
 | `tilt` | number | `0` | a tilt-shift blur, 0 to 1 (0 is off): the frame softens toward its top and bottom edges, the row through the device staying sharp |
 | `brushed` | number | `0.35` | the brushed grain of the metal, 0 (smooth satin) to 1 (a strong streak along the grain); a physical material with anisotropy, no dearer to draw than the standard one here |
+| `lightSweep` | number | `40` | how far the studio's reflections and softboxes turn across the device while it arrives, in degrees, 0 to 90 (0 is off): the highlights slide along the bevel and the glass during the move, the key light and its shadow stay put, and at rest they stand where the look has them, so a rest is unchanged |
 | `asset` | beat field | none | a still, a recording folder (`mm media prep`) or a page folder (`mm capture site`) for the screen |
 | `screen` | beat field | none | screen actions (`screen/scroll`, `play`, `swap`, `zoom-to`, `tap`) on the laptop's screen; tap rings are drawn into the glass |
 
-Brand knobs: aa, glow, contact, contactSoft, occlusion, reflection, reflectSoft, studio, dof, tilt, brushed, metal, model, status
+Brand knobs: aa, glow, contact, contactSoft, occlusion, reflection, reflectSoft, studio, dof, tilt, brushed, lightSweep, metal, model, status
 
 ## Style variables consumed
 - `--mm-device-body` and `--mm-device-rim-light` (the metal shell; the deck, keys and trackpad are tones of it)

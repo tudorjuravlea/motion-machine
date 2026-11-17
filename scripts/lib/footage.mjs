@@ -294,6 +294,9 @@ export function planEdit({ samples, rate, fps, frames, words = null, maxPause = 
   };
 }
 
+/** WhisperX's per-word confidence (0..1), kept when the word carries one: `{ score }` or nothing. */
+const scoreOf = (w) => (Number.isFinite(w?.score) ? { score: w.score } : {});
+
 /**
  * wordsFrom(json): a word list in source seconds, [{ text, start, end }] sorted by start, from either
  * the plain list (or { words: [...] }) or a WhisperX result: its `word_segments`, else every
@@ -308,19 +311,19 @@ export function wordsFrom(json) {
   if (plain) {
     const ok = plain.every((w) => typeof w?.text === 'string' && Number.isFinite(w.start) && Number.isFinite(w.end) && w.end >= w.start && w.start >= 0);
     if (!ok) throw new Error(`the words must be ${plainShape}`);
-    return plain.map((w) => ({ text: w.text, start: w.start, end: w.end })).sort((a, b) => a.start - b.start);
+    return plain.map((w) => ({ text: w.text, start: w.start, end: w.end, ...scoreOf(w) })).sort((a, b) => a.start - b.start);
   }
   const raw = Array.isArray(json?.word_segments) && json.word_segments.length ? json.word_segments
     : Array.isArray(json?.segments) ? json.segments.flatMap((s) => (Array.isArray(s?.words) ? s.words : [])) : null;
   if (!raw) throw new Error(`the words must be ${plainShape}`);
-  const list = raw.filter((w) => typeof w?.word === 'string' && w.word.trim()).map((w) => ({ text: w.word.trim(), start: w.start, end: w.end }));
+  const list = raw.filter((w) => typeof w?.word === 'string' && w.word.trim()).map((w) => ({ text: w.word.trim(), start: w.start, end: w.end, ...scoreOf(w) }));
   const timed = (w) => Number.isFinite(w.start) && Number.isFinite(w.end) && w.end >= w.start && w.start >= 0;
   if (!list.some(timed)) throw new Error('the WhisperX output holds no timed word');
   for (let i = 0; i < list.length; i++) {
     if (timed(list[i])) continue;
     const before = list.slice(0, i).reverse().find(timed), after = list.slice(i + 1).find(timed);
     const start = before ? before.end : after.start;
-    list[i] = { text: list[i].text, start, end: Math.max(start, after ? after.start : before.end) };
+    list[i] = { text: list[i].text, start, end: Math.max(start, after ? after.start : before.end), ...scoreOf(list[i]) };
   }
   return list.sort((a, b) => a.start - b.start);
 }

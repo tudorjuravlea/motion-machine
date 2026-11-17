@@ -33,6 +33,7 @@ export const LOOK_PARAMS = {
   studio: { type: 'enum(light|dark|brand)', default: 'light', meaning: 'the light the device is lit by: light is a white void with softboxes (for a light ground); dark is a dark room with softbox strips; brand is the same void tinted by the brand\'s canvas role, with the accent role as a rim' },
   dof: { type: 'number', default: 0, meaning: 'depth of field, 0 to 1 (0 is off): what lies nearer or further than the device is blurred, the focus set from the camera to the device at that instant' },
   tilt: { type: 'number', default: 0, meaning: 'a tilt-shift blur, 0 to 1 (0 is off): the frame softens toward its top and bottom edges, the device\'s row staying sharp' },
+  lightSweep: { type: 'number', default: 40, meaning: 'how far the studio\'s reflections turn across the device while it arrives, in degrees, 0 to 90 (0 is off): the highlights slide along the bevel and the glass during the move and stand where the look has them at rest, so a rest is unchanged' },
   brushed: { type: 'number', default: 0.35, meaning: 'the brushed grain of the metal, 0 (smooth satin) to 1 (a strong streak along the grain)' },
 };
 
@@ -51,6 +52,7 @@ export function lookOf(params = {}, render = false) {
     glow: clamp01(params.glow, LOOK_PARAMS.glow.default), contact: clamp01(params.contact, 0), soft: clamp01(params.contactSoft, 0.5),
     occlusion: clamp01(params.occlusion, LOOK_PARAMS.occlusion.default), reflection: clamp01(params.reflection, 0), reflectSoft: clamp01(params.reflectSoft, 0.5),
     dof: clamp01(params.dof, 0), tilt: clamp01(params.tilt, 0), brushed: clamp01(params.brushed, LOOK_PARAMS.brushed.default),
+    sweep: (Math.min(90, Math.max(0, Number.isFinite(Number(params.lightSweep ?? LOOK_PARAMS.lightSweep.default)) ? Number(params.lightSweep ?? LOOK_PARAMS.lightSweep.default) : LOOK_PARAMS.lightSweep.default)) * Math.PI) / 180,
   };
 }
 

@@ -1,4 +1,6 @@
 // The gate's report shape (SPEC §7): one row per rule, a JSON file, a console summary, an exit code.
+// The console prints each FAIL and WARN with its evidence, its `fix` and its `see`, then one line of
+// the rules that passed and one of those skipped, each with its reason.
 import { mkdirSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -22,10 +24,16 @@ export function writeReport(dir, rules, { quiet = false, version, journal = null
   renameSync(tmp, join(out, 'check.json'));
   const count = (s) => rules.filter((r) => r.status === s).length;
   if (!quiet) {
-    for (const r of rules) {
+    // findings first, each with its fix and where to read the rule; then one line each for what passed and what was skipped
+    for (const r of [...rules.filter((x) => x.status === 'FAIL'), ...rules.filter((x) => x.status === 'WARN')]) {
       const ev = r.evidence && Object.keys(r.evidence).length ? '  ' + summarise(r.evidence) : '';
       console.log(`${r.status.padEnd(4)}  ${r.id}${ev}`);
+      if (r.fix) console.log(`      fix: ${r.fix}`);
+      if (r.see) console.log(`      see: ${r.see}`);
     }
+    const passed = rules.filter((x) => x.status === 'PASS').map((x) => x.id), skipped = rules.filter((x) => x.status === 'SKIP');
+    if (passed.length) console.log(`Passed (${passed.length}): ${passed.join(', ')}`);
+    if (skipped.length) console.log(`Skipped (${skipped.length}): ${skipped.map((x) => `${x.id} (${x.evidence?.reason ?? 'no reason'})`).join('; ')}`);
     console.log(`\n${count('FAIL') ? `${count('FAIL')} rule${count('FAIL') > 1 ? 's' : ''} failed` : 'All rules passed'}; ${count('WARN')} warning${count('WARN') === 1 ? '' : 's'}, ${count('SKIP')} skipped. Report: ${join(out, 'check.json')}`);
     if (tuned.length) console.log(`Tuned by the style's gate block: ${tuned.join(', ')}.`);
   }

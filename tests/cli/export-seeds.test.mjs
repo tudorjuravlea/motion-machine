@@ -16,7 +16,7 @@ const NAME = 'kit-smoke-cues-16x9.mp4';
 let dir, mp4, tmp, cueAt, seconds;
 const ff = (...args) => { const r = spawnSync('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-nostdin', '-y', ...args], { encoding: 'utf8' }); assert.equal(r.status, 0, r.stderr); };
 const AAC = ['-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-metadata:s:a:0', 'handler_name=SoundHandler'];
-const V = ['-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '16', '-pix_fmt', 'yuv420p', '-r', String(FPS), '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-color_range', 'tv'];
+const V = ['-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '16', '-g', String(2 * FPS), '-pix_fmt', 'yuv420p', '-r', String(FPS), '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-color_range', 'tv'];
 const seedFile = (name) => { const d = join(tmp, name); mkdirSync(d, { recursive: true }); return join(d, NAME); };
 const sound = (name, af, ...more) => { const o = seedFile(name); ff('-i', mp4, '-c:v', 'copy', ...(af ? ['-af', af] : []), ...AAC, ...more, o); return o; };
 const picture = (name, vf) => { const o = seedFile(name); ff('-i', mp4, '-vf', vf, ...V, '-c:a', 'copy', o); return o; };
@@ -76,4 +76,20 @@ test('a file with the colour tags stripped fails QA-COLOUR', async () => {
   const o = seedFile('untagged');
   ff('-i', mp4, '-vf', 'setparams=colorspace=unknown:color_primaries=unknown:color_trc=unknown', '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '16', '-pix_fmt', 'yuv420p', '-r', String(FPS), '-c:a', 'copy', o);
   assert.ok(tripped(await read(o)).includes('QA-COLOUR'));
+});
+
+test('a file tagged BT.709 but full range (pc) fails QA-COLOUR on its range', async () => {
+  const o = seedFile('full-range');
+  ff('-i', mp4, '-vf', 'scale=out_range=pc,format=yuvj420p', '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '16', '-r', String(FPS), '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-color_range', 'pc', '-c:a', 'copy', o);
+  const r = await read(o);
+  assert.ok(tripped(r).includes('QA-COLOUR'));
+  assert.match(row(r, 'QA-COLOUR').evidence.reason, /range pc/);
+});
+
+test('a file with one keyframe for longer than 2 s fails QA-KEYFRAMES; the export passes it', async () => {
+  const o = seedFile('one-gop');
+  ff('-i', mp4, ...V.filter((x, i, a) => x !== '-g' && a[i - 1] !== '-g'), '-g', '1000', '-sc_threshold', '0', '-c:a', 'copy', o);
+  const r = await read(o);
+  assert.ok(tripped(r).includes('QA-KEYFRAMES'), JSON.stringify(row(r, 'QA-KEYFRAMES')));
+  assert.equal(row(await read(mp4), 'QA-KEYFRAMES').status, 'PASS');
 });

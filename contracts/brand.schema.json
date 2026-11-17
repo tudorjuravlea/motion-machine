@@ -173,6 +173,10 @@
         "lookAmount": { "type": "number", "minimum": 0, "maximum": 1, "description": "how much of the look is worn: 1 by default, 0 none" }
       }
     },
+    "particles": { "type": "object", "additionalProperties": false, "required": ["roles"], "description": "the brand allows the particle emitter (emphasis/sparks, emphasis/confetti, emphasis/dust): a burst on a beat's landing, never ambience, in these palette roles only, at most `max` particles a burst and `area` of the frame painted at once, fading out beside every line of type. Without this block the emitter draws nothing and G-PATTERN-REF fails a story that names it. The `particle-burst` ban (a decoration burst) stays as it is", "properties": {
+      "roles": { "type": "array", "minItems": 1, "maxItems": 3, "uniqueItems": true, "items": { "enum": ["accent", "ink", "muted", "surface", "line", "accentInk", "canvas"] }, "description": "the palette roles a particle may take, picked per particle by seed" },
+      "max": { "type": "integer", "minimum": 1, "maximum": 64, "description": "the most particles in one burst (40 by default); a pattern's count never passes it" },
+      "area": { "type": "number", "minimum": 0, "maximum": 0.06, "description": "the largest share of the frame one burst may paint at once (0.025 by default); particles past it, in index order, are never drawn" } } },
     "surface": {
       "type": "object",
       "additionalProperties": false,

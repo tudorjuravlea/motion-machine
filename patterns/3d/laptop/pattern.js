@@ -7,7 +7,7 @@
 // A pose move travels from one written pose to another (lid, turn, place, how far the camera stands back, and
 // `fill`: the camera square in front of the screen, the screen covering the canvas), each key in its own part
 // of the beat's time; a deck rest holds the pose it ends on, so a notebook can rest half shut.
-import { THREE, clamp01, smoothstep01, cssText, cssColour, stage, slab, plate, disc, sheen, sweep, lightAll, menuBar, alloy, metal, glass, glossy, turn, fitCanvas, mark, draw, LOOK_PARAMS, lookOf } from '../../../runtime/kit/device3d.js';
+import { THREE, clamp01, smoothstep01, cssText, cssColour, stage, slab, plate, disc, sheen, sweep, lightAll, reflect, menuBar, alloy, metal, glass, glossy, turn, fitCanvas, mark, draw, LOOK_PARAMS, lookOf } from '../../../runtime/kit/device3d.js';
 
 const LW = 2, LH = 1.29, LT = 0.024, LR = 0.065;   // the lid, in scene units
 const BD = 1.38, BT = 0.058, BR = 0.075;           // the base: depth (front to back) and thickness
@@ -172,6 +172,7 @@ export default {
     const items = String(ctx.params?.menu ?? 'File,Edit,View,Window,Help').split(',').map((x) => x.trim()).filter(Boolean).slice(0, 6);
     c.bar = { ...menuBar(items, String(ctx.params?.statusTime ?? '10:00'), getComputedStyle(holder).getPropertyValue('--mm-font-text').trim() || 'sans-serif', 0.032, String(ctx.params?.url ?? ''), say), status: String(ctx.params?.status ?? 'auto'), browser: String(ctx.params?.browser ?? 'auto') };
     const q = clamp01(p), u = Math.max(0, Number(ctx.u) || 0);
+    reflect(c, look.sweep * (1 - smoothstep01(q)));   // the studio's reflections slide across the bevel while it arrives; at rest they stand where the look has them
     const move = ctx.params?.move ?? 'hero';
     // a pose move reads the beat's own time (u of d), so each key keeps its part of it whatever the entrance's easing
     const pose = move === 'pose' ? poseAt(ctx.params?.from, ctx.params?.to, ctx.d > 0 ? clamp01(u / ctx.d) : 1) : null;

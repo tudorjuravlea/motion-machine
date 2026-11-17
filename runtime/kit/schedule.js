@@ -117,6 +117,8 @@ function springParams(sp, style) {
 export function entranceTiming(beat, style, meta = {}, instant = false) {
   const prm = beat.params || {};
   if (instant || prm.instant === true) return { d: 0, spring: null, role: null };
+  // a pattern whose length is its physics (a bounce: its last contact) says so; the beat's params decide it
+  if (typeof meta.durationOf === 'function') return { d: ms(meta.durationOf(prm)), spring: null, role: null };
   const sp = prm.spring ?? meta.spring;
   if (sp != null) {
     const p = springParams(sp, style);
@@ -250,9 +252,16 @@ function filmSchedule(story, style, meta, eachOpts) {
       if (Array.isArray(inner.steps) && typeof inner.dur === 'number') for (const s of inner.steps) if (s > 0) events.push({ t: ms(it.start + s * (it.d / inner.dur)), kind: 'step', selector: it.selector, scene: sc.id, fx: beat.fx });
       // a pattern that keeps moving after it arrives (a 3D turn) is a move until its scene ends; it does not move the rest
       if (meta(beat.fx).ambient && beat.params?.move !== 'still' && end > it.start) events.push({ t: it.start, kind: 'move', selector: it.selector, scene: sc.id, pattern: beat.fx, d: ms(end - it.start), ambient: true });
+      // an entrance that touches down more than once (a bounce) marks each contact as a visible event, and a cue
+      // sounds on every contact, each a little quieter
+      const touches = it.d > 0 && typeof meta(beat.fx).contactsOf === 'function' ? meta(beat.fx).contactsOf(beat.params ?? {}) : null;
+      for (const k of touches ?? []) events.push({ t: ms(it.start + k.t), kind: 'contact', selector: it.selector, scene: sc.id, fx: beat.fx, n: k.n });
       if (beat.cue) {
-        const c = cueTiming(beat, it.start, it.d, meta);
-        events.push({ t: c.at, kind: 'cue', selector: it.selector, scene: sc.id, cue: beat.cue, d: c.d, anchor: c.anchor, ...(beat.params?.cue ? { params: beat.params.cue } : {}) });
+        if (touches?.length) for (const k of touches) events.push({ t: ms(it.start + k.t), kind: 'cue', selector: it.selector, scene: sc.id, cue: beat.cue, d: 0, anchor: null, contact: k.n, ...(k.levelDb ? { levelDb: k.levelDb } : {}), ...(beat.params?.cue ? { params: beat.params.cue } : {}) });
+        else {
+          const c = cueTiming(beat, it.start, it.d, meta);
+          events.push({ t: c.at, kind: 'cue', selector: it.selector, scene: sc.id, cue: beat.cue, d: c.d, anchor: c.anchor, ...(beat.params?.cue ? { params: beat.params.cue } : {}) });
+        }
       }
       settled = Math.max(settled, it.start + it.d);
       if (beat.emphasis) {
@@ -388,8 +397,12 @@ function deckSchedule(story, style, meta, eachOpts) {
         at: it.at, ...span(it, it.at, it.d) });
     }
     if (it.beat.cue && !it.parent) {
-      const c = cueTiming(it.beat, it.at, it.d, meta);
-      events.push({ press: it.press, kind: 'cue', selector: it.selector, scene: it.scene, cue: it.beat.cue, d: c.d, anchor: c.anchor, ...(it.beat.params?.cue ? { params: it.beat.params.cue } : {}), at: c.at, ...span(it, c.at, 0) });
+      const touches = it.d > 0 && typeof meta(it.fx).contactsOf === 'function' ? meta(it.fx).contactsOf(it.beat.params ?? {}) : null;
+      if (touches?.length) for (const k of touches) { const at = ms(it.at + k.t); events.push({ press: it.press, kind: 'cue', selector: it.selector, scene: it.scene, cue: it.beat.cue, d: 0, anchor: null, contact: k.n, ...(k.levelDb ? { levelDb: k.levelDb } : {}), ...(it.beat.params?.cue ? { params: it.beat.params.cue } : {}), at, ...span(it, at, 0) }); }
+      else {
+        const c = cueTiming(it.beat, it.at, it.d, meta);
+        events.push({ press: it.press, kind: 'cue', selector: it.selector, scene: it.scene, cue: it.beat.cue, d: c.d, anchor: c.anchor, ...(it.beat.params?.cue ? { params: it.beat.params.cue } : {}), at: c.at, ...span(it, c.at, 0) });
+      }
     }
     if (it.emphasis) events.push({ press: it.press, kind: 'move', selector: it.selector, scene: it.scene, pattern: it.emphasis.pattern, d: it.emphasis.d,
       at: it.emphasis.at, from: pos(it.press, it.emphasis.at), to: pos(it.press, ms(it.emphasis.at + it.emphasis.d)) });

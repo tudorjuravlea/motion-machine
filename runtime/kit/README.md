@@ -9,7 +9,7 @@ receives, where a story's params end up, and every function the kit modules expo
 - [What each pattern kind receives](#what-each-pattern-kind-receives) · [Units of travel](#units-of-travel) · [Param routing](#param-routing) · [Cascades](#cascades-data-each--paramseach)
 - [Fragments](#fragments-patternhtml-for-text-data-and-devices) · [Assets](#assets) · [Overlays](#overlays) · [Sound cues](#sound-cues) · [Schedule output](#schedule-output) · [Warnings](#warnings)
 - [Screen actions](#screen-actions) · [3D devices](#3d-devices) · [Footage](#footage)
-- [Module reference](#module-reference): `kit.js` · `params.js` · `schedule.js` · `springs.js` · `ease.js` · `curve.js` · `stagger.js` · `inertia.js` · `maths.js` · `random.js` · `seeded.js` · `fit.js` · `count.js` · `room.js` · `glyphs.js` · `rough.js` · `points.js` · `screen.js` · `cursor.js` · `camera.js` · `demoframe.js` · `footage.js` · `captions.js` · `press.js` · `speaker.js` · `speaker-layer.js` · `device3d.js` · `look3d.js` · `dof3d.js` · `floor3d.js` · `hairline.js` · `drawn.js` · `synth.js` · `modes.js` · `aim.js` · `rig.js` · `diagram.js` · `pathkit.js` · `morph.js` · `dash.js` · `projection.js` · `ground.js` · `surface.js` · `finish.js` · `lens.js` · `split.js` · `scramble.js` · `code.js`
+- [Module reference](#module-reference): `kit.js` · `params.js` · `schedule.js` · `springs.js` · `ease.js` · `curve.js` · `stagger.js` · `inertia.js` · `maths.js` · `random.js` · `seeded.js` · `fit.js` · `count.js` · `room.js` · `glyphs.js` · `rough.js` · `points.js` · `emit.js` · `bounce.js` · `trail.js` · `screen.js` · `cursor.js` · `camera.js` · `demoframe.js` · `footage.js` · `captions.js` · `press.js` · `speaker.js` · `speaker-layer.js` · `device3d.js` · `look3d.js` · `dof3d.js` · `floor3d.js` · `hairline.js` · `drawn.js` · `synth.js` · `modes.js` · `aim.js` · `rig.js` · `diagram.js` · `pathkit.js` · `morph.js` · `dash.js` · `projection.js` · `ground.js` · `surface.js` · `finish.js` · `lens.js` · `split.js` · `scramble.js` · `code.js`
 
 ## Mount and seek
 
@@ -343,7 +343,7 @@ module cannot be read is placed on the arrival, with a `cue <name>: … could no
 - `scenes[]`: `{ id, start, end, cut: { pattern, d }, position, move }` (`position` and `move` are
   `null` when the story gives none; `cut.pattern` is resolved);
 - `events[]`: `cut`, `step` (a change inside one beat: the `steps` a `ui/` pattern exports, in seconds of its own `dur`), `move` (camera moves, emphasis and screen actions), `arrive` (one per cascade
-  child), `depart`, `cue`; film events carry `t` and `d` in seconds; deck events carry `press`, `at`
+  child), `depart`, `contact` (a bounce touching down: `n`, from 0), `cue` (a bounce's cue is one per contact, with `contact` and, after the first, `levelDb`); film events carry `t` and `d` in seconds; deck events carry `press`, `at`
   and `d` in seconds within the press, and `from`/`to` as press positions;
 - `holds[]` (film): `{ scene, from, to }`, one per rest.
 
@@ -520,7 +520,7 @@ Pure; imports in Node and in the page. A node is `{ d, f(u) }`: a duration and a
 | `stagger` | `stagger(each, items, { from, index, ease, cap, grid, axis, reverse, seed, jitter, use, total })` | node + `offsets` | children in turn, by `stagger.js`'s `staggerOffsets`; `from`: `first`, `center`, `last`, `edges`, `random`, `index` (with `index`), an item index or a ratio pair; `ease` a function or an ease string; `cap` bounds the whole spread |
 | `overlap` | `overlap(a, b, o)` | node + `starts` | `b` starts `o` seconds before `a` ends |
 | `transition` | `transition(a, b, pattern, d)` | node | an overlap by `d` whose `f` gives `{ a, b, pattern, p }`, `p` running 0 to 1 across the overlap |
-| `schedule` | `schedule(story, style, { patterns, each })` | the schedule (see Schedule output) | `patterns` maps a ref to its module or metadata (`dur`, `spring`, `durationS`, `anchor`); `each` supplies a cascade's child count in Node |
+| `schedule` | `schedule(story, style, { patterns, each })` | the schedule (see Schedule output) | `patterns` maps a ref to its module or metadata (`dur`, `spring`, `durationS`, `anchor`, and for an entrance whose physics sets its length `durationOf(params)` and `contactsOf(params)`); `each` supplies a cascade's child count in Node |
 | `selectorOf` | `selectorOf(scene, slot)` | string | `[data-scene="…"] [data-slot="…"]` |
 | `forFormat` | `forFormat(story, format)` | story | the story as that format draws it (scene `variants` applied); the input is not changed |
 | `resolveStory` | `resolveStory(story, style)` | story | resolves `style:<role>` and `position`; a new story, refs that are patterns pass through |
@@ -935,6 +935,7 @@ Imported by `3d/phone` and `3d/laptop`. Materials are standard; only the brushed
 | `stage` | `stage(el, cfg)` | `{ renderer, canvas, scene, env, floor, key, glow, camera, tex, tex2d, studio }` | renderer, the studio (`cfg.studio`: light, dark or brand) lighting the metal and glass, a few rectangular softboxes, key and rim lights, floor shadow and glow |
 | `rrect` | `rrect(w, h, r)` | `THREE.Shape` | a rounded rectangle centred on the origin |
 | `lightAll` | `lightAll(c, opts)` | nothing | gives every material the studio as its own envMap and its tone mapping; with `opts` (`{ body, focus, reach, height }`) builds the stage's look |
+| `reflect` | `reflect(c, yaw)` | nothing | turns the studio about the vertical by `yaw` radians for what the device mirrors (every material's `envMapRotation` and the softbox lights; the key light, its shadow and the rim lights stay put); a pattern passes `look.sweep * (1 - smoothstep01(q))`, so the highlights slide across the bevel while it arrives and a rest is unchanged |
 | `LOOK_PARAMS`, `lookOf` | re-exported from `look3d.js` | | the look's param table and its reading |
 | `slab` | `slab(w, h, d, r, b, mats)` | mesh | an extruded slab with rounded corners (`r`) and bevelled edges (`b`); `mats`: `[faces, sides]` |
 | `plate` | `plate(w, h, r, mat)` | mesh | a flat rounded plate facing +z with 0..1 UVs |
@@ -1226,6 +1227,51 @@ Pure arithmetic plus one string builder; see [Overlays](#overlays) (Finish) and 
 | `bloomGain` | `bloomGain(b)` | number | how much glow bloom adds: at most 0.08 |
 | `needsFx` | `needsFx(finish)` | boolean | whether the stage wears the filter: chroma, bloom, or a look other than `neutral` |
 | `fxFilter` | `fxFilter(finish, color, spec, href)` | string | the `<filter id="mm-fx">`, or `''` when none is needed; `href` is the lens ramp's URL |
+
+### `bounce.js`: a dropped object's bounce, in closed form
+
+`entrances/bounce` draws it, and the schedule reads the pattern's `durationOf` and `contactsOf` for its length and its contacts. Restitution comes from the material less up to 35 % for weight, so a heavier object bounces less and an elastic one more.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `MATERIALS` | `{ rigid: 0.3, wood: 0.42, plastic: 0.55, rubber: 0.78 }` | object | the share of its speed an object keeps at a contact, before its weight |
+| `SQUASH` | `{ rigid: 0, wood: 0.02, plastic: 0.05, rubber: 0.14 }` | object | how much the first contact squashes it, as a share of its height |
+| `WEIGHTS` | `{ light: 0, medium: 0.5, heavy: 1 }` | object | weight by name |
+| `MIN_HOP_S` · `MIN_HOP_HEIGHT` · `MAX_CONTACTS` · `SQUASH_S` | `0.08` · `0.012` · `8` · `0.05` | numbers | the shortest hop, the lowest hop (a share of the fall), the most contacts, and how long a squash lasts either side of its contact |
+| `bounceOf` | `bounceOf({ material, weight, fall })` | `{ e, squash, fall }` | a beat's params read; plastic, medium and 0.42 s by default |
+| `contacts` | `contacts({ e, fall })` | `[{ t, speed }]` | the contacts, the first at `fall`, hop k lasting 2·eᵏ·fall |
+| `bounceLength` | `bounceLength(b)` | seconds | the last contact, and its squash |
+| `bounceAt` | `bounceAt(t, b)` | `{ lift, squash, contact }` | height above rest as a share of the drop, the squash, and the contacts made |
+| `contactLevelDb` | `contactLevelDb(speed)` | dB | a contact's sound against the first: 10·log10 of its speed, never under −12 |
+
+### `trail.js`: ribbon, flag and cable motion from delayed copies
+
+Point i of a trail is where its anchor was i·lag seconds ago, plus a flutter the caller fades out as the motion settles: a pure function of t, with no simulation. `entrances/streamer` uses it.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `trailOf` | `trailOf(pathAt, t, { n, lag, wave, waveHz, waves, width })` | `{ points, outline }` | the trail from the anchor (`pathAt(t)`) to the free end (`pathAt(t - n·lag)`), fluttered by `wave` px at the free end, and its outline tapering from `width[0]` to `width[1]` |
+| `normalAt` | `normalAt(points, i)` | `[nx, ny]` | the unit normal of a polyline at a point, `[0, -1]` where it has no length |
+| `trailLength` | `trailLength(points)` | px | its length along the points: 0 once it has caught up |
+| `polygonPath` | `polygonPath(points)` | string | an SVG path `d` for a closed polygon |
+
+### `emit.js`: the particle emitter, in closed form
+
+A burst on a beat's landing, opt-in per brand (`particles` in the style, SPEC §3); the patterns `emphasis/sparks`, `emphasis/confetti` and `emphasis/dust` are its recipes, and G-PATTERN-REF fails a story that names one for a brand with no `particles` block. Each particle is drawn from a hash of (seed, index, attribute slot), so any instant is drawn alone.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `EMIT_LIMIT` | `{ count: 64, area: 0.06, life: 1.6 }` | object | the ceilings: particles in a burst, the share of the frame it may paint, a life in seconds |
+| `EMIT_DEFAULTS` | `{ max: 40, area: 0.025 }` | object | a `particles` block's `max` and `area` when it gives none |
+| `EMIT_ROLES` | `['accent', 'ink', 'muted', 'surface', 'line', 'accentInk', 'canvas']` | array | the roles a particle may take |
+| `seedOf` | `seedOf(text)` | 32-bit integer | FNV-1a of a text |
+| `u01` | `u01(seed, i, slot)` | number in [0, 1) | the draw for particle `i`'s attribute `slot`; a new slot changes no other draw |
+| `particlesOf` | `particlesOf(style)` | `{ roles, max, area }` or `null` | the brand's block with its gaps filled and clamped; `null` (the emitter is off) without one or with no known role |
+| `burstAt` | `burstAt(a, opts)` | particles | the burst `a` s after its event: each `{ i, x, y, vx, vy, q, alpha, size, angle, role }`, gravity and linear drag in closed form, every life ending inside 95 % of `opts.window` |
+| `admitted` | `admitted(count, { max, area, frame, peakArea })` | integer | how many particles, in index order, the count, `max` and the area share admit; fixed for the burst |
+| `clearOf` | `clearOf(x, y, boxes, reach, band)` | 0..1 | how visible a particle may be beside text boxes: 0 within `reach`, 1 past `band` more |
+| `onPerimeter` | `onPerimeter(box, u, gap)` | `[x, y, dx, dy]` | a point on a box's edge `gap` outside it, with the outward direction |
+| `drawBurst` | `drawBurst(el, p, ctx, recipe)` | nothing | a pattern's `at` in one call: a frame-sized canvas in the slot painting the admitted, living particles in the brand's roles, faded beside every visible line of type in the scene; nothing without a `particles` block |
 
 ### `lens.js`: a lens's colour fringe in palette roles
 

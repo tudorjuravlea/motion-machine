@@ -1,0 +1,56 @@
+{
+  "id": "demo-entrances-bounce",
+  "kind": "film",
+  "formats": [
+    "9x16",
+    "1x1",
+    "16x9"
+  ],
+  "title": "entrances/bounce demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "demo",
+      "layout": "layouts/media",
+      "duration": 5.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0.2,
+          "slot": "headline",
+          "fx": "entrances/rise",
+          "text": "It lands, and lands again."
+        },
+        {
+          "at": 0.6,
+          "slot": "image",
+          "fx": "entrances/bounce",
+          "asset": "assets/grid.png",
+          "cue": "tap",
+          "params": {
+            "material": "rubber",
+            "weight": "light"
+          }
+        },
+        {
+          "at": 2.6,
+          "slot": "caption",
+          "fx": "entrances/fade",
+          "text": "A light rubber object: a tap on every contact."
+        }
+      ],
+      "say": "A demo of the pattern."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

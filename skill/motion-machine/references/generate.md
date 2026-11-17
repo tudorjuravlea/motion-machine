@@ -57,6 +57,8 @@ login: when `mm gen` says it is missing or logged out, give the person the one c
 `voice` writes `<name>.words.json` (per-word times); `transcribe` writes the same format, which
 `mm footage cut --words` reads.
 
+- After generating a voice, transcribe it with `mm gen transcribe --audio assets/gen/<name>.mp3 --name <name>-heard` (a paid call the person approves) so the gate can check it says the script: W-VOICE-SCRIPT warns above a word error rate of 0.1 or a changed figure, and is SKIP until the transcript is there.
+
 ## On brand, and getting back on brand
 
 The prompt typed is the idea; the brand adds its words (imagery style and mood, the palette as words and hex,
@@ -104,5 +106,8 @@ result in:
   each with its hash. Do not add one the person has not seen in the plan.
 - A video is a frame sequence after `mm media prep`; keep the `.mp4` out of the repository (never commit
   generated videos). The record and the frames are what the piece needs.
+- A brand that brings its own `.cube` grade wants its pictures graded, not its stage: grade a generated
+  still with `mm media grade <picture> --name <n> --cube <grade.cube>` and a generated video with
+  `mm media prep --cube` (`--raw` first). Never grade a screen recording of the product's interface.
 - Costs are not quoted by Kie.ai or ElevenLabs; the plan says "not quoted". Run `mm gen credit` before and
   after a batch.
