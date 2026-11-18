@@ -89,9 +89,13 @@ test('media prep keeps a BT.709 recording\'s red, graded with the identity or no
     const r = prep(name, extra);
     assert.equal(r.status, 0, r.out);
   }
-  near(pixel(join(work, 'assets', 'plain', 'f00001.jpg'), 100, 100).slice(0, 3), [200, 50, 50], 4, 'plain prep');
-  near(pixel(join(work, 'assets', 'ident', 'f00001.jpg'), 100, 100).slice(0, 3), [200, 50, 50], 4, 'identity grade');
-  near(pixel(join(work, 'assets', 'swap', 'f00030.jpg'), 100, 100).slice(0, 3), [50, 50, 200], 4, 'swap grade');
+  // Against the recording as this ffmpeg decodes it, not the 200,50,50 it was made from: builds of the same
+  // release encode and decode the H.264 a few levels apart (the Linux static 9.0.2 reads 197,46,47 where
+  // the Mac's reads 197,48,48), while a frame written through the wrong matrix loses about 15 of its red.
+  const src = pixel(join(work, 'red.mp4'), 100, 100).slice(0, 3);
+  near(pixel(join(work, 'assets', 'plain', 'f00001.jpg'), 100, 100).slice(0, 3), src, 4, 'plain prep');
+  near(pixel(join(work, 'assets', 'ident', 'f00001.jpg'), 100, 100).slice(0, 3), src, 4, 'identity grade');
+  near(pixel(join(work, 'assets', 'swap', 'f00030.jpg'), 100, 100).slice(0, 3), [src[2], src[1], src[0]], 4, 'swap grade');
   const m = JSON.parse(readFileSync(join(work, 'assets', 'swap', 'media.json'), 'utf8'));
   assert.equal(m.grade.file, 'swap.cube'); assert.equal(m.grade.strength.max, 1);
   assert.equal(JSON.parse(readFileSync(join(work, 'assets', 'plain', 'media.json'), 'utf8')).grade, undefined);
