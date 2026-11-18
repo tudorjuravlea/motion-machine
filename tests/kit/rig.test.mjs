@@ -127,7 +127,7 @@ test('a style without a mascot gets the rig\'s plain default; moods and faces th
 
 test('part colours are role variables or sRGB blends of two roles, never a literal', () => {
   assert.equal(colorOf('accent'), 'var(--mm-color-accent)');
-  assert.equal(colorOf({ role: 'accent', mix: 'ink', share: 0.25 }), 'color-mix(in srgb, var(--mm-color-accent) 75%, var(--mm-color-ink))');
+  assert.equal(colorOf({ role: 'accent', mix: 'ink', share: 0.25 }), 'color-mix(in oklab, var(--mm-color-accent) 75%, var(--mm-color-ink))');
   assert.equal(colorOf('gold', 'ink'), 'var(--mm-color-ink)', 'an unknown role falls back');
   for (const mascot of [paper.mascot, nocturne.mascot, undefined]) {
     const m = resolveMascot({ mascot, color: paper.color });
@@ -136,7 +136,7 @@ test('part colours are role variables or sRGB blends of two roles, never a liter
       assert.doesNotMatch(svg, /#[0-9a-f]{3,8}\b(?!["'])|rgba?\(|hsla?\(/i, `${view} ${mood}: a literal colour`);
       for (const c of svg.matchAll(/(?:fill|stroke):\s*([^;"]+)/g)) {
         if (c[1] === 'none') continue;
-        assert.match(c[1], /^(var\(--mm-color-[a-zA-Z]+\)|color-mix\(in srgb, var\(--mm-color-[a-zA-Z]+\) [\d.]+%, (var\(--mm-color-[a-zA-Z]+\)|transparent)\))$/, `${view} ${mood}: ${c[1]}`);
+        assert.match(c[1], /^(var\(--mm-color-[a-zA-Z]+\)|color-mix\(in (?:srgb|oklab), var\(--mm-color-[a-zA-Z]+\) [\d.]+%, (var\(--mm-color-[a-zA-Z]+\)|transparent)\))$/, `${view} ${mood}: ${c[1]}`);
       }
     }
   }
@@ -152,7 +152,7 @@ test('shade darkens and light, cheeks and shadow follow the brand\'s polarity: t
   assert.match(light.shade, /, var\(--mm-color-ink\)\)$/);
   assert.match(light.light, /, var\(--mm-color-surface\)\)$/);
   const own = resolveMascot({ mascot: { ...paper.mascot, parts: { body: 'muted', light: 'line' } }, color: paper.color }).css;
-  assert.match(own.shade, /^color-mix\(in srgb, var\(--mm-color-muted\)/, 'the shade follows the body\'s own role');
+  assert.match(own.shade, /^color-mix\(in oklab, var\(--mm-color-muted\)/, 'the shade follows the body\'s own role');
   assert.equal(own.light, 'var(--mm-color-line)', 'a part the brand gives is used as given');
 });
 

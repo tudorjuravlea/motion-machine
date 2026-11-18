@@ -78,7 +78,7 @@ export default {
     if (painted(cs) || overhangs(el)) return;
     // the glint: a narrow band of accent mixed into the glyphs, just behind the front
     const c = (lit + front) / 2, w = soft * 0.35;
-    const peak = `color-mix(in srgb, var(--mm-accent-text) ${(glint * 100).toFixed(2)}%, ${cs.color})`;
+    const peak = `color-mix(in oklab, var(--mm-accent-text) ${(glint * 100).toFixed(2)}%, ${cs.color})`;
     el.style.backgroundImage = `linear-gradient(${angle}deg, ${cs.color} ${pct(c - w)}, ${peak} ${pct(c)}, ${cs.color} ${pct(c + w)})`;
     el.style.backgroundClip = el.style.webkitBackgroundClip = 'text';
     el.style.webkitTextFillColor = 'transparent';

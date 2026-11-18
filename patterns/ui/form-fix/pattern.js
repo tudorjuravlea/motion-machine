@@ -62,7 +62,7 @@ export default {
     const out = Math.min(1, Math.max(0, (t - TL.start('fix')) / 0.25));
     lane.style.opacity = String(r3(inn * (1 - out)));
     lane.style.transform = `translateY(${Math.round((1 - inn) * ctx.unit * 0.06 * 10) / 10}px)`;
-    ring.style.borderColor = `color-mix(in srgb, var(--mm-color-alert) ${Math.round(100 * inn * (1 - out))}%, var(--mm-color-accent))`;   // the field says it with the error
+    ring.style.borderColor = `color-mix(in oklab, var(--mm-color-alert) ${Math.round(100 * inn * (1 - out))}%, var(--mm-color-accent))`;   // the field says it with the error
 
     // the button: its two labels share one cell, so the width never changes
     const sw = TL.at('swap', t);

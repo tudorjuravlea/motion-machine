@@ -56,6 +56,25 @@ export function rgbToLab(r, g, b) {
   const fx = fLab(x), fy = fLab(y), fz = fLab(z);
   return [116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz)];
 }
+// sRGB 0..255 to Oklab and back (Björn Ottosson's published matrices): the space the engine mixes two
+// palette colours in (`color-mix(in oklab, …)`), so the palette test can follow that path too.
+const toOklab = ([r, g, b]) => {
+  const R = lin(r), G = lin(g), B = lin(b);
+  const l = Math.cbrt(0.4122214708 * R + 0.5363325363 * G + 0.0514459929 * B);
+  const m = Math.cbrt(0.2119034982 * R + 0.6806995451 * G + 0.1073969566 * B);
+  const s = Math.cbrt(0.0883024619 * R + 0.2817188376 * G + 0.6299787005 * B);
+  return [0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s, 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s, 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s];
+};
+const gam = (v) => 255 * Math.min(1, Math.max(0, v <= 0.0031308 ? 12.92 * v : 1.055 * v ** (1 / 2.4) - 0.055));
+const fromOklab = ([L, a, b]) => {
+  const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3, m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3, s = (L - 0.0894841775 * a - 1.291485548 * b) ** 3;
+  return [gam(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s), gam(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s), gam(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s)];
+};
+/** Oklab [L, a, b] to sRGB 0..255 (fractional, clipped to the gamut): how a computed `oklab(…)` colour paints. */
+export const oklabToRgb = (lab) => fromOklab(lab);
+/** sRGB 0..255 (fractional) of `color-mix(in oklab, a (1 - t), b t)`: the Oklab path between two colours. */
+export const mixOklab = (a, b, t) => { const p = toOklab(a), q = toOklab(b); return fromOklab(p.map((v, k) => v + (q[k] - v) * t)); };
+
 /** CIE76 ΔE between two Lab triples. */
 export const deltaE = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 
@@ -139,7 +158,8 @@ function blendColours(rgbs) {
  * The palette test of G-BRAND's pixel half: distance(rgb) is the ΔE from a colour to the nearest
  * palette colour, two-colour blend, three-colour blend or multiply or screen blend of roles.
  * Antialiasing and opacity blend in sRGB, so a two-colour blend is the sRGB segment between two roles
- * (walked in Lab as a polyline); a translucent role over a gradient between two others, or a glow over
+ * (walked in Lab as a polyline); a mix the engine makes of two roles is computed in Oklab, so the
+ * Oklab path between every two roles is a polyline too; a translucent role over a gradient between two others, or a glow over
  * a gradient, is a point of the triangle the three roles span in sRGB (`blend: 3`, the default;
  * `blend: 2` reads segments only, and neither multiply nor screen). `blendOf` (default: every colour)
  * names the colours multiply and screen blends are made of, so a style's ground colours need not
@@ -151,8 +171,13 @@ export function paletteDistance(colors, { blend = 3, blendOf = colors } = {}) {
   const lines = [];
   for (let i = 0; i < rgbs.length; i++) for (let j = i + 1; j < rgbs.length; j++) {
     const pts = [];
-    for (let s = 0; s <= STEPS; s++) { const t = s / STEPS; pts.push(rgbToLab(...[0, 1, 2].map((k) => rgbs[i][k] + (rgbs[j][k] - rgbs[i][k]) * t))); }
-    lines.push(pts);
+    const ok = [];
+    for (let s = 0; s <= STEPS; s++) {
+      const t = s / STEPS;
+      pts.push(rgbToLab(...[0, 1, 2].map((k) => rgbs[i][k] + (rgbs[j][k] - rgbs[i][k]) * t)));
+      ok.push(rgbToLab(...mixOklab(rgbs[i], rgbs[j], t)));
+    }
+    lines.push(pts, ok);
   }
   const triangles = [];
   if (blend >= 3) for (let i = 0; i < rgbs.length; i++) for (let j = i + 1; j < rgbs.length; j++) for (let k = j + 1; k < rgbs.length; k++) triangles.push([rgbs[i], rgbs[j], rgbs[k]]);

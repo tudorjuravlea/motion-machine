@@ -173,7 +173,7 @@ function placeContent(el, content, state, box, track, warn) {
       img.style.cssText = `top:${top}px;height:${bottom - top}px;width:${box.w}px;`;
       // only a tile that overlaps the screen is decoded, and settle() waits for it
       if (bottom > 0 && top < box.h) {
-        if (img.getAttribute('src') !== img.dataset.src) { img.setAttribute('src', img.dataset.src); track(img.decode().catch(() => warn?.(img.dataset.src))); }
+        if (img.getAttribute('src') !== img.dataset.src) { img.setAttribute('src', img.dataset.src); track(img.decode().catch(() => warn?.(img.dataset.src)), img.dataset.src); }
       } else if (img.hasAttribute('src')) img.removeAttribute('src');
     });
     el.querySelectorAll('.mm-screen__overlay').forEach((img, i) => {
@@ -186,7 +186,7 @@ function placeContent(el, content, state, box, track, warn) {
   const img = el.querySelector('.mm-screen__media');
   if (meta?.kind === 'sequence') {
     const src = `${content.base}f${String(frameIndex({ ...state, content })).padStart(5, '0')}.jpg`;
-    if (img.getAttribute('src') !== src) { img.setAttribute('src', src); track(img.decode().catch(() => warn?.(src))); }
+    if (img.getAttribute('src') !== src) { img.setAttribute('src', src); track(img.decode().catch(() => warn?.(src)), src); }
   }
 }
 

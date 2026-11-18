@@ -102,9 +102,9 @@ export default {
     const c = cursorAt(x, soft, (v) => v);   // a steady reading pace: the band's edges carry the easing
     spans.forEach((s, i) => {
       const L = lightAt(c, q[i], soft, move);
-      const base = `color-mix(in srgb, var(--mm-color-ink) ${r2(toneOf(L, floor))}%, var(--mm-color-canvas))`;
+      const base = `color-mix(in oklab, var(--mm-color-ink) ${r2(toneOf(L, floor))}%, var(--mm-color-canvas))`;
       const e = edge === 'accent' ? edgeOf(L) : 0;
-      s.style.color = e > 0.0005 ? `color-mix(in srgb, var(--mm-accent-text) ${r2(100 * e)}%, ${base})` : base;
+      s.style.color = e > 0.0005 ? `color-mix(in oklab, var(--mm-accent-text) ${r2(100 * e)}%, ${base})` : base;
     });
   },
 };

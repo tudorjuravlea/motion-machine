@@ -495,7 +495,7 @@ Every export of every module in `runtime/kit/`. Pattern files import from these 
 | `goto` | `goto(n)` | nothing | a deck: lands on press `n` (rounded, clamped); a film: `seek(n)` |
 | `next`, `prev` | `next()` · `prev()` | nothing | a deck's press forward and back (`press.js`: Next finishes a press under way and does nothing on the final pose; Back mid-step restarts the step, at a rest goes to the rest before); `next` fires a cancelable `mm:press` event `{ from, to }` first, so a live host may animate the press itself (`deck-player.js` does, in a standalone deck, and plays that press's cues) |
 | `settle` | `async settle()` | `Promise<void>` | resolves once every decode the last seek asked for is done and every `afterSettle` callback has run |
-| `trackDecode` | `trackDecode(promise)` | the tracked promise | registers a decode `settle()` waits for; a rejection is swallowed |
+| `trackDecode` | `trackDecode(promise, what?)` | the tracked promise | registers a decode `settle()` waits for, named by `what` (a file) in `mm.waiting()`; a rejection is swallowed |
 | `afterSettle` | `afterSettle(fn)` | nothing | runs `fn` inside `settle()`, after the decodes; a promise it returns is awaited. Callbacks not yet run are dropped at the start of the next seek |
 | `report` | `report()` | `{ t, format, elements }` | per top-level item: `{ selector, progress, box: {x,y,w,h}, fontPx, color, bg, overshoot, scene, visible }`; what the gate measures |
 | `scene` | `scene(id)` | `HTMLElement \| null` | a scene's `<section>` |

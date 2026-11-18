@@ -89,7 +89,7 @@ test('parts swing during the hop, every colour is a role, and nothing leaves the
           const r = await o.page.evaluate(RIG, sc);
           if (!r) continue;
           assert.ok(r.out <= 0.5, `${format} ${sc} at ${t.toFixed(2)}: ${r.out.toFixed(1)} px outside the slot`);
-          for (const st of r.painted) for (const m of st.matchAll(/(?:fill|stroke): ([^;]+)/g)) assert.match(m[1].trim(), /^(none|var\(--mm-color-[a-zA-Z]+\)|color-mix\(in srgb, var\(--mm-color-[a-zA-Z]+\) [\d.]+%, (var\(--mm-color-[a-zA-Z]+\)|transparent)\))$/, m[1]);
+          for (const st of r.painted) for (const m of st.matchAll(/(?:fill|stroke): ([^;]+)/g)) assert.match(m[1].trim(), /^(none|var\(--mm-color-[a-zA-Z]+\)|color-mix\(in (?:srgb|oklab), var\(--mm-color-[a-zA-Z]+\) [\d.]+%, (var\(--mm-color-[a-zA-Z]+\)|transparent)\))$/, m[1]);
           if (sc === 'cat') swing = Math.max(swing, ...r.parts.map((p) => Math.abs(p[1])));
         }
       }

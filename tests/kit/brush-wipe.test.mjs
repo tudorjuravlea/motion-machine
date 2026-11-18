@@ -60,7 +60,7 @@ test('the geometry is a pure function: the same polygons on every call, edges ra
 test('band colours are palette roles or blends of two roles; unknown pairs fall back to accent', () => {
   const colours = (params) => [...new Set(geometry(1920, 1080, 0.5, params).map((b) => b.fill))];
   for (const c of [...colours({}), ...colours({ pair: 'ink' }), ...colours({ pair: 'muted' })]) {
-    assert.match(c, /^var\(--mm-color-[a-zA-Z]+\)$|^color-mix\(in srgb, var\(--mm-color-[a-zA-Z]+\) \d+%, var\(--mm-color-[a-zA-Z]+\)\)$/, c);
+    assert.match(c, /^var\(--mm-color-[a-zA-Z]+\)$|^color-mix\(in oklab, var\(--mm-color-[a-zA-Z]+\) \d+%, var\(--mm-color-[a-zA-Z]+\)\)$/, c);
   }
   assert.deepEqual(colours({ pair: 'neon' }), colours({}));
   assert.ok(colours({}).includes('var(--mm-color-accent)'));

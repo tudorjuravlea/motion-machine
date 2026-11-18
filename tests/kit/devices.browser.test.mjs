@@ -185,7 +185,7 @@ test('metal glow and reflections, glossy glass: specular bands on the rim, a lit
         const sc = document.querySelector(`[data-scene="${id}"]`);
         const frame = sc.querySelector('.phone__shell, .laptop__lid'), screen = sc.querySelector('[data-screen]'), dev = sc.querySelector('.phone, .laptop');
         const rim = getComputedStyle(frame).backgroundImage.split('linear-gradient').pop();
-        return { stops: (rim.match(/color-mix|rgb/g) ?? []).length, inner: getComputedStyle(frame).boxShadow, glow: (getComputedStyle(dev).filter.match(/drop-shadow/g) ?? []).length,
+        return { stops: (rim.match(/color-mix|rgb|oklab/g) ?? []).length, inner: getComputedStyle(frame).boxShadow, glow: (getComputedStyle(dev).filter.match(/drop-shadow/g) ?? []).length,
           gloss: (getComputedStyle(screen, '::after').backgroundImage.match(/gradient/g) ?? []).length };
       }, id);
       assert.ok(r.stops >= 7, `${id}: the rim carries light bands, ${r.stops} stops`);

@@ -60,8 +60,8 @@ test('extra parts are drawn in their layer, in their colour, from roles only', (
   const iTail = svg.indexOf('data-part="tail"'), iFill = svg.indexOf('mm-rig__fill'), iEar = svg.indexOf('data-part="ear-left"'), iOut = svg.indexOf('mm-rig__outline'), iFace = svg.indexOf('mm-rig__face');
   assert.ok(iTail < iFill, 'a back part sits behind the body');
   assert.ok(iEar > iOut && iEar < iFace, 'a front part sits over the body, under the face');
-  assert.match(svg, /data-part="tail"[\s\S]*?stroke: color-mix\(in srgb, var\(--mm-color-accent\) 75%, var\(--mm-color-ink\)\)/, 'the tail is a stroke in its blend');
-  for (const fill of svg.matchAll(/(?:fill|stroke): ([^;"]+)/g)) assert.match(fill[1], /^(none|var\(--mm-color-[a-zA-Z]+\)|color-mix\(in srgb, var\(--mm-color-[a-zA-Z]+\) [\d.]+%, (var\(--mm-color-[a-zA-Z]+\)|transparent)\))$/, fill[1]);
+  assert.match(svg, /data-part="tail"[\s\S]*?stroke: color-mix\(in oklab, var\(--mm-color-accent\) 75%, var\(--mm-color-ink\)\)/, 'the tail is a stroke in its blend');
+  for (const fill of svg.matchAll(/(?:fill|stroke): ([^;"]+)/g)) assert.match(fill[1], /^(none|var\(--mm-color-[a-zA-Z]+\)|color-mix\(in (?:srgb|oklab), var\(--mm-color-[a-zA-Z]+\) [\d.]+%, (var\(--mm-color-[a-zA-Z]+\)|transparent)\))$/, fill[1]);
 });
 
 test('a part limited to some views is drawn only there; a part that reaches outside the box is dropped and named', () => {

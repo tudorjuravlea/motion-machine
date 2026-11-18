@@ -49,11 +49,12 @@ const S = { ready: false };   // mounted state; never carries anything from one 
 // seek(t) stays synchronous and draws the whole frame; a picture it asks for (a sequence
 // frame, a texture) may still be decoding. trackDecode() registers that decode, and settle() resolves once
 // none is left, so the renderer, the gate and stills read pixels only after it. settle() never
-// changes what seek drew.
-const pending = new Set();
-export function trackDecode(p) {
+// changes what seek drew. `what` names the decode (a file), so a page stuck in settle() can say what
+// it was waiting for (mm.waiting()).
+const pending = new Map();
+export function trackDecode(p, what = 'a decode') {
   const q = Promise.resolve(p).catch(() => {}).finally(() => pending.delete(q));
-  pending.add(q);
+  pending.set(q, String(what));
   return q;
 }
 // afterSettle: work that must see this seek's decoded pictures (a 3D render copying a screen
@@ -62,10 +63,10 @@ let late = [];
 export function afterSettle(fn) { late.push(fn); }
 export async function settle() {
   for (;;) {
-    while (pending.size) await Promise.all([...pending]);
+    while (pending.size) await Promise.all([...pending.keys()]);
     if (!late.length) return;
     const run = late; late = [];
-    for (const fn of run) { const r = fn(); if (r && typeof r.then === 'function') trackDecode(r); }
+    for (const fn of run) { const r = fn(); if (r && typeof r.then === 'function') trackDecode(r, 'a render after the decodes'); }
   }
 }
 // A picture a seek asked for that did not decode is named in mm.warnings, once per file.
@@ -283,6 +284,7 @@ async function mountInner({ story, style, root, patternsBase }) {
   const api = {
     ready: true, kind: story.kind, format,
     seek, goto, report, next, prev, settle,
+    waiting: () => [...pending.values()],   // what settle() is still waiting for
     position: () => S.cur,
     scenes: sched.scenes.map(({ id, start, end }) => ({ id, start, end })),
     schedule: sched, fonts, warnings,
@@ -609,14 +611,14 @@ function setVariables(style, spec) {
   // glass sheen is the lightest at a few percent.
   const darkest = roles[0]?.k ?? 'ink', lightest = roles.at(-1)?.k ?? 'canvas';
   set('--mm-device-glass', `var(--mm-color-${darkest})`);
-  set('--mm-device-rim-light', `color-mix(in srgb, var(--mm-device-body) 55%, var(--mm-color-${lightest}))`);
-  set('--mm-device-rim-dark', `color-mix(in srgb, var(--mm-device-body) 62%, var(--mm-color-${darkest}))`);
+  set('--mm-device-rim-light', `color-mix(in oklab, var(--mm-device-body) 55%, var(--mm-color-${lightest}))`);
+  set('--mm-device-rim-dark', `color-mix(in oklab, var(--mm-device-body) 62%, var(--mm-color-${darkest}))`);
   set('--mm-device-shade', `var(--mm-color-${darkest})`);
   set('--mm-device-glint', `var(--mm-color-${lightest})`);
-  set('--mm-device-spec', `color-mix(in srgb, var(--mm-device-body) 25%, var(--mm-color-${lightest}))`);   // a specular band on the metal
+  set('--mm-device-spec', `color-mix(in oklab, var(--mm-device-body) 25%, var(--mm-color-${lightest}))`);   // a specular band on the metal
   // a camera lens in the glass: a dark core, a lit ring, a soft edge (blends of the darkest and lightest roles)
-  set('--mm-device-lens', `color-mix(in srgb, var(--mm-color-${lightest}) 11%, var(--mm-color-${darkest}))`);
-  set('--mm-device-lens-ring', `color-mix(in srgb, var(--mm-color-${lightest}) 23%, var(--mm-color-${darkest}))`);
+  set('--mm-device-lens', `color-mix(in oklab, var(--mm-color-${lightest}) 11%, var(--mm-color-${darkest}))`);
+  set('--mm-device-lens-ring', `color-mix(in oklab, var(--mm-color-${lightest}) 23%, var(--mm-color-${darkest}))`);
   for (const [role, v] of Object.entries(style.color)) set(`--mm-color-${role}`, v);
   // the brand's text rules. Text on a surface takes surfaceInk (ink when the brand gives
   // none, muted text likewise); a brand with accentText false never tints text with the accent.

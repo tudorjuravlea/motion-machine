@@ -10,7 +10,7 @@ import { join } from 'node:path';
 import { deflateSync } from 'node:zlib';
 import { gate, failsOnly, row } from './_harness.mjs';
 import { hexToRgb } from '../../scripts/check/_lib.mjs';
-import { decodePng, offPalette, paletteDistance } from '../../scripts/check/_pixels.mjs';
+import { decodePng, mixOklab, offPalette, paletteDistance } from '../../scripts/check/_pixels.mjs';
 import { DELTA_E, OFF_MAX, REGION_MAX } from '../../scripts/check/G-BRAND.mjs';
 import { ROOT, launchBrowser, serveRoot } from '../../scripts/lib/browser.mjs';
 
@@ -269,4 +269,14 @@ test('calibration: the palette sheet passes the pixel half in all three presets,
       assert.ok(r.largest.size < REGION_MAX / 2, `${preset}: largest region ${r.largest.size} px`);
     }
   } finally { await browser.close(); await server.close(); }
+});
+
+test('G-BRAND/oklab: a mix the engine makes of two roles in Oklab is on palette, wherever it leaves the sRGB segment', () => {
+  // Chrome's color-mix(in oklab, blue 50%, yellow) paints 128,152,169 (checked against a render); the
+  // sRGB midpoint is 135,135,110, so the Oklab path is far from the segment the antialiasing walks
+  const blue = [20, 60, 220], yellow = [250, 210, 0];
+  assert.deepEqual(mixOklab(blue, yellow, 0.5).map(Math.round), [128, 152, 169]);
+  const d = paletteDistance([blue, yellow, [255, 255, 255]], { blend: 2 });
+  for (const t of [0.1, 0.25, 0.5, 0.75, 0.9]) assert.ok(d(...mixOklab(blue, yellow, t).map(Math.round)) <= DELTA_E, `t ${t}: ΔE ${d(...mixOklab(blue, yellow, t).map(Math.round))}`);
+  assert.ok(d(200, 60, 160) > DELTA_E, 'a colour on neither path still fails');
 });

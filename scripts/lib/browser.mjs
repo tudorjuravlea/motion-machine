@@ -14,9 +14,12 @@ export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..')
  * Chromium flags that make rasterisation a function of the frame alone. Partial raster and
  * GPU rasterisation reuse tiles painted for earlier frames, so a scale entrance could leave a
  * one-pixel difference that depended on what was painted before; colour management is pinned to sRGB.
+ * The last four keep many pages alive and at full speed: shared memory goes to /tmp (a container's
+ * /dev/shm is often 64 MB, and a page that runs out stalls or crashes), and a page out of sight is not slowed.
  */
 export const LAUNCH_ARGS = ['--disable-partial-raster', '--disable-gpu-rasterization', '--disable-gpu', '--disable-zero-copy',
-  '--disable-checker-imaging', '--run-all-compositor-stages-before-draw', '--force-color-profile=srgb', '--disable-lcd-text'];
+  '--disable-checker-imaging', '--run-all-compositor-stages-before-draw', '--force-color-profile=srgb', '--disable-lcd-text',
+  '--disable-dev-shm-usage', '--disable-background-timer-throttling', '--disable-renderer-backgrounding', '--disable-backgrounding-occluded-windows'];
 
 /**
  * A Chromium for rendering and checking: always these flags. `untrusted: true` is for a page from
@@ -216,8 +219,42 @@ export async function openPiece(dir, { format, render = true, browser, server, q
   }
 }
 
-/** Seeks to `t` (film seconds or deck fractional press) and returns the frame as PNG bytes; `alpha` keeps the page's transparency (a page opened with `alpha`). */
-export async function framePng(page, t, { alpha = false } = {}) {
-  await page.evaluate(async (x) => { window.mm.seek(x); await window.mm.settle?.(); }, t);   // pixels wait for decodes
-  return page.screenshot({ type: 'png', animations: 'disabled', caret: 'hide', ...(alpha ? { omitBackground: true } : {}) });
+/**
+ * How long one frame may take, seek, settle and screenshot together, before its page is called stuck:
+ * SLOW_FRAME_MS, or `MM_FRAME_MS` (milliseconds; a test sets it low). Playwright's default timeout does
+ * not cover `page.evaluate`, so without this a page whose settle never resolves held an export forever.
+ */
+export const frameMs = () => { const n = Number(process.env.MM_FRAME_MS); return n > 0 ? n : SLOW_FRAME_MS; };
+
+/** What a stuck page was still waiting for: the decodes its settle() holds, or that its main thread did not answer. */
+async function waitingOn(page) {
+  const busy = new Promise((r) => setTimeout(() => r(null), 2000));
+  const got = await Promise.race([page.evaluate(() => (typeof window.mm?.waiting === 'function' ? window.mm.waiting() : [])).catch(() => null), busy]);
+  if (got === null) return 'the page did not answer (its main thread is busy, or it crashed)';
+  return got.length ? `waiting for ${got.slice(0, 5).join(', ')}${got.length > 5 ? ` and ${got.length - 5} more` : ''}` : 'no decode was pending';
+}
+
+/**
+ * A page that stalled, crashed or closed under a frame: frames are pure functions of time, so a fresh
+ * page redraws the same pixels. Anything else (an error the piece threw) is the piece's own and is not retried.
+ */
+export const pageGone = (e) => e?.stalled === true || e?.name === 'TimeoutError' || /crashed|Target closed|has been closed/i.test(String(e?.message ?? ''));
+
+/**
+ * Seeks to `t` (film seconds or deck fractional press) and returns the frame as PNG bytes; `alpha` keeps
+ * the page's transparency (a page opened with `alpha`). Past `timeout` (frameMs) it throws an error with
+ * `stalled: true` that says what the page was waiting for.
+ */
+export async function framePng(page, t, { alpha = false, timeout = frameMs() } = {}) {
+  let timer;
+  const stall = new Promise((_, no) => { timer = setTimeout(() => no(Object.assign(new Error(`frame at ${t} did not finish in ${Math.round(timeout / 100) / 10} s`), { stalled: true })), timeout); });
+  try {
+    return await Promise.race([stall, (async () => {
+      await page.evaluate(async (x) => { window.mm.seek(x); await window.mm.settle?.(); }, t);   // pixels wait for decodes
+      return page.screenshot({ type: 'png', animations: 'disabled', caret: 'hide', ...(alpha ? { omitBackground: true } : {}) });
+    })()]);
+  } catch (e) {
+    if (e.stalled) e.message += `: ${await waitingOn(page)}`;
+    throw e;
+  } finally { clearTimeout(timer); }
 }

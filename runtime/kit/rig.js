@@ -171,7 +171,7 @@ export function colorOf(part, fallback = 'ink') {
   if (typeof part === 'string') return ROLES.includes(part) ? v(part) : v(fallback);
   if (part && ROLES.includes(part.role) && ROLES.includes(part.mix)) {
     const share = clamp01(Number(part.share) || 0);
-    return `color-mix(in srgb, ${v(part.role)} ${num(100 - share * 100)}%, ${v(part.mix)})`;
+    return `color-mix(in oklab, ${v(part.role)} ${num(100 - share * 100)}%, ${v(part.mix)})`;
   }
   return v(fallback);
 }

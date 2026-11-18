@@ -1,1 +1,0 @@
-# notes, duplicated by Finder

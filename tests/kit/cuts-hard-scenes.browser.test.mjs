@@ -45,10 +45,10 @@ const rgbOf = (page, exprs) => page.evaluate((list) => list.map((e) => {
   const d = document.createElement('div');
   d.style.background = e; document.querySelector('.mm-stage').append(d);
   const c = getComputedStyle(d).backgroundColor; d.remove();
-  let m = /rgba?\(([^)]+)\)/.exec(c);
-  if (m) return m[1].split(',').slice(0, 3).map(Number);
-  m = /color\(srgb ([^)]+)\)/.exec(c);
-  return m[1].trim().split(/\s+/).slice(0, 3).map((v) => Math.round(Number(v) * 255));
+  // the browser converts any computed colour (rgb, color(srgb …), oklab(…)) to the sRGB bytes it paints
+  const g = Object.assign(document.createElement('canvas'), { width: 1, height: 1 }).getContext('2d');
+  g.fillStyle = c; g.fillRect(0, 0, 1, 1);
+  return [...g.getImageData(0, 0, 1, 1).data.slice(0, 3)];
 }), exprs);
 const pixel = (img, x, y) => { const i = (y * img.width + x) * 4; return [img.data[i], img.data[i + 1], img.data[i + 2]]; };
 const lum = ([r, g, b]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
@@ -95,7 +95,7 @@ for (const brand of ['paper', 'nocturne']) {
     const o = await openPiece(dir, { server, browser, format: '16x9' });
     try {
       const sc = (await o.mm.meta()).schedule.scenes[1];
-      const cols = await rgbOf(o.page, ['var(--mm-color-accent)', 'color-mix(in srgb, var(--mm-color-accent) 62%, var(--mm-color-ink))', 'color-mix(in srgb, var(--mm-color-accent) 70%, var(--mm-color-canvas))']);
+      const cols = await rgbOf(o.page, ['var(--mm-color-accent)', 'color-mix(in oklab, var(--mm-color-accent) 62%, var(--mm-color-ink))', 'color-mix(in oklab, var(--mm-color-accent) 70%, var(--mm-color-canvas))']);
       const img = decodePng(await framePng(o.page, sc.start + sc.cut.d * 0.499));   // the outgoing pile is still the scene drawn
       let off = 0, first = null;
       for (let y = 0; y < img.height; y += 2) for (let x = 0; x < img.width; x += 2) {

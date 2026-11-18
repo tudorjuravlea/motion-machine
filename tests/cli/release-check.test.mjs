@@ -20,7 +20,16 @@ const goldenFailed = join(tmp, 'golden-failed');
 cpSync(join(FIX, 'golden-unchecked'), goldenFailed, { recursive: true });
 mkdirSync(join(goldenFailed, 'pieces/golden-x/out'), { recursive: true });
 writeFileSync(join(goldenFailed, 'pieces/golden-x/out/check.json'), JSON.stringify({ rules: [{ id: 'G-EDGE', status: 'FAIL', evidence: {} }] }));
-const rootOf = (fixture) => (fixture === 'golden-failed' ? goldenFailed : join(FIX, fixture));
+// R-DUP's fixture holds only the near misses: the duplicate names are written here, into a copy,
+// so that no file in the repository is named like one
+const finderDup = join(tmp, 'finder-dup');
+cpSync(join(FIX, 'finder-dup'), finderDup, { recursive: true });
+writeFileSync(join(finderDup, 'notes copy.md'), '# notes, duplicated by Finder\n');
+writeFileSync(join(finderDup, 'story 2.json'), '{}\n');
+mkdirSync(join(finderDup, 'patterns/entrances/rise 2'), { recursive: true });
+writeFileSync(join(finderDup, 'patterns/entrances/rise 2/pattern.js'), '// a folder iCloud kept both of\n');
+const TEMP = { 'golden-failed': goldenFailed, 'finder-dup': finderDup };
+const rootOf = (fixture) => TEMP[fixture] ?? join(FIX, fixture);
 
 const CASES = [
   ['brand-word', 'R-BRAND', /notes\.md:1\s+"Zorblax"/],
@@ -68,7 +77,7 @@ test('near misses pass: a short word inside longer words, the SVG namespace, a l
   assert.deepEqual(url.sweeps[0].findings.map((f) => f.file), ['runtime/kit/net.js']);
   const fonts = await releaseCheck({ root: join(FIX, 'font-no-licence'), only: ['R-FONT-LICENSE'] });
   assert.deepEqual(fonts.sweeps[0].findings.map((f) => f.file), ['styles/fonts/acme']);
-  const dup = await releaseCheck({ root: join(FIX, 'finder-dup'), only: ['R-DUP'] });
+  const dup = await releaseCheck({ root: finderDup, only: ['R-DUP'] });
   assert.deepEqual(dup.sweeps[0].findings.map((f) => f.file), ['notes copy.md', 'patterns/entrances/rise 2/pattern.js', 'story 2.json'], 'chapter-2.md and notes-v2.md are not duplicates');
 });
 

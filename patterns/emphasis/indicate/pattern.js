@@ -29,6 +29,6 @@ export default {
     const base = typeof getComputedStyle === 'function' ? getComputedStyle(el).color : 'currentcolor';
     el.style.transformOrigin = pivot(el);
     el.style.scale = (1 + amp * s).toFixed(5);
-    el.style.color = `color-mix(in srgb, var(--mm-accent-text) ${tint.toFixed(3)}%, ${base})`;
+    el.style.color = `color-mix(in oklab, var(--mm-accent-text) ${tint.toFixed(3)}%, ${base})`;
   },
 };

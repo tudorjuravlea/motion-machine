@@ -5,13 +5,14 @@
 //   - the MP4's bytes. These follow from the frames only because the encoder's mux does not depend
 //     on when frames arrive (-max_interleave_delta 0); that property is proved on its own, on a
 //     film longer than x264's lookahead fed at two speeds, in export-robust.test.mjs.
-// A worker forced to throw (MM_EXPORT_FAIL_FRAME) stops the export non-zero and leaves no MP4.
+// A worker forced to throw (MM_EXPORT_FAIL_FRAME) stops the export non-zero and leaves no MP4. A page
+// forced to stall (MM_EXPORT_STALL_FRAME, with a short MM_FRAME_MS) is replaced and its frame redrawn.
 // Every export is spawned straight from scripts/export.mjs under a timeout and killed in after().
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { cpus } from 'node:os';
+import { cpus, totalmem } from 'node:os';
 import { cpSync, existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT, readJson, workCopy } from './cli-helpers.mjs';
@@ -55,9 +56,9 @@ after(() => {
 const mp4 = (format) => join(w.film, 'out', `kit-smoke-film-${format}.mp4`);
 
 /** Exports with `args` and the hash hook on; returns { hashes: {format: [sha]}, mp4: {format: sha}, streams: {format: hash}, manifest }. */
-async function exportWith(args, formats = ['1x1']) {
+async function exportWith(args, formats = ['1x1'], env = {}) {
   const hashFile = join(w.dir, `hashes-${Math.random().toString(36).slice(2)}.json`);
-  const r = await runExport([w.film, '--fps', '10', '--formats', formats.join(','), '--force', ...args], { env: { MM_EXPORT_HASHES: hashFile } });
+  const r = await runExport([w.film, '--fps', '10', '--formats', formats.join(','), '--force', ...args], { env: { ...env, MM_EXPORT_HASHES: hashFile } });
   assert.equal(r.status, 0, r.out);
   const hashes = readJson(hashFile);
   rmSync(hashFile);
@@ -101,10 +102,10 @@ test('three workers with two formats, --gif and --prove: every format proved, ev
   assert.deepEqual(readdirSync(join(w.film, 'out')).filter((f) => f.includes('.partial')), [], 'nothing staged is left');
 });
 
-test('the default is max(1, min(4, floor(cpus / 2))) workers', async () => {
+test('the default is max(1, min(4, floor(cpus / 2), one per 512 MiB)) workers', async () => {
   const { manifest } = await exportWith([]);
   const cap = Number(process.env.MM_WORKERS) || Infinity;   // a suite run may cap the default (MM_WORKERS)
-  assert.equal(manifest.workers, Math.min(cap, Math.max(1, Math.min(4, Math.floor(cpus().length / 2)))));
+  assert.equal(manifest.workers, Math.min(cap, Math.max(1, Math.min(4, Math.floor(cpus().length / 2), Math.floor(totalmem() / 2 ** 29)))));
   const bad = await runExport([w.film, '--workers', '0', '--force']);
   assert.equal(bad.status, 2, bad.out);
   assert.match(bad.stderr, /--workers/);
@@ -116,6 +117,17 @@ test('--workers above 16 draws in 16 pages at most, and export.json says what wa
   assert.equal(manifest.workersRequested, 200);
   assert.ok(manifest.files[0].pages <= 16, `${manifest.files[0].pages} pages`);
   assert.match(r.stderr, /at most/);
+});
+
+test('a page that stalls on a frame is replaced, and the fresh page redraws it: the same frames, streams and MP4', async () => {
+  const one = await exportWith(['--workers', '1']);
+  const stalled = await exportWith(['--workers', '3'], ['1x1'], { MM_EXPORT_STALL_FRAME: '12', MM_FRAME_MS: '8000' });
+  assert.match(stalled.r.out, /page \d stalled on frame 12 \(frame at [\d.]+ did not finish in 8 s: no decode was pending\); a fresh page redraws it/);
+  assert.deepEqual(stalled.hashes['1x1'], one.hashes['1x1']);
+  assert.equal(stalled.streams['1x1'], one.streams['1x1']);
+  assert.equal(stalled.mp4['1x1'], one.mp4['1x1']);
+  assert.equal(stalled.manifest.files[0].redrawn, 1);
+  assert.equal(one.manifest.files[0].redrawn, undefined);
 });
 
 for (const workers of ['3', '1']) {

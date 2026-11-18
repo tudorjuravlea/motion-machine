@@ -22,7 +22,7 @@ is git-ignored with every `out/`, so the test writes it into a temporary copy).
 | `strategy-file/` | R-STRATEGY | a `DECISIONS.md` and a file under `docs/evals/`; `docs/decisions-guide.md` must pass |
 | `history/` | R-HISTORY | one file per kind of marker: a decision id, a finding id, a milestone or plan id, a dated note, a version narrative, a round narrative, a pointer to a private record; every marker is invented (ids in the 9 range), and the exact `file:line` of each is pinned in `tests/cli/release-check.test.mjs` |
 | `history-names/` | R-HISTORY | file and folder names that carry a marker; `plain.md` must pass |
-| `finder-dup/` | R-DUP | `notes copy.md`, `story 2.json` and a folder `rise 2/` named like Finder or iCloud duplicates; `chapter-2.md` and `notes-v2.md` must pass |
+| `finder-dup/` | R-DUP | the near misses only: `chapter-2.md` and `notes-v2.md` must pass; the test writes `notes copy.md`, `story 2.json` and a folder `rise 2/` into a copy to make R-DUP fail, so no file here is named like a Finder or iCloud duplicate |
 
 The sweeps never read `fixtures/release/` when run from the repository root, so these defects do not
 fail the real release check. The key and the paths here are examples, not credentials.

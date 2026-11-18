@@ -11,7 +11,7 @@
   justify-content: center;
   gap: var(--mm-space-3);
   padding: var(--mm-space-4) var(--mm-space-3);
-  border: 1px solid color-mix(in srgb, var(--mm-color-accent) calc(var(--lit, 0) * 100%), var(--mm-color-line));
+  border: 1px solid color-mix(in oklab, var(--mm-color-accent) calc(var(--lit, 0) * 100%), var(--mm-color-line));
   border-radius: var(--mm-radius-3);
   background: color-mix(in srgb, var(--mm-color-accent) calc(var(--lit, 0) * 14%), transparent);
 }

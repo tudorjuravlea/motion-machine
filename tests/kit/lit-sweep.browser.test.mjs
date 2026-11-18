@@ -33,10 +33,23 @@ before(async () => {
 after(async () => { await browser?.close(); await server?.close(); rmSync(OUT, { recursive: true, force: true }); });
 
 const SEL = '[data-scene="a"] [data-slot="headline"]';
-// Each word's share of ink: where its colour sits on the line from the canvas (0) to the ink (1).
+// Each word's share of ink: where its colour sits on the Oklab path from the canvas (0) to the ink (1),
+// the space the pattern mixes in.
 const state = (o) => o.page.evaluate((s) => {
   const el = document.querySelector(s), cs = getComputedStyle(el);
-  const rgb = (c) => { const m = /rgba?\(([^)]+)\)/.exec(c); if (m) return m[1].split(',').map(Number); const n = /color\(srgb ([^)]+)\)/.exec(c)[1].trim().split(/\s+/).map(Number); return [n[0] * 255, n[1] * 255, n[2] * 255, n.length > 3 ? n[4] ?? 1 : 1]; };
+  const g = Object.assign(document.createElement('canvas'), { width: 1, height: 1 }).getContext('2d');
+  const lin = (v) => { const x = v / 255; return x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; };
+  const oklab = ([r, gr, b]) => {
+    const [R, G, B] = [lin(r), lin(gr), lin(b)];
+    const l = Math.cbrt(0.4122214708 * R + 0.5363325363 * G + 0.0514459929 * B), m = Math.cbrt(0.2119034982 * R + 0.6806995451 * G + 0.1073969566 * B), s = Math.cbrt(0.0883024619 * R + 0.2817188376 * G + 0.6299787005 * B);
+    return [0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s, 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s, 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s];
+  };
+  // a computed colour (rgb, color(srgb …), oklab(…)) as the sRGB bytes the browser paints, then as Oklab, with its alpha
+  const rgb = (c) => {
+    g.clearRect(0, 0, 1, 1); g.fillStyle = c; g.fillRect(0, 0, 1, 1);
+    const [r, gr, b, a] = g.getImageData(0, 0, 1, 1).data;
+    return [...oklab(a ? [r, gr, b] : [0, 0, 0]), a / 255];
+  };
   const probe = (v) => { const d = document.createElement('i'); d.style.color = v; el.append(d); const c = rgb(getComputedStyle(d).color); d.remove(); return c; };
   const ink = probe('var(--mm-color-ink)'), canvas = probe('var(--mm-color-canvas)');
   const share = (c) => { const ab = [0, 1, 2].map((i) => ink[i] - canvas[i]); const L = ab.reduce((a, v) => a + v * v, 0); return [0, 1, 2].reduce((a, i) => a + ab[i] * (c[i] - canvas[i]), 0) / L; };

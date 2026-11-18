@@ -13,10 +13,11 @@
 // story's first format, so they are written only when that format is in the run.
 // --prove renders every frame again in a fresh page in reverse order, and again in one page in a shuffled order, and exits 1 on any
 // byte difference (order independence, SPEC §2.5).
-// --workers N (films; default max(1, min(4, floor(cpus / 2))), at most 16) draws frames in N pages and
-// feeds the one encoder in order (see renderFilm); decks draw in one page. out/export.json
-// records `workers` (and `workersRequested` when above 16), the pages that drew each file (`pages`)
-// and the capture seconds (`captureS`, per file and in all).
+// --workers N (films; default max(1, min(4, floor(cpus / 2))), at most 16, and at most one page per
+// 512 MiB of memory) draws frames in N pages and feeds the one encoder in order (see renderFilm); decks
+// draw in one page. out/export.json records `workers` (and `workersRequested` when more were asked than
+// drew), the pages that drew each file (`pages`), the frames redrawn on a fresh page after a page stalled
+// or crashed (`redrawn`, when any) and the capture seconds (`captureS`, per file and in all).
 // --encoder software|auto|videotoolbox (default software): software is x264, the bit-exact encode the
 // proof is about; auto and videotoolbox use the Mac's hardware H.264 when ffmpeg lists it and fall back
 // to software when it does not, and never with --prove. out/export.json records `encoder` (requested, used).
@@ -37,10 +38,10 @@
 // MP4's bytes for the same frames, ffmpeg build and arguments.
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
-import { cpus } from 'node:os';
+import { cpus, totalmem } from 'node:os';
 import { basename, extname, join } from 'node:path';
 import { parseArgs } from 'node:util';
-import { ROOT, VIEWPORTS, framePng, openPiece, serveRoot, launchBrowser } from './lib/browser.mjs';
+import { ROOT, VIEWPORTS, framePng, openPiece, pageGone, serveRoot, launchBrowser } from './lib/browser.mjs';
 import { ExportBusy, Unreadable, holdForExport } from './lib/story-edit.mjs';
 import { versionOf } from './lib/story-version.mjs';
 import { UsageError, fontFiles, resolvePiece, runMain } from './lib/cli.mjs';
@@ -129,18 +130,24 @@ export const instantsOfFrame = (n, fps, sub, cuts = []) => {
   });
 };
 
+/** Pages this machine's memory holds: one per 512 MiB, at least 1. A page drawing a 3D device holds a few hundred MB. */
+export const memoryWorkers = () => Math.max(1, Math.floor(totalmem() / 2 ** 29));
+
 /**
- * `--workers` when none is given: half the cores, at least 1, at most 4. `MM_WORKERS` (a positive whole
- * number) lowers that further, for a machine that runs many exports at once, such as a test run.
+ * `--workers` when none is given: half the cores, at least 1, at most 4 and at most memoryWorkers.
+ * `MM_WORKERS` (a positive whole number) lowers that further, for a machine that runs many exports at
+ * once, such as a test run.
  */
 export const defaultWorkers = () => {
-  const auto = Math.max(1, Math.min(4, Math.floor(cpus().length / 2)));
+  const auto = Math.max(1, Math.min(4, Math.floor(cpus().length / 2), memoryWorkers()));
   const cap = Number(process.env.MM_WORKERS);
   return Number.isInteger(cap) && cap >= 1 ? Math.min(auto, cap) : auto;
 };
 
 /** `--workers` at most: past this, pages only compete for the CPU, and held chunks grow. */
 export const MAX_WORKERS = 16;
+/** The pages an export draws in at most here: MAX_WORKERS, or fewer when memory holds fewer. */
+export const maxWorkers = () => Math.min(MAX_WORKERS, memoryWorkers());
 
 /** Frames per chunk at most: a chunk is a contiguous range that one page draws in order. */
 export const CHUNK_FRAMES = 15;
@@ -229,18 +236,26 @@ export async function orderedPool({ count, workers, run, take }) {
 }
 
 /** Test-only: MM_EXPORT_FAIL_FRAME=<n> or <format>:<n> names the frame whose page throws, as a broken worker would. */
-const failFrameFor = (format) => {
-  const m = /^(?:([^:]+):)?(\d+)$/.exec(process.env.MM_EXPORT_FAIL_FRAME ?? '');
+const frameFor = (name, format) => {
+  const m = /^(?:([^:]+):)?(\d+)$/.exec(process.env[name] ?? '');
   return m && (!m[1] || m[1] === format) ? Number(m[2]) : -1;
 };
+const failFrameFor = (format) => frameFor('MM_EXPORT_FAIL_FRAME', format);
+
+/** How many times one frame may be redrawn on a fresh page before the export stops. */
+export const REDRAWS = 2;
 
 /**
  * Parallel capture. The film's frames are cut into contiguous chunks; each of
  * `workers` pages (one browser, one context per page, as openPiece makes them) takes the next
  * undrawn chunk and draws it in order, and orderedPool hands the chunks to the one encoder strictly
  * in frame order, holding at most `pages + 1` chunks of PNGs. One page runs the same pool.
+ * A page that stalls on a frame (framePng's timer), crashes or closes is closed and replaced by a fresh
+ * one, which redraws that frame (the same pixels: a frame is a function of its time), up to REDRAWS
+ * times per frame; an error the piece throws stops the export at once.
  * The MP4 goes to `out` (a staged name, renamed by exportFilm); any failure kills the encoder.
- * Test-only hooks (inert unless set): MM_EXPORT_FAIL_FRAME (failFrameFor) and
+ * Test-only hooks (inert unless set): MM_EXPORT_FAIL_FRAME (failFrameFor), MM_EXPORT_STALL_FRAME=<n> or
+ * <format>:<n> (the first page to draw frame n never settles, as a stuck page would) and
  * MM_EXPORT_HASHES=<file> (read in exportFilm), which writes { format: [frame SHA-256] }.
  */
 /** Several encoders fed the same frames: one object with an encoder's write, end and abort. */
@@ -251,7 +266,9 @@ function fanEncoder(encs) {
 async function renderFilm({ dir, format, fps, sub, out, comment, meta, shared, wantPoster, workers = 1, encoder = 'software', alpha = null, alsoOut = null }) {
   const t0 = performance.now();
   const failFrame = failFrameFor(format);
+  let stallFrame = frameFor('MM_EXPORT_STALL_FRAME', format);
   const opened = [await openPiece(dir, { format, ...shared, alpha: !!alpha })];
+  const retired = [];   // pages replaced after a stall or a crash: their errors still count
   let enc = null;
   try {
     const lead = opened[0];
@@ -281,9 +298,28 @@ async function renderFilm({ dir, format, fps, sub, out, comment, meta, shared, w
     /** The `sub` instants of frame n, as PNGs, drawn on `page`. */
     const draw = async (page, n) => {
       if (n === failFrame) throw new Error(`MM_EXPORT_FAIL_FRAME: the page drawing frame ${n} of ${format} was told to throw`);
+      if (n === stallFrame) { stallFrame = -1; await page.evaluate(() => { window.mm.settle = () => new Promise(() => {}); }); }
       const pngs = [];
       for (const t of instantsOfFrame(n, fps, sub, cuts)) pngs.push(await framePng(page, t, { alpha: !!alpha }));
       return pngs;
+    };
+    let redrawn = 0;
+    /** Frame n on worker wk's page; a stuck or crashed page is replaced and the frame redrawn on the new one. */
+    const drawOn = async (wk, n) => {
+      for (let tries = 0; ; tries++) {
+        try { return await draw(opened[wk].page, n); } catch (e) {
+          if (!pageGone(e) || tries >= REDRAWS) throw e;
+          const old = opened[wk];
+          log(`  ${format}: page ${wk + 1} ${e.stalled ? 'stalled' : 'failed'} on frame ${n} (${String(e.message).split('\n')[0]}); a fresh page redraws it`);
+          old.page.off('response', onResponse); old.page.off('requestfailed', onFailed);   // closing it aborts its requests
+          retired.push(old);
+          await Promise.race([old.close().catch(() => {}), new Promise((r) => setTimeout(r, 5000))]);
+          const fresh = await openPiece(dir, { format, ...shared, alpha: !!alpha });
+          fresh.page.on('response', onResponse); fresh.page.on('requestfailed', onFailed);
+          opened[wk] = fresh;
+          redrawn++;
+        }
+      }
     };
     enc = alpha
       ? fanEncoder([liveEncoder({ out, fps, sub, comment, meta, kind: alpha, width, height }), ...(alsoOut ? [liveEncoder({ out: alsoOut.out, fps, sub, comment, meta, kind: alsoOut.kind, width, height })] : [])])
@@ -304,7 +340,7 @@ async function renderFilm({ dir, format, fps, sub, out, comment, meta, shared, w
     await orderedPool({ count: chunks.length, workers: pages,
       run: async (wk, c, stopped) => {
         const drawn = [];
-        for (let n = chunks[c][0]; n < chunks[c][1] && !stopped(); n++) drawn.push(await draw(opened[wk].page, n));
+        for (let n = chunks[c][0]; n < chunks[c][1] && !stopped(); n++) drawn.push(await drawOn(wk, n));
         return drawn;
       },
       take: async (c, drawn) => { for (const [k, pngs] of drawn.entries()) await take(chunks[c][0] + k, pngs); } });
@@ -312,9 +348,9 @@ async function renderFilm({ dir, format, fps, sub, out, comment, meta, shared, w
     if (failedRequests.length) throw new Error(`${failedRequests.length} request${failedRequests.length > 1 ? 's' : ''} failed while drawing ${format}, so frames are wrong: ${failedRequests.slice(0, 5).join(', ')}`);
     await enc.end();
     enc = null;
-    const errors = [...new Set(opened.flatMap((o) => o.errors))];
-    return { duration, frames, width: even(width), height: even(height), hashes, first, last, poster: posterPng, errors, warnings: (await lead.mm.meta()).warnings,
-      pages, captureS: Math.round((performance.now() - t0) / 10) / 100 };
+    const errors = [...new Set([...retired, ...opened].flatMap((o) => o.errors))];
+    return { duration, frames, width: even(width), height: even(height), hashes, first, last, poster: posterPng, errors, warnings: (await opened[0].mm.meta()).warnings,
+      pages, ...(redrawn ? { redrawn } : {}), captureS: Math.round((performance.now() - t0) / 10) / 100 };
   } finally {
     if (enc) await enc.abort();
     await Promise.all(opened.map((o) => o.close()));
@@ -378,7 +414,7 @@ async function exportFilm(dir, story, o, shared, manifest) {
       log(`  ${format}: ${r.frames} frames captured in ${r.captureS} s by ${r.pages} page${r.pages > 1 ? 's' : ''}`);
       const info = probe(mp4);
       const v = info.streams.find((s) => s.codec_type === 'video');
-      manifest.files.push({ format, file: out, width: v.width, height: v.height, fps: o.fps, sub: o.sub, frames: Number(v.nb_read_frames ?? v.nb_frames), duration: r.duration, comment: o.comment ?? null, captureS: r.captureS, pages: r.pages, encoder: o.encoder.used });
+      manifest.files.push({ format, file: out, width: v.width, height: v.height, fps: o.fps, sub: o.sub, frames: Number(v.nb_read_frames ?? v.nb_frames), duration: r.duration, comment: o.comment ?? null, captureS: r.captureS, pages: r.pages, ...(r.redrawn ? { redrawn: r.redrawn } : {}), encoder: o.encoder.used });
       if (o.gif) {
         // a looping GIF from the MP4: one palette for the whole film, no dither (dither flickers flat colour)
         const gif = join(outDir, `${story.id}-${format}.gif`);
@@ -423,7 +459,7 @@ async function exportAlphaFormat({ dir, story, o, shared, manifest, format, stag
   log(`  ${format}: ${r.frames} frames captured in ${r.captureS} s by ${r.pages} page${r.pages > 1 ? 's' : ''}`);
   for (const [tmp, kind] of [[webm, 'webm'], mov && [mov, 'mov']].filter(Boolean)) {
     const v = probe(tmp).streams.find((s) => s.codec_type === 'video');
-    manifest.files.push({ format, file: join(outDir, `${story.id}-${format}.${ALPHA_KINDS[kind].ext}`), width: v.width, height: v.height, fps: o.fps, sub: o.sub, frames: Number(v.nb_read_frames ?? v.nb_frames), duration: r.duration, comment: o.comment ?? null, captureS: r.captureS, pages: r.pages, encoder: 'software', alpha: true, codec: kind === 'webm' ? 'vp9' : 'prores-4444' });
+    manifest.files.push({ format, file: join(outDir, `${story.id}-${format}.${ALPHA_KINDS[kind].ext}`), width: v.width, height: v.height, fps: o.fps, sub: o.sub, frames: Number(v.nb_read_frames ?? v.nb_frames), duration: r.duration, comment: o.comment ?? null, captureS: r.captureS, pages: r.pages, ...(r.redrawn ? { redrawn: r.redrawn } : {}), encoder: 'software', alpha: true, codec: kind === 'webm' ? 'vp9' : 'prores-4444' });
   }
   for (const e of [...r.errors, ...r.warnings]) log(`  warning: ${e}`);
   if (o.prove) {
@@ -599,7 +635,7 @@ export async function exportPiece(dir, opts = {}) {
   o.workers ??= defaultWorkers();
   if (!Number.isInteger(o.workers) || o.workers < 1) throw new UsageError('--workers must be a whole number of at least 1');
   const workersRequested = o.workers;
-  o.workers = Math.min(o.workers, MAX_WORKERS);
+  o.workers = Math.min(o.workers, maxWorkers());
   assertTools();
   let held;
   try { held = holdForExport(dir, { by: 'mm export' }); } catch (e) { throw e instanceof ExportBusy ? new UsageError(`export refused: ${e.message}`, 2) : e instanceof Unreadable ? new UsageError(e.reason, 2) : e; }
@@ -620,7 +656,7 @@ async function exportHeld(dir, o, { story, version, journal }, workersRequested)
   mkdirSync(join(dir, 'out'), { recursive: true });
   // a deck draws in one page whatever --workers says
   const manifest = { piece: dir, id: story.id, kind: story.kind, version, fps: o.fps, ...(exactFps(o.fps).arg.includes('/') ? { fpsName: exactFps(o.fps).name } : {}), sub: o.sub, workers: story.kind === 'deck' ? 1 : o.workers, forced: !gate.ok, checked: gate.ok };
-  if (story.kind !== 'deck' && workersRequested > MAX_WORKERS) { manifest.workersRequested = workersRequested; log(`note: --workers ${workersRequested} draws in ${MAX_WORKERS} pages at most`); }
+  if (story.kind !== 'deck' && workersRequested > o.workers) { manifest.workersRequested = workersRequested; log(`note: --workers ${workersRequested} draws in ${o.workers} pages at most${o.workers < MAX_WORKERS ? ' (what this machine\'s memory holds)' : ''}`); }
   manifest.encoder = { requested: o.encoder.requested, used: o.encoder.used, ...(o.encoder.reason ? { note: o.encoder.reason } : {}) };
   if (o.alpha) manifest.alpha = o.alphaMov ? ['webm', 'mov'] : ['webm'];
   if (o.encoder.reason) log(`note: --encoder ${o.encoder.requested}: ${o.encoder.reason}; encoding in software`);

@@ -150,7 +150,7 @@ export default {
       }
       // the item dims as its strike finishes: ink to muted
       const dim = clamp01((pr.strike[i] - 0.5) / 0.5);
-      if (dim > 0) t.style.color = dim >= 1 ? 'var(--mm-color-muted)' : `color-mix(in srgb, var(--mm-color-muted) ${r1(dim * 1000) / 10}%, var(--mm-color-ink))`;
+      if (dim > 0) t.style.color = dim >= 1 ? 'var(--mm-color-muted)' : `color-mix(in oklab, var(--mm-color-muted) ${r1(dim * 1000) / 10}%, var(--mm-color-ink))`;
     });
   },
 };

@@ -145,7 +145,7 @@ export function paintFootage(f, t, track, warn) {
     if (el.closest('[data-scene]')?.style.visibility === 'hidden') continue;
     if (el.getAttribute('src') !== src) {
       el.setAttribute('src', src);
-      track(el.decode().catch(() => { if (el.getAttribute('src') === src) warn?.(src); }));
+      track(el.decode().catch(() => { if (el.getAttribute('src') === src) warn?.(src); }), src);
     }
     const mask = f.masks?.get(el);
     if (mask) {   // the mask is the size of the picture's box now (a speaker frame moves and resizes the box)
@@ -157,7 +157,7 @@ export function paintFootage(f, t, track, warn) {
     if (mask && mask.getAttribute('href') !== matteFile(f.base, i)) {
       const m = matteFile(f.base, i);
       mask.setAttribute('href', m);
-      track(mask.decode().catch(() => { if (mask.getAttribute('href') === m) warn?.(m); }));
+      track(mask.decode().catch(() => { if (mask.getAttribute('href') === m) warn?.(m); }), m);
     }
   }
 }

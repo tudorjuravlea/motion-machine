@@ -5,7 +5,7 @@ import { extname, join, relative, resolve, sep } from 'node:path';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import { ROOT } from '../lib/browser.mjs';
-import { decodePng } from './_pixels.mjs';
+import { decodePng, oklabToRgb } from './_pixels.mjs';
 import { EPS, round, words, banActive } from './_pure.mjs';
 
 export { ROOT };
@@ -319,6 +319,12 @@ export function parseColor(s) {
   if (cs) {
     const a = cs[4] == null ? 1 : cs[4].endsWith('%') ? parseFloat(cs[4]) / 100 : parseFloat(cs[4]);
     return [Math.round(+cs[1] * 255), Math.round(+cs[2] * 255), Math.round(+cs[3] * 255), a];
+  }
+  // a colour mixed in Oklab (`color-mix(in oklab, …)`) computes to oklab(L a b / A)
+  const ok = /^oklab\(\s*([\d.e-]+)\s+([\d.e-]+)\s+([\d.e-]+)(?:\s*\/\s*([\d.]+%?))?\s*\)$/.exec(s);
+  if (ok) {
+    const a = ok[4] == null ? 1 : ok[4].endsWith('%') ? parseFloat(ok[4]) / 100 : parseFloat(ok[4]);
+    return [...oklabToRgb([+ok[1], +ok[2], +ok[3]]).map(Math.round), a];
   }
   const m = /rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:\s*[,/]\s*([\d.]+%?))?\s*\)/.exec(s);
   if (!m) return null;

@@ -27,9 +27,9 @@ const params = {
 
 // band, alternate band, streak: a role, then blends of it with a second role
 const PAIRS = {
-  accent: ['var(--mm-color-accent)', 'color-mix(in srgb, var(--mm-color-accent) 62%, var(--mm-color-ink))', 'color-mix(in srgb, var(--mm-color-accent) 70%, var(--mm-color-canvas))'],
-  ink: ['var(--mm-color-ink)', 'color-mix(in srgb, var(--mm-color-ink) 72%, var(--mm-color-canvas))', 'color-mix(in srgb, var(--mm-color-ink) 80%, var(--mm-color-accent))'],
-  muted: ['var(--mm-color-muted)', 'color-mix(in srgb, var(--mm-color-muted) 62%, var(--mm-color-ink))', 'color-mix(in srgb, var(--mm-color-muted) 70%, var(--mm-color-canvas))'],
+  accent: ['var(--mm-color-accent)', 'color-mix(in oklab, var(--mm-color-accent) 62%, var(--mm-color-ink))', 'color-mix(in oklab, var(--mm-color-accent) 70%, var(--mm-color-canvas))'],
+  ink: ['var(--mm-color-ink)', 'color-mix(in oklab, var(--mm-color-ink) 72%, var(--mm-color-canvas))', 'color-mix(in oklab, var(--mm-color-ink) 80%, var(--mm-color-accent))'],
+  muted: ['var(--mm-color-muted)', 'color-mix(in oklab, var(--mm-color-muted) 62%, var(--mm-color-ink))', 'color-mix(in oklab, var(--mm-color-muted) 70%, var(--mm-color-canvas))'],
 };
 
 // A hash of two integers to [0, 1).

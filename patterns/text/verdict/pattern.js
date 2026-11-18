@@ -74,7 +74,7 @@ export default {
         if (q < 1 && u < STAMP_S) stamp.at(name, 0.5, { ...ctx, u, d: STAMP_S, params: { personality: prm.personality, flash: prm.flash, shake: prm.shake } });
         return;
       }
-      if (dim > 0) name.style.color = dim >= 1 ? 'var(--mm-color-muted)' : `color-mix(in srgb, var(--mm-color-muted) ${r4(dim * 100)}%, var(--mm-color-ink))`;
+      if (dim > 0) name.style.color = dim >= 1 ? 'var(--mm-color-muted)' : `color-mix(in oklab, var(--mm-color-muted) ${r4(dim * 100)}%, var(--mm-color-ink))`;
     });
   },
 };

@@ -3,7 +3,7 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { join } from 'node:path';
-import { ROOT, serveRoot, openPiece, launchBrowser, framePng } from '../../scripts/lib/browser.mjs';
+import { ROOT, serveRoot, openPiece, launchBrowser, framePng, pageGone } from '../../scripts/lib/browser.mjs';
 
 const PAGE = join(ROOT, 'tests/kit/media');
 let server, browser;
@@ -60,4 +60,25 @@ test('an afterSettle callback runs once the decodes of the seek are done, and se
     });
     assert.equal(seen, true);
   } finally { await o.close(); }
+});
+
+test('a frame whose settle never resolves stops at its timer and names what it was waiting for', async () => {
+  const o = await open();
+  try {
+    await o.page.evaluate(async () => {
+      const { trackDecode } = await import('../../../runtime/kit/kit.js');
+      trackDecode(new Promise(() => {}), 'stuck/f00001.jpg');
+    });
+    assert.deepEqual(await o.page.evaluate(() => window.mm.waiting()), ['stuck/f00001.jpg']);
+    await assert.rejects(framePng(o.page, 1, { timeout: 1500 }), (e) => e.stalled === true && pageGone(e) && /did not finish in 1\.5 s: waiting for stuck\/f00001\.jpg/.test(e.message));
+  } finally { await o.close(); }
+});
+
+test('pageGone retries a stalled, timed-out or crashed page and never an error the piece threw', () => {
+  assert.equal(pageGone({ stalled: true }), true);
+  assert.equal(pageGone(Object.assign(new Error('screenshot'), { name: 'TimeoutError' })), true);
+  assert.equal(pageGone(new Error('page.evaluate: Target crashed')), true);
+  assert.equal(pageGone(new Error('page.screenshot: Target page, context or browser has been closed')), true);
+  assert.equal(pageGone(new Error('page.evaluate: TypeError: x is not a function')), false);
+  assert.equal(pageGone(new Error('MM_EXPORT_FAIL_FRAME: the page drawing frame 5 of 1x1 was told to throw')), false);
 });
