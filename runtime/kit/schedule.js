@@ -178,6 +178,13 @@ function cueTiming(beat, arrive, d, meta) {
   return { at: arrive, d: len, anchor: 'start' };
 }
 
+/** A screen action's length: its own `d`, else the length its params give (a script's), else its pattern's duration role. */
+export function actionSeconds(a, m, style) {
+  if (a.d != null) return ms(a.d);
+  if (typeof m.durationOf === 'function') return ms(m.durationOf(a.params ?? {}));
+  return roleSeconds(m.dur ?? 'standard', style);
+}
+
 export function schedule(story, style, { patterns = {}, each = {} } = {}) {
   const meta = (ref) => (ref && patterns[ref]) || {};
   const resolved = resolveStory(story, style);
@@ -249,7 +256,12 @@ function filmSchedule(story, style, meta, eachOpts) {
       for (const a of kids.length ? kids : [it]) events.push({ t: a.start, kind: 'arrive', selector: a.selector, scene: sc.id, fx: beat.fx, d: a.d, spring: a.spring, role: a.role });
       // a whole story inside one beat (a ui pattern) says where its steps fall, so the timing rules can see it moving
       const inner = meta(beat.fx);
-      if (Array.isArray(inner.steps) && typeof inner.dur === 'number') for (const s of inner.steps) if (s > 0) events.push({ t: ms(it.start + s * (it.d / inner.dur)), kind: 'step', selector: it.selector, scene: sc.id, fx: beat.fx });
+      if (Array.isArray(inner.steps) && typeof inner.dur === 'number') {
+        for (const s of inner.steps) if (s > 0) events.push({ t: ms(it.start + s * (it.d / inner.dur)), kind: 'step', selector: it.selector, scene: sc.id, fx: beat.fx });
+      } else if (typeof inner.stepsOf === 'function') {
+        // a pattern played from the beat's own script (ui/component) reads its steps from the beat, in seconds
+        for (const s of inner.stepsOf(beat.params ?? {})) if (s > 0 && s < it.d) events.push({ t: ms(it.start + s), kind: 'step', selector: it.selector, scene: sc.id, fx: beat.fx });
+      }
       // a pattern that keeps moving after it arrives (a 3D turn) is a move until its scene ends; it does not move the rest
       if (meta(beat.fx).ambient && beat.params?.move !== 'still' && end > it.start) events.push({ t: it.start, kind: 'move', selector: it.selector, scene: sc.id, pattern: beat.fx, d: ms(end - it.start), ambient: true });
       // an entrance that touches down more than once (a bounce) marks each contact as a visible event, and a cue
@@ -272,11 +284,15 @@ function filmSchedule(story, style, meta, eachOpts) {
       }
       // screen actions play on the beat's device screen; the scene rests after the last
       for (const a of beat.screen ?? []) {
-        const sd = ms(a.d ?? roleSeconds(meta(a.do).dur ?? 'standard', style));
+        const sd = actionSeconds(a, meta(a.do), style);
         const t = ms(it.start + (a.at ?? 0));
         events.push({ t, kind: 'move', selector: it.selector, scene: sc.id, pattern: a.do, d: sd, screen: true });
         const inner = meta(a.do);
-        if (Array.isArray(inner.steps) && typeof inner.dur === 'number') for (const s of inner.steps) if (s > 0) events.push({ t: ms(t + s * (sd / inner.dur)), kind: 'step', selector: it.selector, scene: sc.id, fx: a.do });
+        if (Array.isArray(inner.steps) && typeof inner.dur === 'number') {
+          for (const s of inner.steps) if (s > 0) events.push({ t: ms(t + s * (sd / inner.dur)), kind: 'step', selector: it.selector, scene: sc.id, fx: a.do });
+        } else if (typeof inner.stepsOf === 'function') {
+          for (const s of inner.stepsOf(a.params ?? {})) if (s > 0 && s < sd) events.push({ t: ms(t + s), kind: 'step', selector: it.selector, scene: sc.id, fx: a.do });
+        }
         settled = Math.max(settled, t + sd);
       }
       if (beat.out != null) {
@@ -365,7 +381,7 @@ function deckSchedule(story, style, meta, eachOpts) {
         const want = it.press + (a.step ?? 0);
         if (want > P + sc.presses) warnings.push(`screen: ${it.selector}: ${a.do} step ${a.step} beyond the scene's ${sc.presses} presses; it plays on the last`);
         const press = Math.min(P + sc.presses, want);
-        L[press] = Math.max(L[press], ms(a.d ?? roleSeconds(meta(a.do).dur ?? 'standard', style)));
+        L[press] = Math.max(L[press], actionSeconds(a, meta(a.do), style));
         return press;
       });
       if (beat.until != null && beat.until <= sc.presses) {

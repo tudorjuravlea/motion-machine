@@ -61,7 +61,7 @@
     },
     {
       "id": "f11",
-      "text": "222 patterns in 13 groups: 3d 5, data 23, devices 6, emphasis 19, entrances 30, exits 7, layouts 23, moves 16, screen 9, sound 29, text 17, transitions 27, ui 11. None carries a brand. The wall shows each one's demo still in this film's style.",
+      "text": "223 patterns in 13 groups: 3d 5, data 23, devices 6, emphasis 19, entrances 30, exits 7, layouts 23, moves 16, screen 9, sound 29, text 17, transitions 27, ui 12. None carries a brand. The wall shows each one's demo still in this film's style.",
       "source": "node scripts/mm.mjs pattern list; node scripts/pattern-lint.mjs; capture/assets.json library-wall"
     },
     {
@@ -517,7 +517,7 @@
           "at": 0.5,
           "slot": "headline",
           "fx": "style:headline",
-          "text": "222 patterns. None branded.",
+          "text": "223 patterns. None branded.",
           "fact": "f11",
           "cue": "hit"
         },
@@ -530,7 +530,7 @@
           "cue": "tick"
         }
       ],
-      "say": "222 patterns, every one in this film's brand because none carries its own."
+      "say": "223 patterns, every one in this film's brand because none carries its own."
     },
     {
       "id": "cta",

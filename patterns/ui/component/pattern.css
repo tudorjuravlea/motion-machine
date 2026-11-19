@@ -1,0 +1,205 @@
+/* ui/component: a UI component played from a script of its states. Each state is written the way a component
+   library writes it (state attributes and variables); `--mm-motion` takes the place of `transition`, in its
+   grammar, and runtime/kit/component.js plays it at t, so nothing here runs on a clock. Durations and easings
+   are the style's roles. The toast stack restates the motion of UI SDK's toast (Apache-2.0); the menu takes its
+   parts and states (a trigger open while its menu is, a lit item, a destructive one) and moves as product menus do. */
+@import url('../../../runtime/kit/ui.css');
+/* a motion spec belongs to its element, as a transition does: it does not pass to the children */
+@property --mm-motion { syntax: '*'; inherits: false; }
+
+.mm-uc__app { display: flex; flex-direction: column; gap: var(--mm-space-3); }
+.mm-uc__app > .mm-ui__bar { max-width: 100%; }
+.mm-uc__head { display: flex; align-items: center; justify-content: space-between; gap: var(--mm-space-3); margin-bottom: var(--mm-space-2); }
+.mm-uc__head:empty { display: none; }
+.mm-uc__title { font-weight: var(--mm-weight-display); font-size: calc(var(--mm-size-body) * 1.6); white-space: nowrap; }
+
+/* the toast stack: the region sits at the panel's foot, and the toasts rise from it */
+.mm-uc-toast__region {
+  position: absolute;
+  left: var(--mm-space-5);
+  right: var(--mm-space-5);
+  bottom: var(--mm-space-5);
+  height: 0;
+}
+.mm-uc-toast {
+  --dir: -1;
+  --y: calc(var(--dir) * var(--toast-index) * var(--mm-space-3));
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: calc(100 - var(--toast-index));
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--mm-space-1);
+  padding: var(--mm-space-4);
+  border: 1px solid var(--mm-color-line);
+  border-radius: var(--mm-radius-3);
+  background: var(--mm-color-canvas);
+  color: var(--mm-color-ink);
+  box-shadow: 0 var(--mm-space-2) var(--mm-space-5) color-mix(in srgb, var(--mm-color-ink) 14%, transparent);
+  height: var(--toast-height);
+  translate: 0 calc(var(--y) + var(--exit-y, 0px));
+  scale: calc(1 - var(--toast-index) * 0.05);
+  --mm-motion: translate var(--mm-dur-standard) var(--mm-ease-enter), scale var(--mm-dur-standard) var(--mm-ease-enter),
+    opacity var(--mm-dur-standard) var(--mm-ease-enter), height var(--mm-dur-standard) var(--mm-ease-enter);
+}
+/* behind a closed stack a toast takes the front one's height, and its words are covered */
+.mm-uc-toast:not([data-front], [data-expanded]) { height: var(--toast-front-height); }
+.mm-uc-toast__cover {
+  position: absolute;
+  inset: 0;
+  background: var(--mm-color-canvas);
+  opacity: 0;
+  --mm-motion: opacity var(--mm-dur-standard) var(--mm-ease-enter);
+}
+.mm-uc-toast:not([data-front], [data-expanded]) > .mm-uc-toast__cover { opacity: 1; }
+/* a stack that fans out lays every toast whole above the newer ones, quicker than it closes */
+.mm-uc-toast[data-expanded] {
+  --y: calc(var(--dir) * (var(--toast-offset) + var(--toast-index) * var(--mm-space-3)));
+  scale: 1;
+  --mm-motion: translate var(--mm-dur-quick) var(--mm-ease-enter), scale var(--mm-dur-quick) var(--mm-ease-enter),
+    opacity var(--mm-dur-quick) var(--mm-ease-enter), height var(--mm-dur-quick) var(--mm-ease-enter);
+}
+/* the newest slides in from the edge; the ones behind it fade in where they are */
+.mm-uc-toast[data-starting-style]:not([data-front]) { opacity: 0; }
+.mm-uc-toast[data-starting-style][data-front] { --y: calc(var(--dir) * -1 * (var(--toast-height) + var(--mm-space-5))); }
+/* one past the stack's limit waits out of sight */
+.mm-uc-toast[data-limited] { opacity: 0; }
+/* a leaving toast slides back out the way it came, or fades where it is when it was behind */
+.mm-uc-toast[data-ending-style] {
+  opacity: 0;
+  --exit-y: calc(var(--dir) * -1 * (var(--toast-height) + var(--mm-space-5)));
+  --mm-motion: translate var(--mm-dur-quick) var(--mm-ease-exit), scale var(--mm-dur-quick) var(--mm-ease-exit),
+    opacity var(--mm-dur-quick) var(--mm-ease-exit), height var(--mm-dur-quick) var(--mm-ease-exit);
+}
+.mm-uc-toast[data-ending-style]:not([data-front], [data-expanded]) { --exit-y: 0px; }
+
+.mm-uc-toast__head { display: flex; align-items: center; gap: var(--mm-space-3); }
+.mm-uc-toast__mark { flex: none; width: 0.6em; height: 0.6em; border-radius: 50%; background: var(--mm-color-accent); }
+.mm-uc-toast__title { font-weight: var(--mm-weight-display); }
+.mm-uc-toast__text { color: var(--mm-color-muted); font-size: calc(var(--mm-size-body) * 1.1); padding-left: calc(0.6em + var(--mm-space-3)); }
+
+/* the menu: a trigger in the head, pressed as it opens the menu; the menu grows from the trigger's corner */
+.mm-uc-menu__trigger {
+  flex: none;
+  padding: var(--mm-space-2) var(--mm-space-4);
+  border: 1px solid var(--mm-color-line);
+  border-radius: var(--mm-radius-2);
+  /* a faded ink layer over the canvas, as strong as --mm-uc-tint, which the motion moves like any number */
+  --mm-uc-tint: 0%;
+  background: linear-gradient(color-mix(in srgb, var(--mm-color-ink) var(--mm-uc-tint), transparent), color-mix(in srgb, var(--mm-color-ink) var(--mm-uc-tint), transparent)) var(--mm-color-canvas);
+  color: var(--mm-color-ink);
+  font-weight: var(--mm-weight-display);
+  white-space: nowrap;
+  transform-origin: center;
+  --mm-motion: --mm-uc-tint var(--mm-dur-quick) var(--mm-ease-enter), scale var(--mm-dur-quick) var(--mm-ease-enter);
+}
+.mm-uc-menu__trigger:is([data-mm-hover], [data-open]) { --mm-uc-tint: 8%; }
+.mm-uc-menu__trigger[data-mm-active] { scale: 0.96; }
+.mm-uc-menu__popup {
+  position: absolute;
+  z-index: 10;
+  box-sizing: border-box;
+  min-width: 11em;
+  padding: var(--mm-space-1);
+  border: 1px solid var(--mm-color-line);
+  border-radius: var(--mm-radius-3);
+  background: var(--mm-color-canvas);
+  color: var(--mm-color-ink);
+  box-shadow: 0 var(--mm-space-2) var(--mm-space-5) color-mix(in srgb, var(--mm-color-ink) 14%, transparent);
+  transform-origin: top right;
+  --mm-motion: opacity var(--mm-dur-quick) var(--mm-ease-enter), scale var(--mm-dur-quick) var(--mm-ease-enter),
+    translate var(--mm-dur-quick) var(--mm-ease-enter);
+}
+.mm-uc-menu__popup[data-starting-style] { opacity: 0; scale: 0.96; translate: 0 calc(-1 * var(--mm-space-2)); }
+.mm-uc-menu__popup[data-ending-style] {
+  opacity: 0;
+  scale: 0.96;
+  --mm-motion: opacity var(--mm-dur-quick) var(--mm-ease-exit), scale var(--mm-dur-quick) var(--mm-ease-exit);
+}
+.mm-uc-menu__item {
+  padding: var(--mm-space-2) var(--mm-space-3);
+  border-radius: var(--mm-radius-2);
+  white-space: nowrap;
+  background: color-mix(in srgb, var(--mm-color-ink) 0%, transparent);
+  transform-origin: center;
+  --mm-motion: background-color var(--mm-dur-quick) var(--mm-ease-enter), scale var(--mm-dur-quick) var(--mm-ease-enter);
+}
+.mm-uc-menu__item[data-highlighted] { background: color-mix(in srgb, var(--mm-color-ink) 8%, transparent); }
+.mm-uc-menu__item[data-mm-active] { background: color-mix(in srgb, var(--mm-color-ink) 14%, transparent); scale: 0.98; }
+.mm-uc-menu__item--alert { color: var(--mm-color-alert, var(--mm-color-accent)); }
+/* the authored pointer stays above the menu it opens */
+.mm-uc > .mm-ui__cursor { z-index: 20; }
+
+/* tabs: the underline takes the active tab's place and width; a panel lies before or after the active one */
+.mm-uc-tabs__list {
+  position: relative;
+  display: flex;
+  gap: var(--mm-space-1);
+  border-bottom: 1px solid var(--mm-color-line);
+}
+.mm-uc-tabs__tab {
+  padding: var(--mm-space-2) var(--mm-space-3);
+  color: var(--mm-surface-muted);
+  white-space: nowrap;
+  transform-origin: center;
+  --mm-motion: color var(--mm-dur-quick) var(--mm-ease-enter), scale var(--mm-dur-quick) var(--mm-ease-enter);
+}
+.mm-uc-tabs__tab[data-active] { color: var(--mm-color-surfaceInk); }
+.mm-uc-tabs__tab[data-mm-active] { scale: 0.96; }
+.mm-uc-tabs__indicator {
+  /* on the list's bottom rule, outside the tabs' boxes, so no label ever stands on the accent */
+  position: absolute;
+  left: 0;
+  top: 100%;
+  height: var(--mm-space-1);
+  border-radius: var(--mm-radius-2);
+  background: var(--mm-color-accent);
+  width: var(--tab-w);
+  translate: var(--tab-x) 0;
+  --mm-motion: translate var(--mm-dur-standard) var(--mm-ease-move), width var(--mm-dur-standard) var(--mm-ease-move);
+}
+.mm-uc-tabs__panels { position: relative; overflow: hidden; margin-top: var(--mm-space-3); }
+.mm-uc-tabs__panel {
+  position: absolute;
+  inset: 0 0 auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-space-3);
+  /* the panel coming in waits for the one going out, so two panels' words never overlap */
+  --mm-motion: translate var(--mm-dur-standard) var(--mm-ease-enter) var(--mm-dur-quick), opacity var(--mm-dur-standard) var(--mm-ease-enter) var(--mm-dur-quick);
+}
+.mm-uc-tabs__panel > .mm-ui__bar { max-width: 100%; }
+.mm-uc-tabs__panel[data-side] { opacity: 0; --mm-motion: translate var(--mm-dur-quick) var(--mm-ease-exit), opacity var(--mm-dur-quick) var(--mm-ease-exit); }
+.mm-uc-tabs__panel[data-side='before'] { translate: calc(-1 * var(--mm-space-6)) 0; }
+.mm-uc-tabs__panel[data-side='after'] { translate: var(--mm-space-6) 0; }
+.mm-uc-tabs__caption { font-weight: var(--mm-weight-display); }
+
+/* the sheet: the panel is a screen; the app behind scales back and dims as the sheet rises from its foot */
+.mm-uc--sheet { padding: 0; }
+.mm-uc--sheet > .mm-uc__app { padding: var(--mm-space-5); }
+.mm-uc-sheet__dim { position: absolute; inset: 0; background: var(--mm-device-shade); opacity: 0; pointer-events: none; }
+.mm-uc-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mm-space-3);
+  padding: var(--mm-space-2) var(--mm-space-5) var(--mm-space-5);
+  border-top: 1px solid var(--mm-color-line);
+  border-radius: var(--mm-radius-3) var(--mm-radius-3) 0 0;
+  background: var(--mm-color-canvas);
+  color: var(--mm-color-ink);
+  box-shadow: 0 calc(-1 * var(--mm-space-1)) var(--mm-space-5) color-mix(in srgb, var(--mm-color-ink) 14%, transparent);
+}
+.mm-uc-sheet > .mm-ui__bar { max-width: 100%; }
+.mm-uc-sheet__grabber { align-self: center; width: 2.4em; height: var(--mm-space-1); border-radius: var(--mm-radius-2); background: var(--mm-color-line); margin-bottom: var(--mm-space-2); }
+.mm-uc-sheet__title { font-weight: var(--mm-weight-display); font-size: calc(var(--mm-size-body) * 1.6); }
+.mm-uc-sheet__row { padding-block: var(--mm-space-2); border-bottom: 1px solid var(--mm-color-line); }

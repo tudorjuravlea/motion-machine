@@ -92,6 +92,10 @@ test('the ground is pure in t: the same instant draws the same pixels after any 
   }
 });
 
+// every layer's position at the origin: Chromium 159 (Playwright 1.65.1) reports one position set on four
+// layers once, where earlier builds repeated it per layer, so each listed position is read
+const atOrigin = (pos) => pos.split(',').every((v) => v.trim() === '0px 0px');
+
 test('graph-paper loops: the frame at t equals the frame at t + cycle, and drifts in between', async () => {
   const o = await open(ground(PAPER));
   try {
@@ -103,7 +107,7 @@ test('graph-paper loops: the frame at t equals the frame at t + cycle, and drift
     // the grid is back at the origin at the cycle's ends, and the scan band is off the frame there
     await o.mm.seek(8);
     const pos = await o.page.evaluate(() => getComputedStyle(document.querySelector('.mm-scene:last-child .mm-ground__grid')).backgroundPosition);
-    assert.match(pos, /^0px 0px, 0px 0px, 0px 0px, 0px 0px$/);
+    assert.ok(atOrigin(pos), pos);
   } finally { await o.close(); }
 });
 
@@ -149,7 +153,7 @@ test('the fine and the heavy grid are drawn in the role, heavy every Nth line', 
 test('a deck draws a still ground: the bloom full size, the grid at its origin, the scan band off the frame', async () => {
   for (const [g, check] of [
     [undefined, async (o) => assert.equal(await o.page.evaluate(() => new DOMMatrix(getComputedStyle(document.querySelector('.mm-ground__bloom')).transform).a), 1)],
-    [PAPER, async (o) => assert.equal(await o.page.evaluate(() => getComputedStyle(document.querySelector('.mm-ground__grid')).backgroundPosition), '0px 0px, 0px 0px, 0px 0px, 0px 0px')],
+    [PAPER, async (o) => { const pos = await o.page.evaluate(() => getComputedStyle(document.querySelector('.mm-ground__grid')).backgroundPosition); assert.ok(atOrigin(pos), pos); }],
   ]) {
     const o = await open(g ? ground(g) : {}, '16x9', 'deck');
     try {

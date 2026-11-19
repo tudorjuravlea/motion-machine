@@ -58,7 +58,7 @@ for (const name of readdirSync(join(ROOT, 'patterns/ui'))) for (const [device, f
     const story = JSON.parse(readFileSync(join(PIECE, 'story.json'), 'utf8'));
     story.formats = [format];
     const scene = story.scenes[0];
-    scene.duration = Math.ceil(mod.dur) + 2;
+    scene.duration = Math.ceil(typeof mod.durationOf === 'function' ? mod.durationOf(beat.params ?? {}) : mod.dur) + 2;   // a scripted pattern's length is its script's
     scene.beats[0].fx = device;
     scene.beats[0].screen = [{ do: `ui/${name}`, at: 0.3, ...(beat.text != null ? { params: { ...beat.params, rows: beat.params?.rows ?? beat.text } } : { params: beat.params }) }];
     writeFileSync(join(dir, 'story.json'), JSON.stringify(story));

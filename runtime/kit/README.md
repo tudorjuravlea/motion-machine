@@ -9,7 +9,7 @@ receives, where a story's params end up, and every function the kit modules expo
 - [What each pattern kind receives](#what-each-pattern-kind-receives) · [Units of travel](#units-of-travel) · [Param routing](#param-routing) · [Cascades](#cascades-data-each--paramseach)
 - [Fragments](#fragments-patternhtml-for-text-data-and-devices) · [Assets](#assets) · [Overlays](#overlays) · [Sound cues](#sound-cues) · [Schedule output](#schedule-output) · [Warnings](#warnings)
 - [Screen actions](#screen-actions) · [3D devices](#3d-devices) · [Footage](#footage)
-- [Module reference](#module-reference): `kit.js` · `params.js` · `schedule.js` · `springs.js` · `ease.js` · `curve.js` · `stagger.js` · `inertia.js` · `maths.js` · `random.js` · `seeded.js` · `fit.js` · `count.js` · `room.js` · `glyphs.js` · `rough.js` · `points.js` · `emit.js` · `bounce.js` · `trail.js` · `screen.js` · `cursor.js` · `camera.js` · `demoframe.js` · `footage.js` · `captions.js` · `press.js` · `speaker.js` · `speaker-layer.js` · `device3d.js` · `look3d.js` · `dof3d.js` · `floor3d.js` · `hairline.js` · `drawn.js` · `synth.js` · `modes.js` · `aim.js` · `rig.js` · `diagram.js` · `pathkit.js` · `morph.js` · `dash.js` · `projection.js` · `ground.js` · `surface.js` · `finish.js` · `lens.js` · `split.js` · `scramble.js` · `code.js`
+- [Module reference](#module-reference): `kit.js` · `params.js` · `schedule.js` · `springs.js` · `ease.js` · `curve.js` · `stagger.js` · `inertia.js` · `component.js` · `maths.js` · `random.js` · `seeded.js` · `fit.js` · `count.js` · `room.js` · `glyphs.js` · `rough.js` · `points.js` · `emit.js` · `bounce.js` · `trail.js` · `screen.js` · `cursor.js` · `camera.js` · `demoframe.js` · `footage.js` · `captions.js` · `press.js` · `speaker.js` · `speaker-layer.js` · `device3d.js` · `look3d.js` · `dof3d.js` · `floor3d.js` · `hairline.js` · `drawn.js` · `synth.js` · `modes.js` · `aim.js` · `rig.js` · `diagram.js` · `pathkit.js` · `morph.js` · `dash.js` · `projection.js` · `ground.js` · `surface.js` · `finish.js` · `lens.js` · `split.js` · `scramble.js` · `code.js`
 
 ## Mount and seek
 
@@ -520,7 +520,8 @@ Pure; imports in Node and in the page. A node is `{ d, f(u) }`: a duration and a
 | `stagger` | `stagger(each, items, { from, index, ease, cap, grid, axis, reverse, seed, jitter, use, total })` | node + `offsets` | children in turn, by `stagger.js`'s `staggerOffsets`; `from`: `first`, `center`, `last`, `edges`, `random`, `index` (with `index`), an item index or a ratio pair; `ease` a function or an ease string; `cap` bounds the whole spread |
 | `overlap` | `overlap(a, b, o)` | node + `starts` | `b` starts `o` seconds before `a` ends |
 | `transition` | `transition(a, b, pattern, d)` | node | an overlap by `d` whose `f` gives `{ a, b, pattern, p }`, `p` running 0 to 1 across the overlap |
-| `schedule` | `schedule(story, style, { patterns, each })` | the schedule (see Schedule output) | `patterns` maps a ref to its module or metadata (`dur`, `spring`, `durationS`, `anchor`, and for an entrance whose physics sets its length `durationOf(params)` and `contactsOf(params)`); `each` supplies a cascade's child count in Node |
+| `schedule` | `schedule(story, style, { patterns, each })` | the schedule (see Schedule output) | `patterns` maps a ref to its module or metadata (`dur`, `spring`, `durationS`, `anchor`, and for an entrance whose physics sets its length `durationOf(params)` and `contactsOf(params)`; a pattern played from the beat's own script says where its steps fall with `stepsOf(params)`, seconds into the beat); `each` supplies a cascade's child count in Node |
+| `actionSeconds` | `actionSeconds(action, meta, style)` | seconds | a screen action's length: its `d`, else its pattern's `durationOf(params)` for the action's params, else the pattern's duration role |
 | `selectorOf` | `selectorOf(scene, slot)` | string | `[data-scene="…"] [data-slot="…"]` |
 | `forFormat` | `forFormat(story, format)` | story | the story as that format draws it (scene `variants` applied); the input is not changed |
 | `resolveStory` | `resolveStory(story, style)` | story | resolves `style:<role>` and `position`; a new story, refs that are patterns pass through |
@@ -594,12 +595,14 @@ Pure and seeded. Options: `each` (seconds a step, default 0.1) or `amount` (the 
 
 ### `inertia.js`: a throw that lands
 
-Pure. `inertia({ from, velocity, power = 0.8, timeConstant = 325, min, max, snap, elastic = true, bounceStiffness, bounceDamping, restDelta })` with `timeConstant` in milliseconds, positions in any unit, velocity in units per second, `t` in seconds from the release.
+Pure. `inertia({ from, velocity, timeConstant = 325 | rate, power, min, max, snap, minFlick = 500, skip = true, response = 0.34, damping = 1, flickDamping = 0.88, elastic = true, bounceStiffness, bounceDamping, restDelta })` with `timeConstant` in milliseconds, positions in any unit, velocity in units per second, `t` in seconds from the release. A throw leaves at the release speed and travels `velocity × τ`; `rate` (0.998 normal, 0.99 fast) sets τ as a scroll view does; an explicit `power` keeps the older `power × velocity`.
 
 | Name | Signature | Returns | Note |
 |---|---|---|---|
-| `inertia` | `inertia(opts)` | `{ at(t), velocity(t), target, end, settle, bound }` | friction toward `target`; if that is past a bound, the crossing is solved and a spring (or a wall, with `elastic: false`) takes over; `snap` is a step, a list of places or a function |
+| `inertia` | `inertia(opts)` | `{ at(t), velocity(t), target, end, settle, bound }` | friction toward `target`; if that is past a bound, the crossing is solved and a spring (or a wall, with `elastic: false`) takes over; `snap` is a step, a list of places or a function: slower than `minFlick` it takes the place nearest the release, a flick never lands behind the release (`skip: false`: one place at most), and it lands on a spring that leaves at the release speed |
 | `FEELS` | `FEELS.throw`, `FEELS.drag` | option sets | the defaults, and the slower dragged-card feel (time constant 750 ms) |
+| `SNAP` | `SNAP` | option set | the snap landing: `minFlick` 500, `skip` true, the sheet spring (`response` 0.34 s, `damping` 1, `flickDamping` 0.88) |
+| `RATES` | `RATES.normal`, `RATES.fast` | numbers | a scroll view's deceleration per millisecond, 0.998 and 0.99 |
 
 ### `maths.js`: small maths
 
@@ -773,7 +776,19 @@ A whole short interaction drawn from one beat's time, for the `ui/` patterns; th
 | `lengthOf`, `cutAt` | `(pts)`, `(pts, len)` | px, points | a route's length and its first `len` px, so a dashed line reveals without its dashes stretching |
 | `drawLine` | `(root, pts, { kind, reveal, phase, end })` | svg | one line of the annotation family: `lead` names, `send` asks, `reply` answers, `stream` flows; `end` (`dot`, `arrow`) waits for the line to reach it |
 
-A ui pattern in a beat's `screen` list (`{ "do": "ui/answer", "at": 0.3, "params": {…} }`) plays on that device's screen. `asAction` in `screen.js` makes it a screen action: it leaves the screen state alone, draws with its own `at` and stays once finished. `.mm-screen-fx > .mm-ui` in `ui.css` fills the glass and sets the type at the format's body size, so a phone needs a tall frame to hold a story. A 3D device draws its own screen and shows no ui story.
+A ui pattern in a beat's `screen` list (`{ "do": "ui/answer", "at": 0.3, "params": {…} }`) plays on that device's screen. `asAction` in `screen.js` makes it a screen action: it leaves the screen state alone, draws with its own `at` and stays once finished. Its length is the action's `d`, else what its pattern's `durationOf(params)` gives for the action's params (a scripted pattern such as `ui/component`), else its duration role; `stepsOf` marks its steps there too. `.mm-screen-fx > .mm-ui` in `ui.css` fills the glass and sets the type at the format's body size, so a phone needs a tall frame to hold a story. A 3D device draws its own screen and shows no ui story.
+
+### `component.js`: a component played from a script of its states
+
+For `ui/component`. A component's CSS says what each state looks like (state attributes and variables) and, in `--mm-motion`, how each property moves when its state changes, in the grammar of `transition` (`translate var(--mm-dur-standard) var(--mm-ease-enter), opacity …`); the CSS never declares `transition`, so nothing runs on a clock and G-TIME has nothing live to find. `@property --mm-motion` is registered as not inherited, as a transition is not. At `seek(t)` the browser computes each state's look and this module plays the motion between them: a change takes the timing of the state it changes to, a property the change leaves alone keeps running, a change during a motion starts from where the property is, an entering part starts from its `data-starting-style` look and a leaving part moves to its `data-ending-style` look and is gone once the longest motion its leaving started has run.
+
+| Name | Signature | Returns | Note |
+|---|---|---|---|
+| `playParts` | `(parts, t)` | none | each part `{ el, follow, states: [{ at, attrs, vars }], leave }` hidden, or put in its state at t with its moving properties written inline; `follow` are descendants whose look also follows the part's state |
+| `motionOf` | `(text)` | `Map` | a computed `--mm-motion` read: property → `{ d, delay }` in seconds and `{ ease }` as CSS writes it |
+| `mix` | `(prop, a, b, q)` | string | `q` of the way from computed value `a` to `b`: numbers token by token (`none` filled in for translate, scale and rotate), colours `color-mix(in oklab, …)`, anything else switching halfway |
+| `stateAt` | `(states, t)` | state | the last state at or before t |
+| `STARTING`, `ENDING` | strings | | `data-starting-style`, `data-ending-style` |
 
 ### `cursor.js`: a recorded pointer as a cursor
 

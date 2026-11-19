@@ -155,7 +155,9 @@ test('chunked capture meets recordings and device screens on any runner (device 
   rmSync(copy, { recursive: true, force: true });
   cpSync(piece, copy, { recursive: true, filter: (p) => !p.includes('/out') });
   try {
-    const r = await runExport([copy, '--fps', '1', '--formats', '9x16', '--workers', '3', '--prove', '--force']);
+    // a CI runner draws this 3D device film in software: 122 s on Playwright 1.65.0, 160 s and once over 170 s on
+    // 1.65.1 (Chromium 159), 18 s on a Mac; the limit leaves room for a slow runner, a stall still fails it
+    const r = await runExport([copy, '--fps', '1', '--formats', '9x16', '--workers', '3', '--prove', '--force'], { timeout: 360_000 });
     assert.equal(r.status, 0, r.out.slice(-3000));
     assert.match(r.stdout, /prove ok \(9x16\)/);
     const manifest = readJson(join(copy, 'out', 'export.json'));

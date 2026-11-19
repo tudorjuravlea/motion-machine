@@ -1,0 +1,109 @@
+{
+  "id": "demo-ui-component",
+  "kind": "film",
+  "formats": [
+    "16x9",
+    "9x16",
+    "1x1"
+  ],
+  "title": "ui/component demo",
+  "language": "en",
+  "facts": [],
+  "audio": {
+    "track": null,
+    "bpm": null,
+    "beats": null
+  },
+  "scenes": [
+    {
+      "id": "shot",
+      "layout": "layouts/stage",
+      "duration": 8.4,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "ui/component",
+          "params": {
+            "kind": "toast",
+            "app": "Orders",
+            "steps": "0.6 add Order placed | Two items, arriving Friday\n1.6 add Payment received | Card ending 4242\n2.6 add Invoice sent\n3.6 expand\n4.8 dismiss\n5.6 close"
+          }
+        }
+      ],
+      "say": "Three notifications arrive and stack; the stack fans out, one leaves, and it closes again."
+    },
+    {
+      "id": "menu",
+      "layout": "layouts/stage",
+      "duration": 5.2,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "ui/component",
+          "params": {
+            "kind": "menu",
+            "app": "Orders",
+            "label": "Actions",
+            "items": "Duplicate|Rename|Move to…|!Delete",
+            "steps": "0.8 open\n1.4 highlight 1\n1.8 highlight 2\n2.2 highlight 3\n2.7 press 3"
+          }
+        }
+      ],
+      "say": "A menu opens from its trigger, the pointer walks down its items and picks one, and it closes."
+    },
+    {
+      "id": "tabs",
+      "layout": "layouts/stage",
+      "duration": 6.0,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "ui/component",
+          "params": {
+            "kind": "tabs",
+            "app": "Orders",
+            "tabs": "Overview|Activity|Settings",
+            "panels": "Revenue up 12% this week|Three new comments|Billing: monthly",
+            "steps": "1.0 select 2\n2.2 select 3\n3.3 select 1"
+          }
+        }
+      ],
+      "say": "The pointer presses a tab, its underline slides there, and the panel slides in from that side."
+    },
+    {
+      "id": "sheet",
+      "layout": "layouts/stage",
+      "duration": 7.2,
+      "cut": "transitions/hard-cut",
+      "move": null,
+      "beats": [
+        {
+          "at": 0,
+          "slot": "stage",
+          "fx": "ui/component",
+          "params": {
+            "kind": "sheet",
+            "app": "Orders",
+            "label": "Share order",
+            "rows": "Copy link|Send by email|Export as PDF",
+            "steps": "0.6 open\n2.0 drag up\n3.4 drag down\n4.6 drag down"
+          }
+        }
+      ],
+      "say": "A sheet rises over the screen, is dragged up to full height, then down, and flicked away."
+    }
+  ],
+  "cta": {
+    "text": "motion-machine",
+    "url": "github.com/tudorjuravlea/motion-machine"
+  }
+}

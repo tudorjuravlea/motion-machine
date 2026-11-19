@@ -1041,7 +1041,7 @@ function runScreens() {
         if (S.reduced && action.do !== 'screen/play') return { action, module, i, start: press - 1 + SNAP_S, d: 0, end: press, sec };
         return { action, module, i, start: press - 1, d: 1, sec };
       }
-      const d = action.d ?? durSec(module.dur);
+      const d = action.d ?? (typeof module.durationOf === 'function' ? module.durationOf(action.params ?? {}) : durSec(module.dur));
       return { action, module, i, start: it.start + (action.at ?? 0), d, sec: d };
     }).filter(Boolean).sort((p, q) => p.start - q.start || p.i - q.i);
     const initial = s.initial;

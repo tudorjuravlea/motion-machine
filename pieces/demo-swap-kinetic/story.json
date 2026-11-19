@@ -14,7 +14,7 @@
     },
     {
       "id": "f2",
-      "text": "222 patterns in 13 groups, none carrying a brand.",
+      "text": "223 patterns in 13 groups, none carrying a brand.",
       "source": "node scripts/mm.mjs pattern list; README.md"
     },
     {
@@ -107,8 +107,8 @@
           "at": 0.5,
           "slot": "figure",
           "fx": "style:figure",
-          "value": 222,
-          "text": "222",
+          "value": 223,
+          "text": "223",
           "fact": "f2",
           "cue": "hit"
         },
@@ -120,7 +120,7 @@
           "fact": "f2"
         }
       ],
-      "say": "222 patterns, and the style decides how each one moves."
+      "say": "223 patterns, and the style decides how each one moves."
     },
     {
       "id": "cta",
